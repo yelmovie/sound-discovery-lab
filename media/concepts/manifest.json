@@ -1,0 +1,60 @@
+{
+  "created": "2026-10-28",
+  "method": "Pillow + FFmpeg, generated teaching illustrations and project props, system Malgun Gothic",
+  "fps": 24,
+  "duration": 16,
+  "framing": "4 shots of 4s, static front analytical view, final conclusion held",
+  "audio": "CC0 field/instrument recordings, gain and relative-rate modeling; source details in media/audio/experiments/sources.json; no narration",
+  "films": [
+    {
+      "id": "vibration",
+      "title": "떨림이 소리를 만들어",
+      "captions": [
+        "물체를 울리면 떨림이 시작돼.",
+        "떨리는 동안 소리가 나.",
+        "손으로 잡으면 떨림이 멈춰.",
+        "떨림이 멈추면 소리도 멈춰."
+      ]
+    },
+    {
+      "id": "volume",
+      "title": "큰 떨림, 큰 소리",
+      "captions": [
+        "같은 북을 약하게 쳐 봐.",
+        "세게 치면 더 크게 떨려.",
+        "높낮이는 같고, 소리 크기가 달라.",
+        "치는 세기로 소리 크기를 조절해."
+      ]
+    },
+    {
+      "id": "pitch",
+      "title": "짧게 떨리면 높은 소리",
+      "captions": [
+        "같은 자를 같은 힘으로 튕겨 봐.",
+        "긴 부분은 천천히 떨려 낮은 소리.",
+        "짧은 부분은 빠르게 떨려 높은 소리.",
+        "길이로 높낮이, 힘으로 크기를 바꿔."
+      ]
+    },
+    {
+      "id": "travel",
+      "title": "소리는 물질을 따라",
+      "captions": [
+        "북과 귀 사이의 공기를 따라.",
+        "물속 종과 감지기 사이의 물을 따라.",
+        "탁자와 감지기 사이의 고체를 따라.",
+        "세 물질 모두 소리를 전달할 수 있어."
+      ]
+    },
+    {
+      "id": "care",
+      "title": "필요한 소리는 살리고",
+      "captions": [
+        "누가, 언제, 어디에서 불편할까?",
+        "음량을 줄이고 의자에 패드를 붙여.",
+        "연습 시간과 장소도 바꿀 수 있어.",
+        "필요한 안내는 들리게, 서로 배려해."
+      ]
+    }
+  ]
+}

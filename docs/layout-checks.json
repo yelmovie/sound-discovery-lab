@@ -1,0 +1,203 @@
+{
+  "date": "2026-10-15",
+  "tablet": [
+    {
+      "size": 1280,
+      "lesson": 1,
+      "clipped": [],
+      "overflow": false,
+      "small": []
+    },
+    {
+      "size": 1280,
+      "lesson": 2,
+      "clipped": [],
+      "overflow": false,
+      "small": []
+    },
+    {
+      "size": 1280,
+      "lesson": 3,
+      "clipped": [],
+      "overflow": false,
+      "small": []
+    },
+    {
+      "size": 1280,
+      "lesson": 4,
+      "clipped": [],
+      "overflow": false,
+      "small": []
+    },
+    {
+      "size": 1280,
+      "lesson": 5,
+      "clipped": [],
+      "overflow": false,
+      "small": []
+    },
+    {
+      "size": 1280,
+      "lesson": 6,
+      "clipped": [],
+      "overflow": false,
+      "small": []
+    },
+    {
+      "size": 1280,
+      "lesson": 7,
+      "clipped": [],
+      "overflow": false,
+      "small": []
+    },
+    {
+      "size": 1280,
+      "lesson": 8,
+      "clipped": [],
+      "overflow": false,
+      "small": []
+    },
+    {
+      "size": 1280,
+      "lesson": 9,
+      "clipped": [],
+      "overflow": false,
+      "small": []
+    },
+    {
+      "size": 1280,
+      "lesson": 10,
+      "clipped": [],
+      "overflow": false,
+      "small": []
+    },
+    {
+      "size": 1024,
+      "lesson": 1,
+      "clipped": [],
+      "overflow": false,
+      "small": []
+    },
+    {
+      "size": 1024,
+      "lesson": 2,
+      "clipped": [],
+      "overflow": false,
+      "small": []
+    },
+    {
+      "size": 1024,
+      "lesson": 3,
+      "clipped": [],
+      "overflow": false,
+      "small": []
+    },
+    {
+      "size": 1024,
+      "lesson": 4,
+      "clipped": [],
+      "overflow": false,
+      "small": []
+    },
+    {
+      "size": 1024,
+      "lesson": 5,
+      "clipped": [],
+      "overflow": false,
+      "small": []
+    },
+    {
+      "size": 1024,
+      "lesson": 6,
+      "clipped": [],
+      "overflow": false,
+      "small": []
+    },
+    {
+      "size": 1024,
+      "lesson": 7,
+      "clipped": [],
+      "overflow": false,
+      "small": []
+    },
+    {
+      "size": 1024,
+      "lesson": 8,
+      "clipped": [],
+      "overflow": false,
+      "small": []
+    },
+    {
+      "size": 1024,
+      "lesson": 9,
+      "clipped": [],
+      "overflow": false,
+      "small": []
+    },
+    {
+      "size": 1024,
+      "lesson": 10,
+      "clipped": [],
+      "overflow": false,
+      "small": []
+    }
+  ],
+  "compact": [
+    {
+      "size": 915,
+      "lesson": 1,
+      "clipped": [],
+      "overflow": false,
+      "small": []
+    },
+    {
+      "size": 915,
+      "lesson": 3,
+      "clipped": [],
+      "overflow": false,
+      "small": []
+    },
+    {
+      "size": 915,
+      "lesson": 7,
+      "clipped": [],
+      "overflow": false,
+      "small": []
+    },
+    {
+      "size": 915,
+      "lesson": 10,
+      "clipped": [],
+      "overflow": false,
+      "small": []
+    },
+    {
+      "size": 375,
+      "lesson": 1,
+      "clipped": [],
+      "overflow": false,
+      "small": []
+    },
+    {
+      "size": 375,
+      "lesson": 3,
+      "clipped": [],
+      "overflow": false,
+      "small": []
+    },
+    {
+      "size": 375,
+      "lesson": 7,
+      "clipped": [],
+      "overflow": false,
+      "small": []
+    },
+    {
+      "size": 375,
+      "lesson": 10,
+      "clipped": [],
+      "overflow": false,
+      "small": []
+    }
+  ]
+}

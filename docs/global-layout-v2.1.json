@@ -1,0 +1,225 @@
+{
+  "pages": [
+    {
+      "height": 768,
+      "label": "home",
+      "main": "home-page",
+      "offscreen": [],
+      "overflow": 0,
+      "width": 1024
+    },
+    {
+      "height": 768,
+      "label": "map",
+      "main": "map-page",
+      "offscreen": [
+        "조율 공방복구 완료",
+        "전달 네트워크복구 완료"
+      ],
+      "overflow": 0,
+      "width": 1024
+    },
+    {
+      "height": 768,
+      "label": "final",
+      "main": "final-page final-focus",
+      "offscreen": [],
+      "overflow": 0,
+      "width": 1024
+    },
+    {
+      "height": 768,
+      "label": "result",
+      "main": "result-page",
+      "offscreen": [],
+      "overflow": 0,
+      "width": 1024
+    },
+    {
+      "height": 800,
+      "label": "home",
+      "main": "home-page",
+      "offscreen": [],
+      "overflow": 0,
+      "width": 1280
+    },
+    {
+      "height": 800,
+      "label": "map",
+      "main": "map-page",
+      "offscreen": [],
+      "overflow": 0,
+      "width": 1280
+    },
+    {
+      "height": 800,
+      "label": "final",
+      "main": "final-page final-focus",
+      "offscreen": [],
+      "overflow": 0,
+      "width": 1280
+    },
+    {
+      "height": 800,
+      "label": "result",
+      "main": "result-page",
+      "offscreen": [],
+      "overflow": 0,
+      "width": 1280
+    },
+    {
+      "height": 1080,
+      "label": "home",
+      "main": "home-page",
+      "offscreen": [],
+      "overflow": 0,
+      "width": 1920
+    },
+    {
+      "height": 1080,
+      "label": "map",
+      "main": "map-page",
+      "offscreen": [],
+      "overflow": 0,
+      "width": 1920
+    },
+    {
+      "height": 1080,
+      "label": "final",
+      "main": "final-page final-focus",
+      "offscreen": [],
+      "overflow": 0,
+      "width": 1920
+    },
+    {
+      "height": 1080,
+      "label": "result",
+      "main": "result-page",
+      "offscreen": [],
+      "overflow": 0,
+      "width": 1920
+    }
+  ],
+  "finalQuestions": [
+    {
+      "height": 768,
+      "label": "final-0",
+      "main": "final-page final-focus",
+      "offscreen": [],
+      "overflow": 0,
+      "width": 1024
+    },
+    {
+      "height": 768,
+      "label": "final-1",
+      "main": "final-page final-focus",
+      "offscreen": [],
+      "overflow": 0,
+      "width": 1024
+    },
+    {
+      "height": 768,
+      "label": "final-2",
+      "main": "final-page final-focus",
+      "offscreen": [],
+      "overflow": 0,
+      "width": 1024
+    },
+    {
+      "height": 768,
+      "label": "final-3",
+      "main": "final-page final-focus",
+      "offscreen": [],
+      "overflow": 0,
+      "width": 1024
+    },
+    {
+      "height": 768,
+      "label": "final-4",
+      "main": "final-page final-focus",
+      "offscreen": [],
+      "overflow": 0,
+      "width": 1024
+    },
+    {
+      "height": 800,
+      "label": "final-0",
+      "main": "final-page final-focus",
+      "offscreen": [],
+      "overflow": 0,
+      "width": 1280
+    },
+    {
+      "height": 800,
+      "label": "final-1",
+      "main": "final-page final-focus",
+      "offscreen": [],
+      "overflow": 0,
+      "width": 1280
+    },
+    {
+      "height": 800,
+      "label": "final-2",
+      "main": "final-page final-focus",
+      "offscreen": [],
+      "overflow": 0,
+      "width": 1280
+    },
+    {
+      "height": 800,
+      "label": "final-3",
+      "main": "final-page final-focus",
+      "offscreen": [],
+      "overflow": 0,
+      "width": 1280
+    },
+    {
+      "height": 800,
+      "label": "final-4",
+      "main": "final-page final-focus",
+      "offscreen": [],
+      "overflow": 0,
+      "width": 1280
+    },
+    {
+      "height": 1080,
+      "label": "final-0",
+      "main": "final-page final-focus",
+      "offscreen": [],
+      "overflow": 0,
+      "width": 1920
+    },
+    {
+      "height": 1080,
+      "label": "final-1",
+      "main": "final-page final-focus",
+      "offscreen": [],
+      "overflow": 0,
+      "width": 1920
+    },
+    {
+      "height": 1080,
+      "label": "final-2",
+      "main": "final-page final-focus",
+      "offscreen": [],
+      "overflow": 0,
+      "width": 1920
+    },
+    {
+      "height": 1080,
+      "label": "final-3",
+      "main": "final-page final-focus",
+      "offscreen": [],
+      "overflow": 0,
+      "width": 1920
+    },
+    {
+      "height": 1080,
+      "label": "final-4",
+      "main": "final-page final-focus",
+      "offscreen": [],
+      "overflow": 0,
+      "width": 1920
+    }
+  ]
+}

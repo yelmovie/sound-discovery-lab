@@ -1,0 +1,1142 @@
+[
+  {
+    "height": 768,
+    "i": 0,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 737,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 740,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1024
+  },
+  {
+    "height": 768,
+    "i": 1,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 729,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 740,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1024
+  },
+  {
+    "height": 768,
+    "i": 2,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 651,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 740,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1024
+  },
+  {
+    "height": 768,
+    "i": 3,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 670,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 740,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1024
+  },
+  {
+    "height": 768,
+    "i": 4,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 702,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 740,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1024
+  },
+  {
+    "height": 768,
+    "i": 5,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 725,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 740,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1024
+  },
+  {
+    "height": 768,
+    "i": 6,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 678,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 740,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1024
+  },
+  {
+    "height": 768,
+    "i": 7,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 682,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 740,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1024
+  },
+  {
+    "height": 768,
+    "i": 8,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 736,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 740,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1024
+  },
+  {
+    "height": 768,
+    "i": 9,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 723,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 740,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1024
+  },
+  {
+    "height": 768,
+    "i": 10,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 710,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 740,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1024
+  },
+  {
+    "height": 768,
+    "i": 11,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 711,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 740,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1024
+  },
+  {
+    "height": 768,
+    "i": 12,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 715,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 740,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1024
+  },
+  {
+    "height": 768,
+    "i": 13,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 692,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 740,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1024
+  },
+  {
+    "height": 768,
+    "i": 14,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 706,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 740,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1024
+  },
+  {
+    "height": 768,
+    "i": 15,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 658,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 730,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1024
+  },
+  {
+    "height": 768,
+    "i": 16,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 740,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 740,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1024
+  },
+  {
+    "height": 768,
+    "i": 17,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 732,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 740,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1024
+  },
+  {
+    "height": 768,
+    "i": 18,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 691,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 740,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1024
+  },
+  {
+    "height": 768,
+    "i": 19,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 697,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 740,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1024
+  },
+  {
+    "height": 800,
+    "i": 0,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 754,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 723,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1280
+  },
+  {
+    "height": 800,
+    "i": 1,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 746,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 723,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1280
+  },
+  {
+    "height": 800,
+    "i": 2,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 668,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 738,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1280
+  },
+  {
+    "height": 800,
+    "i": 3,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 687,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 736,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1280
+  },
+  {
+    "height": 800,
+    "i": 4,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 719,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 723,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1280
+  },
+  {
+    "height": 800,
+    "i": 5,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 742,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 723,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1280
+  },
+  {
+    "height": 800,
+    "i": 6,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 695,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 736,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1280
+  },
+  {
+    "height": 800,
+    "i": 7,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 699,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 736,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1280
+  },
+  {
+    "height": 800,
+    "i": 8,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 753,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 723,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1280
+  },
+  {
+    "height": 800,
+    "i": 9,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 742,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 723,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1280
+  },
+  {
+    "height": 800,
+    "i": 10,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 727,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 736,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1280
+  },
+  {
+    "height": 800,
+    "i": 11,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 728,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 736,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1280
+  },
+  {
+    "height": 800,
+    "i": 12,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 732,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 723,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1280
+  },
+  {
+    "height": 800,
+    "i": 13,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 709,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 723,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1280
+  },
+  {
+    "height": 800,
+    "i": 14,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 723,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 736,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1280
+  },
+  {
+    "height": 800,
+    "i": 15,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 675,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 736,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1280
+  },
+  {
+    "height": 800,
+    "i": 16,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 757,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 723,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1280
+  },
+  {
+    "height": 800,
+    "i": 17,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 749,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 723,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1280
+  },
+  {
+    "height": 800,
+    "i": 18,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 708,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 736,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1280
+  },
+  {
+    "height": 800,
+    "i": 19,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 714,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 736,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1280
+  },
+  {
+    "height": 1080,
+    "i": 0,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 986,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 965,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1920
+  },
+  {
+    "height": 1080,
+    "i": 1,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 994,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 965,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1920
+  },
+  {
+    "height": 1080,
+    "i": 2,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 885,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 982,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1920
+  },
+  {
+    "height": 1080,
+    "i": 3,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 971,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 982,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1920
+  },
+  {
+    "height": 1080,
+    "i": 4,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 945,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 965,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1920
+  },
+  {
+    "height": 1080,
+    "i": 5,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 1003,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 965,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1920
+  },
+  {
+    "height": 1080,
+    "i": 6,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 911,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 982,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1920
+  },
+  {
+    "height": 1080,
+    "i": 7,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 902,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 982,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1920
+  },
+  {
+    "height": 1080,
+    "i": 8,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 989,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 965,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1920
+  },
+  {
+    "height": 1080,
+    "i": 9,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 945,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 965,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1920
+  },
+  {
+    "height": 1080,
+    "i": 10,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 984,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 982,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1920
+  },
+  {
+    "height": 1080,
+    "i": 11,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 954,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 982,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1920
+  },
+  {
+    "height": 1080,
+    "i": 12,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 931,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 965,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1920
+  },
+  {
+    "height": 1080,
+    "i": 13,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 910,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 965,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1920
+  },
+  {
+    "height": 1080,
+    "i": 14,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 940,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 962,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1920
+  },
+  {
+    "height": 1080,
+    "i": 15,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 878,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 962,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1920
+  },
+  {
+    "height": 1080,
+    "i": 16,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 943,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 965,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1920
+  },
+  {
+    "height": 1080,
+    "i": 17,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 978,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 965,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1920
+  },
+  {
+    "height": 1080,
+    "i": 18,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 922,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 982,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1920
+  },
+  {
+    "height": 1080,
+    "i": 19,
+    "offscreen": [],
+    "panels": [
+      {
+        "bottom": 931,
+        "name": "experiment-board",
+        "overflow": 0
+      },
+      {
+        "bottom": 982,
+        "name": "research-panel",
+        "overflow": 0
+      }
+    ],
+    "scroll": 0,
+    "width": 1920
+  }
+]

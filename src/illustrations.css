@@ -1,0 +1,63 @@
+/* Generated teaching objects; measurements and interaction remain in the DOM. */
+.concept-art{display:block;width:100%;object-fit:contain;pointer-events:none;user-select:none}
+.concept-scene{height:140px;max-width:100%;margin:auto}
+.concept-thumb{width:76px;height:66px;flex-shrink:0;margin:auto}
+.concept-story{width:100%;height:150px;object-fit:cover;border-radius:14px}
+.illustrated-ruler{display:block;position:relative;container-type:inline-size;width:100%;max-width:360px;height:110px!important;margin:auto;overflow:hidden}
+.illustrated-ruler .ruler-base-art{position:absolute;left:0;top:calc(51% - 11.76cqw);width:42%;height:21cqw;object-fit:contain;z-index:2}
+.ruler-blade-window{position:absolute;left:12%;top:51%;width:calc(28% + var(--free)*54%);height:9%;overflow:hidden;z-index:1}
+.ruler-blade-texture{position:absolute;right:0;top:-12cqw;width:84cqw;height:28cqw;background:url('/image/generated/concepts/ruler-blade.webp') center/100% 100% no-repeat}
+.ruler-measure{position:absolute;left:40%;top:79%;width:calc(var(--free)*54%);height:8px;border-bottom:2px solid #278684;border-left:2px solid #278684;border-right:2px solid #278684}
+.ruler-bench.illustrated-bench{height:112px;display:grid;place-items:center;margin:6px 0}
+.illustrated-bench .illustrated-ruler{max-width:400px;height:112px!important}
+.instrument>.concept-art{height:clamp(90px,13.6dvh,160px);max-width:180px;margin:auto}
+.medium-card.illustrated-medium{display:flex;flex-direction:column;align-items:stretch;gap:6px;padding:12px}
+.illustrated-medium h3{margin:0;text-align:center}
+.illustrated-medium .transmission{font-size:var(--read-small);min-height:34px;gap:5px;margin:0}
+.illustrated-medium .concept-scene{height:135px}
+.sensor-zone.illustrated-zone{display:grid;grid-template-columns:110px 1fr 40px;align-items:center;gap:8px;min-height:90px;padding:8px 12px}
+.illustrated-zone>.concept-scene{height:72px;width:110px}
+.illustrated-zone .sensor-indicator{width:38px;height:38px;display:grid;place-items:center}
+.illustrated-zone .sensor-indicator .prop-img{width:38px;height:38px!important}
+.concept-tool{display:flex!important;align-items:center;gap:8px;text-align:left}
+.concept-tool .concept-thumb{width:64px;height:64px;margin:0}
+.concept-tool>span:last-child{flex:1;min-width:0}
+.solution-grid .concept-tool{display:flex;flex-direction:row;min-height:106px;padding:10px}
+.solution-grid .concept-tool .solution-check{flex-shrink:0;margin:0}
+.solution-grid .concept-tool small{display:block;margin-top:4px}
+.noise-story.illustrated-noise{display:grid;grid-template-columns:minmax(160px,.85fr) 1fr;gap:16px}
+.illustrated-noise .concept-story{height:170px}
+.sound-parcel .concept-thumb{width:100%;height:72px;margin:0 auto 4px}
+.context-cards .concept-tool{flex-direction:column;text-align:center;gap:4px;min-height:124px}
+.context-cards .concept-tool .concept-thumb{height:70px;width:90px}
+.festival-controls .concept-thumb{height:55px;width:60px;margin:0 auto 4px}
+.final-stage>.concept-thumb{width:64px;height:54px;margin:0}
+.finding-replay>.concept-thumb{width:64px;height:48px;margin:0}
+.final-stage>.prop-img,.final-stage>.illustrated-ruler,.finding-replay>.prop-img,.finding-replay>.illustrated-ruler{width:64px;height:54px!important;flex-shrink:0;object-fit:contain;margin:0}
+.festival-controls fieldset>.prop-img{height:55px;max-width:60px;margin:0 auto 4px}
+.care-request-art{display:grid;grid-template-columns:105px 1fr;gap:12px;align-items:center;text-align:left}
+.care-request-art>.concept-art{height:85px;width:105px}
+@media(min-width:901px) and (max-height:820px){
+ .concept-scene,.illustrated-medium .concept-scene{height:100px}
+ .ruler-bench.illustrated-bench,.illustrated-bench .illustrated-ruler{height:64px!important;max-width:280px}
+ .illustrated-bench+.ruler-slider~.ruler-play-row{margin:4px 0}
+ .illustrated-bench+.ruler-slider~.ruler-play-row+.live-scope{height:26px}
+ .instrument>.concept-art,.instrument>.illustrated-ruler{height:90px!important}
+ .length-card .illustrated-ruler{height:70px!important}
+ .illustrated-noise .concept-story{height:125px}
+ .solution-grid .concept-tool{min-height:106px;gap:6px;padding:8px}
+ .solution-grid .concept-tool .solution-check{display:none}
+ .solution-grid+.sample-pair.compact .waveform{height:30px}
+ .concept-tool .concept-thumb{height:56px;width:56px}
+ .sensor-zone.illustrated-zone{min-height:74px}
+ .illustrated-zone>.concept-scene{height:58px}
+ .context-cards .concept-tool{min-height:110px}
+ .context-cards .concept-tool .concept-thumb{height:58px}
+ .care-request-art>.concept-art{height:66px}
+ .care-request-art{grid-template-columns:92px 1fr}
+}
+@media(max-width:900px){
+ .noise-story.illustrated-noise{grid-template-columns:1fr}
+ .illustrated-noise .concept-story{height:180px}
+ .sensor-zone.illustrated-zone{grid-template-columns:100px 1fr 36px}
+}

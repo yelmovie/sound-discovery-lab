@@ -1,0 +1,328 @@
+{
+  "schemaVersion": 1,
+  "generatedOn": "2026-10-22",
+  "generator": "Built-in image_gen.imagegen",
+  "sourceBrief": {
+    "pageId": "page_e5c729a999bc8191a58096624d8e5603",
+    "note": "Project 3D prop brief summarized by parent agent; final prompts below."
+  },
+  "format": "PNG RGBA",
+  "postProcessing": "None. Generated PNG outputs copied byte-for-byte into the project.",
+  "validation": {
+    "visualInspection": "Each built-in output was inspected for requested subject, silhouette, material, and absence of text/extra objects.",
+    "alpha": "Each saved image has an alpha channel, fully transparent pixels, and four fully transparent corner pixels.",
+    "note": "The tool preview may show RGB color in fully transparent areas. The original alpha channel is preserved."
+  },
+  "assets": [
+    {
+      "id": "core",
+      "status": "generated-and-inspected",
+      "path": "image/generated/core.png",
+      "sourcePath": "C:\\Users\\bongb\\.codex\\generated_images\\01a1606c-0c09-76b1-ad2e-ac5596eb6319\\exec-9b9c88f7-4f50-49fc-a734-37ce29ce27be.png",
+      "mode": "RGBA",
+      "transparentBackground": true,
+      "prompt": "Use case: scientific-educational. Asset type: one reusable transparent game prop for an elementary sound-science game. Style: cozy polished illustrated 3D-shaped science toy, restrained cyan, deep navy and cream palette with orange accents where appropriate, clean material detail, soft studio shading on the object. Orthographic three-quarter view. One complete object centered, generous transparent padding, crisp readable silhouette at small size. Genuine transparent alpha background. No text, letters, numbers, logo, UI, environment, ground plane, detached parts, particles, waves, emitted light, motion effects, or cast shadow. Do not crop any part.\nSubject: a compact tabletop science core device, a smooth cream and deep navy spherical housing held on one short sturdy pedestal. Five small empty circular mechanical ring ports distributed visibly around the housing. The five ports are empty; there are NO actual rings. Subtle cyan inset mechanical seams only, no emission. Complete standalone core plus pedestal as a single joined object.",
+      "inspection": "Cream/navy spherical housing on pedestal; five visibly empty ports; no detachable rings or emission.",
+      "width": 1292,
+      "height": 1217,
+      "bytes": 1336320,
+      "sha256": "627cca9e15c9a0a6ce6c45d7266d3cb187356e6b8a861424e927df2a0ede490b",
+      "alphaExtrema": [
+        0,
+        255
+      ],
+      "fullyTransparentPixels": 831025,
+      "alphaBounds": [
+        0,
+        5,
+        1276,
+        1217
+      ],
+      "cornerAlphas": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "ring",
+      "status": "generated-and-inspected",
+      "path": "image/generated/ring.png",
+      "sourcePath": "C:\\Users\\bongb\\.codex\\generated_images\\01a1606c-0c09-76b1-ad2e-ac5596eb6319\\exec-fdf30043-64a2-4c36-a269-b1a58cd10b72.png",
+      "mode": "RGBA",
+      "transparentBackground": true,
+      "prompt": "Use case: scientific-educational. Asset type: one reusable transparent game prop for an elementary sound-science game. Style: cozy polished illustrated 3D-shaped science toy, restrained cyan, deep navy and cream palette with orange accents where appropriate, clean material detail, soft studio shading on the object. Orthographic three-quarter view. One complete object centered, generous transparent padding, crisp readable silhouette at small size. Genuine transparent alpha background. No text, letters, numbers, logo, UI, environment, ground plane, detached parts, particles, waves, emitted light, motion effects, or cast shadow. Do not crop any part.\nSubject: one separate circular mechanical ring, upright like a coin seen at a three-quarter angle, deep navy outer casing and cream trim, restrained cyan inset band, and one small mounting tab at the bottom. The circular center is completely open and transparent. A single simple continuous ring only, no device core or stand.",
+      "inspection": "One continuous circular ring, transparent open center and one bottom mounting tab.",
+      "width": 1312,
+      "height": 1199,
+      "bytes": 839498,
+      "sha256": "6eec9401d39e9ea21f7fc822ad962afa0597125e46a98369f330871518d478d8",
+      "alphaExtrema": [
+        0,
+        255
+      ],
+      "fullyTransparentPixels": 1138209,
+      "alphaBounds": [
+        0,
+        25,
+        1274,
+        1183
+      ],
+      "cornerAlphas": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "tuning-fork",
+      "status": "generated-and-inspected",
+      "path": "image/generated/tuning-fork.png",
+      "sourcePath": "C:\\Users\\bongb\\.codex\\generated_images\\01a1606c-0c09-76b1-ad2e-ac5596eb6319\\exec-0b12e1e4-1f84-4ab5-91f2-9324950b0e92.png",
+      "mode": "RGBA",
+      "transparentBackground": true,
+      "prompt": "Use case: scientific-educational. Asset type: one reusable transparent game prop for an elementary sound-science game. Style: cozy polished illustrated 3D-shaped science toy, restrained cyan, deep navy and cream palette with orange accents where appropriate, clean material detail, soft studio shading on the object. Orthographic three-quarter view. One complete object centered, generous transparent padding, crisp readable silhouette at small size. Genuine transparent alpha background. No text, letters, numbers, logo, UI, environment, ground plane, detached parts, particles, waves, emitted light, motion effects, or cast shadow. Do not crop any part.\nSubject: one physically correct silver tuning fork, TWO straight parallel silver metal prongs of equal length with gently rounded tips, joined by a curved U-shaped bottom, and ONE simple straight centered handle extending from the bottom of the U. Clearly visible large open space between the two prongs. Upright, complete tuning fork only. No stand, no mallet, no extra prongs, no sound waves.",
+      "inspection": "Two parallel equal-length silver prongs, U-shaped join and one centered handle; no stand.",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 1248075,
+      "sha256": "ae33bfd57f165f4138264d490ce3ec9807e20dadcdcf3d240f5c87df8984a51d",
+      "alphaExtrema": [
+        0,
+        254
+      ],
+      "fullyTransparentPixels": 1283214,
+      "alphaBounds": [
+        41,
+        35,
+        978,
+        1504
+      ],
+      "cornerAlphas": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "fork-stand",
+      "status": "generated-and-inspected",
+      "path": "image/generated/fork-stand.png",
+      "sourcePath": "C:\\Users\\bongb\\.codex\\generated_images\\01a1606c-0c09-76b1-ad2e-ac5596eb6319\\exec-4db24ea3-09e0-4862-b77d-fdb84669ad09.png",
+      "mode": "RGBA",
+      "transparentBackground": true,
+      "prompt": "Use case: scientific-educational. Asset type: one reusable transparent game prop for an elementary sound-science game. Style: cozy polished illustrated 3D-shaped science toy, restrained cyan, deep navy and cream palette with orange accents where appropriate, clean material detail, soft studio shading on the object. Orthographic three-quarter view. One complete object centered, generous transparent padding, crisp readable silhouette at small size. Genuine transparent alpha background. No text, letters, numbers, logo, UI, environment, ground plane, detached parts, particles, waves, emitted light, motion effects, or cast shadow. Do not crop any part.\nSubject: one small warm natural wood rectangular tabletop stand for a tuning fork. A single empty centered socket drilled into its top, clearly visible from a slightly elevated three-quarter view. The slot is empty and dark inside. Softly rounded rectangular edges, solid simple wooden block. No tuning fork, no other object, no shadow underneath.",
+      "inspection": "One wooden block with empty top socket; no attached fork.",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 1635106,
+      "sha256": "8885f5eed64efaabdbb3a4abab28db66860638aa10762422e2070e54d6bda4b8",
+      "alphaExtrema": [
+        0,
+        254
+      ],
+      "fullyTransparentPixels": 1020136,
+      "alphaBounds": [
+        65,
+        19,
+        1410,
+        976
+      ],
+      "cornerAlphas": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "drum",
+      "status": "generated-and-inspected",
+      "path": "image/generated/drum.png",
+      "sourcePath": "C:\\Users\\bongb\\.codex\\generated_images\\01a1606c-0c09-76b1-ad2e-ac5596eb6319\\exec-c50cc7ab-f011-4f0c-9f2e-c1b621b4515b.png",
+      "mode": "RGBA",
+      "transparentBackground": true,
+      "prompt": "Use case: scientific-educational. Asset type: one reusable transparent game prop for an elementary sound-science game. Style: cozy polished illustrated 3D-shaped science toy, restrained cyan, deep navy and cream palette with orange accents where appropriate, clean material detail, soft studio shading on the object. Orthographic three-quarter view. One complete object centered, generous transparent padding, crisp readable silhouette at small size. Genuine transparent alpha background. No text, letters, numbers, logo, UI, environment, ground plane, detached parts, particles, waves, emitted light, motion effects, or cast shadow. Do not crop any part.\nSubject: one upright short cylindrical hand drum. Reddish natural wooden shell, a single taut cream top membrane with visible rounded rim, a deep navy bottom rim, and restrained silver hardware connecting the rims. Slightly elevated three-quarter view clearly shows the entire cream drum membrane. No mallet, no hands, no stand, no vibration lines.",
+      "inspection": "Wooden cylindrical shell, cream upper membrane and metal hardware; no mallet.",
+      "width": 1374,
+      "height": 1145,
+      "bytes": 1634482,
+      "sha256": "7a8bbaf3fc16994bc9305f069fbb0bb9494237b40592e9130909a3f20a5e1e1e",
+      "alphaExtrema": [
+        0,
+        255
+      ],
+      "fullyTransparentPixels": 700610,
+      "alphaBounds": [
+        0,
+        25,
+        1352,
+        1145
+      ],
+      "cornerAlphas": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "mallet",
+      "status": "generated-and-inspected",
+      "path": "image/generated/mallet.png",
+      "sourcePath": "C:\\Users\\bongb\\.codex\\generated_images\\01a1606c-0c09-76b1-ad2e-ac5596eb6319\\exec-b5045195-a227-4a3e-a501-7b9569cfbe28.png",
+      "mode": "RGBA",
+      "transparentBackground": true,
+      "prompt": "Use case: scientific-educational. Asset type: one reusable transparent game prop for an elementary sound-science game. Style: cozy polished illustrated 3D-shaped science toy, restrained cyan, deep navy and cream palette with orange accents where appropriate, clean material detail, soft studio shading on the object. Orthographic three-quarter view. One complete object centered, generous transparent padding, crisp readable silhouette at small size. Genuine transparent alpha background. No text, letters, numbers, logo, UI, environment, ground plane, detached parts, particles, waves, emitted light, motion effects, or cast shadow. Do not crop any part.\nSubject: one single wooden percussion mallet. Smooth slender natural wood straight handle and one soft orange felt spherical head attached at the end. Full mallet from rounded wood handle end to full orange felt ball, diagonal composition, no drum, no second mallet, no ribbon, no other object.",
+      "inspection": "One wooden handle and one orange felt head; no second mallet.",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 1284618,
+      "sha256": "0d01c0615f331cf4ac4a8ecb55e8d0d205221ec856dfbfca3f8eef316efdff3e",
+      "alphaExtrema": [
+        0,
+        254
+      ],
+      "fullyTransparentPixels": 1381108,
+      "alphaBounds": [
+        72,
+        54,
+        1491,
+        998
+      ],
+      "cornerAlphas": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "kalimba",
+      "status": "generated-and-inspected",
+      "path": "image/generated/kalimba.png",
+      "sourcePath": "C:\\Users\\bongb\\.codex\\generated_images\\01a1606c-0c09-76b1-ad2e-ac5596eb6319\\exec-109c038c-cba2-4d4b-a726-4028e55f430f.png",
+      "mode": "RGBA",
+      "transparentBackground": true,
+      "prompt": "Use case: scientific-educational. Asset type: one reusable transparent game prop for an elementary sound-science game. Style: cozy polished illustrated 3D-shaped science toy, restrained cyan, deep navy and cream palette with orange accents where appropriate, clean material detail, soft studio shading on the object. Orthographic three-quarter view. One complete object centered, generous transparent padding, crisp readable silhouette at small size. Genuine transparent alpha background. No text, letters, numbers, logo, UI, environment, ground plane, detached parts, particles, waves, emitted light, motion effects, or cast shadow. Do not crop any part.\nSubject: one warm natural wood kalimba BODY ONLY, a compact rounded rectangular wooden sound box with a round soundhole near the lower front and one silver metal bridge across the upper front. NO metal tines, NO keys, NO rods attached; the bridge is empty because individual tines are separate sprites. Clearly readable front face in an orthographic slightly elevated three-quarter view. Smooth wood grain, no branding.",
+      "inspection": "Wooden sound box and empty silver bridge; no tines attached.",
+      "width": 1312,
+      "height": 1199,
+      "bytes": 1846139,
+      "sha256": "aae5b05bcdd539f494880041aa3de249e6ab2fa4668c2a161a2259f433d1399e",
+      "alphaExtrema": [
+        0,
+        255
+      ],
+      "fullyTransparentPixels": 710270,
+      "alphaBounds": [
+        0,
+        36,
+        1307,
+        1199
+      ],
+      "cornerAlphas": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "tine",
+      "status": "generated-and-inspected",
+      "path": "image/generated/tine.png",
+      "sourcePath": "C:\\Users\\bongb\\.codex\\generated_images\\01a1606c-0c09-76b1-ad2e-ac5596eb6319\\exec-e5a13d35-8d34-4817-9ecd-f7d9763e7ce6.png",
+      "mode": "RGBA",
+      "transparentBackground": true,
+      "prompt": "Use case: scientific-educational. Asset type: one reusable transparent game prop for an elementary sound-science game. Style: cozy polished illustrated 3D-shaped science toy, restrained cyan, deep navy and cream palette with orange accents where appropriate, clean material detail, soft studio shading on the object. Orthographic three-quarter view. One complete object centered, generous transparent padding, crisp readable silhouette at small size. Genuine transparent alpha background. No text, letters, numbers, logo, UI, environment, ground plane, detached parts, particles, waves, emitted light, motion effects, or cast shadow. Do not crop any part.\nSubject: one single uniform thin flat silver metal kalimba tine. A plain narrow straight rectangular strip of constant width with a gently rounded playing tip at one end and a simple squared opposite end. It must be visibly FLAT like a narrow metal ruler, NOT a cylindrical rod, and have no holes, labels, brackets or ornament. Vertical composition, very shallow three-quarter angle shows its flat face and thin metal edge.",
+      "inspection": "One flat silver strip of constant width with rounded playing tip.",
+      "width": 1024,
+      "height": 1536,
+      "bytes": 1136978,
+      "sha256": "bb8fb0d956905194cfaea7ad425f89262dfbfcc1cf80e0914a41bfa48afca035",
+      "alphaExtrema": [
+        0,
+        254
+      ],
+      "fullyTransparentPixels": 1377792,
+      "alphaBounds": [
+        31,
+        68,
+        946,
+        1458
+      ],
+      "cornerAlphas": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "transmitter",
+      "status": "generated-and-inspected",
+      "path": "image/generated/transmitter.png",
+      "sourcePath": "C:\\Users\\bongb\\.codex\\generated_images\\01a1606c-0c09-76b1-ad2e-ac5596eb6319\\exec-e22fed92-5416-4cde-b8d6-e45d88638fd6.png",
+      "mode": "RGBA",
+      "transparentBackground": true,
+      "prompt": "Use case: scientific-educational. Asset type: one reusable transparent game prop for an elementary sound-science game. Style: cozy polished illustrated 3D-shaped science toy, restrained cyan, deep navy and cream palette with orange accents where appropriate, clean material detail, soft studio shading on the object. Orthographic three-quarter view. One complete object centered, generous transparent padding, crisp readable silhouette at small size. Genuine transparent alpha background. No text, letters, numbers, logo, UI, environment, ground plane, detached parts, particles, waves, emitted light, motion effects, or cast shadow. Do not crop any part.\nSubject: one fictional waterproof sound-science transmitter device. A compact deep navy and cream rounded box, a single circular ORANGE emitter face on the front and one small blank status window. Closed watertight casing, softly rounded corners, modest silver screws. No antenna, no screen text, no cable, no handle, no sound waves, no water, no glow. Complete standalone device.",
+      "inspection": "Navy/cream box with one orange emitter and one blank status window.",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 1682452,
+      "sha256": "05b78dcdd51377bf0704b48e0d28f61505b1d73a0e86afbd8598b311531bc957",
+      "alphaExtrema": [
+        0,
+        254
+      ],
+      "fullyTransparentPixels": 821905,
+      "alphaBounds": [
+        0,
+        29,
+        1514,
+        1006
+      ],
+      "cornerAlphas": [
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "receiver",
+      "status": "generated-and-inspected",
+      "path": "image/generated/receiver.png",
+      "sourcePath": "C:\\Users\\bongb\\.codex\\generated_images\\01a1606c-0c09-76b1-ad2e-ac5596eb6319\\exec-5939dddb-497f-46d2-844b-783942210831.png",
+      "mode": "RGBA",
+      "transparentBackground": true,
+      "prompt": "Use case: scientific-educational. Asset type: one reusable transparent game prop for an elementary sound-science game. Style: cozy polished illustrated 3D-shaped science toy, restrained cyan, deep navy and cream palette with orange accents where appropriate, clean material detail, soft studio shading on the object. Orthographic three-quarter view. One complete object centered, generous transparent padding, crisp readable silhouette at small size. Genuine transparent alpha background. No text, letters, numbers, logo, UI, environment, ground plane, detached parts, particles, waves, emitted light, motion effects, or cast shadow. Do not crop any part.\nSubject: one fictional waterproof sound-science receiver device matching a compact deep navy and cream rounded box family. Cream main casing with deep navy accents. A single circular CYAN sensor on the front and one separate small circular unlit indicator. Closed watertight casing, softly rounded corners, modest silver screws. No antenna, no screen text, no cable, no handle, no sound waves, no water, no glow. Complete standalone device.",
+      "inspection": "Cream/navy box with one cyan sensor and separate small circular indicator.",
+      "width": 1312,
+      "height": 1199,
+      "bytes": 1451473,
+      "sha256": "0a55a6781ea3f572385f0468a8ea09e1a555a42103c91bdb16e599d1186bddaf",
+      "alphaExtrema": [
+        0,
+        255
+      ],
+      "fullyTransparentPixels": 695926,
+      "alphaBounds": [
+        0,
+        7,
+        1296,
+        1199
+      ],
+      "cornerAlphas": [
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ]
+}

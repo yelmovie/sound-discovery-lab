@@ -1,0 +1,85 @@
+{
+  "downloaded": "2026-10-28",
+  "vcslCommit": "c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e",
+  "license": "CC0-1.0",
+  "licenseFile": "VCSL-LICENSE.txt",
+  "notes": "Independent CC0 recordings. Freesound public preview URLs were provided on each source page. No login-only originals downloaded.",
+  "assets": [
+    {
+      "id": "drum",
+      "license": "CC0-1.0",
+      "author": "Versilian Studios / Sam Gossner",
+      "source": "https://github.com/sgossner/VCSL",
+      "sourceFile": "HDrumL_Hit_v2_rr1_Sum.wav",
+      "start": 0,
+      "processing": "Frame drum hit; same recording used at every force. Mono, DC removal, peak normalization, short edge fades, Ogg encoding.",
+      "path": "media/audio/experiments/drum.ogg",
+      "duration": 1.5,
+      "bytes": 16643,
+      "sha256": "bcd3aa04751634d9f39eaf6d6356d01a63d89cdac959596cd4fbdc0e33c40dcd"
+    },
+    {
+      "id": "ruler",
+      "license": "CC0-1.0",
+      "author": "alienistcog",
+      "source": "https://freesound.org/people/alienistcog/sounds/124719/",
+      "sourceFile": "ruler-twang.mp3",
+      "start": 0,
+      "processing": "First isolated ruler twang, public HQ preview. Relative pitch transposition models different free lengths. Mono, DC removal, peak normalization, short edge fades, Ogg encoding.",
+      "path": "media/audio/experiments/ruler.ogg",
+      "duration": 1.1,
+      "bytes": 17370,
+      "sha256": "24afdd2d2057c1a8724779f1e7ed7d7ca881087e5a6842a8766e040d81747ad4"
+    },
+    {
+      "id": "rubber",
+      "license": "CC0-1.0",
+      "author": "baidonovan",
+      "source": "https://freesound.org/people/baidonovan/sounds/187354/",
+      "sourceFile": "rubber-snap.mp3",
+      "start": 0.54,
+      "processing": "Isolated rubber-band snap from public HQ preview, front handling trimmed. Mono, DC removal, peak normalization, short edge fades, Ogg encoding.",
+      "path": "media/audio/experiments/rubber.ogg",
+      "duration": 0.225,
+      "bytes": 6056,
+      "sha256": "b8be920bf64c6cfe845430e3e0019f460e8592ef9fdc1f96303a9bf82dbd7d69"
+    },
+    {
+      "id": "fork",
+      "license": "CC0-1.0",
+      "author": "jmuehlhans",
+      "source": "https://commons.wikimedia.org/wiki/File:Tuning-fork-440Hz.ogg",
+      "sourceFile": "tuning-fork-440.ogg",
+      "start": 0,
+      "processing": "Real 440 Hz tuning fork. Playback rate follows requested model frequency. Mono, DC removal, peak normalization, short edge fades, Ogg encoding.",
+      "path": "media/audio/experiments/fork.ogg",
+      "duration": 6.5,
+      "bytes": 19631,
+      "sha256": "21fba846ffc70e4a73622939b48e76584e7bccd6e47ee3f51e434c6b3d90fce8"
+    },
+    {
+      "id": "place",
+      "license": "CC0-1.0",
+      "author": "Versilian Studios / Sam Gossner",
+      "source": "https://github.com/sgossner/VCSL",
+      "sourceFile": "Idiophones/Struck Idiophones/Claves/Claves1_Hit_v1_rr1_Mid.wav",
+      "processing": "Short wooden placement feedback, normalized and faded.",
+      "path": "media/audio/place_wood.ogg",
+      "duration": 0.35,
+      "bytes": 7027,
+      "sha256": "80db3f71ab404ed6f31224724c114bff3199038177a8eec0c937f63edf8dff10"
+    },
+    {
+      "id": "restore",
+      "license": "CC0-1.0",
+      "author": "Versilian Studios / Sam Gossner",
+      "source": "https://github.com/sgossner/VCSL",
+      "sourceFile": "Idiophones/Plucked Idiophones/Kalimba, Kenya/Mbira6_Normal_MainSpirit_A4_k1_vl3_rr2.wav",
+      "processing": "Original C-E-G reward arrangement from A4 kalimba recording, transposed, mixed and faded.",
+      "path": "media/audio/restore_chime.ogg",
+      "duration": 1.5,
+      "bytes": 13247,
+      "sha256": "e2b641b83d857cdb60a3fcacfb6a4af0ebf854d58c1cd62bc577f803c28ba621"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "changes": "None; playback gain adjusted in SoundEngine",
+  "author": "Kenney",
+  "source": "https://kenney.nl/assets/interface-sounds",
+  "download": "https://kenney.nl/media/pages/assets/interface-sounds/fa43c1dd4d-1677589452/kenney_interface-sounds.zip",
+  "pack": "Interface Sounds 1.0",
+  "files": [
+    "click_003",
+    "open_001",
+    "drop_001",
+    "select_003",
+    "confirmation_002",
+    "maximize_008"
+  ],
+  "checked": "2026-10-22",
+  "license": "CC0-1.0"
+}

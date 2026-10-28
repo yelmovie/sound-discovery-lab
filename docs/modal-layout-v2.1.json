@@ -1,0 +1,164 @@
+[
+  {
+    "bodyOverflow": 0,
+    "centerError": 0,
+    "h": 692,
+    "height": 768,
+    "label": "settings",
+    "width": 1024,
+    "y": 38
+  },
+  {
+    "bodyOverflow": 0,
+    "centerError": 0.0078125,
+    "h": 531.796875,
+    "height": 768,
+    "label": "story",
+    "width": 1024,
+    "y": 118.09375
+  },
+  {
+    "bodyOverflow": 0,
+    "centerError": 0,
+    "h": 319,
+    "height": 768,
+    "label": "reset",
+    "width": 1024,
+    "y": 224.5
+  },
+  {
+    "bodyOverflow": 0,
+    "centerError": 0,
+    "h": 718.75,
+    "height": 768,
+    "label": "notebook",
+    "width": 1024,
+    "y": 24.625
+  },
+  {
+    "bodyOverflow": 0,
+    "centerError": 0,
+    "h": 662.8125,
+    "height": 768,
+    "label": "concept",
+    "width": 1024,
+    "y": 52.59375
+  },
+  {
+    "bodyOverflow": 0,
+    "centerError": 0,
+    "h": 485.6875,
+    "height": 768,
+    "label": "discovery",
+    "width": 1024,
+    "y": 141.15625
+  },
+  {
+    "bodyOverflow": 0,
+    "centerError": 0,
+    "h": 692,
+    "height": 800,
+    "label": "settings",
+    "width": 1280,
+    "y": 54
+  },
+  {
+    "bodyOverflow": 0,
+    "centerError": 0.0078125,
+    "h": 531.796875,
+    "height": 800,
+    "label": "story",
+    "width": 1280,
+    "y": 134.09375
+  },
+  {
+    "bodyOverflow": 0,
+    "centerError": 0,
+    "h": 319,
+    "height": 800,
+    "label": "reset",
+    "width": 1280,
+    "y": 240.5
+  },
+  {
+    "bodyOverflow": 0,
+    "centerError": 0,
+    "h": 718.75,
+    "height": 800,
+    "label": "notebook",
+    "width": 1280,
+    "y": 40.625
+  },
+  {
+    "bodyOverflow": 0,
+    "centerError": 0.0078125,
+    "h": 679.765625,
+    "height": 800,
+    "label": "concept",
+    "width": 1280,
+    "y": 60.109375
+  },
+  {
+    "bodyOverflow": 0,
+    "centerError": 0,
+    "h": 488.8125,
+    "height": 800,
+    "label": "discovery",
+    "width": 1280,
+    "y": 155.59375
+  },
+  {
+    "bodyOverflow": 0,
+    "centerError": 0,
+    "h": 732.1875,
+    "height": 1080,
+    "label": "settings",
+    "width": 1920,
+    "y": 173.90625
+  },
+  {
+    "bodyOverflow": 0,
+    "centerError": 0.0078125,
+    "h": 583.234375,
+    "height": 1080,
+    "label": "story",
+    "width": 1920,
+    "y": 248.375
+  },
+  {
+    "bodyOverflow": 0,
+    "centerError": 0,
+    "h": 400.4375,
+    "height": 1080,
+    "label": "reset",
+    "width": 1920,
+    "y": 339.78125
+  },
+  {
+    "bodyOverflow": 0,
+    "centerError": 0,
+    "h": 827.5625,
+    "height": 1080,
+    "label": "notebook",
+    "width": 1920,
+    "y": 126.21875
+  },
+  {
+    "bodyOverflow": 0,
+    "centerError": 0,
+    "h": 898.125,
+    "height": 1080,
+    "label": "concept",
+    "width": 1920,
+    "y": 90.9375
+  },
+  {
+    "bodyOverflow": 0,
+    "centerError": 0,
+    "h": 527.625,
+    "height": 1080,
+    "label": "discovery",
+    "width": 1920,
+    "y": 276.1875
+  }
+]

@@ -1,0 +1,158 @@
+{
+  "created": "2026-10-28",
+  "tool": "built-in image_gen",
+  "preparation": "Delivery resize and WebP encoding only; original composition preserved.",
+  "assets": [
+    {
+      "id": "rubber-instrument",
+      "sourcePath": "C:\\Users\\user\\.codex\\generated_images\\01a18110-2c1c-71f2-a793-82f88fb2d993\\exec-455063ee-10cc-45da-b49d-4a028d46e2dd.png",
+      "prompt": "Previously generated in this chat. See source generation metadata and docs/CONCEPT-ART-20261028.md.",
+      "path": "image/generated/concepts/rubber-instrument.webp",
+      "width": 800,
+      "height": 533,
+      "alpha": true,
+      "bytes": 59484,
+      "sha256": "c103bd12aeaa607d70998cfb98b4a8aeb8054c9d439f8daa3c64c85dc56aa41d"
+    },
+    {
+      "id": "ruler-blade",
+      "sourcePath": "C:\\Users\\user\\.codex\\generated_images\\01a18110-2c1c-71f2-a793-82f88fb2d993\\exec-ad73ff2c-79da-4722-8444-2f8c160d747e.png",
+      "prompt": "Previously generated in this chat. See source generation metadata and docs/CONCEPT-ART-20261028.md.",
+      "path": "image/generated/concepts/ruler-blade.webp",
+      "width": 1024,
+      "height": 341,
+      "alpha": true,
+      "bytes": 11026,
+      "sha256": "afdcb1d5c57ecefc79bcf0c651e9f117e4e911bbab228ca030a3c50041af51a5"
+    },
+    {
+      "id": "travel-air",
+      "sourcePath": "C:\\Users\\user\\.codex\\generated_images\\01a18110-2c1c-71f2-a793-82f88fb2d993\\exec-83b908bf-5bca-41f5-b83f-dee17b4dd9f1.png",
+      "prompt": "Previously generated in this chat. See source generation metadata and docs/CONCEPT-ART-20261028.md.",
+      "path": "image/generated/concepts/travel-air.webp",
+      "width": 800,
+      "height": 400,
+      "alpha": true,
+      "bytes": 57120,
+      "sha256": "9dca0f0421f4458e5db8e3e256f6d9c8e31209fa9a2ae16705d423c4eba15cc3"
+    },
+    {
+      "id": "travel-water",
+      "sourcePath": "C:\\Users\\user\\.codex\\generated_images\\01a18110-2c1c-71f2-a793-82f88fb2d993\\exec-a40f1216-d3ef-448e-9a29-97f177468bbc.png",
+      "prompt": "Previously generated in this chat. See source generation metadata and docs/CONCEPT-ART-20261028.md.",
+      "path": "image/generated/concepts/travel-water.webp",
+      "width": 800,
+      "height": 450,
+      "alpha": true,
+      "bytes": 66782,
+      "sha256": "68022161f3626d8c7edf63179d0221fe5defdf87761e0e7ae11dbc7c46367b21"
+    },
+    {
+      "id": "travel-solid",
+      "sourcePath": "C:\\Users\\user\\.codex\\generated_images\\01a18110-2c1c-71f2-a793-82f88fb2d993\\exec-0af71181-73f4-4c1a-9359-5392b29d90ab.png",
+      "prompt": "Previously generated in this chat. See source generation metadata and docs/CONCEPT-ART-20261028.md.",
+      "path": "image/generated/concepts/travel-solid.webp",
+      "width": 800,
+      "height": 400,
+      "alpha": true,
+      "bytes": 29396,
+      "sha256": "01d2715466805b68caa4e8844b072cfc1b7146ad2170bd15f2ec19ab8ac42033"
+    },
+    {
+      "id": "ruler-base",
+      "sourcePath": "C:\\Users\\user\\.codex\\generated_images\\01a18110-2c1c-71f2-a793-82f88fb2d993\\exec-14fdd5db-e580-401c-a592-6602d79f167d.png",
+      "prompt": "Use case: scientific-educational. ONE isolated reusable asset for a polished upper-elementary sound-science game, hand-painted 3D-shaped illustration, warm wood, cream and restrained teal/navy, readable at small size, not photographic. Transparent background, crisp silhouette, complete centered object with padding. No text, numbers, labels, UI, borders, watermark, ground shadow or outer glow. A low wooden tabletop block viewed straight from its long side, with a small LOW-PROFILE BRIDGE CLAMP on TOP of its LEFT THIRD. A cream vertical screw presses a small dark teal horizontal shoe down onto the tabletop. A narrow horizontal insertion gap between the shoe and wood. To the RIGHT of this clamp, the top surface continues and ends cleanly; above and beyond the RIGHT EDGE is completely OPEN. A ruler will be composited later pointing RIGHT under the shoe into the open space. No ruler included. NO C-shaped clamp hanging over an edge, no right-side upright or barrier. One joined tabletop-and-low-clamp assembly, side view with a slight top surface visible.",
+      "transparentBackground": true,
+      "path": "image/generated/concepts/ruler-base.webp",
+      "width": 800,
+      "height": 400,
+      "alpha": true,
+      "bytes": 32766,
+      "sha256": "b14e3841c23255a80c32f018483a0ccc9ac50c75f19bb5e389d69c8c73ca020d"
+    },
+    {
+      "id": "library-noise",
+      "sourcePath": "C:\\Users\\user\\.codex\\generated_images\\01a18110-2c1c-71f2-a793-82f88fb2d993\\exec-c04a240e-0fe3-477c-a482-cc87e8e9550e.png",
+      "prompt": "Use case: scientific-educational. ONE coherent 16:9 story illustration for an upper-elementary game about unwanted sound. School library reading area on the left: one child in teal at a wooden table with an open book, distracted, hand near ear, worried but not distressed. On the right through an OPEN doorway into the immediately adjacent corridor, another child practices a small wooden drum. Open doorway and connected air space explain how the drum is heard by the reader. Bookshelves and school architecture form one continuous scene, not a collage. Polished hand-painted 3D-shaped educational illustration, warm wood/cream/teal/navy. Both children and drum readable at small size. No signs, letters, speech bubbles, sound waves, UI, labels, watermark, particles or strong blur.",
+      "transparentBackground": false,
+      "path": "image/generated/concepts/library-noise.webp",
+      "width": 800,
+      "height": 450,
+      "alpha": false,
+      "bytes": 56180,
+      "sha256": "0b15aab8afae0654622ada68f60ab5242d941a5c2fbc0f254ae5fddc5a6a99d8"
+    },
+    {
+      "id": "care-pad",
+      "sourcePath": "C:\\Users\\user\\.codex\\generated_images\\01a18110-2c1c-71f2-a793-82f88fb2d993\\exec-4c60aa49-cd17-4319-b1aa-fde68b08d876.png",
+      "prompt": "Use case: scientific-educational. ONE isolated reusable asset for a polished upper-elementary sound-science game, hand-painted 3D-shaped illustration, warm wood, cream and restrained teal/navy, readable at small size, not photographic. Transparent background, crisp silhouette, complete centered object with padding. No text, numbers, labels, UI, borders, watermark, ground shadow or outer glow. Close-up of the lower section of a single wooden SCHOOL CHAIR LEG with a thick dark teal FELT PAD firmly attached underneath its flat foot. Felt visibly soft and fibrous, cushioning the contact below the wood. A little chair crossbar identifies a chair leg. Leg and attached pad are one joined object. Three-quarter slightly elevated view. Large simple readable object. Not an entire chair, not a leaf, no detached pad, no panels.",
+      "transparentBackground": true,
+      "path": "image/generated/concepts/care-pad.webp",
+      "width": 800,
+      "height": 755,
+      "alpha": true,
+      "bytes": 80786,
+      "sha256": "3f641b671fc9835255c39ed37921316afdc6711cca5d90c91b7c1ceff7d436f2"
+    },
+    {
+      "id": "care-volume",
+      "sourcePath": "C:\\Users\\user\\.codex\\generated_images\\01a18110-2c1c-71f2-a793-82f88fb2d993\\exec-aa28bd86-59cf-4189-a56e-a5d071f56bf1.png",
+      "prompt": "Use case: scientific-educational. ONE isolated reusable asset for a polished upper-elementary sound-science game, hand-painted 3D-shaped illustration, warm wood, cream and restrained teal/navy, readable at small size, not photographic. Transparent background, crisp silhouette, complete centered object with padding. No text, numbers, labels, UI, borders, watermark, ground shadow or outer glow. One compact tabletop MUSIC SPEAKER with warm cream housing, deep teal circular grille, and a large clearly visible blue rotary VOLUME KNOB at its front lower corner. An unlabelled short arc around the knob has a pointer near its low end, suggesting quieter volume. One coherent portable music speaker, three-quarter front view, fully visible. No musical notes, sound waves, numbers, letters, icons, separate phone or detached controller.",
+      "transparentBackground": true,
+      "path": "image/generated/concepts/care-volume.webp",
+      "width": 800,
+      "height": 731,
+      "alpha": true,
+      "bytes": 106114,
+      "sha256": "2fd5a68382f151860d02d8dec11908150824b1ffcf9354626de99ac5662d5107"
+    },
+    {
+      "id": "care-time",
+      "sourcePath": "C:\\Users\\user\\.codex\\generated_images\\01a18110-2c1c-71f2-a793-82f88fb2d993\\exec-141f8b3c-eba6-4089-a526-90d45a6c0d51.png",
+      "prompt": "Use case: scientific-educational. ONE reusable educational game illustration, refined hand-painted 3D-shaped upper-elementary style, warm wood/cream and restrained teal/navy, readable at small size, not photographic. Complete centered subject, padding. Transparent background with no shadow plane, glow, UI, letters, words, numbers, labels, watermarks, borders or sound-wave symbols. One sturdy tabletop analog SCHOOL CLOCK in warm cream and teal housing on two small feet. Face has exactly twelve simple unnumbered tick marks and two distinct clock hands clearly indicating a scheduled time. A small brass bell on top evokes a classroom practice-time reminder. One coherent clock only, three-quarter front view. No detached calendar, musical notes or additional props.",
+      "transparentBackground": true,
+      "path": "image/generated/concepts/care-time.webp",
+      "width": 800,
+      "height": 731,
+      "alpha": true,
+      "bytes": 58704,
+      "sha256": "2526c668c094d4517d5a174f3ea5a86cfdf941f93f49de202565667cd865af6a"
+    },
+    {
+      "id": "care-place",
+      "sourcePath": "C:\\Users\\user\\.codex\\generated_images\\01a18110-2c1c-71f2-a793-82f88fb2d993\\exec-961578f0-e417-41f5-a462-c59aaf6ecee4.png",
+      "prompt": "Use case: scientific-educational. ONE small wide schoolyard scene explaining moving noisy practice away from a classroom. A child in navy/teal plays a small wooden drum at the FAR RIGHT of a green outdoor playground; a school classroom building with closed windows stands at the distant LEFT, clearly separated from the practice area by a broad open lawn. One coherent scene with visible spatial distance, gentle afternoon light, polished hand-painted 3D-shaped educational illustration, cream/wood/teal colors. No text, arrows, speech bubbles, labels, UI, magic, musical notes or watermark. Do not make a before/after collage.",
+      "transparentBackground": false,
+      "path": "image/generated/concepts/care-place.webp",
+      "width": 800,
+      "height": 400,
+      "alpha": false,
+      "bytes": 91816,
+      "sha256": "a39d712c9c512fd05c1408ba1c30e91b70f07d9514d4a92007ccfbcb446822fa"
+    },
+    {
+      "id": "sound-parcel",
+      "sourcePath": "C:\\Users\\user\\.codex\\generated_images\\01a18110-2c1c-71f2-a793-82f88fb2d993\\exec-82f0b086-c724-45b1-a2e7-3b67334e9b5f.png",
+      "prompt": "Use case: scientific-educational. ONE reusable educational game illustration, refined hand-painted 3D-shaped upper-elementary style, warm wood/cream and restrained teal/navy, readable at small size, not photographic. Complete centered subject, padding. Transparent background with no shadow plane, glow, UI, letters, words, numbers, labels, watermarks, borders or sound-wave symbols. One small sealed sound-experiment DELIVERY BOX made of warm honey wood, cube-like with softly rounded edges, a deep teal strap wrapping around its middle, a tiny circular dark sound opening on the front. Closed opaque lid: contents hidden. Clean three-quarter view. Neutral identical appearance suitable for three audio-only comparisons; do not indicate loudness by size, color or patterns. One box only, no letters A B C, no other objects.",
+      "transparentBackground": true,
+      "path": "image/generated/concepts/sound-parcel.webp",
+      "width": 800,
+      "height": 667,
+      "alpha": true,
+      "bytes": 56006,
+      "sha256": "d7c86cf9474de5b6a7490ddd2fc8208af7dc4bc6d0fd1df46f849e633395c7d0"
+    },
+    {
+      "id": "drum-pad",
+      "sourcePath": "C:\\Users\\user\\.codex\\generated_images\\01a18110-2c1c-71f2-a793-82f88fb2d993\\exec-bfef163d-d635-49b0-ab3d-1c43c896b407.png",
+      "prompt": "Use case: scientific-educational. ONE isolated object for an upper-elementary sound-science game: a thick rectangular DARK TEAL FELT CUSHION MAT with softly rounded corners, used underneath a practice drum to reduce vibration reaching a floor. Three-quarter slightly elevated view, clearly visible soft woven fibrous texture and substantial thickness. One mat only, nothing standing on it. Refined hand-painted 3D-shaped educational illustration, not a photograph. Complete centered object, generous transparent padding, crisp edges, transparent background. No text, numbers, labels, logos, UI, borders, shadows, glow or other objects.",
+      "transparentBackground": true,
+      "path": "image/generated/concepts/drum-pad.webp",
+      "width": 800,
+      "height": 533,
+      "alpha": true,
+      "bytes": 73232,
+      "sha256": "33d81e627b55cf19676a97171841fb159cd611d6a4d8f34b2ffc73a977946364"
+    }
+  ]
+}
