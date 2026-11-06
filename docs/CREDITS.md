@@ -29,7 +29,7 @@ Pixabay 음원은 포함하지 않았다. CC0 공개 녹음과 가공 음원에�
 
 ## 기존 제공 이미지 — 11개
 
-image/backgrounds/의 017~026 PNG 10개와 image/characters/chatgpt_generated_028_ee0700142c.png 1개다. ASSET_INDEX.md에 기록된 사용자가 제공한 ChatGPT 생성 이미지다. 원본은 보존한다. 최신 캐릭터 시트의 갈색 포니테일·청록 의상 탐험가와 파란 울림새를 새 보행 그림의 기준으로 사용했다.
+image/backgrounds/의 017~026 JPEG 10개(2026-10-29 PNG 원본에서 같은 해상도로 변환, 원본은 `_unused/originals-20261029/`)와 image/characters/chatgpt_generated_028_ee0700142c.jpg 1개다. ASSET_INDEX.md에 기록된 사용자가 제공한 ChatGPT 생성 이미지다. 원본은 보존한다. 최신 캐릭터 시트의 갈색 포니테일·청록 의상 탐험가와 파란 울림새를 새 보행 그림의 기준으로 사용했다.
 
 브랜딩·초기 합본·와이어프레임·화면 참고 이미지들은 자료로 보존하되 현재 assets 목록과 빌드에는 포함하지 않는다. 목록은 _unused/DELETE-CANDIDATES.md에 있으며 실제 삭제는 하지 않았다.
 
@@ -37,7 +37,7 @@ image/backgrounds/의 017~026 PNG 10개와 image/characters/chatgpt_generated_02
 
 | 파일 | 용도 | 생성·검증 기록 |
 |---|---|---|
-| image/generated/ullim-village.png | 2.5D 픽셀 RPG 마을 지도 | world-manifest.json |
+| image/generated/ullim-village.jpg | 2.5D 픽셀 RPG 마을 지도 | world-manifest.json |
 | image/generated/explorer-walk.png | 탐험가 4방향 × 4프레임 보행 | world-manifest.json |
 | image/generated/bird-walk.png | 울림새 4방향 × 4프레임 동행 | world-manifest.json |
 | image/generated/core.png, ring.png | 코어·복구 링 기준 소품 | props-manifest.json |
@@ -69,3 +69,13 @@ image/backgrounds/의 017~026 PNG 10개와 image/characters/chatgpt_generated_02
 - click_003: 이동 / open_001: 패널 열기 / drop_001: 끌어 놓기 / select_003: 힌트 / confirmation_002: 증거 수집 / maximize_008: 영상 종료·도시 복구.
 - `media/concepts/`의 5편: 프로젝트 소품과 직접 그린 도형, Windows 시스템 맑은 고딕으로 Pillow에서 프레임을 구성하고 FFmpeg로 H.264/AAC 인코딩. 각 16초·960×540·24fps. 자막·효과음은 자체 제작이며 음성 해설은 없다. 시스템 글꼴 파일은 배포하지 않는다.
 - `image/generated/pio-guide.svg`: 코드로 직접 만든 파란 새 삐오 UI 일러스트. 지도에서는 기존 bird-walk.png 동행 애니메이션을 재사용한다.
+
+## 2026-10-30 파생 이미지
+
+| 파일 | 만든 방법 | 원본 |
+|---|---|---|
+| image/branding/title-logo.png | sips로 1200px 축소 | image/branding/chatgpt_generated_029_00e56966ca.png |
+| image/og/ullim-og.jpg | scripts/compose-share-art.swift 합성 | 018 배경 + title-logo + pio-guide.svg |
+| image/icons/icon-192.png, icon-512.png | 같은 스크립트 합성 | pio-guide.svg |
+
+새로 생성한 이미지는 없다. 원본의 권리 확인 상태(기존 제공 이미지 상업 이용 근거)는 위 항목을 그대로 따른다.

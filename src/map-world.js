@@ -1,30 +1,40 @@
-// Checked against image/generated/ullim-village.png. Normalized coordinates keep
+// Checked against image/generated/ullim-village.jpg. Normalized coordinates keep
 // the picture, labels, light anchors and road graph in the same coordinate space.
 const width=1672,height=941;
 const point=(x,y)=>({x:x/width,y:y/height});
 export const mapLayout={
-  width,height,image:'image/generated/ullim-village.png',explorer:'image/generated/explorer-walk.png',companion:'image/generated/bird-walk.png',spawn:'spawn',
+  width,height,roadWidth:26,image:'image/generated/ullim-village.jpg',explorer:'image/generated/explorer-walk.png',companion:'image/generated/bird-walk.png',spawn:'spawn',
+  // Centre lines and half widths are traced from the sand colour of the artwork, kept a
+  // few pixels inside it so feet stay on the path. Narrow widths are stairs, stones and the bridge.
   nodes:{
-    lab:point(387,384),westTop:point(586,432),northWest:point(663,385),north:point(831,347),arena:point(836,309),
-    northEast:point(1038,394),eastTop:point(1107,448),workshop:point(1325,413),east:point(1100,556),
-    southEast:point(1017,631),south:point(845,677),core:point(843,628),southWest:point(704,650),
-    westBottom:point(617,610),west:point(562,521),gardenTop:point(677,687),garden:point(652,754),gardenBottom:point(593,822),
-    noise:point(475,790),spawn:point(845,735),bridgeTop:point(940,781),bridge:point(1005,822),bridgeBottom:point(1110,864),network:point(1267,807),
+    lab:point(388,358),labStep:point(416,386),labRoad:point(470,408),westTop:point(568,447),
+    northWest:point(668,372),forest:point(640,290),forestEnd:point(592,226),north:point(831,350),arenaStep:point(836,305),arena:point(834,262),
+    northMid:point(960,350),groveGate:point(1015,372),grove:point(1052,300),groveEnd:point(1100,248),northEast:point(1050,392),
+    eastTop:point(1110,440),workshopRoad:point(1205,438),workshopGate:point(1300,424),workshopStep:point(1312,395),workshop:point(1312,368),
+    eastMid:point(1125,490),east:point(1100,548),southEast:point(1040,602),southRing:point(955,638),south:point(845,660),core:point(843,592),
+    ringSW:point(760,638),gardenGate:point(712,626),southWest:point(668,608),westBottom:point(600,565),west:point(562,505),
+    gardenTop:point(695,700),garden:point(650,770),gardenBottom:point(600,815),noisePatch:point(530,835),noiseStep:point(480,800),noise:point(462,762),
+    spawn:point(850,735),bridgeTop:point(892,795),bridgeGate:point(962,832),bridge:point(1004,842),bridgeBottom:point(1050,872),bridgeEnd:point(1115,900),bridgeExit:point(1165,880),
+    networkRoad:point(1205,835),networkStep:point(1262,808),network:point(1262,772),
   },
   edges:[
-    ['lab','westTop'],['westTop','northWest'],['northWest','north'],['north','arena'],['north','northEast'],
-    ['northEast','eastTop'],['eastTop','workshop'],['eastTop','east'],['east','southEast'],['southEast','south'],
-    ['south','core'],['south','southWest'],['southWest','westBottom'],['westBottom','west'],['west','westTop'],
-    ['southWest','gardenTop'],['gardenTop','garden'],['garden','gardenBottom'],['gardenBottom','noise'],
-    ['south','spawn'],['spawn','bridgeTop'],['bridgeTop','bridge'],['bridge','bridgeBottom'],['bridgeBottom','network'],
+    ['lab','labStep',14],['labStep','labRoad',16],['labRoad','westTop',20],
+    ['westTop','northWest',28],['northWest','forest',20],['forest','forestEnd',20],['northWest','north',24],['north','arenaStep',20],['arenaStep','arena',14],
+    ['north','northMid',24],['northMid','groveGate',24],['groveGate','grove',14],['grove','groveEnd',14],['groveGate','northEast',24],['northEast','eastTop',26],
+    ['eastTop','workshopRoad',15],['workshopRoad','workshopGate',15],['workshopGate','workshopStep',16],['workshopStep','workshop',14],
+    ['eastTop','eastMid',26],['eastMid','east',26],['east','southEast',22],['southEast','southRing',22],['southRing','south',26],['south','core',20],
+    ['south','ringSW',26],['ringSW','gardenGate',24],['gardenGate','southWest',24],['southWest','westBottom',28],['westBottom','west',34],['west','westTop',36],
+    ['gardenGate','gardenTop',12],['gardenTop','garden',12],['garden','gardenBottom',12],['gardenBottom','noisePatch',24],['noisePatch','noiseStep',18],['noiseStep','noise',14],
+    ['south','spawn',30],['spawn','bridgeTop',24],['bridgeTop','bridgeGate',18],['bridgeGate','bridge',14],['bridge','bridgeBottom',14],['bridgeBottom','bridgeEnd',14],
+    ['bridgeEnd','bridgeExit',16],['bridgeExit','networkRoad',22],['networkRoad','networkStep',18],['networkStep','network',14],
   ],
   doors:[
-    {stage:0,node:'lab',label:point(387,414),bounds:[point(186,115),point(502,389)],lights:[point(251,300),point(454,282),point(535,504)]},
-    {stage:1,node:'arena',label:point(836,337),bounds:[point(651,28),point(1007,308)],lights:[point(771,207),point(906,207),point(1094,307)]},
-    {stage:2,node:'workshop',label:point(1325,443),bounds:[point(1153,143),point(1509,410)],lights:[point(1233,317),point(1439,343),point(1549,286)]},
-    {stage:3,node:'network',label:point(1267,700),bounds:[point(1168,457),point(1445,800)],lights:[point(1370,745),point(1242,590),point(1086,634)]},
-    {stage:4,node:'noise',label:point(455,640),bounds:[point(291,515),point(620,782)],lights:[point(449,625),point(375,694),point(766,714)]},
-    {stage:5,node:'core',label:point(843,588),bounds:[point(700,382),point(982,596)],lights:[point(844,461)]},
+    {stage:0,resident:point(452,432),node:'lab',label:point(340,262),bounds:[point(186,115),point(502,389)],lights:[point(251,300),point(454,282),point(535,504)]},
+    {stage:1,resident:point(772,322),node:'arena',label:point(836,160),bounds:[point(651,28),point(1007,308)],lights:[point(771,207),point(906,207),point(1094,307)]},
+    {stage:2,resident:point(1236,470),node:'workshop',label:point(1335,262),bounds:[point(1153,143),point(1509,410)],lights:[point(1233,317),point(1439,343),point(1549,286)]},
+    {stage:3,resident:point(1190,792),node:'network',label:point(1285,640),bounds:[point(1168,457),point(1445,800)],lights:[point(1370,745),point(1242,590),point(1086,634)]},
+    {stage:4,resident:point(566,800),node:'noise',label:point(440,610),bounds:[point(291,515),point(620,782)],lights:[point(449,625),point(375,694),point(766,714)]},
+    {stage:5,node:'core',label:point(843,462),bounds:[point(700,382),point(982,596)],lights:[point(844,461)]},
   ],
 };
 export const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
@@ -39,14 +49,14 @@ export function createWorld(layout=mapLayout){
   };
   const nodes=Object.fromEntries(Object.entries(layout.nodes).map(([id,p])=>[id,pixel(p)]));
   const adjacency=Object.fromEntries(Object.keys(nodes).map(id=>[id,[]]));
-  const edges=layout.edges.map(([a,b],index)=>{
+  const edges=layout.edges.map(([a,b,width],index)=>{
     if(!nodes[a]||!nodes[b]||a===b)throw Error('Invalid road');
     const length=distance(nodes[a],nodes[b]);if(length<1)throw Error('Empty road');
-    adjacency[a].push({node:b,edge:index,length});adjacency[b].push({node:a,edge:index,length});return {a,b,length};
+    adjacency[a].push({node:b,edge:index,length});adjacency[b].push({node:a,edge:index,length});return {a,b,length,width:width??layout.roadWidth??26};
   });
   const doors=layout.doors.map(door=>{
     if(!nodes[door.node])throw Error('Missing door road');
-    return {...door,...nodes[door.node],radius:23,label:pixel(door.label),bounds:door.bounds.map(pixel),lights:door.lights.map(pixel)};
+    return {...door,...nodes[door.node],radius:16,label:pixel(door.label),resident:door.resident&&pixel(door.resident),bounds:door.bounds.map(pixel),lights:door.lights.map(pixel)};
   });
   if(doors.length!==6||new Set(doors.map(d=>d.stage)).size!==6||!doors.every(d=>Number.isInteger(d.stage)&&d.stage>=0&&d.stage<=5))throw Error('Invalid stage doors');
   if(!nodes[layout.spawn])throw Error('Missing spawn');
@@ -92,27 +102,42 @@ export function directionVector(directions){
   const x=Number(has('right'))-Number(has('left')),y=Number(has('down'))-Number(has('up')),length=Math.hypot(x,y);
   return length?{x:x/length,y:y/length}:{x:0,y:0};
 }
-// Junctions choose the outgoing road closest to the held direction. All input
-// directions consume equal world distance, including movement on diagonal roads.
-export function moveOnRoad(position,input,amount,world=worldMap){
-  let p=nearestRoad(position,world),remaining=Math.max(0,amount);const magnitude=Math.hypot(input.x,input.y);
-  if(!p||!magnitude||!remaining)return {x:position.x,y:position.y};
-  const intent={x:input.x/magnitude,y:input.y/magnitude};
-  for(let guard=0;guard<world.edges.length+2&&remaining>.001;guard++){
-    const edge=world.edges[p.edge],a=world.nodes[edge.a],b=world.nodes[edge.b],node=p.t<.00001?edge.a:p.t>.99999?edge.b:null;
-    let target,available;
-    if(node){
-      let best=null,score=.12;
-      for(const next of world.adjacency[node]){const dest=world.nodes[next.node],dot=((dest.x-p.x)*intent.x+(dest.y-p.y)*intent.y)/next.length;if(dot>score){score=dot;best=next;}}
-      if(!best)break;
-      p={...world.nodes[node],edge:best.edge,t:world.edges[best.edge].a===node?0:1};target=world.nodes[best.node];available=best.length;
-    }else{
-      const dot=((b.x-a.x)*intent.x+(b.y-a.y)*intent.y)/edge.length;if(Math.abs(dot)<.12)break;
-      target=dot>0?b:a;available=distance(p,target);
+function roadGap(p,edge,world){
+  const a=world.nodes[edge.a],b=world.nodes[edge.b],t=clamp(((p.x-a.x)*(b.x-a.x)+(p.y-a.y)*(b.y-a.y))/(edge.length*edge.length),0,1);
+  return distance(p,mix(a,b,t));
+}
+// Each road is a band around its centre line, so the walker can move freely on
+// the painted sand while water, fences and buildings stay out of reach.
+export const canWalk=(p,world=worldMap)=>world.edges.some(edge=>roadGap(p,edge,world)<=edge.width);
+// A blocked step turns onto the road closest to the held direction at full speed,
+// so all input directions still consume equal world distance on diagonal roads.
+export function walkStep(position,input,amount,world=worldMap){
+  let p={x:position.x,y:position.y};
+  if(!canWalk(p,world)){const road=nearestRoad(p,world);if(road)p={x:road.x,y:road.y};}
+  const magnitude=Math.hypot(input.x,input.y);if(!magnitude||!(amount>0))return p;
+  const dir={x:input.x/magnitude,y:input.y/magnitude},steps=Math.min(64,Math.ceil(amount/5)),size=amount/steps;
+  for(let i=0;i<steps;i++){
+    const ahead={x:p.x+dir.x*size,y:p.y+dir.y*size};
+    if(canWalk(ahead,world)){p=ahead;continue;}
+    let best=null,score=.12;
+    for(const turn of [.6,-.6,1.2,-1.2]){ // round road ends and tapers: edge around them
+      const c=Math.cos(turn),n=Math.sin(turn),x=dir.x*c-dir.y*n,y=dir.x*n+dir.y*c,slide={x:p.x+x*size,y:p.y+y*size};
+      if(c>score&&canWalk(slide,world)){score=c;best=slide;}
     }
-    if(remaining<available){const next=mix(p,target,remaining/available);return {x:next.x,y:next.y};}
-    remaining-=available;p={...target,edge:p.edge,t:distance(target,world.nodes[world.edges[p.edge].a])<.01?0:1};
-  }return {x:p.x,y:p.y};
+    for(const edge of world.edges){
+      if(roadGap(p,edge,world)>edge.width+size)continue;
+      const a=world.nodes[edge.a],b=world.nodes[edge.b],tx=(b.x-a.x)/edge.length,ty=(b.y-a.y)/edge.length,along=dir.x*tx+dir.y*ty,sign=Math.sign(along)||1;
+      const slide={x:p.x+tx*sign*size,y:p.y+ty*sign*size};
+      if(Math.abs(along)>score&&canWalk(slide,world)){score=Math.abs(along);best=slide;}
+    }
+    if(!best)break;p=best;
+  }
+  return p;
+}
+// Pushes a label inside the safe area; one fully off screen stays put so it scrolls in naturally.
+export function labelNudge(box,safe,screen=safe){
+  if(box.right<=screen.left||box.left>=screen.right||box.bottom<=screen.top||box.top>=screen.bottom)return [0,0];
+  return [Math.max(safe.left-box.left,Math.min(0,safe.right-box.right)),Math.max(safe.top-box.top,Math.min(0,safe.bottom-box.bottom))];
 }
 export function returnPosition(stage,world=worldMap){
   const door=world.doors.find(d=>d.stage===stage);if(!door)return {...world.spawn};

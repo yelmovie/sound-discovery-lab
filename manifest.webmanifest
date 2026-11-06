@@ -1,0 +1,15 @@
+{
+  "name": "울림도시 대작전 · 소리의 성질",
+  "short_name": "울림도시",
+  "lang": "ko",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "landscape",
+  "theme_color": "#102b3b",
+  "background_color": "#cfeaf3",
+  "icons": [
+    {"src": "/image/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "/image/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"}
+  ]
+}

@@ -35,7 +35,7 @@
 
 ## 캐릭터와 제목
 
-- `../image/characters/chatgpt_generated_028_ee0700142c.png`: 파란 울림새, 갈색 포니테일 학생, 갈색 머리 학생. RGB 시트이므로 투명한 개별 캐릭터 스프라이트가 아니다. 과거 화면에 있는 노란 새·다른 복장은 최신 시트와 통일해야 한다.
+- `../image/characters/chatgpt_generated_028_ee0700142c.jpg`: 파란 울림새, 갈색 포니테일 학생, 갈색 머리 학생. RGB 시트이므로 투명한 개별 캐릭터 스프라이트가 아니다. 과거 화면에 있는 노란 새·다른 복장은 최신 시트와 통일해야 한다.
 - `../image/branding/chatgpt_generated_027_042a6891d4.png`: 도시 배경이 포함된 제목 참고 이미지. 2172×724.
 - `../image/branding/chatgpt_generated_029_00e56966ca.png`: 제목 이미지. 1672×941, RGBA, 알파 범위 0~254. 합성 결과의 가장자리와 불필요한 반투명 영역은 별도 점검 필요.
 
