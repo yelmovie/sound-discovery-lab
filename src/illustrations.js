@@ -8,5 +8,5 @@ export function art(id,alt='',className=''){
 }
 export function rulerIllustration(length=18){
  const n=[6,12,18].includes(Number(length))?Number(length):18;
- return `<span class="illustrated-ruler tool-svg ruler-key" role="img" aria-label="같은 자에서 떨리는 길이 ${n} 센티미터" style="--free:${n/18}"><span class="ruler-blade-window"><span class="ruler-blade-texture"></span></span>${art('ruler-base','','ruler-base-art')}<span class="ruler-measure" aria-hidden="true"></span></span>`;
+ return `<span class="illustrated-ruler tool-svg ruler-key" role="img" aria-label="책상에 고정한 같은 자, 책상 밖에서 떨리는 길이 ${n} 센티미터" style="--free:${n/18}"><span class="ruler-model" aria-hidden="true"><span class="ruler-blade-window vibrating-part"><span class="ruler-blade-texture"></span></span>${art('ruler-base','','ruler-base-art')}<span class="ruler-edge"></span><span class="ruler-measure"></span><svg class="ruler-motion-arrow" viewBox="0 0 20 34" fill="none"><path d="M10 3v28M4 9l6-6 6 6M4 25l6 6 6-6"/></svg></span><span class="ruler-caption" aria-hidden="true"><span>책상에 고정</span><span>떨리는 부분</span></span></span>`;
 }

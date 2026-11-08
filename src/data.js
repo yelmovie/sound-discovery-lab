@@ -10,7 +10,7 @@ export const props = Object.fromEntries(['core','ring','tuning-fork','fork-stand
 export const villageAssets = ['image/generated/ullim-village.jpg',...['explorer-walk','bird-walk'].map(name => `image/generated/${name}.png`)];
 import { conceptAssets } from './concepts.js';
 export const interfaceSounds={tap:'click_003',open:'open_001',drop:'place_wood',hint:'select_003',success:'confirmation_002',badge:'restore_chime'};
-export const assets = [...new Set([...recordedAudioAssets, ...conceptArtAssets,...backgrounds, characters, titleLogo, ...Object.values(props), ...villageAssets, 'image/generated/pio-guide.svg',...conceptAssets,...Object.values(interfaceSounds).map(n=>`media/audio/${n}.ogg`),'media/audio/License.txt','media/audio/sources.json','media/concepts/manifest.json'])];
+export const assets = [...new Set(['media/audio/npc-welcome.m4a',...recordedAudioAssets, ...conceptArtAssets,...backgrounds, characters, titleLogo, ...Object.values(props), ...villageAssets, 'image/generated/pio-guide.svg',...conceptAssets,...Object.values(interfaceSounds).map(n=>`media/audio/${n}.ogg`),'media/audio/License.txt','media/audio/sources.json','media/concepts/manifest.json'])];
 export { APP_VERSION } from './version.js';
 export const stages = [
   {name:'진동 연구소', short:'진동', color:'#22d3df', icon:'wave', x:132,y:141, mission:'멈춘 연구소에 소리를 되찾아 줘.', reward:'물체의 떨림을 제어하는 힘', restored:'연구소의 실험 장치가 다시 움직여!'},

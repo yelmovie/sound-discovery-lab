@@ -42,7 +42,8 @@ export function bindManipulations(root,{session,commit,unlock}){
 function inside(el,e){const r=el.getBoundingClientRect();return e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom;}
 
 export function liveWave(level=1,cycles=5){
- const points=Array.from({length:121},(_,i)=>`${i*2},${40+Math.sin(i/120*Math.PI*2*cycles)*level*27*Math.sin(i/120*Math.PI)}`).join(' ');
- return `<svg viewBox="0 0 240 80" aria-hidden="true"><path d="M0 40H240" stroke="#bed3c5"/><polyline points="${points}" fill="none" stroke="#208d91" stroke-width="3" stroke-linecap="round"/></svg>`;
+ const amplitude=Math.min(1,Math.max(0,Number(level)||0)),frequency=Math.min(18,Math.max(0,Number(cycles)||0));
+ const points=Array.from({length:161},(_,i)=>`${(i*1.5).toFixed(1)},${(40+Math.sin(i/160*Math.PI*2*frequency)*amplitude*27).toFixed(2)}`).join(' ');
+ return `<svg class="live-wave" viewBox="0 0 240 80" preserveAspectRatio="none" aria-hidden="true"><path class="scope-grid" d="M0 13H240M0 67H240M30 0V80M60 0V80M90 0V80M120 0V80M150 0V80M180 0V80M210 0V80"/><path class="scope-center" d="M0 40H240"/><polyline class="scope-trace-underlay" points="${points}"/><polyline class="scope-trace" points="${points}"/></svg>`;
 }
 export function rulerKey(length){return rulerIllustration(length);}

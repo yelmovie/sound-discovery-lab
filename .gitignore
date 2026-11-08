@@ -1,6 +1,9 @@
 dist/
 .work/
 node_modules/
+.tmp/
+._*
+.DS_Store
 *.log
 .env*
 !.env.example

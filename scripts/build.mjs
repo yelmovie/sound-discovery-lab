@@ -7,7 +7,7 @@ process.env.TEMP = process.env.TMP = 'D:\\DevTemp';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const pkg=JSON.parse(await readFile(path.join(root,'package.json'),'utf8'));
 await writeFile(path.join(root,'src/version.js'),`// Updated from package.json by scripts/build.mjs.\nexport const APP_VERSION = ${JSON.stringify(pkg.version)};\n`);
-for (const file of ['challenges.js','map-world.js','settings-content.js','version.js','app.js','audio.js','map.js','model.js','data.js','concepts.js','companion.js','manipulations.js','progress.js','illustrations.js','samples.js']) execFileSync(process.execPath, ['--check', path.join(root,'src',file)]);
+for (const file of ['challenges.js','map-world.js','settings-content.js','version.js','app.js','audio.js','map.js','model.js','data.js','concepts.js','companion.js','manipulations.js','progress.js','illustrations.js','samples.js','experiment-player.js']) execFileSync(process.execPath, ['--check', path.join(root,'src',file)]);
 for (const file of assets) await stat(path.join(root,file));
 for (const file of ['sw.js','manifest.webmanifest','image/og/ullim-og.jpg','image/icons/icon-192.png','image/icons/icon-512.png']) await stat(path.join(root,file));
 await mkdir(path.join(root,'dist'),{recursive:true});
@@ -18,7 +18,7 @@ for (const file of ['index.html','src','sw.js','manifest.webmanifest',...shareAs
 }
 // Precache the code, title, map and interface sounds; lesson art caches as students reach it.
 const sources=(await readdir(path.join(root,'src'))).filter(file=>!file.startsWith("._")&&/\.(js|css)$/.test(file)).map(file=>`/src/${file}`);
-const shell=['/','/index.html','/manifest.webmanifest',...sources,...assets.filter(file=>/^(image\/(branding|generated\/(ullim-village|explorer-walk|bird-walk|pio-guide))|media\/audio\/.*\.ogg$)/.test(file)).map(file=>`/${file}`),...shareAssets.filter(file=>file.includes('icons')).map(file=>`/${file}`),`/${backgrounds[1]}`];
+const shell=['/','/index.html','/manifest.webmanifest',...sources,...assets.filter(file=>/^(image\/(branding|generated\/(ullim-village|explorer-walk|bird-walk|pio-guide))|media\/audio\/.*\.(ogg|m4a)$)/.test(file)).map(file=>`/${file}`),...shareAssets.filter(file=>file.includes('icons')).map(file=>`/${file}`),`/${backgrounds[1]}`];
 const swPath=path.join(root,'dist','sw.js'),sw=await readFile(swPath,'utf8');
 const stamped=sw.replace("const CACHE_VERSION='dev';",`const CACHE_VERSION='${pkg.version}-${Date.now().toString(36)}';`).replace("const APP_SHELL=['/','/index.html','/manifest.webmanifest'];",`const APP_SHELL=${JSON.stringify(shell)};`);
 if(stamped===sw||!stamped.includes(`'${pkg.version}-`))throw new Error('sw.js CACHE_VERSION/APP_SHELL markers not found.');

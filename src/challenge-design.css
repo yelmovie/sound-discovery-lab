@@ -1,0 +1,256 @@
+/* One experiment per screen. Short boards trade vertical stacks for parallel controls. */
+.experiment-content.activity-base-challenge{grid-template-rows:minmax(0,1fr);align-content:stretch;align-items:stretch}
+.challenge-shell{container:quest / inline-size;width:100%;height:100%;min-width:0;min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto;align-items:stretch;gap:6px}
+.challenge-shell *{box-sizing:border-box}
+.challenge-shell :is(h2,p){margin:0}
+.challenge-shell :is(.challenge-workspace,.challenge-tools,.hotspot-scene,.signal-lab,.sensor-scene,.mixer-controls,.context-cards,.medium-choices,.sort-cards,.sort-slots,.sequence-console)>*{min-width:0;min-height:0}
+.challenge-shell .icon{flex:0 0 auto}
+.challenge-shell :is(.btn,.choice,.sort-slot,.drag-handle){min-height:44px;white-space:normal;max-width:100%;margin:0;gap:6px;font-size:var(--read-small);line-height:1.3}
+.challenge-shell .btn{padding:8px 12px}
+.challenge-shell .quest-progress{display:flex;justify-content:flex-end;align-items:center;min-height:0;padding:0 2px;font-size:var(--read-small);font-weight:800;line-height:1.2;color:#53796c}
+.challenge-shell .challenge-workspace{display:grid;width:100%;height:100%;min-height:0;gap:12px}
+.challenge-shell .challenge-workspace h2{font-size:var(--read);line-height:1.3}
+.challenge-shell .challenge-object{display:grid;grid-template-rows:minmax(0,1fr) auto;align-items:center;justify-items:center;align-content:stretch;width:100%;height:100%;min-height:0;padding:10px;gap:6px}
+.challenge-shell .challenge-object-art{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr);place-items:center;width:100%;height:100%;min-width:0;min-height:0;padding:6px;pointer-events:none}
+.challenge-shell .challenge-object-art>.prop-assembly{height:100%;width:auto;aspect-ratio:1.12;max-width:100%;margin:auto}
+.challenge-shell .challenge-object-art>.concept-art{height:100%;width:100%;max-width:100%;object-fit:contain;margin:auto}
+.challenge-shell .challenge-object-art>.illustrated-ruler{height:100%!important;max-width:100%;margin:auto}
+.challenge-shell .object-caption{display:block;position:static;max-width:100%;margin:0!important;font-size:var(--read-small);font-weight:700;line-height:1.3;text-align:center}
+.challenge-shell .object-touch{border:2px solid #bad5c4;background:radial-gradient(ellipse,#fffef5,#eaf3e6);box-shadow:0 3px 0 #c9dbca}
+.challenge-shell .object-touch.observed{border-color:#518e78;background:#eef9ee}
+.challenge-shell[data-challenge="parts"] .challenge-workspace{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)}
+.challenge-shell .hotspot-scene{height:100%;display:block;padding:0;border:0;background:none;min-width:0;min-height:0}
+.challenge-shell .hotspot-scene>.challenge-object{height:100%;width:100%}
+.challenge-shell .labelled-choices{display:grid;grid-template-columns:minmax(0,1fr);grid-auto-rows:minmax(44px,1fr);gap:8px;align-content:stretch}
+.challenge-shell .labelled-choices .choice{display:flex;flex-direction:row;align-items:center;justify-content:flex-start;text-align:left;padding:10px 14px;gap:10px}
+.challenge-shell .answer-marker{display:grid;place-items:center;flex:0 0 30px;width:30px;height:30px;border:1px solid #bdcfc2;border-radius:9px;background:#e4ece3;color:#365e54;font-size:18px}
+.challenge-shell .choice.selected .answer-marker{background:#256f66;border-color:#256f66;color:#fff}
+.challenge-shell .signal-score{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);align-items:stretch;justify-content:center;gap:8px;margin:0;min-width:0;min-height:0}
+.challenge-shell .signal-score>.signal-tile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;max-width:none;width:auto;height:auto;min-width:0;min-height:44px;padding:7px 5px;border:2px solid #c7d8c5;border-radius:14px;background:#fffdf3;box-shadow:0 3px 0 #e2e8d9;color:#2d6a64}
+.challenge-shell .signal-tile b{font-size:var(--read-small);line-height:1.3}
+.challenge-shell .signal-trace{display:block;width:100%;max-width:140px;height:clamp(24px,12cqh,90px);overflow:visible}
+.challenge-shell .signal-trace path{fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.challenge-shell .signal-tile.is-rest{border-style:dashed;color:#7a7359;background:#f6f3e7}
+.challenge-shell .signal-score>.filled{background:#dff2df;border-color:#47977b;box-shadow:0 3px 0 #a7cab2}
+.challenge-shell .pitch-score .signal-trace{background:repeating-linear-gradient(to bottom,transparent 0 8px,#dbe5d933 8px 9px);border-radius:3px}
+.challenge-shell[data-challenge="rhythm"] .challenge-workspace{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.4fr)}
+.challenge-shell[data-challenge="rhythm"] .rhythm-lab{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;grid-row:auto;grid-column:auto;align-items:stretch;height:100%;min-height:0;gap:6px;padding:8px;border:1px solid #d4e2d1;border-radius:18px;background:#f4f8ed}
+.challenge-shell[data-challenge="rhythm"] .rhythm-lab .challenge-object{width:100%;height:100%;grid-row:auto;grid-column:auto;padding:0;grid-template-rows:minmax(0,1fr)}
+.challenge-shell .rhythm-scope{min-height:0;min-width:0;text-align:center}
+.challenge-shell[data-challenge="rhythm"] .rhythm-scope .waveform{display:block;width:100%;height:clamp(30px,10cqh,75px);margin:0}
+.challenge-shell .rhythm-scope>span{display:block;font-size:var(--read-small);line-height:1.3;color:#4d7465}
+.challenge-shell .sequence-console{display:grid;grid-template-rows:minmax(0,1fr) auto auto;align-content:stretch;gap:8px;min-width:0;min-height:0}
+.challenge-shell .rhythm-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.challenge-shell .rhythm-actions .btn{padding:8px 5px}
+.challenge-shell .performance-line{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;min-height:24px;padding:4px 8px;border-radius:9px;background:#edf3e7;font-size:var(--read-small);line-height:1.3}
+.challenge-shell .performance-line>b{color:#497668;flex-shrink:0}
+.challenge-shell .performance-line>span{min-width:0}
+.challenge-shell[data-challenge="signal"] .challenge-workspace{grid-template-rows:auto minmax(0,1fr)}
+.challenge-shell .request-card{padding:8px 12px;background:#eff5e6;border:1px solid #bfd3ba;border-radius:16px;box-shadow:inset 0 3px 0 #ffffffb3}
+.challenge-shell .request-card h2{margin:0;font-size:var(--read);line-height:1.3}
+.challenge-shell .signal-lab{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:stretch;gap:14px;min-height:0}
+.challenge-shell .signal-lab .challenge-object{width:100%;height:100%;border:1px solid #bfd5bf;background:radial-gradient(ellipse,#f9f9df,#e9f2df);box-shadow:0 3px 0 #d7e3cc}
+.challenge-shell .signal-controls{display:flex;flex-direction:column;justify-content:center;gap:4px;min-width:0;min-height:0}
+.challenge-shell :is(.signal-controls,.slider-mixer) label{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:5px 12px;font-size:var(--read-small);line-height:1.3}
+.challenge-shell output{display:inline-block;min-width:3em;padding:2px 8px;border:1px solid #b9d2c6;border-radius:8px;background:#fffdf5;color:#246a66;text-align:center;font-size:var(--read-small);font-weight:800;line-height:1.3}
+.challenge-shell input[type="range"]{min-height:44px;margin:0;width:100%;flex-shrink:0}
+.challenge-shell .range-ticks{font-size:var(--read-small);line-height:1.3;gap:6px;margin:0}
+.challenge-shell .live-scope{height:clamp(32px,14cqh,115px);min-height:0;width:100%}
+.challenge-shell[data-challenge="sort"] .challenge-workspace{grid-template-rows:minmax(0,1fr) auto}
+.challenge-shell .sort-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch;gap:10px;min-height:0}
+.challenge-shell .sound-parcel{height:100%;padding:6px;gap:0;border-radius:16px;background:#f7f5e8;box-shadow:0 3px 0 #d8e1cc;min-height:0}
+.challenge-shell .sound-parcel.selected{background:#e3f4e9;border-color:#2a8a79;box-shadow:0 3px 0 #85b5a3}
+.challenge-shell .drag-handle{display:grid;grid-template-rows:minmax(0,1fr) auto;align-items:center;justify-items:center;align-content:stretch;gap:5px;width:100%;height:100%;padding:5px;border:0;background:transparent;font-size:var(--read-small);line-height:1.3;min-height:0}
+.challenge-shell .drag-handle>.concept-thumb{height:100%;max-height:100%;width:100%;max-width:100%;margin:0;object-fit:contain}
+.challenge-shell .parcel-title{display:flex;justify-content:center;align-items:center;gap:5px;flex-wrap:wrap;font-size:var(--read);line-height:1.3}
+.challenge-shell .parcel-title .icon{width:22px;height:22px}
+.challenge-shell .sort-slots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.challenge-shell .sort-slot{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:auto auto;align-items:center;justify-items:center;gap:3px 8px;padding:8px;border:2px dashed #9bbcac;border-radius:15px;background:#edf4e9;font-size:var(--read-small);line-height:1.3}
+.challenge-shell .sort-slot.filled{border-style:solid;background:#dff0df;border-color:#438b76}
+.challenge-shell .sort-slot>b{font-size:var(--read);line-height:1.3}
+.challenge-shell .slot-level{grid-row:1/3;display:flex;align-items:flex-end;gap:4px;height:24px}
+.challenge-shell .slot-level i{display:block;width:9px;height:9px;border-radius:3px 3px 0 0;background:#cdddcf;border:1px solid #aec7b9}
+.challenge-shell .slot-level i:nth-child(2){height:16px}
+.challenge-shell .slot-level i:nth-child(3){height:24px}
+.challenge-shell .slot-level .on{background:#559c8b;border-color:#397e70}
+.challenge-shell[data-challenge="melody"] .challenge-workspace{grid-template-columns:minmax(0,.8fr) minmax(0,1.3fr)}
+.challenge-shell .melody-console{grid-template-rows:auto minmax(0,1fr) auto auto}
+.challenge-shell .length-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));height:100%;min-height:0;gap:10px}
+.challenge-shell .length-card{display:grid;grid-template-rows:minmax(0,1fr) auto auto;align-content:stretch;justify-items:center;gap:4px;padding:8px;min-height:0;height:100%}
+.challenge-shell .length-card>.illustrated-ruler{width:100%;height:100%!important;max-width:100%;min-height:0}
+.challenge-shell .length-card b{font-size:var(--read);line-height:1.3}
+.challenge-shell .length-card small{font-size:var(--read-small);line-height:1.3}
+.challenge-shell[data-challenge="melody"] .length-card{min-height:0}
+.challenge-shell[data-challenge="melody"] .length-card b{font-size:var(--read)}
+.challenge-shell[data-challenge="mix"] .challenge-workspace{grid-template-columns:minmax(0,.9fr) minmax(0,1.4fr);grid-template-rows:auto minmax(0,1fr) auto}
+.challenge-shell .sound-order{grid-column:2;grid-row:1}
+.challenge-shell .sound-order h2{display:flex;justify-content:center;gap:6px 14px;flex-wrap:wrap}
+.challenge-shell .sound-order h2>span{display:inline-flex;align-items:center;gap:6px;font-weight:500;font-size:var(--read-small)}
+.challenge-shell .sound-order h2 b{padding:2px 8px;border:1px solid #c5d3bb;border-radius:8px;background:#fffdf2;font-size:var(--read);color:#2c6a68}
+.challenge-shell .mix-preview{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;grid-column:1;grid-row:1/4;align-items:stretch;gap:8px;min-height:0;padding:8px;border:1px solid #d4e0d1;border-radius:17px;background:#f2f7ee}
+.challenge-shell .mix-preview .mix-device{width:100%;height:100%;max-height:none;min-height:0}
+.challenge-shell .mix-preview .mix-device>.illustrated-ruler{height:100%!important;max-height:100%;max-width:100%;width:100%}
+.challenge-shell .slider-mixer{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:stretch;gap:10px;min-height:0}
+.challenge-shell .slider-mixer .mixer-channel{min-width:0;min-height:0;margin:0;padding:8px 10px;display:flex;flex-direction:column;justify-content:center;gap:4px;background:#f0f6ec;border:1px solid #bfd5c4;border-radius:15px}
+.challenge-shell .slider-mixer .mixer-channel .mixer-title{max-width:100%;margin:0;font-size:var(--read-small);font-weight:800;line-height:1.3;padding:0 4px;white-space:normal}
+.challenge-shell .slider-mixer .volume-channel{background:#f8f2e3;border-color:#d7c8a5}
+.challenge-shell .slider-mixer .volume-channel output{color:#7f5b2d;border-color:#d8c294}
+.challenge-shell[data-challenge="mix"] .slider-mixer{grid-column:2;grid-row:2}
+.challenge-shell[data-challenge="mix"] .challenge-workspace>.primary{grid-column:2;grid-row:3;width:100%;min-width:0;align-self:stretch}
+.challenge-shell[data-challenge="sensor"] .challenge-workspace{grid-template-rows:auto minmax(0,1fr)}
+.challenge-shell .challenge-top{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.challenge-shell .challenge-top>small{font-size:var(--read-small);line-height:1.3;color:#56796b}
+.challenge-shell .sensor-scene{display:grid;grid-template-columns:minmax(0,.65fr) minmax(0,1fr);height:100%;min-height:0;gap:12px;align-items:stretch;padding:8px;border-radius:18px;border:1px solid #cdddc7;background:#f2f6eb}
+.challenge-shell .sensor-scene>div:first-child{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr);align-items:stretch;min-height:0}
+.challenge-shell .sensor-grip{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr);place-items:center;width:100%;height:100%;min-height:44px;max-width:none;padding:8px;border:2px dashed #81a99a;background:#fffdf0}
+.challenge-shell .sensor-grip>.prop-img{height:100%!important;max-height:100%;max-width:100%;width:100%;min-width:0;min-height:0;object-fit:contain}
+.challenge-shell .sensor-zones{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:repeat(3,minmax(44px,1fr));height:100%;gap:8px;min-height:0}
+.challenge-shell .sensor-zone.illustrated-zone{display:grid;grid-template-columns:minmax(50px,.8fr) minmax(0,1fr) 32px;align-items:center;gap:7px;padding:6px 9px;min-height:44px;height:100%}
+.challenge-shell .illustrated-zone>.concept-scene{height:100%;max-height:100%;width:100%;object-fit:contain;min-height:0}
+.challenge-shell .illustrated-zone>b{font-size:var(--read);line-height:1.3}
+.challenge-shell .illustrated-zone .sensor-indicator{display:grid;place-items:center;width:30px;height:30px;border:1px dashed #8fb6a9;border-radius:8px;background:#ffffff88;font-size:22px;color:#598377}
+.challenge-shell .sensor-zone.selected .sensor-indicator{background:#c9ebdb;border-style:solid;border-color:#3d9984}
+.challenge-shell[data-challenge="classify"] .challenge-workspace{grid-template-rows:auto minmax(0,1fr) auto}
+.challenge-shell .case-story{display:block;padding:10px 14px}
+.challenge-shell .case-story p{font-size:var(--read);line-height:1.35;margin:0}
+.challenge-shell .sound-path-model{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:7px;padding:8px 10px;background:#f1f6ec;border-radius:16px;min-height:0}
+.challenge-shell .sound-path-model>span{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:5px;min-width:0;min-height:0;text-align:center;font-size:var(--read-small);line-height:1.3}
+.challenge-shell .sound-path-model .icon{width:clamp(22px,8cqh,70px);height:clamp(22px,8cqh,70px)}
+.challenge-shell .sound-path-model>i{font-style:normal;font-size:var(--read);color:#72a08e}
+.challenge-shell .sound-path-model .path-question{border:2px dashed #bd9b53;border-radius:11px;background:#fff3d4;color:#87682c;padding:8px}
+.challenge-shell .medium-choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.challenge-shell .medium-choices .choice{display:flex;justify-content:center;text-align:center;align-items:center;padding:9px;gap:7px}
+.challenge-shell[data-challenge="solutions"] .challenge-workspace{grid-template-rows:auto minmax(0,1fr) auto}
+.challenge-shell .solution-target{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);align-items:center;gap:12px;text-align:left}
+.challenge-shell .solution-target p{font-size:var(--read-small);line-height:1.35;margin:0}
+.challenge-shell .context-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:stretch;gap:10px;min-height:0}
+.challenge-shell .context-cards>.solution{display:grid;grid-template-rows:minmax(0,1fr) auto;align-content:stretch;align-items:center;justify-items:center;gap:5px;min-height:44px;height:100%;padding:8px;text-align:center}
+.challenge-shell .context-cards .concept-thumb{width:100%;max-width:100%;height:100%;max-height:100%;margin:auto;object-fit:contain}
+.challenge-shell .context-cards b{font-size:var(--read-small);line-height:1.3}
+.challenge-shell .comparison-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.challenge-shell[data-challenge="festival"] .challenge-workspace{grid-template-rows:minmax(0,1fr)}
+.challenge-shell .festival-controls.slider-mixer{height:100%;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.challenge-shell .festival-controls .mixer-channel{display:grid;grid-template-rows:auto minmax(0,1fr) auto auto;align-content:stretch;align-items:center;gap:5px;padding:8px 10px}
+.challenge-shell .resident-request{display:flex;align-items:center;justify-content:center;gap:6px;padding:5px;border:1px solid #d8caa5;border-radius:9px;background:#fff1d5;font-size:var(--read-small);line-height:1.3;text-align:center}
+.challenge-shell .resident-request>span{display:grid;place-items:center;flex:0 0 24px;width:24px;height:24px;border-radius:50%;background:#fff;font-size:18px}
+.challenge-shell .resident-request.satisfied{background:#e7f4e2;border-color:#68a38a}
+.challenge-shell .resident-request.satisfied>span{background:#337d64;color:#fff}
+.challenge-shell .festival-controls .mixer-title.resident-request{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:5px;padding:3px 5px}
+.challenge-shell .festival-controls .mixer-channel>.concept-thumb,.challenge-shell .festival-controls .mixer-channel>.prop-img{display:block;max-width:100%;max-height:100%;height:100%;width:100%;object-fit:contain;margin:auto;min-height:0}
+.challenge-shell .festival-controls .mixer-channel:last-child{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto minmax(0,1fr) auto}
+.challenge-shell .festival-controls .mixer-channel:last-child>.mixer-title{grid-column:1/-1;grid-row:1}
+.challenge-shell .festival-controls .mixer-channel:last-child>.concept-thumb{grid-column:1/-1;grid-row:2}
+.challenge-shell .festival-controls .mixer-channel:last-child>.choice{grid-column:1;grid-row:3}
+.challenge-shell .festival-controls .mixer-channel:last-child>.secondary{grid-column:2;grid-row:3}
+.challenge-shell .festival-controls .choice{font-size:var(--read-small);padding:8px;min-height:44px;width:100%;margin:0;justify-content:center}
+.challenge-shell .festival-controls label{justify-content:center}
+.challenge-shell .challenge-feedback{font-size:var(--read-small);line-height:1.3;padding:5px 9px;min-height:0;border-left:4px solid #9cb793;border-radius:8px}
+.challenge-shell .challenge-feedback:empty{display:none}
+.challenge-shell .challenge-feedback.success{border-color:#38886e;background:#e0f0dc;color:#28664f}
+.challenge-shell .challenge-feedback.hint{border-color:#ba8c39;background:#fff2d4;color:#795b2a}
+.challenge-shell.challenge-complete{display:flex;align-items:center;justify-content:center;gap:18px;padding:12px}
+.challenge-shell.challenge-complete .success-emblem{margin:0;width:clamp(60px,20cqh,150px);height:clamp(60px,20cqh,150px)}
+.challenge-shell.challenge-complete h2{font-size:var(--read);line-height:1.3}
+@container experiment (max-height:340px){
+ .challenge-shell{gap:4px}
+ .challenge-shell .challenge-workspace{gap:6px}
+ .challenge-shell .quest-progress{font-size:var(--read-small);line-height:1}
+ .challenge-shell .challenge-object{gap:3px;padding:5px}
+ .challenge-shell .labelled-choices{gap:6px}
+ .challenge-shell .labelled-choices .choice{padding:6px 10px}
+ .challenge-shell .signal-score{gap:5px}
+ .challenge-shell .signal-score>.signal-tile{padding:4px;gap:2px;border-radius:10px}
+ .challenge-shell .signal-trace{height:24px}
+ .challenge-shell[data-challenge="rhythm"] .rhythm-lab{padding:5px;gap:3px}
+ .challenge-shell[data-challenge="rhythm"] .rhythm-scope .waveform{height:30px}
+ .challenge-shell .sequence-console{gap:5px}
+ .challenge-shell .rhythm-actions .btn{padding:6px 4px;gap:4px}
+ .challenge-shell .rhythm-actions .icon{width:20px;height:20px}
+ .challenge-shell .performance-line{padding:2px 4px;gap:6px;min-height:0}
+ .challenge-shell .request-card{padding:5px 9px}
+ .challenge-shell .request-card h2{font-size:var(--read-small)}
+ .challenge-shell .signal-controls{gap:2px}
+ .challenge-shell .signal-lab{gap:10px}
+ .challenge-shell .signal-lab .live-scope{height:30px}
+ .challenge-shell .sort-cards,.challenge-shell .sort-slots{gap:6px}
+ .challenge-shell .sound-parcel{padding:3px}
+ .challenge-shell .drag-handle{padding:3px;gap:3px}
+ .challenge-shell .parcel-title{font-size:var(--read-small)}
+ .challenge-shell .sort-slot{padding:5px;gap:2px 5px}
+ .challenge-shell .sort-slot>b{font-size:var(--read-small)}
+ .challenge-shell .slot-level{gap:3px;height:21px}
+ .challenge-shell .slot-level i{width:7px}
+ .challenge-shell .slot-level i:nth-child(3){height:21px}
+ .challenge-shell .length-options{gap:6px}
+ .challenge-shell .length-card{padding:5px;gap:2px}
+ .challenge-shell .mix-preview{padding:4px;gap:3px}
+ .challenge-shell .mix-preview .live-scope{height:34px}
+ .challenge-shell .slider-mixer{gap:6px}
+ .challenge-shell .slider-mixer .mixer-channel{padding:4px 6px;gap:2px}
+ .challenge-shell .slider-mixer .mixer-title{padding:0 3px}
+ .challenge-shell output{padding:1px 5px}
+ .challenge-shell .sound-order h2{gap:4px 8px}
+ .challenge-shell .sound-order h2 b{font-size:var(--read-small);padding:1px 5px}
+ .challenge-shell .challenge-top{gap:4px 10px}
+ .challenge-shell .challenge-top h2{font-size:var(--read-small)}
+ .challenge-shell .sensor-scene{grid-template-columns:minmax(0,.55fr) minmax(0,1.45fr);padding:5px;gap:7px}
+ .challenge-shell .sensor-grip{padding:4px}
+ .challenge-shell .sensor-zones{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:minmax(44px,1fr);gap:5px}
+ .challenge-shell .sensor-zone.illustrated-zone{grid-template-columns:minmax(0,1fr) 30px;grid-template-rows:minmax(0,1fr) auto;padding:5px;gap:5px}
+ .challenge-shell .sensor-zone.illustrated-zone>.concept-scene{grid-column:1/-1;grid-row:1}
+ .challenge-shell .sensor-zone.illustrated-zone>b{grid-column:1;grid-row:2}
+ .challenge-shell .sensor-zone.illustrated-zone>.sensor-indicator{grid-column:2;grid-row:2}
+ .challenge-shell .illustrated-zone>b{font-size:var(--read-small)}
+ .challenge-shell .case-story{padding:6px 9px}
+ .challenge-shell .case-story p{font-size:var(--read-small)}
+ .challenge-shell .sound-path-model{padding:4px 7px;gap:5px}
+ .challenge-shell .sound-path-model .path-question{padding:5px}
+ .challenge-shell .medium-choices{gap:6px}
+ .challenge-shell .medium-choices .choice{padding:6px}
+ .challenge-shell .solution-target{gap:8px}
+ .challenge-shell .context-cards{gap:6px}
+ .challenge-shell .context-cards>.solution{padding:4px;gap:3px}
+ .challenge-shell .comparison-controls{gap:6px}
+ .challenge-shell .festival-controls.slider-mixer{gap:6px}
+ .challenge-shell .festival-controls .mixer-channel{padding:4px 6px;gap:3px}
+ .challenge-shell .resident-request{padding:3px;gap:4px}
+ .challenge-shell .resident-request>span{width:20px;height:20px;flex-basis:20px;font-size:18px}
+ .challenge-shell .challenge-feedback{padding:3px 7px}
+}
+@container experiment (max-width:560px){
+ .challenge-shell[data-challenge="parts"] .challenge-workspace{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto}
+ .challenge-shell .labelled-choices{grid-auto-rows:48px;gap:7px}
+ .challenge-shell[data-challenge="rhythm"] .challenge-workspace{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto}
+ .challenge-shell .sequence-console{grid-template-rows:minmax(60px,1fr) auto auto}
+ .challenge-shell[data-challenge="melody"] .challenge-workspace{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
+ .challenge-shell .melody-console{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto auto auto;gap:6px}
+ .challenge-shell .melody-console>.btn:first-child{grid-column:1}
+ .challenge-shell .melody-console .signal-score{grid-column:1/-1;grid-row:2;min-height:74px}
+ .challenge-shell .melody-console .performance-line{grid-column:1/-1;grid-row:3}
+ .challenge-shell .melody-console>.btn:last-child{grid-column:2;grid-row:1}
+ .challenge-shell .length-options{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+ .challenge-shell[data-challenge="mix"] .challenge-workspace{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto auto}
+ .challenge-shell .sound-order{grid-column:1;grid-row:1}
+ .challenge-shell .mix-preview{grid-column:1;grid-row:2}
+ .challenge-shell[data-challenge="mix"] .slider-mixer{grid-column:1;grid-row:3}
+ .challenge-shell[data-challenge="mix"] .challenge-workspace>.primary{grid-column:1;grid-row:4}
+ .challenge-shell .sensor-scene{grid-template-columns:minmax(0,.5fr) minmax(0,1fr);gap:8px}
+ .challenge-shell .sensor-zone.illustrated-zone{grid-template-columns:minmax(50px,.8fr) minmax(0,1fr) 28px;padding:5px;gap:5px}
+ .challenge-shell .illustrated-zone>b{font-size:var(--read-small)}
+ .challenge-shell .context-cards{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:8px}
+ .challenge-shell .solution-target{grid-template-columns:minmax(0,1fr);gap:5px}
+ .challenge-shell .festival-controls.slider-mixer{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) minmax(0,1fr) minmax(0,1.2fr);gap:8px}
+ .challenge-shell .festival-controls .mixer-channel{display:grid;grid-template-columns:minmax(0,.65fr) minmax(0,1fr);grid-template-rows:auto minmax(44px,1fr) auto;gap:2px 8px;padding:2px 4px}
+ .challenge-shell .festival-controls .mixer-title.resident-request{padding:1px 4px;gap:4px}
+ .challenge-shell .festival-controls .resident-request>span{width:20px;height:20px;flex-basis:20px}
+ .challenge-shell .festival-controls .secondary .icon{width:20px;height:20px}
+ .challenge-shell .festival-controls .mixer-channel>.mixer-title{grid-column:1/-1;grid-row:1}
+ .challenge-shell .festival-controls .mixer-channel>.concept-thumb,.challenge-shell .festival-controls .mixer-channel>.prop-img{grid-column:1;grid-row:2/4}
+ .challenge-shell .festival-controls .mixer-channel>input{grid-column:2;grid-row:2}
+ .challenge-shell .festival-controls .mixer-channel>.range-ticks{grid-column:2;grid-row:3}
+ .challenge-shell .festival-controls .mixer-channel:last-child{display:grid;grid-template-columns:minmax(0,.65fr) minmax(0,1fr);grid-template-rows:auto minmax(44px,1fr) auto}
+ .challenge-shell .festival-controls .mixer-channel:last-child>.mixer-title{grid-column:1/-1;grid-row:1}
+ .challenge-shell .festival-controls .mixer-channel:last-child>.concept-thumb{grid-column:1;grid-row:2/4}
+ .challenge-shell .festival-controls .mixer-channel:last-child>.choice{grid-column:2;grid-row:2}
+ .challenge-shell .festival-controls .mixer-channel:last-child>.secondary{grid-column:2;grid-row:3}
+}

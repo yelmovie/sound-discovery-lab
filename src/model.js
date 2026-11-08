@@ -47,13 +47,31 @@ export function normalize(raw) {
   return base;
 }
 export function readState(storage) {
-  try { const saved=storage.getItem(STORAGE_KEY),raw=saved ? JSON.parse(saved) : null;
-    if(raw?.version===1){try{if(!storage.getItem(`${STORAGE_KEY}-backup-v1`))storage.setItem(`${STORAGE_KEY}-backup-v1`,saved);}catch{/* Play remains possible when backup storage is unavailable. */}}
-    return {state:normalize(raw),warning:''}; }
-  catch { return {state:freshState(),warning:'저장 기록을 읽지 못했어. 새 기록으로 시작해.'}; }
+  let saved=null;
+  try {
+    saved=storage.getItem(STORAGE_KEY)??null;
+    const raw=saved ? JSON.parse(saved) : null;
+    if(saved && (!object(raw)||![1,2].includes(raw.version)))return {state:freshState(),snapshot:saved,blocked:true,warning:'다른 버전의 기록을 보호 중이야. 이 창의 활동은 저장하지 않아.'};
+    if(raw?.version===1){try{if(!storage.getItem(`${STORAGE_KEY}-backup-v1`))storage.setItem(`${STORAGE_KEY}-backup-v1`,saved);}catch{}}
+    return {state:normalize(raw),snapshot:saved,blocked:false,warning:''};
+  } catch {return {state:freshState(),snapshot:saved,blocked:true,warning:'저장 기록을 읽지 못해 원본을 보호 중이야. 이 창의 활동은 저장하지 않아.'};}
 }
 export function writeState(storage,state) {
   try { storage.setItem(STORAGE_KEY,JSON.stringify(state)); return true; } catch { return false; }
+}
+// Compare before writing so an older classroom tab never erases newer progress.
+export function createSaveSession(storage,loaded=readState(storage)) {
+  let snapshot=loaded.snapshot,blocked=loaded.blocked;
+  return {
+    save(state){
+      if(blocked)return {ok:false,warning:loaded.warning||'다른 창의 기록을 보호 중이야. 새로고침 후 이어 해 줘.'};
+      try {
+        if((storage.getItem(STORAGE_KEY)??null)!==snapshot){blocked=true;return {ok:false,warning:'다른 창에서 기록이 바뀌어 덮어쓰지 않았어. 이 창을 새로고침해서 이어 해 줘.'};}
+        const next=JSON.stringify(state);storage.setItem(STORAGE_KEY,next);snapshot=next;return {ok:true};
+      }catch{return {ok:false,warning:'자동 저장이 막혀 있어. 이 창을 닫으면 기록을 잃을 수 있어.'};}
+    },
+    backup(){try{if(blocked||(storage.getItem(STORAGE_KEY)??null)!==snapshot)return false;if(snapshot)storage.setItem(`${STORAGE_KEY}-before-reset`,snapshot);return true;}catch{return false;}}
+  };
 }
 export const evidenceCount = s => Object.keys(s.evidence).filter(i=>/^\d+$/.test(i)&&Number(i)>=0 && Number(i)<LESSON_COUNT).length;
 export const stageDone = (s,n) => stageLessons(n).every(i=>Boolean(s.evidence[i]));
