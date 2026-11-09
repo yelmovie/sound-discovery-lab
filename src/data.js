@@ -12,12 +12,14 @@ import { conceptAssets } from './concepts.js';
 export const interfaceSounds={tap:'click_003',open:'open_001',drop:'place_wood',hint:'select_003',success:'confirmation_002',badge:'restore_chime'};
 export const assets = [...new Set(['media/audio/npc-welcome.m4a',...recordedAudioAssets, ...conceptArtAssets,...backgrounds, characters, titleLogo, ...Object.values(props), ...villageAssets, 'image/generated/pio-guide.svg',...conceptAssets,...Object.values(interfaceSounds).map(n=>`media/audio/${n}.ogg`),'media/audio/License.txt','media/audio/sources.json','media/concepts/manifest.json'])];
 export { APP_VERSION } from './version.js';
+// Curriculum link per facility. Teacher review is still pending, so needsReview stays true until a reviewer signs off.
+export const CURRICULUM_REVIEW = Object.freeze({needsReview:true, source:'2022 개정 과학과 교육과정 3~4학년군 (7) 소리의 성질', reviewer:null, reviewedAt:null});
 export const stages = [
-  {name:'진동 연구소', short:'진동', color:'#22d3df', icon:'wave', x:132,y:141, mission:'멈춘 연구소에 소리를 되찾아 줘.', reward:'물체의 떨림을 제어하는 힘', restored:'연구소의 실험 장치가 다시 움직여!'},
-  {name:'볼륨 경기장', short:'크기', color:'#ffbf58', icon:'volume', x:305,y:93, mission:'멀리 있는 친구에게 신호를 보내 줘.', reward:'소리의 크기를 조절하는 힘', restored:'친구들에게 경기 시작 신호가 들려!'},
-  {name:'조율 공방', short:'높낮이', color:'#c1a3ff', icon:'music', x:491,y:148, mission:'공방의 뒤섞인 멜로디를 고쳐 줘.', reward:'소리의 높낮이를 조절하는 힘', restored:'공방에서 다시 멜로디가 흘러나와!'},
-  {name:'전달 네트워크', short:'전달', color:'#69dcb4', icon:'network', x:456,y:277, mission:'끊어진 도시의 통신을 되살려 줘.', reward:'소리가 전달되는 길을 찾는 힘', restored:'물속과 땅 위의 친구들이 연결됐어!'},
-  {name:'소음 관리센터', short:'배려', color:'#ffa0a9', icon:'leaf', x:188,y:280, mission:'모두가 편안한 도서관을 만들어 줘.', reward:'상황에 맞게 소리를 다루는 힘', restored:'책 읽는 친구들이 편안해졌어!'}
+  {name:'진동 연구소', short:'진동', color:'#22d3df', icon:'wave', x:132,y:141, mission:'멈춘 연구소에 소리를 되찾아 줘.', reward:'물체의 떨림을 제어하는 힘', standards:['4과07-01'], objective:'소리가 나는 물체는 떨리고, 떨림이 멈추면 소리도 멈춘다는 것을 관찰로 설명한다.', review:CURRICULUM_REVIEW, restored:'연구소의 실험 장치가 다시 움직여!'},
+  {name:'볼륨 경기장', short:'크기', color:'#ffbf58', icon:'volume', x:305,y:93, mission:'멀리 있는 친구에게 신호를 보내 줘.', reward:'소리의 크기를 조절하는 힘', standards:['4과07-02'], objective:'같은 물체를 치는 세기를 바꿔 큰 소리와 작은 소리를 구분하고 만들어 낸다.', review:CURRICULUM_REVIEW, restored:'친구들에게 경기 시작 신호가 들려!'},
+  {name:'조율 공방', short:'높낮이', color:'#c1a3ff', icon:'music', x:491,y:148, mission:'공방의 뒤섞인 멜로디를 고쳐 줘.', reward:'소리의 높낮이를 조절하는 힘', standards:['4과07-02'], objective:'떨리는 부분의 길이를 바꿔 높은 소리와 낮은 소리를 구분하고 만들어 낸다.', review:CURRICULUM_REVIEW, restored:'공방에서 다시 멜로디가 흘러나와!'},
+  {name:'전달 네트워크', short:'전달', color:'#69dcb4', icon:'network', x:456,y:277, mission:'끊어진 도시의 통신을 되살려 줘.', reward:'소리가 전달되는 길을 찾는 힘', standards:['4과07-03'], objective:'소리가 공기·물·고체를 통해 전달되는 것을 관찰하고 생활 상황에 적용한다.', review:CURRICULUM_REVIEW, restored:'물속과 땅 위의 친구들이 연결됐어!'},
+  {name:'소음 관리센터', short:'배려', color:'#ffa0a9', icon:'leaf', x:188,y:280, mission:'모두가 편안한 도서관을 만들어 줘.', reward:'상황에 맞게 소리를 다루는 힘', standards:['4과07-03'], objective:'불편한 소리를 줄이는 방법을 찾아 상황에 맞게 실천하고 필요한 소리는 살린다.', review:CURRICULUM_REVIEW, restored:'책 읽는 친구들이 편안해졌어!'}
 ];
 export const legacyLessons = [
   {title:'소리는 어디에서 시작될까?', task:'물체를 눌러 소리를 만들고, 떨리는 모습을 관찰해 봐.', goal:'서로 다른 물체 2개 이상 관찰하기', question:'소리가 나는 물체의 공통점은?', choices:['물체가 떨려.','물체의 색이 바뀌어.'], answer:0, summary:'소리가 나는 물체는 떨려.'},
