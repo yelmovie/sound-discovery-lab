@@ -446,7 +446,7 @@ dialog[open]{display:flex;flex-direction:column}
 .title-cta{min-width:270px;min-height:66px;font-size:26px;border-radius:20px}
 .title-story{min-height:66px;padding:0 24px;border-radius:20px;background:#fffdf3;color:#17394b;border:2px solid #fff;box-shadow:0 4px 0 #9fb9b5,var(--shadow);font-size:22px}
 .title-sub{margin-top:14px;color:#fff;font-size:20px;font-weight:700;text-shadow:0 2px 6px #0b2a44cc}
-.title-guide{position:absolute;right:clamp(16px,4vw,72px);bottom:clamp(16px,6dvh,64px);display:flex;flex-direction:column;align-items:center;gap:10px;animation:title-bob 3s ease-in-out infinite}
+.title-guide{position:absolute;right:clamp(16px,4vw,72px);bottom:clamp(16px,6dvh,64px);display:flex;flex-direction:column;align-items:center;gap:10px;animation:title-bob 3s ease-in-out 4}
 .title-guide .portrait{width:clamp(110px,12vw,180px);height:auto;border:0;border-radius:0;background:none;filter:drop-shadow(0 10px 10px #0b2a4440)}
 .title-bubble{position:relative;padding:9px 16px;border-radius:16px;background:#fffdf3;color:#17394b;font-size:20px;font-weight:800;box-shadow:var(--shadow);white-space:nowrap}
 .title-bubble::after{content:"";position:absolute;left:50%;bottom:-7px;width:14px;height:14px;background:inherit;transform:translateX(-50%) rotate(45deg)}
@@ -563,10 +563,10 @@ body:has(.admin-dock) :is(.lesson-page,.final-page,.result-page){padding-bottom:
 }
 @media(max-height:500px){
  .map-controls{left:12px;bottom:10px;gap:6px}
- .map-dpad{grid-template-columns:repeat(3,46px);grid-template-rows:repeat(2,44px);gap:4px}
- .map-dpad button{width:46px;min-height:44px;font-size:22px}
+ .map-dpad{grid-template-columns:repeat(3,48px);grid-template-rows:repeat(2,48px);gap:4px}
+ .map-dpad button{width:48px;min-height:48px;font-size:22px}
  .map-tools{gap:4px}
- .map-tool{min-height:44px;padding:4px 10px;font-size:16px}
+ .map-tool{min-height:48px;padding:4px 10px;font-size:16px}
  .map-tool .icon{width:22px;height:22px}
  .map-next{right:12px;bottom:10px;min-height:56px;max-width:40vw;padding:4px 14px}
  .map-next small{font-size:14px}
