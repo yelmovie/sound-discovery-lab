@@ -266,6 +266,7 @@ export function mountMap(canvas,state,onArrive,options={}){
         const paper=sheet.getContext('2d');paper.filter=`hue-rotate(${hue}deg) saturate(1.15)`;paper.drawImage(birdImage,0,0);return {...birdSprite,image:sheet};
       });
       ready=true;loadedAt=performance.now();loading.hidden=true;measure();paint(loadedAt);
+      if(destination!==null)walk(destination);
     }catch{
       if(!active||version!==loadVersion)return;
       loading.replaceChildren(document.createTextNode('마을 그림을 불러오지 못했어. 탐구 기록은 그대로야. '));
@@ -273,7 +274,9 @@ export function mountMap(canvas,state,onArrive,options={}){
     }
   }
   function walk(stage){
-    if(!ready||paused||!Number.isInteger(stage)||stage<0||stage>5)return false;
+    if(paused||!Number.isInteger(stage)||stage<0||stage>5)return false;
+    // Keep an early destination click while the map art finishes loading.
+    if(!ready){destination=stage;return true;}
     clearInput();const door=world.doors[stage];
     if(distance(position,door)<=door.radius||reduced.matches){position={x:door.x,y:door.y};entered(position);paint(performance.now());followCamera(true);arrive(stage);return true;}
     path=findRoute(position,door,world).slice(1);destination=stage;goal={x:door.x,y:door.y};return path.length>0;

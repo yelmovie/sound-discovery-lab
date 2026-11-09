@@ -6,7 +6,7 @@ import net from 'node:net';
 import { fileURLToPath } from 'node:url';
 import { concepts,conceptView,emphasize } from '../src/concepts.js';
 import { assets,interfaceSounds } from '../src/data.js';
-import { freshState } from '../src/model.js';
+import { freshState, normalize } from '../src/model.js';
 import { coachFor } from '../src/companion.js';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
@@ -38,6 +38,15 @@ test('every lesson has progressive hints and ready feedback requires actual evid
  const state=freshState();
  for(let i=0;i<20;i++)for(let level=0;level<3;level++){const coach=coachFor(state,i,level);assert.equal(coach.ready,false);assert.equal(typeof coach.text,'string');assert.ok(coach.text.length>5);}
  state.work[0]={seen:['rubber','drum'],choice:0};assert.equal(coachFor(state,0).ready,true);assert.equal(coachFor(state,0).target,'[data-action="submit"]');
+});
+test('a restored rhythm guides a fresh performance instead of adding another first beat',()=>{
+ const state=freshState();state.work[3]={challenge:{sequence:['울림'],sounding:true}};
+ assert.equal(coachFor(state,3).target,'[data-action="challenge-rest"]');
+ const restored=normalize(state),cue=coachFor(restored,3);
+ assert.equal(cue.target,'[data-action="challenge-clear"]');
+ assert.match(cue.text,/다시 연주/);
+ restored.work[3].challenge.sequence=['울림','쉼'];
+ assert.equal(coachFor(restored,3).target,'[data-action="challenge-ring"]');
 });
 test('concept player retains native playback controls and text when video is unavailable',()=>{
  const html=conceptView(0);assert.match(html,/playsinline controls/);assert.match(html,/kind="captions"/);assert.match(html,/concept-fallback/);

@@ -104,6 +104,18 @@ test('safe challenge observations retain the current round without replaying com
  assert.deepEqual(experimentPlan(solutions,{challenge:{solution:'pad'}}).filter(s=>s.type==='action').map(s=>s.action),['challenge-before','challenge-after']);
 });
 
+test('automatic rhythm observation retains the restart cue for an interrupted performance',()=>{
+ const i=lessons.findIndex(l=>l.challenge==='rhythm');
+ for(const sounding of [false,true]){
+  const w={challenge:{sequence:['울림'],sounding}},before=structuredClone(w);
+  const cue=experimentPlan(i,w).at(-1);
+  assert.equal(cue.nextSelector,'[data-action="challenge-clear"]');
+  assert.match(cue.message,/다시 연주/);
+  assert.deepEqual(w,before);
+ }
+ assert.equal(experimentPlan(i,{challenge:{sequence:['울림','쉼'],sounding:false}}).at(-1).nextSelector,'[data-action="challenge-ring"]');
+});
+
 test('running every fresh challenge observation cannot award a proof or choose an answer',()=>{
  const sound={play(){},sequence(){},stop(){}};
  for(const [i,l] of lessons.entries()){

@@ -50,6 +50,11 @@ export const transferCases = [
   {title:'물속에서 돌을 톡톡',text:'물속 돌 두 개를 부딪칠 때, 물속 감지기에 소리가 전해져.',answer:'water'},
   {title:'탁자에 귀를 대 봐',text:'탁자 한쪽을 살짝 두드렸더니, 탁자에 댄 귀로 들렸어.',answer:'solid'}
 ];
+export const diagnosisFields = [
+  {key:'place',label:'소리가 나는 위치',answer:'library',options:[['library','도서관 옆 복도'],['field','운동장 반대편']]},
+  {key:'situation',label:'소리가 불편한 상황',answer:'reading',options:[['reading','독서하는 시간'],['festival','함께 북 치는 축제']]},
+  {key:'person',label:'영향을 받는 사람',answer:'reader',options:[['reader','책 읽는 친구'],['drummer','공연 중인 연주자']]}
+];
 export const solutions = [
   {id:'pad',label:'북 아래 패드',detail:'바닥으로 전해지는 떨림을 줄여.'},
   {id:'volume',label:'더 작은 세기로',detail:'북을 살살 쳐 소리 크기를 줄여.'},

@@ -174,7 +174,8 @@ body:has(.single-screen) .admin-arrow{width:44px;min-height:44px;height:44px;fon
  .experiment-content .sample-pair .waveform{height:clamp(28px,10cqh,48px)}
  .experiment-content .sample-pair.large .waveform{height:clamp(36px,20cqh,90px)}
 }
-@container experiment (max-height:320px){
+@media (orientation:landscape){
+@container experiment (max-height:370px){
  .experiment-content{--read:18px;--read-small:16px;gap:6px}
  .experiment-content .btn,.experiment-content .choice{min-height:48px;padding:5px 8px}
  .experiment-content input[type=range]{min-height:44px}
@@ -254,6 +255,7 @@ body:has(.single-screen) .admin-arrow{width:44px;min-height:44px;height:44px;fon
  .activity-base-9 .solution-grid .concept-thumb{width:40px;height:40px}
  .activity-base-9 .solution-grid .concept-tool{padding:5px;grid-template-columns:40px minmax(0,1fr)}
  .activity-base-9 .answer-group .choice{font-size:16px}
+}
 }
 @media(max-width:1100px){
  .lesson-page.single-screen{padding:8px 12px 10px;gap:8px}

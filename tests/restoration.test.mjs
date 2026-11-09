@@ -1,0 +1,3 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {freshState,normalize} from '../src/model.js';import {strikeSignalNote} from '../src/signal-restoration.js';
+test('celebration notes cannot open a locked stage or award evidence',()=>{const s=freshState();assert.equal(strikeSignalNote(s,0,0),false);assert.deepEqual(s.evidence,{});assert.deepEqual(s.restoration,{});});
+test('old saves normalize and unearned celebration data is discarded',()=>{const s=freshState();delete s.restoration;s.restoration={0:[0,1,2]};assert.deepEqual(normalize(s).restoration,{0:[],1:[],2:[],3:[],4:[]});});

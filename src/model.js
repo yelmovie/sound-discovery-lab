@@ -1,7 +1,7 @@
-import { lessons, legacyLessons, legacyIndex, LESSON_COUNT, stageLessons, finalTasks, transferCases } from './data.js';
+import { lessons, legacyLessons, legacyIndex, LESSON_COUNT, stageLessons, finalTasks, transferCases, diagnosisFields } from './data.js';
 import { cleanChallenge, checkChallenge } from './challenges.js';
 export const STORAGE_KEY = 'ullim-city-v1';
-export const freshState = () => ({version:2,work:{},evidence:{},settings:{muted:false,admin:false,bgm:true,sfx:true,bgmVolume:25},lastRoute:'home',finalAnswers:{},restored:false,completedAt:null,previousCompletion:null});
+export const freshState = () => ({version:2,work:{},restoration:{},evidence:{},settings:{muted:false,admin:false,bgm:true,sfx:true,bgmVolume:25},lastRoute:'home',finalAnswers:{},restored:false,completedAt:null,previousCompletion:null});
 const object = value => value && typeof value === 'object' && !Array.isArray(value);
 function cleanWork(raw) {
   if (!object(raw)) return {};
@@ -43,6 +43,7 @@ export function normalize(raw) {
   base.restored = raw.restored===true && evidenceCount(base)===LESSON_COUNT && checkFinal(base).ok;
   base.completedAt = base.restored && typeof raw.completedAt==='string' && Number.isFinite(Date.parse(raw.completedAt)) ? raw.completedAt : null;
   if(!base.completedAt)base.restored=false;
+  base.restoration=Object.fromEntries(Array.from({length:5},(_,n)=>[n,stageDone(base,n)&&Array.isArray(raw.restoration?.[n])?[...new Set(raw.restoration[n].filter(i=>[0,1,2].includes(i)))]:[]]));
   base.lastRoute = typeof raw.lastRoute==='string' && canRoute(base,raw.lastRoute) ? raw.lastRoute : 'home';
   return base;
 }
@@ -85,6 +86,10 @@ export function canRoute(s,route) {
 }
 const fail = message => ({ok:false,message});
 const list = x => Array.isArray(x) ? x : [];
+// Finish the first pass, then guide the learner back to the field that needs another look.
+export function nextDiagnosisField(work={}) {
+  return diagnosisFields.find(field=>!work[field.key]) || diagnosisFields.find(field=>work[field.key]!==field.answer);
+}
 export function checkLesson(s,i) {
   const w=s.work[i]||{};
   if(!lessons[i])return fail('올바른 실험을 선택해 줘.');
@@ -111,7 +116,7 @@ export function checkLesson(s,i) {
   if (i===7 && !transferCases.every((c,k)=>w.verified?.[k]===c.answer)) return fail('아직 검증하지 않은 상황이 있어. 세 상황 모두 선택한 뒤 실험해 봐.');
   if (i===8) {
     if (!w.heard) return fail('현장 소리를 먼저 들어 봐.');
-    if (w.place!=='library' || w.situation!=='reading' || w.person!=='reader') return fail('도서관 옆 복도에서, 독서 중인 친구가 어떤 어려움을 겪는지 다시 살펴봐.');
+    if (nextDiagnosisField(w)) return fail('도서관 옆 복도에서, 독서 중인 친구가 어떤 어려움을 겪는지 다시 살펴봐.');
   }
   if (i===9) {
     if (!s.evidence[legacyIndex(8)]) return fail('먼저 소음 관리센터에서 현장을 진단해 줘.');

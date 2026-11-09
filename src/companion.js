@@ -41,6 +41,7 @@ export function coachFor(state,index,level=0,saved){
  if(l.base===9)target=!w.before?'[data-action="noise-before"]':!(w.solutions||[]).length?'[data-action="solution"]':!w.after?'[data-action="noise-after"]':'.answer-group .choice';
  if(l.challenge){
   const c=w.challenge||{};
+  if(l.challenge==='rhythm'&&!c.sounding&&c.sequence?.at(-1)==='울림')return {text:'소리가 멈췄어. 처음부터를 눌러 신호를 다시 연주해 봐.',target:'[data-action="challenge-clear"]',ready};
   const next={
    parts:c.heard?'[data-action="challenge-select"]':'[data-action="challenge-listen"]',
    rhythm:c.sounding?'[data-action="challenge-rest"]':'[data-action="challenge-ring"]',

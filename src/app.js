@@ -2,9 +2,10 @@ import { mountNpcGuide } from './npc-guide.js';
 let disposeNpc;
 import { art, rulerIllustration } from './illustrations.js';
 import { transferSound } from './samples.js';
-import { backgrounds, titleLogo, stages, lessons, instruments, lengths, media, transferCases, solutions, finalTasks, props, achievements, legacyIndex, LESSON_COUNT, stageLessons } from './data.js';
-import { STORAGE_KEY, freshState, readState, createSaveSession, evidenceCount, stageDone, canLesson, canRoute, recordEvidence, checkLesson, checkFinal } from './model.js';
+import { backgrounds, titleLogo, stages, lessons, instruments, lengths, media, transferCases, diagnosisFields, solutions, finalTasks, props, achievements, legacyIndex, LESSON_COUNT, stageLessons } from './data.js';
+import { STORAGE_KEY, freshState, readState, createSaveSession, evidenceCount, stageDone, canLesson, canRoute, recordEvidence, checkLesson, checkFinal, nextDiagnosisField } from './model.js';
 import { SoundEngine } from './audio.js';
+import {mountSignalRestoration} from './signal-restoration.js';
 import { mountMap } from './map.js';
 import { challengeView, runChallenge } from './challenges.js';
 import { settingsContent as copy } from './settings-content.js';
@@ -28,6 +29,7 @@ let advanceTimer=null,inputLockedUntil=0;
 const hintLevels={};
 const sound=new SoundEngine();configureSound();
 let autoSession=0,previewVisual=null,autoplayDispatch=false,fitFrame=0,fitObserver=null,currentExperimentStep=null;
+let experimentPointer=null,pointerReleaseTimer=null;
 const experimentPlayer=createExperimentPlayer({getContext:()=>`${route}|${autoSession}`,perform:performExperimentStep,onUpdate:syncExperimentPlayer});
 function configureSound(){sound.configure({...state.settings,bgmVolume:state.settings.bgmVolume/100});}
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -106,7 +108,7 @@ function activity(index,w){
   if(i===5)return `<div class="target-row"><div><span class="eyebrow">목표 신호</span><h3>낮음 <span>→</span> 높음 <span>→</span> 중간</h3></div>${button(`${icon('play')} 목표 신호 듣기 ${w.targetHeard?'✓':''}`,'target','','btn secondary')}</div><div class="pattern-slots">${[0,1,2].map((_,k)=>`<span class="${w.pattern?.[k]?'filled':''}">${w.pattern?.[k]?lengths.find(l=>l.value===w.pattern[k])?.pitch:k+1}</span>`).join('<i>→</i>')}</div><div class="length-options">${lengths.map(l=>button(`${rulerKey(l.value)}<b>${l.label} · ${l.value} cm</b>`,'note',`data-length="${l.value}"`, 'length-card key')).join('')}</div><div class="inline-actions">${button('다시 연주하기','pattern-reset','','btn quiet')}</div>`;
   if(i===6)return `<div class="medium-grid">${media.map(m=>`<section class="medium-card illustrated-medium ${arr(w.media).includes(m.id)?'observed':''}"><h3>${arr(w.media).includes(m.id)?'✓ ':''}${m.label}</h3>${art(`travel-${m.id}`,`${m.source}에서 ${m.receiver}까지 ${m.label}를 통해 소리가 전달되는 실험`,'concept-scene')}<div class="transmission-path"><span>${m.source}</span><b>${m.label}${m.id==='water'?'을':'를'} 통해</b><span>${m.receiver}</span></div>${button(`${icon('play')} 듣기`,'medium',`data-medium="${m.id}" aria-label="${m.label} 소리 전달 실험"`,'btn secondary')}</section>`).join('')}</div><p class="small-note">서로 독립된 세 실험이야.</p>${choiceGroup(index,w)}`;
   if(i===7){const k=w.currentCase||0,t=transferCases[k];return `<div class="case-tabs">${transferCases.map((t,n)=>button(`${n+1}. ${['문 밖','물속','탁자'][n]} ${w.verified?.[n]?'✓':''}`,'case',`data-case="${n}" aria-pressed="${k===n}"`,`btn ${k===n?'secondary':'quiet'}`)).join('')}</div><div class="case-story"><span class="case-number">0${k+1}</span><div><h3>${t.title}</h3><p>${t.text}</p></div></div><div class="medium-choices">${media.map(m=>button(m.label,'case-choice',`data-medium="${m.id}" aria-pressed="${w.caseChoice===m.id}"`,`choice ${w.caseChoice===m.id?'selected':''}`)).join('')}</div><p class="small-note">연결 ${Object.keys(w.verified||{}).length} / 3</p>`;}
-  if(i===8)return `<div class="noise-story illustrated-noise">${art('library-noise','도서관에서 책 읽는 친구와 열린 문 밖 복도의 북 연습','concept-story')}<div><span class="eyebrow">현장 제보 · 독서 시간</span><p class="noise-context"><span>복도의 북 연습</span><b aria-hidden="true">→</b><span>책 읽는 친구</span></p><h3>“같은 줄을 자꾸 다시 읽게 돼.”</h3>${button(`${icon('play')} 현장 소리 듣기 ${w.heard?'✓':''}`,'noise-scene','','btn secondary')}</div></div>${diagnostic('place','소리가 나는 위치',[['library','도서관 옆 복도'],['field','운동장 반대편']],w)}${diagnostic('situation','소리가 불편한 상황',[['reading','독서하는 시간'],['festival','함께 북 치는 축제']],w)}${diagnostic('person','영향을 받는 사람',[['reader','책 읽는 친구'],['drummer','공연 중인 연주자']],w)}`;
+  if(i===8)return `<div class="noise-story illustrated-noise">${art('library-noise','도서관에서 책 읽는 친구와 열린 문 밖 복도의 북 연습','concept-story')}<div><span class="eyebrow">현장 제보 · 독서 시간</span><p class="noise-context"><span>복도의 북 연습</span><b aria-hidden="true">→</b><span>책 읽는 친구</span></p><h3>“같은 줄을 자꾸 다시 읽게 돼.”</h3>${button(`${icon('play')} 현장 소리 듣기 ${w.heard?'✓':''}`,'noise-scene','','btn secondary')}</div></div>${diagnosisFields.map(field=>diagnostic(field.key,field.label,field.options,w)).join('')}`;
   if(i===9){if(!state.evidence[legacyIndex(8)])return missing(8,'해결책을 적용할 현장 진단이 아직 없어.');return `<div class="solution-grid">${solutions.map(s=>button(`<span class="solution-check">${arr(w.solutions).includes(s.id)?'✓':'+'}</span>${art(s.id==='pad'?'drum-pad':`care-${s.id}`,'','concept-thumb')}<span><b>${s.label}</b></span>`,'solution',`data-solution="${s.id}" aria-label="${s.label}. ${s.detail}" aria-pressed="${arr(w.solutions).includes(s.id)}"`,`solution concept-tool ${arr(w.solutions).includes(s.id)?'selected':''}`)).join('')}</div><div class="sample-pair compact"><section><b>적용 전 · 독서 시간</b>${wave(.9,7)}${button(`${icon('play')} 적용 전 듣기 ${w.before?'✓':''}`,'noise-before','','btn secondary')}</section><section><b>적용 후 · 독서 시간</b>${wave(arr(w.solutions).includes('time')?0:noiseLevel(w),7,arr(w.solutions).includes('time'))}${button(`${icon('play')} 적용 후 듣기 ${w.after?'✓':''}`,'noise-after','','btn secondary')}</section></div>${choiceGroup(index,w)}`;}
   return '';
 }
@@ -117,13 +119,13 @@ function lessonCue(i,w,saved){
  const coach=coachFor(state,i,hintLevels[i]||0,saved),l=lessons[i];
  if(saved)return {text:'관찰을 마쳤어! 다음 활동으로 가자.',target:'[data-action="continue"]'};
  if(l.challenge){
-  const c=w.challenge||{};let target=coach.target;
+  const c=w.challenge||{};if(coach.target==='[data-action="challenge-clear"]')return coach;let target=coach.target;
   if(c.kind==='hint'&&l.challenge==='solutions'&&c.before&&c.after)target='[data-action="challenge-solution"]';
   if(c.kind==='hint'&&l.challenge==='mix')target='.slider-mixer';
   return {text:!hintLevels[i]&&c.message?c.message:coach.text,target};
  }
  if(l.base===1)return {text:hintLevels[i]?coach.text:playingUntil>Date.now()?'손으로 눌러 떨림을 멈춰 봐.':w.stopped?'누르기 전과 뒤를 비교해 골라 봐.':'소리굽쇠를 눌러 울려 봐.',target:playingUntil>Date.now()?'[data-action="fork-stop"]':coach.target};
- if(l.base===8&&w.heard){const field=['place','situation','person'].find(k=>!w[k])||'place';const names={place:'소리가 나는 위치',situation:'불편한 상황',person:'영향을 받는 사람'};return {text:hintLevels[i]?coach.text:`${names[field]}${field==='place'?'를':'을'} 골라 봐.`,target:`[data-action="diagnostic"][data-field="${field}"]`};}
+ if(l.base===8&&w.heard){const field=nextDiagnosisField(w);if(field)return {text:hintLevels[i]?coach.text:`${field.label}${field.key==='place'?'를':'을'} ${w[field.key]?'다시 살펴보고 ':''}골라 봐.`,target:`[data-action="diagnostic"][data-field="${field.key}"]`};}
  if(hintLevels[i])return coach;
  if(l.base===0)return {text:arr(w.seen).length<2?'물체를 눌러 떨림을 관찰해 봐.':'관찰한 물체의 공통점을 골라 봐.',target:coach.target};
  if(l.base===2)return {text:!w.a?'북을 눌러 첫 소리를 담아 봐.':'세기를 바꾸고 북을 다시 쳐 봐.',target:coach.target};
@@ -141,7 +143,21 @@ function stopExperiment(){
  const active=experimentPlayer.status().state!=='idle'||previewVisual;
  autoSession++;previewVisual=null;currentExperimentStep=null;experimentPlayer.stop();if(active)sound.stop();
 }
+// A preview is a demonstration, not the learner's saved settings. The first
+// manual gesture restores those settings; a second, explicit gesture acts on them.
+function handOffExperiment(target){
+ if(!previewVisual)return false;
+ const control=target?.closest('button,input,select');
+ const selector=control?.id?`#${CSS.escape(control.id)}`:control?.dataset.action?`button${[...control.attributes].filter(a=>a.name.startsWith('data-')).map(a=>`[${a.name}="${CSS.escape(a.value)}"]`).join('')}`:'';
+ stopExperiment();clearTimeout(liveTimer);playingUntil=0;
+ feedback={kind:'hint',text:'자동실험을 멈췄어. 내 설정으로 돌아왔으니 직접 조절하고 조작해 봐.'};
+ render();if(selector)app.querySelector(selector)?.focus({preventScroll:true});
+ return true;
+}
 function syncExperimentPlayer(ps=experimentPlayer.status()){
+ // Keep the pressed control in place until its click/drop has a target. Hiding
+ // player controls here can cross a container-query breakpoint during a tap.
+ if(experimentPointer!==null)return;
  const controls=app.querySelector('.autoplay-controls');if(!controls)return;
  controls.dataset.playerState=ps.state;
  const b=controls.querySelector('[data-action="auto-play"]'),label=b?.querySelector('.autoplay-state');
@@ -151,6 +167,10 @@ function syncExperimentPlayer(ps=experimentPlayer.status()){
  const speed=controls.querySelector('select');if(speed)speed.value=String(ps.speed);
  if(['waiting','complete','idle'].includes(ps.state)&&previewVisual){previewVisual=null;render();return;}
  syncLessonCue();
+}
+function releaseExperimentPointer(){
+ if(experimentPointer===null)return;
+ clearTimeout(pointerReleaseTimer);experimentPointer=null;syncExperimentPlayer();
 }
 function syncLessonCue(){
  if(!route.startsWith('lesson/'))return;
@@ -193,7 +213,22 @@ function fitExperiment(){
   let scale=1;
   for(let n=0;n<5;n++){
    const box=content.getBoundingClientRect();let left=box.left,right=box.right,top=box.top,bottom=box.bottom;
-   for(const child of content.querySelectorAll('*')){const r=child.getBoundingClientRect();if(r.width<1||r.height<1)continue;left=Math.min(left,r.left);right=Math.max(right,r.right);top=Math.min(top,r.top);bottom=Math.max(bottom,r.bottom);}
+   const clipBoxes=new Map();
+   for(const child of content.querySelectorAll('*')){
+    const r=child.getBoundingClientRect();if(r.width<1||r.height<1)continue;
+    let x1=r.left,x2=r.right,y1=r.top,y2=r.bottom;
+    // Cropped artwork can extend far beyond its visible window. Measure that
+    // window, while retaining overflow outside the actual experiment content.
+    for(let parent=child.parentElement;parent&&parent!==content;parent=parent.parentElement){
+     let clip=clipBoxes.get(parent);
+     if(!clip){const style=getComputedStyle(parent);clip={x:/hidden|clip|auto|scroll/.test(style.overflowX),y:/hidden|clip|auto|scroll/.test(style.overflowY)};if(clip.x||clip.y)clip.box=parent.getBoundingClientRect();clipBoxes.set(parent,clip);}
+     if(clip.x){x1=Math.max(x1,clip.box.left);x2=Math.min(x2,clip.box.right);}
+     if(clip.y){y1=Math.max(y1,clip.box.top);y2=Math.min(y2,clip.box.bottom);}
+     if(x2<=x1||y2<=y1)break;
+    }
+    if(x2<=x1||y2<=y1)continue;
+    left=Math.min(left,x1);right=Math.max(right,x2);top=Math.min(top,y1);bottom=Math.max(bottom,y2);
+   }
    const needW=Math.max(Math.max(content.scrollWidth,content.offsetWidth)*scale,right-left),needH=Math.max(Math.max(content.scrollHeight,content.offsetHeight)*scale,bottom-top);
    const factor=Math.min(1,width/needW,height/needH);if(factor>.995)break;
    scale=Math.max(.4,scale*factor*.995);content.style.setProperty('--content-fit',String(scale));
@@ -207,7 +242,7 @@ function finalPage(){
  return `<main class="final-page final-focus"><div class="page-title"><div><span class="eyebrow">FINAL MISSION</span><h1>우리의 증거로 축제를 열자!</h1></div>${rings()}</div>${evidenceCount(state)<LESSON_COUNT?'<div class="preview-notice">교사용 미리보기 · 정식 복구에는 증거 20개가 필요해.</div>':''}<nav class="final-steps" aria-label="다섯 가지 소리 원리">${stages.map((s,n)=>button(`${state.finalAnswers[n]!==undefined?'✓ ':''}${s.short}`,'final-step',`data-step="${n}" ${n===i?'aria-current="step"':''}`,`chapter ${n===i?'current':''}`)).join('')}</nav><div class="final-grid"><section class="final-task"><div class="final-stage">${stagePicture(i)} ${stages[i].name}<span>${i+1} / 5</span></div><div class="evidence-quote">${state.evidence[i*4+3]?esc(state.evidence[i*4+3].summary):'이 시설에서 모은 증거를 떠올려 봐.'}</div><h2>${t.q}</h2>${t.options.map((option,k)=>button(option,'final-choice',`data-question="${i}" data-choice="${k}" aria-pressed="${state.finalAnswers[i]===k}"`,`choice ${state.finalAnswers[i]===k?'selected':''}`)).join('')}<div class="final-navigation">${button('이전 원리','final-step',`data-step="${Math.max(0,i-1)}" ${i===0?'disabled':''}`,'btn quiet')}<span class="small-note">${i===4?'다섯 원리를 모았다면 코어를 복구해!':'답을 고르면 다음 원리로 이어져.'}</span></div></section><section class="core-control"><div class="mini-core">${prop('core','소리 코어')}</div><h2>다섯 발견이 모이면<br>축제가 시작돼!</h2><p>${answered} / 5 원리 선택</p>${button('소리 코어 복구하기','restore',answered<5?'disabled':'','btn primary')}<div class="feedback ${feedback?.kind||''}" role="status">${esc(feedback?.text||'모은 증거를 적용해서 코어를 깨워 줘.')}</div>${state.settings.admin?button('결과 미리보기','goto','data-route="result"','btn quiet'):''}</section></div></main>`;
 }
 function resultPage(){const genuine=state.restored&&evidenceCount(state)===LESSON_COUNT;return `<main class="result-page"><section class="certificate ${genuine?'':'preview'}"><span class="eyebrow">${genuine?'ULLIM CITY · SOUND EXPLORER':'관리자 미리보기 · 아직 인증되지 않았어'}</span><div class="certificate-medal">${icon('star')}</div><h1>${genuine?'울림도시가 다시 깨어났어!':'도시의 복구를 기다리고 있어'}</h1><p>${genuine?'관찰하고, 비교하고, 다시 도전한 너에게':'증거 20개와 마지막 복구를 마치면'}</p><h2>소리 탐험가 인증서</h2>${rings()}<div class="certificate-summary"><span><b>${evidenceCount(state)}</b>개 증거</span><span><b>${stages.filter((_,i)=>stageDone(state,i)).length}</b>곳 복구</span><span><b>5</b>가지 소리의 원리</span></div><p class="certificate-message">소리의 떨림, 크기, 높낮이, 전달을 탐구하고<br>함께 사는 친구들을 배려하는 방법을 발견했어.</p>${genuine?`<p class="certificate-date">복구한 날 · ${new Date(state.completedAt).toLocaleDateString('ko-KR',{timeZone:'Asia/Seoul'})}</p>`:''}<div class="result-team">${portrait('girl')}${portrait()}${portrait('boy')}</div><div class="result-actions">${genuine?button('인증서 인쇄 · PDF 저장','print','','btn primary'):button('증거 모으러 가기','goto','data-route="map"','btn primary')}${button('내 증거 다시 보기','notebook','','btn secondary')}${button('지도 둘러보기','goto','data-route="map"','btn quiet')}</div></section><section class="result-findings"><h2>내가 발견한 다섯 원리</h2>${stages.map((s,i)=>button(`${stagePicture(i)}<span><small>${s.name}</small><b>${concepts[i].title}</b></span>${icon('play')}`,'concept',`data-stage="${i}"`,'finding-replay')).join('')}</section></main>`;}
-function render(){disposeNpc?.();map?.destroy();map=null;sound.setScene(route.startsWith('lesson/')?'lesson':route);app.innerHTML=header()+(route==='home'?home():route==='map'?mapPage():route==='final'?finalPage():route==='result'?resultPage():lessonPage(Number(route.split('/')[1])))+adminDock()+`<footer class="statusbar"><span id="audio-status" role="status">${esc(soundText||'소리 준비됨')}</span><span id="save-status" role="status">${esc(studentState?'교사용 시연 · 학생 기록에 저장하지 않음':warning||'이 브라우저에 자동 저장 중')}</span></footer>${warning?`<div class="save-warning" role="alert">${esc(warning)}</div>`:''}`;if(route.startsWith('lesson/')){syncLessonCue();fitExperiment();fitObserver??=new ResizeObserver(fitExperiment);fitObserver.disconnect();fitObserver.observe(app.querySelector('.experiment-board'));}if(route==='home')disposeNpc=mountNpcGuide(app.querySelector('.title-actions'),{src:'./media/audio/npc-welcome.m4a',text:'소리 탐험을 시작해 볼까? 소리가 날 때 물체가 어떻게 떨리는지 관찰하고, 소리의 크기와 높낮이를 직접 비교해 보자.',enabled:()=>!state.settings.muted&&state.settings.sfx,quiet:value=>sound.setQuiet(value)});if(route==='map'){map=mountMap(document.querySelector('#world'),state,n=>{if(n===5?!canRoute(state,'final'):!canLesson(state,n*4))return lockedNote(n);navigate(n===5?'final':`lesson/${stageLessons(n).find(i=>!state.evidence[i])??n*4}`);},{onView:syncMapView,onNear:syncMapNext,onStep:()=>sound.tone({frequency:170,level:.5,duration:.06,kind:'ui'}),residentLine:n=>stages[n].restored});map.setView(mapView);}}
+function render(){disposeNpc?.();map?.destroy();map=null;sound.setScene(route.startsWith('lesson/')?'lesson':route);app.innerHTML=header()+(route==='home'?home():route==='map'?mapPage():route==='final'?finalPage():route==='result'?resultPage():lessonPage(Number(route.split('/')[1])))+adminDock()+`<footer class="statusbar"><span id="audio-status" role="status">${esc(soundText||'소리 준비됨')}</span><span id="save-status" role="status">${esc(studentState?'교사용 시연 · 학생 기록에 저장하지 않음':warning||'이 브라우저에 자동 저장 중')}</span></footer>${warning?`<div class="save-warning" role="alert">${esc(warning)}</div>`:''}`;if(route.startsWith('lesson/')){syncLessonCue();fitExperiment();fitObserver??=new ResizeObserver(fitExperiment);fitObserver.disconnect();fitObserver.observe(app.querySelector('.experiment-board'));}if(route==='home')disposeNpc=mountNpcGuide(app.querySelector('.title-actions'),{src:'./media/audio/npc-welcome.m4a',text:'소리 탐험을 시작해 볼까? 소리가 날 때 물체가 어떻게 떨리는지 관찰하고, 소리의 크기와 높낮이를 직접 비교해 보자.',enabled:()=>!state.settings.muted&&state.settings.sfx,quiet:value=>sound.setQuiet(value)});if(route==='map'){map=mountMap(document.querySelector('#world'),state,n=>{if(n===5?!canRoute(state,'final'):!canLesson(state,n*4))return lockedNote(n);navigate(n===5?'final':`lesson/${stageLessons(n).find(i=>!state.evidence[i])??n*4}`);},{onView:syncMapView,onNear:syncMapNext,onStep:()=>sound.tone({frequency:170,level:.5,duration:.06,kind:'ui'}),residentLine:n=>stages[n].restored});map.setView(mapView);mountSignalRestoration(app.querySelector('.map-page'),state,save,(frequency)=>sound.play({frequency,kind:'fork',duration:.5}));}}
 function navigate(next){stopExperiment();cancelAdvance();inputLockedUntil=Date.now()+300;if(!canRoute(state,next))next='map';if(next!==route)trail.push(route);route=next;feedback=null;lastObject='';clearTimeout(liveTimer);playingUntil=0;sound.stop();closeModal(false);save();render();void sound.effect('tap');window.scrollTo(0,0);document.querySelector('main h1')?.setAttribute('tabindex','-1');document.querySelector('main h1')?.focus({preventScroll:true});}
 sound.onStatus=text=>{soundText=text;const el=document.querySelector('#audio-status');if(el)el.textContent=text;};
 function updateView(){const focus=document.activeElement;const action=focus?.dataset?.action,key=['tool','length','medium','slot','choice','case','solution','field','value','question'].map(k=>focus?.dataset?.[k]?`[data-${k}="${focus.dataset[k]}"]`:'').join('');render();if(action)document.querySelector(`[data-action="${action}"]${key}`)?.focus({preventScroll:true});}
@@ -269,10 +304,10 @@ async function handleClick(e){void sound.unlock();const b=e.target.closest('butt
    const ps=experimentPlayer.status();
    if(ps.playing){experimentPlayer.pause();sound.stop();clearTimeout(liveTimer);playingUntil=0;updateView();return;}
    if(ps.state==='paused'){const step=currentExperimentStep,context=`${route}|${autoSession}`;experimentPlayer.start();if(step)void performExperimentStep(step,{isCurrent:()=>experimentPlayer.status().playing&&context===`${route}|${autoSession}`});return;}
-   if(i<0)return;previewVisual=null;experimentPlayer.start(experimentPlan(i,w,state.evidence));return;
+   if(i<0)return;if(lessons[i].challenge==='rhythm'&&w.challenge)w.challenge.sounding=false;previewVisual=null;experimentPlayer.start(experimentPlan(i,w,state.evidence));return;
   }
   if(a==='auto-stop'){stopExperiment();clearTimeout(liveTimer);playingUntil=0;updateView();return;}
-  if(!e.auto){const hadPreview=Boolean(previewVisual);stopExperiment();if(hadPreview){render();app.querySelector(`[data-action="${a}"]`)?.focus({preventScroll:true});}}
+  if(!e.auto){if(b.closest('.experiment-board')&&handOffExperiment(b))return;const hadPreview=Boolean(previewVisual);stopExperiment();if(hadPreview){render();app.querySelector(`[data-action="${a}"]`)?.focus({preventScroll:true});}}
   if(a==='activity-tools')return openModal(`<div class="activity-menu">${button(`${icon('book')} 내 증거 노트`,'notebook','','btn secondary')}${button(`${icon('play')} 개념 영상`,'concept',`data-stage="${lessons[i].stage}"`,'btn secondary')}${button(`${icon('map')} 지도 보기`,'goto','data-route="map"','btn quiet')}${adminDock(true)}</div>`,'노트와 개념 영상');
   if(a==='home')return navigate('home');
   if(a==='start')return navigate('map');
@@ -340,7 +375,7 @@ async function handleClick(e){void sound.unlock();const b=e.target.closest('butt
   if(a==='medium'){const m=media.find(m=>m.id===b.dataset.medium);w.media=[...new Set([...arr(w.media),m.id])];sound.play({...transferSound(m.id,.5),duration:1.2});feedback={kind:'success',text:m.detail};}
   if(a==='case'){w.currentCase=Number(b.dataset.case);w.caseChoice=null;sound.stop();}
   if(a==='case-choice')w.caseChoice=b.dataset.medium;
-  if(a==='case-choice'){const k=w.currentCase||0;if(w.caseChoice===transferCases[k].answer){w.verified={...w.verified,[k]:w.caseChoice};sound.play(transferSound(w.caseChoice));feedback={kind:'success',text:`맞아! ${media.find(m=>m.id===w.caseChoice).label}를 통해 전달됐어. ${Object.keys(w.verified).length===3?'세 상황을 모두 연결했어.':'다음 상황에서도 소리 길을 찾아봐.'}`};const next=transferCases.findIndex((_,n)=>!w.verified[n]);if(next>=0){w.currentCase=next;w.caseChoice=null;inputLockedUntil=Date.now()+500;}}else feedback={kind:'error',text:w.caseChoice?'소리를 내는 물체와 듣는 곳 사이를 다시 살펴봐. 다른 물질을 고르고 검증해 봐.':'먼저 공기·물·고체 중 하나를 골라 줘.'};}
+  if(a==='case-choice'){const k=w.currentCase||0;if(w.caseChoice===transferCases[k].answer){w.verified={...w.verified,[k]:w.caseChoice};sound.play(transferSound(w.caseChoice));feedback={kind:'success',text:`맞아! ${media.find(m=>m.id===w.caseChoice).label}${w.caseChoice==='water'?'을':'를'} 통해 전달됐어. ${Object.keys(w.verified).length===3?'세 상황을 모두 연결했어.':'다음 상황에서도 소리 길을 찾아봐.'}`};const next=transferCases.findIndex((_,n)=>!w.verified[n]);if(next>=0){w.currentCase=next;w.caseChoice=null;inputLockedUntil=Date.now()+500;}}else feedback={kind:'error',text:w.caseChoice?'소리를 내는 물체와 듣는 곳 사이를 다시 살펴봐. 다른 물질을 고르고 검증해 봐.':'먼저 공기·물·고체 중 하나를 골라 줘.'};}
   if(a==='noise-scene'){w.heard=true;sound.sequence([0,1,2].map(()=>({kind:'drum',frequency:150,level:.85})));}
   if(a==='diagnostic')w[b.dataset.field]=b.dataset.value;
   if(a==='solution'){const id=b.dataset.solution;feedback={kind:'hint',text:solutions.find(s=>s.id===id).detail};w.solutions=arr(w.solutions).includes(id)?w.solutions.filter(x=>x!==id):[...arr(w.solutions),id];w.after=false;sound.stop();void sound.effect('drop');}
@@ -365,20 +400,25 @@ bindManipulations(app,{
  }
 });
 app.addEventListener('click',handleClick);modalRoot.addEventListener('click',handleClick);
-document.addEventListener('visibilitychange',()=>{if(document.hidden){const hadPreview=Boolean(previewVisual);stopExperiment();cancelAdvance();modalRoot.querySelector('video')?.pause();for(const w of Object.values(state.work))if(w.challenge)w.challenge.sounding=false;sound.stop();playingUntil=0;clearTimeout(liveTimer);if(hadPreview||route===`lesson/${legacyIndex(1)}`)render();}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden){const hadPreview=Boolean(previewVisual);stopExperiment();cancelAdvance();modalRoot.querySelector('video')?.pause();for(const w of Object.values(state.work))if(w.challenge)w.challenge.sounding=false;sound.stop();playingUntil=0;clearTimeout(liveTimer);if(hadPreview||route.startsWith('lesson/'))render();}});
 document.addEventListener('keydown',e=>{
  if(!['ArrowLeft','ArrowRight'].includes(e.key)||e.altKey||e.ctrlKey||e.metaKey||modalRoot.querySelector('dialog'))return;
  if(e.target instanceof Element&&e.target.closest('input,select,textarea,[contenteditable="true"]'))return;
  const t=state.settings.admin&&adminTargets(),next=t&&(e.key==='ArrowLeft'?t.prev:t.next);
  if(next){e.preventDefault();navigate(next);}
 });
-window.addEventListener('pagehide',()=>{const hadPreview=Boolean(previewVisual);stopExperiment();cancelAdvance();clearTimeout(liveTimer);playingUntil=0;sound.stop();map?.destroy();if(hadPreview||route===`lesson/${legacyIndex(1)}`)render();});
+window.addEventListener('pagehide',()=>{const hadPreview=Boolean(previewVisual);stopExperiment();cancelAdvance();clearTimeout(liveTimer);playingUntil=0;for(const w of Object.values(state.work))if(w.challenge)w.challenge.sounding=false;sound.stop();map?.destroy();if(hadPreview||route.startsWith('lesson/'))render();});
 render();
 // Offline cache for classroom Wi-Fi drops; skipped on local dev unless ?sw is added.
 if('serviceWorker' in navigator&&location.protocol!=='file:'&&(!['localhost','127.0.0.1','[::1]'].includes(location.hostname)||new URLSearchParams(location.search).has('sw')))addEventListener('load',()=>{navigator.serviceWorker.register('/sw.js').catch(()=>{});});
 
-app.addEventListener('pointerdown',e=>{if(e.target.closest('.experiment-board'))stopExperiment();},{capture:true});
-app.addEventListener('input',e=>{if(e.target.id==='experiment-speed'){experimentPlayer.setSpeed(Number(e.target.value));return;}if(!autoplayDispatch)stopExperiment();},{capture:true});
+app.addEventListener('pointerdown',e=>{if(!e.target.closest('.experiment-board'))return;if(handOffExperiment(e.target)){e.preventDefault();e.stopImmediatePropagation();return;}clearTimeout(pointerReleaseTimer);experimentPointer=e.pointerId;stopExperiment();},{capture:true});
+document.addEventListener('pointerup',e=>{if(e.pointerId===experimentPointer)pointerReleaseTimer=setTimeout(releaseExperimentPointer,0);},{capture:true});
+document.addEventListener('click',releaseExperimentPointer,{capture:true});
+document.addEventListener('pointercancel',releaseExperimentPointer,{capture:true});
+window.addEventListener('blur',releaseExperimentPointer);
+app.addEventListener('keydown',e=>{if(e.target.matches('.experiment-board input[type="range"]')&&['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown'].includes(e.key)&&handOffExperiment(e.target)){e.preventDefault();e.stopImmediatePropagation();}},{capture:true});
+app.addEventListener('input',e=>{if(e.target.id==='experiment-speed'){experimentPlayer.setSpeed(Number(e.target.value));return;}if(!autoplayDispatch){if(handOffExperiment(e.target)){e.stopImmediatePropagation();return;}stopExperiment();}},{capture:true});
 window.addEventListener('resize',()=>{syncExperimentPlayer();fitExperiment();});
 window.visualViewport?.addEventListener('resize',fitExperiment);
 document.fonts.ready.then(fitExperiment);

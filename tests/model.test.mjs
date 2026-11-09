@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { freshState, normalize, readState, writeState, canLesson, canRoute, checkLesson, recordEvidence, evidenceCount, stageDone, checkFinal, STORAGE_KEY } from '../src/model.js';
+import { freshState, normalize, readState, writeState, canLesson, canRoute, checkLesson, recordEvidence, evidenceCount, stageDone, checkFinal, nextDiagnosisField, STORAGE_KEY } from '../src/model.js';
 import { lessons, legacyIndex, LESSON_COUNT, finalTasks, stageLessons } from '../src/data.js';
 import { runChallenge, checkChallenge, challengeRoundCount } from '../src/challenges.js';
 
@@ -65,6 +65,19 @@ test('noise comparison requires diagnosis and fresh hearing for the selected sol
   const s=freshState(),a=legacyIndex(8),b=legacyIndex(9);s.work[b]=structuredClone(oldWork[9]);assert.equal(checkLesson(s,b).ok,false);
   complete(s,a,oldWork[8]);assert.equal(checkLesson(s,b).ok,true);s.work[b].solutions=['time'];assert.equal(checkLesson(s,b).ok,false);
   s.work[b].afterKey='time';assert.equal(checkLesson(s,b).ok,true);s.work[b].choice=1;assert.equal(checkLesson(s,b).ok,false);
+});
+test('diagnosis retry points to each incorrect field after all choices are made',()=>{
+  const correct={heard:true,place:'library',situation:'reading',person:'reader'};
+  assert.equal(nextDiagnosisField({}).key,'place');
+  assert.equal(nextDiagnosisField({place:'field'}).key,'situation');
+  for(const [key,wrong] of [['place','field'],['situation','festival'],['person','drummer']]){
+    const work={...correct,[key]:wrong},s=freshState();s.work[legacyIndex(8)]=work;
+    assert.equal(nextDiagnosisField(work).key,key);
+    assert.equal(checkLesson(s,legacyIndex(8)).ok,false);
+  }
+  assert.equal(nextDiagnosisField(correct),undefined);
+  const s=freshState();s.work[legacyIndex(8)]=correct;
+  assert.equal(checkLesson(s,legacyIndex(8)).ok,true);
 });
 test('additional activities require all live rounds and survive storage',()=>{
   for(let i=0;i<LESSON_COUNT;i++)if(lessons[i].challenge){
