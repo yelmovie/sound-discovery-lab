@@ -594,3 +594,5 @@ body:has(.admin-dock) :is(.lesson-page,.final-page,.result-page){padding-bottom:
  .map-location small{font-size:20px}
  .map-bubble{width:360px;font-size:24px}
 }
+
+.map-tool{width:52px;min-width:48px;min-height:48px;justify-content:center;padding:6px}
