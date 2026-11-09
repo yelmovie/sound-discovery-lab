@@ -4,7 +4,8 @@ import { stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-process.env.TEMP = process.env.TMP = 'D:\\DevTemp';
+// Windows (D: SSD) keeps temp files off the internal drive; other systems keep their own TMPDIR.
+if (process.platform === 'win32') process.env.TEMP = process.env.TMP = 'D:\\DevTemp';
 const project = fileURLToPath(new URL('../', import.meta.url));
 const root = process.argv.includes('--dist') ? path.join(project, 'dist') : project;
 const types = { '.html':'text/html; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.css':'text/css; charset=utf-8', '.webp':'image/webp', '.png':'image/png', '.jpg':'image/jpeg', '.svg':'image/svg+xml', '.json':'application/json', '.webmanifest':'application/manifest+json', '.mp4':'video/mp4', '.vtt':'text/vtt; charset=utf-8', '.ogg':'audio/ogg', '.m4a':'audio/mp4', '.wav':'audio/wav' };

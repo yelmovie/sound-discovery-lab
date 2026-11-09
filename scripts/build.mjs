@@ -3,7 +3,8 @@ import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { assets, backgrounds } from '../src/data.js';
-process.env.TEMP = process.env.TMP = 'D:\\DevTemp';
+// Windows (D: SSD) keeps temp files off the internal drive; other systems keep their own TMPDIR.
+if (process.platform === 'win32') process.env.TEMP = process.env.TMP = 'D:\\DevTemp';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const pkg=JSON.parse(await readFile(path.join(root,'package.json'),'utf8'));
 await writeFile(path.join(root,'src/version.js'),`// Updated from package.json by scripts/build.mjs.\nexport const APP_VERSION = ${JSON.stringify(pkg.version)};\n`);
