@@ -1,0 +1,16 @@
+/* Concept recall: quiet emphasis, not perpetual decorative movement. */
+.concept-focus{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;padding:10px 14px;color:#214d43;background:#f5f8e9;border:1px solid #c6d9c3;border-radius:14px;font-size:clamp(16px,1.45vw,22px);line-height:1.45}
+.concept-focus>small{font-size:.8em;font-weight:800;letter-spacing:.04em;color:#536e61}
+.concept-focus strong{padding:3px 10px;background:#fff5b8;border:1px solid #d5bc51;border-radius:9px;color:#3d471e}
+.concept-keyword{background:#fff1a0;color:#273e2c;border-radius:5px;padding:0 .16em;font-weight:900;box-decoration-break:clone;-webkit-box-decoration-break:clone;text-decoration:underline;text-decoration-color:#a88a2c;text-underline-offset:4px}
+.concept-chapters{display:flex;gap:7px;padding:6px 0;list-style:none;margin:0}
+.concept-chapters button{flex:1;min-width:0;min-height:44px;padding:7px 10px;border:1px solid #b8cebc;border-radius:10px;background:#f7faf3;color:#39584c;font:inherit;font-size:clamp(15px,1.3vw,20px);font-weight:700;transition:background .2s,border-color .2s}
+.concept-chapters button[aria-current=step]{background:#d8eedf;border-color:#407961;box-shadow:inset 0 -3px #407961}
+.concept-chapters button:focus-visible{outline:3px solid #a66b12;outline-offset:3px}
+@media(prefers-reduced-motion:reduce){.concept-chapters button,.concept-timeline i{transition:none!important}.concept-cues .active{animation:none!important}}
+.reduced .concept-chapters button,[data-reduced=true] .concept-chapters button{transition:none!important}
+@media(max-height:650px){.concept-focus{padding:6px 10px;gap:5px}.concept-focus strong{padding:1px 7px}}
+
+.modal-concept .concept-player video{max-height:37dvh}.modal-concept .concept-focus{margin-top:10px}.modal-concept .concept-cues>span{border:1px solid #d2dfcf;transition:background .25s,border-color .25s}.modal-concept .concept-cues>span.active{border-color:#4b8062;background:#e0f0df;box-shadow:inset 4px 0 #4b8062}.concept-recall-summary{padding:10px 14px;border-radius:12px;background:#f6f7ed;color:#294b3b;font-size:clamp(18px,1.5vw,24px);line-height:1.5;margin:10px 0 0}@media(max-height:650px){.modal-concept .concept-player video{max-height:28dvh}.modal-concept .concept-cues>span{font-size:17px}.concept-recall-summary{font-size:17px;padding:7px 10px}}@media(prefers-reduced-motion:reduce){.modal-concept .concept-cues>span{transition:none}}
+
+@media(min-width:760px){body .modal-concept{width:min(1100px,calc(100vw - 40px))}.modal-concept .concept-player{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:10px 16px;align-items:start}.modal-concept .concept-player video{grid-column:1;grid-row:1/4;align-self:center;max-height:50dvh;width:100%}.modal-concept .concept-focus{grid-column:2;margin:0}.modal-concept .concept-transcript{grid-column:2;margin:0!important}.modal-concept .concept-cues{grid-template-columns:1fr;gap:5px}.modal-concept .concept-cues>span{font-size:18px;line-height:1.4}.modal-concept .concept-recall-summary{grid-column:1/-1;margin:0}.modal-concept .concept-fallback{grid-column:1/-1}.modal-concept .concept-transcript summary{padding:7px 10px;min-height:40px;font-size:17px}}

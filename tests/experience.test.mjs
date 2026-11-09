@@ -4,7 +4,7 @@ import { readFile,stat } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 import net from 'node:net';
 import { fileURLToPath } from 'node:url';
-import { concepts,conceptView } from '../src/concepts.js';
+import { concepts,conceptView,emphasize } from '../src/concepts.js';
 import { assets,interfaceSounds } from '../src/data.js';
 import { freshState } from '../src/model.js';
 import { coachFor } from '../src/companion.js';
@@ -41,7 +41,9 @@ test('every lesson has progressive hints and ready feedback requires actual evid
 });
 test('concept player retains native playback controls and text when video is unavailable',()=>{
  const html=conceptView(0);assert.match(html,/playsinline controls/);assert.match(html,/kind="captions"/);assert.match(html,/concept-fallback/);
- for(const cue of concepts[0].cues)assert.ok(html.includes(cue));
+ for(const cue of concepts[0].cues)assert.ok(html.replace(/<[^>]*>/g,'').includes(cue));
+ assert.match(html,/concept-keyword/);assert.match(html,/concept-focus/);assert.match(html,/concept-transcript\" open/);
+ assert.equal(emphasize('<떨림>',['떨림']),'&lt;<mark class=\"concept-keyword\">떨림</mark>&gt;');
 });
 test('video seeking returns byte ranges, correct MIME and matching bytes',async()=>{
  const r=await fetch(`${base}${concepts[0].src}`,{headers:{Range:'bytes=0-127'}});
