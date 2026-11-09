@@ -106,7 +106,7 @@ export class SoundEngine {
     if(this.context?.state!=='running'||this.quiet||this.muted||!this.sfx||this.needsGesture||this.destroyed)return false;
     const c=this.context,rate=sample.spec.pitch?bounded(frequency/sample.spec.reference,.25,4,1):1;
     const length=Math.min(bounded(duration,.04,15,1.1),sample.buffer.duration/rate),start=c.currentTime+bounded(delay,0,30,0);
-    const source=c.createBufferSource(),gain=c.createGain(),peak=bounded(level,0,1,.4)*.6;
+    const source=c.createBufferSource(),gain=c.createGain(),peak=bounded(level,0,1,.4)*.6*(sample.spec.gain??1);
     source.buffer=sample.buffer;source.playbackRate.setValueAtTime(rate,start);
     gain.gain.setValueAtTime(0,start);gain.gain.linearRampToValueAtTime(peak,start+.004);
     gain.gain.setValueAtTime(peak,start+Math.max(.005,length-.025));gain.gain.linearRampToValueAtTime(0,start+length);

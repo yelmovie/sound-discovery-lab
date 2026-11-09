@@ -2,7 +2,7 @@
 .concept-focus{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;padding:10px 14px;color:#214d43;background:#f5f8e9;border:1px solid #c6d9c3;border-radius:14px;font-size:clamp(16px,1.45vw,22px);line-height:1.45}
 .concept-focus>small{font-size:.8em;font-weight:800;letter-spacing:.04em;color:#536e61}
 .concept-focus strong{padding:3px 10px;background:#fff5b8;border:1px solid #d5bc51;border-radius:9px;color:#3d471e}
-.concept-keyword{background:#fff1a0;color:#273e2c;border-radius:5px;padding:0 .16em;font-weight:900;box-decoration-break:clone;-webkit-box-decoration-break:clone;text-decoration:underline;text-decoration-color:#a88a2c;text-underline-offset:4px}
+.concept-keyword{background:#fff1a0;color:#273e2c;border-radius:5px;padding:0 .12em;margin:0 -.12em;font-weight:900;box-decoration-break:clone;-webkit-box-decoration-break:clone;text-decoration:underline;text-decoration-color:#a88a2c;text-underline-offset:4px}
 .concept-chapters{display:flex;gap:7px;padding:6px 0;list-style:none;margin:0}
 .concept-chapters button{flex:1;min-width:0;min-height:44px;padding:7px 10px;border:1px solid #b8cebc;border-radius:10px;background:#f7faf3;color:#39584c;font:inherit;font-size:clamp(15px,1.3vw,20px);font-weight:700;transition:background .2s,border-color .2s}
 .concept-chapters button[aria-current=step]{background:#d8eedf;border-color:#407961;box-shadow:inset 0 -3px #407961}

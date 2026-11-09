@@ -123,9 +123,16 @@ export function checkLesson(s,i) {
     if (!list(w.solutions).some(x=>['pad','volume','time'].includes(x))) return fail('진단에 맞는 해결책을 하나 이상 적용해 줘.');
     if (!(w.before && w.after) || w.afterKey!==list(w.solutions).slice().sort().join(',')) return fail('현재 해결책의 적용 전과 적용 후 소리를 모두 들어 봐.');
   }
-  if (legacyLessons[i]?.answer!==undefined && w.choice!==legacyLessons[i].answer) return fail(i===9 ? '시간을 바꾸면 독서 중에는 조용해져도 연습할 때의 소리는 남아. 어떤 점이 나아졌을까?' : '관찰한 떨림과 소리를 다시 떠올려 봐. 선택을 바꾸고 다시 확인할 수 있어.');
+  if (legacyLessons[i]?.answer!==undefined && w.choice!==legacyLessons[i].answer) return fail(wrongChoice[i] || '관찰한 떨림과 소리를 다시 떠올려 봐. 선택을 바꾸고 다시 확인할 수 있어.');
   return {ok:true,message:current.summary};
 }
+// Wrong-answer prompts point back to the evidence each activity actually produced.
+const wrongChoice={
+  1:'누르기 전과 누른 뒤를 다시 비교해 봐. 떨림이 멈췄을 때 소리는 어땠어?',
+  4:'길이를 바꾸며 다시 들어 봐. 떨리는 부분이 짧을 때와 길 때 소리의 높낮이를 비교해.',
+  6:'공기·물·고체 세 실험에서 모두 소리가 감지기에 전해졌는지 다시 떠올려 봐.',
+  9:'시간을 바꾸면 독서 중에는 조용해져도 연습할 때의 소리는 남아. 어떤 점이 나아졌을까?'
+};
 export function recordEvidence(s,i) {
   if(!Number.isInteger(i)||i<0||i>=LESSON_COUNT)return fail('올바른 실험을 선택해 줘.');
   const result=checkLesson(s,i);

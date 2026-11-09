@@ -29,6 +29,10 @@ const cases = [
   {title:'교실 문 바로 앞에서 응원해!',scene:'응원 장소를 옮길 수 있는 넓은 운동장이 있어.',answer:'place',why:'응원 장소를 교실에서 떨어진 곳으로 옮겼어.'}
 ];
 const solutionTools = [{id:'pad',name:'패드 붙이기'},{id:'volume',name:'음량 줄이기'},{id:'time',name:'시간 바꾸기'},{id:'place',name:'장소 옮기기'}];
+// 받침이 있으면 '이', 없으면 '가'.
+const subject = word => (word.charCodeAt(word.length-1)-0xac00)%28 ? '이' : '가';
+// '물속'은 한 낱말이라 붙여 쓴다.
+const inside = m => m.id==='water' ? '물속' : `${m.label} 속`;
 const forceName = n => ['','작게','보통 크기로','크게'][n];
 const pitchName = n => lengths.find(x=>x.value===n)?.pitch || '낮음';
 const expectedProof = {
@@ -71,7 +75,7 @@ export function challengeView(id,w,h) {
   const object=tool=>`<span class="challenge-object-art">${toolGraphic(tool)}</span>`;
   const beat=(label,n,filled=false,pitch=null)=>`<span class="signal-tile ${filled?'filled':''} ${label==='쉼'?'is-rest':''}" aria-label="${n+1}번째 ${label}${filled?', 연주했어':''}"><svg class="signal-trace" viewBox="0 0 72 30" aria-hidden="true"><path d="${label==='쉼'?'M4 15H68':pitch!==null?`M4 ${pitch===6?6:pitch===12?15:24}H68`:'M4 15H12L18 5L26 25L34 5L42 25L50 5L58 15H68'}"/></svg><b>${label}${filled?' ✓':''}</b></span>`;
   const performance=(label,sequence)=>`<p class="performance-line"><b>${label}</b><span>${sequence||'—'}</span></p>`;
-  if(done)return `<div class="challenge-shell challenge-complete round-success" data-challenge="${id}" data-round="${round}"><div class="success-emblem">${icon('check')}</div><h2>주민의 의뢰를 모두 해결했어!</h2>${control('다시 도전','replay','','btn quiet')}</div>`;
+  if(done)return `<div class="challenge-shell challenge-complete round-success" data-challenge="${id}" data-round="${round}"><div class="success-emblem">${icon('check')}</div><h2>주민의 의뢰를 모두 해결했어!</h2>${h.summary?`<p class="challenge-summary">${h.summary}</p>`:''}${control('다시 도전','replay','','btn quiet')}</div>`;
   let body='';
   if(id==='parts'){
     const p=parts[k];body=`<div class="hotspot-scene"><button class="challenge-object object-touch ${c.heard?'observed':''}" data-action="challenge-listen" aria-label="${p.name} 직접 울려 보기">${object(p.tool)}<span class="object-caption">${p.name} · ${c.heard?'✓ 다시 울리기':'울려 보기'}</span></button></div><div class="challenge-tools labelled-choices" aria-label="떨리는 부분 선택">${p.answers.map((x,n)=>choose(`<span class="answer-marker">${n+1}</span><span>${x}</span>`,n,c.selected)).join('')}</div>`;
@@ -86,7 +90,7 @@ export function challengeView(id,w,h) {
   }else if(id==='mix'){
     const t=mixes[k];body=`<div class="request-card sound-order"><h2><span>높낮이 <b>${pitchName(t.length)}</b></span><span>크기 <b>${forceName(t.force)}</b></span></h2></div><div class="mix-preview"><div class="mix-device">${rulerKey(c.length||18)}</div><div class="live-scope challenge-live-wave">${liveWave((c.force||1)/3,c.length===6?9:c.length===12?6:3)}</div></div><div class="mixer-controls slider-mixer"><section class="mixer-channel pitch-channel" role="group" aria-label="높낮이 조절"><h3 class="mixer-title">길이 <output data-param-output="length">${c.length||18} cm</output></h3><input id="mix-length" type="range" min="6" max="18" step="6" value="${c.length||18}" data-challenge-param="length" aria-label="떨리는 길이"><div class="range-ticks"><span>짧게</span><span>길게</span></div></section><section class="mixer-channel volume-channel" role="group" aria-label="소리 크기 조절"><h3 class="mixer-title">세기 <output data-param-output="force">${['','약하게','보통','세게'][c.force||1]}</output></h3><input id="mix-force" type="range" min="1" max="3" value="${c.force||1}" data-challenge-param="force" aria-label="튕기는 세기"><div class="range-ticks"><span>약하게</span><span>세게</span></div></section></div>${control(`${icon('play')} 연주하기`,'check','','btn primary')}`;
   }else if(id==='sensor'){
-    const m=media[k];body=`<div class="challenge-top"><h2>${m.source} → ${m.label} 속 감지기</h2><small>독립된 세 실험</small></div><div class="sensor-scene"><div><button class="sensor-grip" data-drag-kind="sensor" aria-label="감지기 잡아 옮기기">${prop('receiver','옮길 감지기')}</button></div><div class="sensor-zones">${media.map(x=>control(`${art(`travel-${x.id}`,`${x.label} 전달 실험${x.id==='water'?', 물속에는 방수 감지기 사용':''}`,'concept-scene')}<b>${x.label} 속</b><span class="sensor-indicator">${c.zone===x.id?prop('receiver','놓은 감지기'):'＋'}</span>`,'zone',`data-value="${x.id}" data-drop-kind="sensor" aria-pressed="${c.zone===x.id}"`,`sensor-zone illustrated-zone ${x.id} ${c.zone===x.id?'selected':''}`)).join('')}</div></div>`;
+    const m=media[k];body=`<div class="challenge-top"><h2>${m.source} → ${inside(m)} 감지기</h2><small>독립된 세 실험</small></div><div class="sensor-scene"><div><button class="sensor-grip" data-drag-kind="sensor" aria-label="감지기 잡아 옮기기">${prop('receiver','옮길 감지기')}</button></div><div class="sensor-zones">${media.map(x=>control(`${art(`travel-${x.id}`,`${x.label} 전달 실험${x.id==='water'?', 물속에는 방수 감지기 사용':''}`,'concept-scene')}<b>${inside(x)}</b><span class="sensor-indicator">${c.zone===x.id?prop('receiver','놓은 감지기'):'＋'}</span>`,'zone',`data-value="${x.id}" data-drop-kind="sensor" aria-pressed="${c.zone===x.id}"`,`sensor-zone illustrated-zone ${x.id} ${c.zone===x.id?'selected':''}`)).join('')}</div></div>`;
   }else if(id==='classify'){
     body=`<div class="case-story path-source" data-drag-kind="path" aria-label="이야기를 전달 물질로 이어 보기"><p>${situations[k].text}</p></div><div class="sound-path-model" aria-label="소리가 난 곳에서 전달 물질을 거쳐 듣는 곳으로 이어져"><span>${icon('volume')}<b>소리가 난 곳</b></span><i aria-hidden="true">→</i><span class="path-question"><b>어떤 물질?</b></span><i aria-hidden="true">→</i><span>${icon('network')}<b>듣는 곳</b></span></div><div class="medium-choices">${media.map(m=>control(`${icon(m.id==='air'?'wave':m.id==='water'?'network':'music')}<span>${m.label}</span>`,'zone',`data-value="${m.id}" data-drop-kind="path" aria-pressed="${c.zone===m.id}"`,`choice ${c.zone===m.id?'selected':''}`)).join('')}</div>`;
   }else if(id==='solutions'){
@@ -119,7 +123,7 @@ export function runChallenge(id,w,action,data={},sound) {
     if(action!=='select'||!Number.isInteger(n)||!p.answers[n])return;
     if(!c.heard)return wrong('먼저 물체를 눌러 울리고, 떨리는 곳을 관찰해 봐.');
     c.selected=n;
-    return n===p.answer?finish(`맞아! ${p.answers[p.answer]}가 떨려.`):wrong(p.hint);
+    return n===p.answer?finish(`맞아! ${p.answers[p.answer]}${subject(p.answers[p.answer])} 떨려.`):wrong(p.hint);
   }
   if(id==='rhythm'){
     if(!['ring','rest'].includes(action))return;
