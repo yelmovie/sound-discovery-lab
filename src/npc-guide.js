@@ -1,5 +1,5 @@
 // Manual, local-file NPC guide. No network TTS or autoplay.
-export function mountNpcGuide(host, {src, text, enabled}) {
+export function mountNpcGuide(host, {src, text, enabled, quiet = () => {}}) {
   if (!host) return () => {};
   const trigger=document.createElement('button');
   trigger.type='button'; trigger.textContent='안내자 목소리 듣기';
@@ -15,15 +15,15 @@ export function mountNpcGuide(host, {src, text, enabled}) {
   for(const b of [play,close])b.style.cssText='min-height:48px;min-width:48px;padding:10px 16px;margin:4px;border-radius:12px;font:inherit;cursor:pointer';
   const status=document.createElement('p');status.setAttribute('role','status');
   dialog.append(caption,label,play,close,status);document.body.append(dialog);
-  const audio=new Audio(src);audio.preload='none';let alive=true,request=0;
-  function reset(){play.textContent='목소리 재생';play.setAttribute('aria-pressed','false');}
-  function stop(){request++;audio.pause();audio.currentTime=0;reset();}
+  let audio=new Audio(src);audio.preload='none';let alive=true,request=0;
+  function reset(){quiet(false);play.textContent='목소리 재생';play.setAttribute('aria-pressed','false');}
+  function stop(){request++;audio.onended=null;audio.onerror=null;audio.pause();audio.currentTime=0;reset();}
   function failed(){stop();status.textContent='음성을 읽지 못했어요. 위 안내 글로 계속할 수 있어요.';}
   async function toggle(){
-    if(!audio.paused){stop();return;}
+    if(!audio.paused||play.getAttribute('aria-pressed')==='true'){stop();return;}
     if(!enabled()){status.textContent='설정에서 소리를 켠 뒤 재생해 주세요.';return;}
-    status.textContent='';const ticket=++request;
-    try{await audio.play();if(!alive||ticket!==request||!dialog.open||!enabled()){audio.pause();return;}play.textContent='목소리 멈추기';play.setAttribute('aria-pressed','true');}catch{if(alive&&ticket===request)failed();}
+    stop();audio=new Audio(src);audio.preload='none';audio.onended=reset;audio.onerror=failed;const candidate=audio;status.textContent='';const ticket=++request;quiet(true);play.setAttribute('aria-pressed','true');
+    try{await candidate.play();if(!alive||ticket!==request||!dialog.open||!enabled()){candidate.pause();return;}play.textContent='목소리 멈추기';play.setAttribute('aria-pressed','true');}catch{if(alive&&ticket===request)failed();}
   }
   function hidden(){if(document.hidden)stop();}
   function outside(event){if(!dialog.contains(event.target)&&event.target!==trigger)stop();}

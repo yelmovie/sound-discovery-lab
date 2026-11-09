@@ -1,0 +1,16 @@
+{
+  "uuid": "05681f60-e69f-4dea-96d2-14a0e02122ed",
+  "model": "momo-voice",
+  "language": "ko",
+  "voice": "F1",
+  "text": "소리 탐험을 시작해 볼까? 소리가 날 때 물체가 어떻게 떨리는지 관찰하고, 소리의 크기와 높낮이를 직접 비교해 보자.",
+  "createdAt": "2026-11-07T22:00:37.576Z",
+  "license": "OpenRAIL-M (Supertonic 3)",
+  "licenseUrl": "https://huggingface.co/Supertone/supertonic-3/blob/main/LICENSE",
+  "sourceSha256": "e341d0320b5a5b9cb0d6b03c9e8c7929f665c65048fcdfd400c49a017a858573",
+  "renderSha256": "94d2e86d787515b074ca28061c8c390ebd2343865a597be711d825e6ef24070e",
+  "captionExactMatch": true,
+  "sourceDuration": 10.24,
+  "renderDuration": 10.24,
+  "normalizedCorrelation": 0.998692471629343
+}

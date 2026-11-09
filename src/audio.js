@@ -8,7 +8,7 @@ export class SoundEngine {
   constructor(){
     this.context=null;this.nodes=[];this.generation=0;this.muted=false;this.onStatus=()=>{};
     this.bgm=true;this.sfx=true;this.bgmVolume=.35;this.scene='home';
-    this.unlocked=false;this.needsGesture=false;this.destroyed=false;
+    this.quiet=false;this.unlocked=false;this.needsGesture=false;this.destroyed=false;
     this.bgmNodes=[];this.bgmGeneration=0;this.bgmTimer=null;this.bgmBus=null;
     this.buffers=new Map();this.effectClock=0;
     this.visibilityHandler=()=>{
@@ -26,6 +26,7 @@ export class SoundEngine {
     if(this.muted!==wasMuted||wasSfx&&!this.sfx)this.stop();
     this.syncBgm();
   }
+  setQuiet(value){this.quiet=Boolean(value);if(this.quiet)this.stop();this.syncBgm();}
   setMuted(value){this.configure({muted:Boolean(value)});}
   setScene(scene){this.scene=scene;this.syncBgm();}
   async unlock(){
@@ -46,17 +47,17 @@ export class SoundEngine {
     try{source.disconnect();gain.disconnect();}catch{}
   }
   async ready(){
-    if(this.destroyed||this.muted||this.needsGesture||typeof document!=='undefined'&&document.hidden)return false;
+    if(this.destroyed||this.quiet||this.muted||this.needsGesture||typeof document!=='undefined'&&document.hidden)return false;
     try{
       if(!this.context){const Audio=globalThis.AudioContext||globalThis.webkitAudioContext;this.context=new Audio();}
       if(this.context.state==='suspended')await this.context.resume();
-      if(this.destroyed||this.muted||this.needsGesture||typeof document!=='undefined'&&document.hidden)return false;
+      if(this.destroyed||this.quiet||this.muted||this.needsGesture||typeof document!=='undefined'&&document.hidden)return false;
       if(this.context.state!=='running')throw Error('Audio unavailable');
       return true;
     }catch{this.onStatus('소리를 시작하지 못했어 · 기기의 소리 설정을 확인해 줘');return false;}
   }
   tone({frequency=440,level=.4,duration=1.1,kind='ruler',delay=0}={}){
-    if(!this.context||this.context.state!=='running'||this.muted||!this.sfx||this.needsGesture||this.destroyed)return;
+    if(!this.context||this.context.state!=='running'||this.quiet||this.muted||!this.sfx||this.needsGesture||this.destroyed)return;
     const c=this.context,start=c.currentTime+bounded(delay,0,30,0),length=bounded(duration,.04,15,1.1);
     const osc=c.createOscillator(),gain=c.createGain();osc.type=kind==='rubber'?'triangle':'sine';
     const pitch=bounded(frequency,40,10000,440);osc.frequency.setValueAtTime(pitch,start);
@@ -81,14 +82,14 @@ export class SoundEngine {
     this.stop();const generation=this.generation;
     if(!this.sfx||!await this.ready()||generation!==this.generation)return;
     const sample=await this.loadInstrument(options.kind||'ruler');
-    if(generation!==this.generation||this.muted||!this.sfx||this.needsGesture||this.destroyed)return;
+    if(generation!==this.generation||this.quiet||this.muted||!this.sfx||this.needsGesture||this.destroyed)return;
     this.onStatus('소리 재생 중');if(!this.recordedTone(options,sample))this.tone(options);
   }
   async sequence(notes){
     this.stop();const generation=this.generation;
     if(!this.sfx||!await this.ready()||generation!==this.generation)return;
     const sequence=notes.slice(0,32),samples=await Promise.all(sequence.map(note=>this.loadInstrument(note.kind||'ruler')));
-    if(generation!==this.generation||this.muted||!this.sfx||this.needsGesture||this.destroyed)return;
+    if(generation!==this.generation||this.quiet||this.muted||!this.sfx||this.needsGesture||this.destroyed)return;
     this.onStatus('신호 재생 중');sequence.forEach((note,i)=>{const options={...note,delay:i*.62,duration:.5};if(!this.recordedTone(options,samples[i]))this.tone(options);});
   }
   async loadInstrument(kind){
@@ -102,7 +103,7 @@ export class SoundEngine {
   }
   recordedTone({frequency=440,level=.4,duration=1.1,delay=0}={},sample){
     if(!sample?.buffer||!Number.isFinite(sample.buffer.duration))return false;
-    if(this.context?.state!=='running'||this.muted||!this.sfx||this.needsGesture||this.destroyed)return false;
+    if(this.context?.state!=='running'||this.quiet||this.muted||!this.sfx||this.needsGesture||this.destroyed)return false;
     const c=this.context,rate=sample.spec.pitch?bounded(frequency/sample.spec.reference,.25,4,1):1;
     const length=Math.min(bounded(duration,.04,15,1.1),sample.buffer.duration/rate),start=c.currentTime+bounded(delay,0,30,0);
     const source=c.createBufferSource(),gain=c.createGain(),peak=bounded(level,0,1,.4)*.6;
@@ -122,14 +123,14 @@ export class SoundEngine {
       const file=interfaceSounds[name];
       if(!this.buffers.has(file))this.buffers.set(file,fetch(`/media/audio/${file}.ogg`).then(r=>{if(!r.ok)throw Error('Sound unavailable');return r.arrayBuffer();}).then(b=>this.context.decodeAudioData(b)));
       const buffer=await this.buffers.get(file);
-      if(generation!==this.generation||!this.sfx||this.muted||this.needsGesture||this.destroyed)return;
+      if(generation!==this.generation||this.quiet||!this.sfx||this.muted||this.needsGesture||this.destroyed)return;
       const source=this.context.createBufferSource(),gain=this.context.createGain();
       source.buffer=buffer;gain.gain.value=name==='badge'?.22:.16;source.connect(gain);gain.connect(this.context.destination);
       const entry={source,gain};this.nodes.push(entry);source.onended=()=>{source.disconnect();gain.disconnect();this.nodes=this.nodes.filter(n=>n!==entry);};source.start();
     }catch{if(generation===this.generation)this.tone({frequency:name==='success'?660:480,kind:'ui',level:.4,duration:.12});}
   }
   canBgm(){
-    return !this.destroyed&&this.unlocked&&!this.needsGesture&&!this.muted&&this.bgm&&this.bgmVolume>0&&bgmScenes.has(this.scene)&&!(typeof document!=='undefined'&&document.hidden);
+    return !this.destroyed&&!this.quiet&&this.unlocked&&!this.needsGesture&&!this.muted&&this.bgm&&this.bgmVolume>0&&bgmScenes.has(this.scene)&&!(typeof document!=='undefined'&&document.hidden);
   }
   syncBgm(){
     if(!this.canBgm()||this.context?.state!=='running'){this.stopBgm();return;}

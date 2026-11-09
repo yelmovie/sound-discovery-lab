@@ -121,3 +121,13 @@ test('missing recorded file falls back to an audible synthesized experiment',asy
   assert.equal(sound.context.oscillators.length,1);assert.equal(sound.context.oscillators[0].frequency.events[0].value,390);
  }finally{sound.destroy();globalThis.fetch=previousFetch;}
 });
+
+test('NPC narration quiet mode stops and gates experiment and background sound',async()=>{
+ const sound=new SoundEngine();try{
+  await sound.unlock();await sound.play();sound.setQuiet(true);
+  assert.equal(sound.nodes.length,0);assert.equal(sound.bgmNodes.length,0);
+  const count=sound.context.oscillators.length;await sound.play();sound.tone();
+  assert.equal(sound.context.oscillators.length,count);sound.setQuiet(false);
+  assert.equal(sound.bgmNodes.length,5);
+ }finally{sound.destroy();}
+});
