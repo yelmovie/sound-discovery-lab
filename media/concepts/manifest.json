@@ -1,10 +1,12 @@
 {
-  "created": "2026-10-28",
-  "method": "Pillow + FFmpeg, generated teaching illustrations and project props, system Malgun Gothic",
-  "fps": 24,
+  "created": "2026-11-09",
+  "method": "HyperFrames 0.9.26 (HTML → video), sources in films/<id>/, built by films/build-films.mjs and rendered by films/render-films.mjs; previous Pillow version replaced",
+  "size": "1280x720 H.264 + AAC, faststart (rendered 1920x1080)",
+  "fps": 30,
   "duration": 16,
-  "framing": "4 shots of 4s, static front analytical view, final conclusion held",
-  "audio": "CC0 field/instrument recordings, gain and relative-rate modeling; source details in media/audio/experiments/sources.json; no narration",
+  "framing": "4 scenes of 4 s on the app caption clock: question and set-up → the change you see and hear → the part that changed, named → one-line answer and 삐오 reacts",
+  "audio": "No music or narration. One effect per visible action from the game's own CC0 recordings (media/audio/experiments/sources.json): loudness by gain only (same drum, 0.22 vs 1.0), pitch by playback rate only (ruler ×1 vs ×2.5, as src/audio.js 260→650 Hz), both ruler lengths share one gentle compression",
+  "art": "Existing project props and concept illustrations, 삐오 (image/generated/pio-guide.svg); hand, waves, arcs and labels drawn in code",
   "films": [
     {
       "id": "vibration",
@@ -28,7 +30,7 @@
     },
     {
       "id": "pitch",
-      "title": "짧게 떨리면 높은 소리",
+      "title": "짧은 자, 빠른 떨림",
       "captions": [
         "같은 자를 같은 힘으로 튕겨 봐.",
         "긴 부분은 천천히 떨려 낮은 소리.",

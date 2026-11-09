@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>소리는 물질을 따라 · 삐오의 소리 노트</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+@font-face{font-family:"Note Sans";src:local("Apple SD Gothic Neo"),local("AppleSDGothicNeo-Regular");font-weight:400}
+@font-face{font-family:"Note Sans";src:local("Apple SD Gothic Neo Bold"),local("AppleSDGothicNeo-Bold");font-weight:700}
+@font-face{font-family:"Note Sans";src:local("Apple SD Gothic Neo ExtraBold"),local("AppleSDGothicNeo-ExtraBold");font-weight:800}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1920px;height:1080px;overflow:hidden;background:#fffdf3}
+#root{position:relative;width:100%;height:100%;font-family:"Note Sans",sans-serif;color:#17394b;word-break:keep-all}
+.full{position:absolute;inset:0}
+.abs{position:absolute}
+.paper{position:absolute;inset:0;background-color:#fffdf3;background-image:linear-gradient(#e4ede0 2px,transparent 2px),linear-gradient(90deg,#e4ede0 2px,transparent 2px);background-size:60px 60px}
+.head{position:absolute;left:192px;top:104px}
+.chip{display:inline-block;background:#086a73;color:#fff;font-size:30px;font-weight:700;padding:8px 22px;border-radius:999px}
+.head h1{font-size:68px;font-weight:800;line-height:1.1;margin-top:14px;letter-spacing:-.01em}
+.question{font-size:40px;font-weight:700;color:#086a73;margin-top:10px}
+.cap-band{position:absolute;left:192px;right:192px;top:846px;height:124px;background:#17394b;border-radius:30px;display:flex;align-items:center;justify-content:center}
+.cap-band p{color:#fff;font-size:58px;font-weight:700;letter-spacing:-.01em}
+.tag-pos{position:absolute}
+.tag{background:#fff;border:4px solid #17394b;border-radius:20px;padding:8px 24px;font-size:42px;font-weight:800;white-space:nowrap;box-shadow:0 6px 0 rgba(23,57,75,.16)}
+.tag.warm{border-color:#c76a1c;color:#7a3d08}
+.lead line,.lead path{stroke:#17394b;stroke-width:5;stroke-linecap:round;fill:none}
+.lead .dash{stroke:#486675;stroke-dasharray:10 12;stroke-width:4}
+.wave{position:absolute;overflow:hidden;border-radius:18px;background:rgba(188,236,237,.35);border:3px solid #bad0c8}
+.wave svg{position:absolute;left:0;top:0;overflow:visible}
+.wave-axis line{stroke:#bad0c8;stroke-width:3;stroke-dasharray:8 10}
+.wave-run path{fill:none;stroke-width:8;stroke-linecap:round;stroke-linejoin:round}
+.blade-window{position:absolute;left:0;top:0;width:100%;height:100%;overflow:hidden}
+.blade-window img{position:absolute;left:0}
+.push path{stroke:#c76a1c;stroke-width:9;stroke-linecap:round;stroke-linejoin:round;fill:none}
+.pio{position:absolute;width:250px;height:250px}
+.bubble-pos{position:absolute;transform:translateX(-100%)}
+.bubble{background:#fff;border:4px solid #086a73;border-radius:28px;padding:14px 30px;font-size:46px;font-weight:800;color:#086a73;white-space:nowrap;box-shadow:0 6px 0 rgba(8,106,115,.18)}
+.arc path{stroke:#086a73;stroke-width:9;stroke-linecap:round;fill:none}
+.burst path{stroke:#c76a1c;stroke-width:9;stroke-linecap:round}
+.ring{width:140px;height:140px;border-radius:50%;border:8px solid #ffbd58;box-shadow:0 0 0 6px rgba(255,189,88,.25)}
+.ripple{width:120px;height:120px;border-radius:50%;border:6px solid #fff}
+.pulse{width:120px;height:18px;border-radius:9px;background:#fff;border:5px solid #086a73;box-shadow:0 0 0 6px rgba(188,236,237,.9)}
+.band{border-radius:65px;background:#bceced;border:5px solid #086a73;overflow:hidden}
+.roll{position:absolute;inset:0;overflow:hidden}
+.roll-in span{display:flex;height:130px;align-items:center;justify-content:center;font-size:56px;font-weight:800;color:#17394b}
+.meter{display:flex;flex-direction:column;gap:10px}
+.meter .bar{width:90px;height:34px;border-radius:10px;background:#086a73}
+#turn path{stroke:#c76a1c;stroke-width:9}
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="16" data-width="1920" data-height="1080">
+    <div id="ground" class="clip full" data-start="0" data-duration="16" data-track-index="2" style="z-index:2"><div class="paper"></div></div>
+    <div id="header" class="clip full" data-start="0" data-duration="16" data-track-index="3" style="z-index:3"><div class="head"><div id="head-chip" class="chip">삐오의 소리 노트</div><h1 id="head-title">소리는 물질을 따라</h1><p id="head-q" class="question">소리는 무엇을 따라 올까?</p></div></div>
+    <div id="cap0" class="clip full" data-start="0" data-duration="4" data-track-index="4" style="z-index:4"><div class="cap-band"><p id="cap0-t">북과 귀 사이의 공기를 따라.</p></div></div>
+    <div id="cap1" class="clip full" data-start="4" data-duration="4" data-track-index="5" style="z-index:5"><div class="cap-band"><p id="cap1-t">물속 종과 감지기 사이의 물을 따라.</p></div></div>
+    <div id="cap2" class="clip full" data-start="8" data-duration="4" data-track-index="6" style="z-index:6"><div class="cap-band"><p id="cap2-t">탁자와 감지기 사이의 고체를 따라.</p></div></div>
+    <div id="cap3" class="clip full" data-start="12" data-duration="4" data-track-index="7" style="z-index:7"><div class="cap-band"><p id="cap3-t">세 물질 모두 소리를 전달할 수 있어.</p></div></div>
+    <div id="air" class="clip full" data-start="0" data-duration="4.1" data-track-index="8" style="z-index:8"><img id="air-img" class="abs" src="assets/img/travel-air.webp" alt="" style="left:460px;top:300px;width:1000px;height:500px"></div>
+    <div id="air-fx" class="clip full" data-start="0.8" data-duration="3.1" data-track-index="9" style="z-index:9"><svg id="b-air" class="burst abs" width="160" height="160" viewBox="0 0 160 160" style="left:624px;top:460px"><path d="M80 18v26M80 116v26M18 80h26M116 80h26M36 36l18 18M106 106l18 18M124 36l-18 18M54 106l-18 18"/></svg><svg id="ar0" class="arc abs" width="70" height="120" viewBox="0 0 70 120" style="left:765px;top:410px;transform-origin:50% 50%"><path d="M20 12 Q62 60 20 108"/></svg><svg id="ar1" class="arc abs" width="70" height="120" viewBox="0 0 70 120" style="left:765px;top:410px;transform-origin:50% 50%"><path d="M20 12 Q62 60 20 108"/></svg><svg id="ar2" class="arc abs" width="70" height="120" viewBox="0 0 70 120" style="left:765px;top:410px;transform-origin:50% 50%"><path d="M20 12 Q62 60 20 108"/></svg><svg id="ar3" class="arc abs" width="70" height="120" viewBox="0 0 70 120" style="left:765px;top:410px;transform-origin:50% 50%"><path d="M20 12 Q62 60 20 108"/></svg><!-- -3.945186229037563 --><div id="ear" class="ring abs" style="left:1040px;top:405px"></div><div class="tag-pos" style="left:945px;top:360px;transform:translateX(-50%)"><div id="t-air" class="tag ">공기</div></div></div>
+    <div id="water" class="clip full" data-start="4" data-duration="4.1" data-track-index="10" style="z-index:10"><img id="water-img" class="abs" src="assets/img/travel-water.webp" alt="" style="left:510px;top:296px;width:900px;height:506px"></div>
+    <div id="water-fx" class="clip full" data-start="4.6" data-duration="3.3" data-track-index="11" style="z-index:11"><div id="rip0" class="ripple abs" style="left:720px;top:482px"></div><div id="rip1" class="ripple abs" style="left:720px;top:482px"></div><div id="rip2" class="ripple abs" style="left:720px;top:482px"></div><div id="sen" class="ring abs" style="left:1066px;top:490px;width:160px;height:160px"></div><div class="tag-pos" style="left:965px;top:420px;transform:translateX(-50%)"><div id="t-water" class="tag ">물</div></div></div>
+    <div id="solid" class="clip full" data-start="8" data-duration="4.1" data-track-index="12" style="z-index:12"><img id="solid-img" class="abs" src="assets/img/travel-solid.webp" alt="" style="left:460px;top:300px;width:1000px;height:500px"></div>
+    <div id="solid-fx" class="clip full" data-start="8.6" data-duration="3.3" data-track-index="13" style="z-index:13"><svg id="b-solid" class="burst abs" width="160" height="160" viewBox="0 0 160 160" style="left:636px;top:440px"><path d="M80 18v26M80 116v26M18 80h26M116 80h26M36 36l18 18M106 106l18 18M124 36l-18 18M54 106l-18 18"/></svg><div id="pulse" class="pulse abs" style="left:656px;top:514px"></div><div id="sen2" class="ring abs" style="left:1192px;top:410px;width:160px;height:160px"></div><div class="tag-pos" style="left:994px;top:600px;transform:translateX(-50%)"><div id="t-solid" class="tag ">고체(탁자)</div></div></div>
+    <div id="path" class="clip full" data-start="12" data-duration="4" data-track-index="14" style="z-index:14"><img id="p-src" class="abs" src="assets/img/drum.png" alt="" style="left:300px;top:430px;width:264px;height:220px">
+<img id="p-dst" class="abs" src="assets/img/receiver.png" alt="" style="left:1240px;top:410px;width:240px;height:219px">
+<div class="tag-pos" style="left:432px;top:670px;transform:translateX(-50%)"><div id="t-src" class="tag ">소리 나는 곳</div></div><div class="tag-pos" style="left:1360px;top:670px;transform:translateX(-50%)"><div id="t-dst" class="tag ">듣는 곳</div></div>
+<div id="band" class="band abs" style="left:600px;top:470px;width:600px;height:130px"><div class="roll"><div id="roll" class="roll-in"><span>공기</span><span>물</span><span>고체</span><span>공기 · 물 · 고체</span></div></div></div></div>
+    <div id="pio" class="clip full" data-start="12.9" data-duration="3.1" data-track-index="15" style="z-index:15"><img id="pio-img" class="pio" src="assets/img/pio-guide.svg" alt="" style="left:1480px;top:150px">
+<div class="bubble-pos" style="left:1464px;top:220px"><div id="pio-say" class="bubble">셋 다 전달해!</div></div></div>
+    <audio id="sfx0" class="clip" src="assets/sfx/drum.ogg" data-start="0.933" data-duration="1.5" data-track-index="60" data-volume="0.8"></audio>
+    <audio id="sfx1" class="clip" src="assets/sfx/fork.ogg" data-start="4.733" data-duration="2.6" data-track-index="61" data-volume="0.55" data-fade-out="0.6"></audio>
+    <audio id="sfx2" class="clip" src="assets/sfx/wood.ogg" data-start="8.733" data-duration="0.35" data-track-index="62" data-volume="0.9"></audio>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo('#head-chip',{opacity:0,x:-24},{opacity:1,x:0,duration:.45,ease:'expo.out'},.05);
+      tl.fromTo('#head-title',{opacity:0,filter:'blur(8px)'},{opacity:1,filter:'blur(0px)',duration:.2,ease:'power2.out'},.15);
+      tl.fromTo('#head-q',{opacity:0,y:12},{opacity:1,y:0,duration:.4,ease:'expo.out'},.35);
+      tl.to('#head-q',{opacity:0,duration:0.2,ease:'power2.in'},3.75);
+      tl.fromTo('#cap0-t',{opacity:0,filter:'blur(8px)'},{opacity:1,filter:'blur(0px)',duration:.18,ease:'power2.out'},0.08);
+      tl.to('#cap0-t',{opacity:0,duration:0.14,ease:'power2.in'},3.84);
+      tl.fromTo('#cap1-t',{opacity:0,filter:'blur(8px)'},{opacity:1,filter:'blur(0px)',duration:.18,ease:'power2.out'},4.08);
+      tl.to('#cap1-t',{opacity:0,duration:0.14,ease:'power2.in'},7.84);
+      tl.fromTo('#cap2-t',{opacity:0,filter:'blur(8px)'},{opacity:1,filter:'blur(0px)',duration:.18,ease:'power2.out'},8.08);
+      tl.to('#cap2-t',{opacity:0,duration:0.14,ease:'power2.in'},11.84);
+      tl.fromTo('#cap3-t',{opacity:0,filter:'blur(8px)'},{opacity:1,filter:'blur(0px)',duration:.18,ease:'power2.out'},12.08);
+      tl.to('#air-img',{x:-320,opacity:0,duration:.3,ease:'power3.in'},3.75);
+      tl.fromTo('#b-air',{opacity:0,scale:.5},{opacity:1,scale:1,duration:.15,ease:'power2.out'},.9);tl.to('#b-air',{opacity:0,duration:.3},1.2);
+      tl.fromTo('#ar0',{x:0,y:0,rotation:-3.945,opacity:0,scale:.6},{x:290,y:-20,rotation:-3.945,scale:1.1,duration:1,ease:'none'},0.95);
+      tl.to('#ar0',{opacity:1,duration:.15},0.95);tl.to('#ar0',{opacity:0,duration:.2},1.75);
+      tl.fromTo('#ar1',{x:0,y:0,rotation:-3.945,opacity:0,scale:.6},{x:290,y:-20,rotation:-3.945,scale:1.1,duration:1,ease:'none'},1.15);
+      tl.to('#ar1',{opacity:1,duration:.15},1.15);tl.to('#ar1',{opacity:0,duration:.2},1.95);
+      tl.fromTo('#ar2',{x:0,y:0,rotation:-3.945,opacity:0,scale:.6},{x:290,y:-20,rotation:-3.945,scale:1.1,duration:1,ease:'none'},1.35);
+      tl.to('#ar2',{opacity:1,duration:.15},1.35);tl.to('#ar2',{opacity:0,duration:.2},2.15);
+      tl.fromTo('#ar3',{x:0,y:0,rotation:-3.945,opacity:0,scale:.6},{x:290,y:-20,rotation:-3.945,scale:1.1,duration:1,ease:'none'},1.55);
+      tl.to('#ar3',{opacity:1,duration:.15},1.55);tl.to('#ar3',{opacity:0,duration:.2},2.35);
+      tl.fromTo('#t-air',{opacity:0,scale:.82},{opacity:1,scale:1,duration:.32,ease:'back.out(1.7)'},1.3);
+      tl.fromTo('#ear',{opacity:0,scale:.6},{opacity:1,scale:1,duration:.3,ease:'back.out(1.6)'},1.95);
+      tl.fromTo('#water-img',{x:320,opacity:0},{x:0,opacity:1,duration:.5,ease:'expo.out'},4);
+      tl.to('#water-img',{x:-320,opacity:0,duration:.3,ease:'power3.in'},7.75);
+      tl.fromTo('#rip0',{scale:.3,opacity:.9},{scale:6.2,opacity:0,duration:1.4,ease:'power1.out'},4.7);
+      tl.fromTo('#rip1',{scale:.3,opacity:.9},{scale:6.2,opacity:0,duration:1.4,ease:'power1.out'},5.05);
+      tl.fromTo('#rip2',{scale:.3,opacity:.9},{scale:6.2,opacity:0,duration:1.4,ease:'power1.out'},5.4);
+      tl.fromTo('#t-water',{opacity:0,scale:.82},{opacity:1,scale:1,duration:.32,ease:'back.out(1.7)'},5);
+      tl.fromTo('#sen',{opacity:0,scale:.6},{opacity:1,scale:1,duration:.3,ease:'back.out(1.6)'},5.55);
+      tl.fromTo('#solid-img',{x:320,opacity:0},{x:0,opacity:1,duration:.5,ease:'expo.out'},8);
+      tl.to('#solid-img',{x:-320,opacity:0,duration:.3,ease:'power3.in'},11.75);
+      tl.fromTo('#b-solid',{opacity:0,scale:.5},{opacity:1,scale:1,duration:.15,ease:'power2.out'},8.7);tl.to('#b-solid',{opacity:0,duration:.3},9.0);
+      tl.fromTo('#pulse',{x:0,opacity:0},{x:496,opacity:1,duration:.7,ease:'power1.in'},8.72);tl.to('#pulse',{opacity:0,duration:.2},9.42);
+      tl.fromTo('#t-solid',{opacity:0,scale:.82},{opacity:1,scale:1,duration:.32,ease:'back.out(1.7)'},9);
+      tl.fromTo('#sen2',{opacity:0,scale:.6},{opacity:1,scale:1,duration:.3,ease:'back.out(1.6)'},9.42);
+      tl.fromTo('#p-src',{opacity:0},{opacity:1,duration:0.3,ease:'power2.out'},12.05);
+      tl.fromTo('#p-dst',{opacity:0},{opacity:1,duration:0.3,ease:'power2.out'},12.15);
+      tl.fromTo('#t-src',{opacity:0,scale:.82},{opacity:1,scale:1,duration:.32,ease:'back.out(1.7)'},12.2);
+      tl.fromTo('#t-dst',{opacity:0,scale:.82},{opacity:1,scale:1,duration:.32,ease:'back.out(1.7)'},12.3);
+      tl.fromTo('#band',{scaleX:.2,opacity:0},{scaleX:1,opacity:1,duration:.5,ease:'expo.out',transformOrigin:'0% 50%'},12.25);
+      tl.set('#roll',{y:0},12.25);tl.to('#roll',{y:-130,duration:.18,ease:'power2.inOut'},12.85);tl.to('#roll',{y:-260,duration:.18,ease:'power2.inOut'},13.25);tl.to('#roll',{y:-390,duration:.22,ease:'power2.inOut'},13.65);
+      tl.fromTo('#pio-img',{y:320},{y:0,duration:.55,ease:'back.out(1.5)'},12.9);
+      tl.fromTo('#pio-img',{scaleY:1,scaleX:1},{scaleY:.9,scaleX:1.06,duration:.12,ease:'power2.out',transformOrigin:'50% 100%'},13.52);tl.to('#pio-img',{scaleY:1,scaleX:1,duration:.3,ease:'back.out(2.2)'},13.64);
+      tl.fromTo('#pio-say',{opacity:0,scale:.82},{opacity:1,scale:1,duration:.32,ease:'back.out(1.7)'},13.65);
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

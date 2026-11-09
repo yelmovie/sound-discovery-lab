@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>큰 떨림, 큰 소리 · 삐오의 소리 노트</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+@font-face{font-family:"Note Sans";src:local("Apple SD Gothic Neo"),local("AppleSDGothicNeo-Regular");font-weight:400}
+@font-face{font-family:"Note Sans";src:local("Apple SD Gothic Neo Bold"),local("AppleSDGothicNeo-Bold");font-weight:700}
+@font-face{font-family:"Note Sans";src:local("Apple SD Gothic Neo ExtraBold"),local("AppleSDGothicNeo-ExtraBold");font-weight:800}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1920px;height:1080px;overflow:hidden;background:#fffdf3}
+#root{position:relative;width:100%;height:100%;font-family:"Note Sans",sans-serif;color:#17394b;word-break:keep-all}
+.full{position:absolute;inset:0}
+.abs{position:absolute}
+.paper{position:absolute;inset:0;background-color:#fffdf3;background-image:linear-gradient(#e4ede0 2px,transparent 2px),linear-gradient(90deg,#e4ede0 2px,transparent 2px);background-size:60px 60px}
+.head{position:absolute;left:192px;top:104px}
+.chip{display:inline-block;background:#086a73;color:#fff;font-size:30px;font-weight:700;padding:8px 22px;border-radius:999px}
+.head h1{font-size:68px;font-weight:800;line-height:1.1;margin-top:14px;letter-spacing:-.01em}
+.question{font-size:40px;font-weight:700;color:#086a73;margin-top:10px}
+.cap-band{position:absolute;left:192px;right:192px;top:846px;height:124px;background:#17394b;border-radius:30px;display:flex;align-items:center;justify-content:center}
+.cap-band p{color:#fff;font-size:58px;font-weight:700;letter-spacing:-.01em}
+.tag-pos{position:absolute}
+.tag{background:#fff;border:4px solid #17394b;border-radius:20px;padding:8px 24px;font-size:42px;font-weight:800;white-space:nowrap;box-shadow:0 6px 0 rgba(23,57,75,.16)}
+.tag.warm{border-color:#c76a1c;color:#7a3d08}
+.lead line,.lead path{stroke:#17394b;stroke-width:5;stroke-linecap:round;fill:none}
+.lead .dash{stroke:#486675;stroke-dasharray:10 12;stroke-width:4}
+.wave{position:absolute;overflow:hidden;border-radius:18px;background:rgba(188,236,237,.35);border:3px solid #bad0c8}
+.wave svg{position:absolute;left:0;top:0;overflow:visible}
+.wave-axis line{stroke:#bad0c8;stroke-width:3;stroke-dasharray:8 10}
+.wave-run path{fill:none;stroke-width:8;stroke-linecap:round;stroke-linejoin:round}
+.blade-window{position:absolute;left:0;top:0;width:100%;height:100%;overflow:hidden}
+.blade-window img{position:absolute;left:0}
+.push path{stroke:#c76a1c;stroke-width:9;stroke-linecap:round;stroke-linejoin:round;fill:none}
+.pio{position:absolute;width:250px;height:250px}
+.bubble-pos{position:absolute;transform:translateX(-100%)}
+.bubble{background:#fff;border:4px solid #086a73;border-radius:28px;padding:14px 30px;font-size:46px;font-weight:800;color:#086a73;white-space:nowrap;box-shadow:0 6px 0 rgba(8,106,115,.18)}
+.arc path{stroke:#086a73;stroke-width:9;stroke-linecap:round;fill:none}
+.burst path{stroke:#c76a1c;stroke-width:9;stroke-linecap:round}
+.ring{width:140px;height:140px;border-radius:50%;border:8px solid #ffbd58;box-shadow:0 0 0 6px rgba(255,189,88,.25)}
+.ripple{width:120px;height:120px;border-radius:50%;border:6px solid #fff}
+.pulse{width:120px;height:18px;border-radius:9px;background:#fff;border:5px solid #086a73;box-shadow:0 0 0 6px rgba(188,236,237,.9)}
+.band{border-radius:65px;background:#bceced;border:5px solid #086a73;overflow:hidden}
+.roll{position:absolute;inset:0;overflow:hidden}
+.roll-in span{display:flex;height:130px;align-items:center;justify-content:center;font-size:56px;font-weight:800;color:#17394b}
+.meter{display:flex;flex-direction:column;gap:10px}
+.meter .bar{width:90px;height:34px;border-radius:10px;background:#086a73}
+#turn path{stroke:#c76a1c;stroke-width:9}
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="16" data-width="1920" data-height="1080">
+    <div id="ground" class="clip full" data-start="0" data-duration="16" data-track-index="2" style="z-index:2"><div class="paper"></div></div>
+    <div id="header" class="clip full" data-start="0" data-duration="16" data-track-index="3" style="z-index:3"><div class="head"><div id="head-chip" class="chip">삐오의 소리 노트</div><h1 id="head-title">큰 떨림, 큰 소리</h1><p id="head-q" class="question">북소리를 크게 내려면?</p></div></div>
+    <div id="cap0" class="clip full" data-start="0" data-duration="4" data-track-index="4" style="z-index:4"><div class="cap-band"><p id="cap0-t">같은 북을 약하게 쳐 봐.</p></div></div>
+    <div id="cap1" class="clip full" data-start="4" data-duration="4" data-track-index="5" style="z-index:5"><div class="cap-band"><p id="cap1-t">세게 치면 더 크게 떨려.</p></div></div>
+    <div id="cap2" class="clip full" data-start="8" data-duration="4" data-track-index="6" style="z-index:6"><div class="cap-band"><p id="cap2-t">높낮이는 같고, 소리 크기가 달라.</p></div></div>
+    <div id="cap3" class="clip full" data-start="12" data-duration="4" data-track-index="7" style="z-index:7"><div class="cap-band"><p id="cap3-t">치는 세기로 소리 크기를 조절해.</p></div></div>
+    <div id="drum" class="clip full" data-start="0" data-duration="8.3" data-track-index="8" style="z-index:8"><img id="drum" class="abs" src="assets/img/drum.png" alt="" style="left:330px;top:400px;width:480px;height:400px"><img id="dm" class="abs" src="assets/img/mallet.png" alt="" style="left:530px;top:423px;width:360px;height:240px"></div>
+    <div id="w" class="clip full" data-start="0" data-duration="8.3" data-track-index="9" style="z-index:9"><div id="wv" class="wave" style="left:1080px;top:400px;width:600px;height:260px">
+  <svg class="wave-axis" width="600" height="260" viewBox="0 0 600 260"><line x1="0" y1="130" x2="600" y2="130"/></svg>
+  <svg id="wv-run" class="wave-run" width="900" height="260" viewBox="0 0 900 260"><g id="wv-amp"><path d="M0 130 L4 109.654 L8 89.878 L12 71.226 L16 54.22 L20 39.336 L24 26.992 L28 17.533 L32 11.223 L36 8.241 L40 8.668 L44 12.494 L48 19.611 L52 29.82 L56 42.834 L60 58.29 L64 75.755 L68 94.738 L72 114.709 L76 135.109 L80 155.365 L84 174.911 L88 193.199 L92 209.717 L96 224.003 L100 235.655 L104 244.348 L108 249.839 L112 251.973 L116 250.691 L120 246.029 L124 238.117 L128 227.177 L132 213.515 L136 197.514 L140 179.622 L144 160.34 L148 140.209 L152 119.791 L156 99.66 L160 80.378 L164 62.486 L168 46.485 L172 32.823 L176 21.883 L180 13.971 L184 9.309 L188 8.027 L192 10.161 L196 15.652 L200 24.345 L204 35.997 L208 50.283 L212 66.801 L216 85.089 L220 104.635 L224 124.891 L228 145.291 L232 165.262 L236 184.245 L240 201.71 L244 217.166 L248 230.18 L252 240.389 L256 247.506 L260 251.332 L264 251.759 L268 248.777 L272 242.467 L276 233.008 L280 220.664 L284 205.78 L288 188.774 L292 170.122 L296 150.346 L300 130 L304 109.654 L308 89.878 L312 71.226 L316 54.22 L320 39.336 L324 26.992 L328 17.533 L332 11.223 L336 8.241 L340 8.668 L344 12.494 L348 19.611 L352 29.82 L356 42.834 L360 58.29 L364 75.755 L368 94.738 L372 114.709 L376 135.109 L380 155.365 L384 174.911 L388 193.199 L392 209.717 L396 224.003 L400 235.655 L404 244.348 L408 249.839 L412 251.973 L416 250.691 L420 246.029 L424 238.117 L428 227.177 L432 213.515 L436 197.514 L440 179.622 L444 160.34 L448 140.209 L452 119.791 L456 99.66 L460 80.378 L464 62.486 L468 46.485 L472 32.823 L476 21.883 L480 13.971 L484 9.309 L488 8.027 L492 10.161 L496 15.652 L500 24.345 L504 35.997 L508 50.283 L512 66.801 L516 85.089 L520 104.635 L524 124.891 L528 145.291 L532 165.262 L536 184.245 L540 201.71 L544 217.166 L548 230.18 L552 240.389 L556 247.506 L560 251.332 L564 251.759 L568 248.777 L572 242.467 L576 233.008 L580 220.664 L584 205.78 L588 188.774 L592 170.122 L596 150.346 L600 130 L604 109.654 L608 89.878 L612 71.226 L616 54.22 L620 39.336 L624 26.992 L628 17.533 L632 11.223 L636 8.241 L640 8.668 L644 12.494 L648 19.611 L652 29.82 L656 42.834 L660 58.29 L664 75.755 L668 94.738 L672 114.709 L676 135.109 L680 155.365 L684 174.911 L688 193.199 L692 209.717 L696 224.003 L700 235.655 L704 244.348 L708 249.839 L712 251.973 L716 250.691 L720 246.029 L724 238.117 L728 227.177 L732 213.515 L736 197.514 L740 179.622 L744 160.34 L748 140.209 L752 119.791 L756 99.66 L760 80.378 L764 62.486 L768 46.485 L772 32.823 L776 21.883 L780 13.971 L784 9.309 L788 8.027 L792 10.161 L796 15.652 L800 24.345 L804 35.997 L808 50.283 L812 66.801 L816 85.089 L820 104.635 L824 124.891 L828 145.291 L832 165.262 L836 184.245 L840 201.71 L844 217.166 L848 230.18 L852 240.389 L856 247.506 L860 251.332 L864 251.759 L868 248.777 L872 242.467 L876 233.008 L880 220.664 L884 205.78 L888 188.774 L892 170.122 L896 150.346 L900 130" style="stroke:#086a73" vector-effect="non-scaling-stroke"/></g></svg>
+</div></div>
+    <div id="lab1" class="clip full" data-start="1.3" data-duration="2.6" data-track-index="10" style="z-index:10"><div class="tag-pos" style="left:790px;top:270px;transform:translateX(-50%)"><div id="t-weak" class="tag ">약하게</div></div><div class="tag-pos" style="left:1380px;top:336px;transform:translateX(-50%)"><div id="t-small" class="tag ">작은 소리</div></div></div>
+    <div id="lab2" class="clip full" data-start="5.1" data-duration="2.8" data-track-index="11" style="z-index:11"><div class="tag-pos" style="left:790px;top:270px;transform:translateX(-50%)"><div id="t-strong" class="tag warm">세게</div></div><div class="tag-pos" style="left:1380px;top:336px;transform:translateX(-50%)"><div id="t-big" class="tag warm">큰 소리</div></div></div>
+    <div id="cmp" class="clip full" data-start="8" data-duration="8" data-track-index="12" style="z-index:12"><div id="wa" class="wave" style="left:470px;top:340px;width:700px;height:230px">
+  <svg class="wave-axis" width="700" height="230" viewBox="0 0 700 230"><line x1="0" y1="115" x2="700" y2="115"/></svg>
+  <svg id="wa-run" class="wave-run" width="1044" height="230" viewBox="0 0 1044 230"><g id="wa-amp"><path d="M0 115 L4 99.421 L8 84.173 L12 69.583 L16 55.961 L20 43.597 L24 32.755 L28 23.666 L32 16.523 L36 11.479 L40 8.642 L44 8.071 L48 9.78 L52 13.731 L56 19.84 L60 27.978 L64 37.97 L68 49.604 L72 62.632 L76 76.776 L80 91.735 L84 107.19 L88 122.81 L92 138.265 L96 153.224 L100 167.368 L104 180.396 L108 192.03 L112 202.022 L116 210.16 L120 216.269 L124 220.22 L128 221.929 L132 221.358 L136 218.521 L140 213.477 L144 206.334 L148 197.245 L152 186.403 L156 174.039 L160 160.417 L164 145.827 L168 130.579 L172 115 L176 99.421 L180 84.173 L184 69.583 L188 55.961 L192 43.597 L196 32.755 L200 23.666 L204 16.523 L208 11.479 L212 8.642 L216 8.071 L220 9.78 L224 13.731 L228 19.84 L232 27.978 L236 37.97 L240 49.604 L244 62.632 L248 76.776 L252 91.735 L256 107.19 L260 122.81 L264 138.265 L268 153.224 L272 167.368 L276 180.396 L280 192.03 L284 202.022 L288 210.16 L292 216.269 L296 220.22 L300 221.929 L304 221.358 L308 218.521 L312 213.477 L316 206.334 L320 197.245 L324 186.403 L328 174.039 L332 160.417 L336 145.827 L340 130.579 L344 115 L348 99.421 L352 84.173 L356 69.583 L360 55.961 L364 43.597 L368 32.755 L372 23.666 L376 16.523 L380 11.479 L384 8.642 L388 8.071 L392 9.78 L396 13.731 L400 19.84 L404 27.978 L408 37.97 L412 49.604 L416 62.632 L420 76.776 L424 91.735 L428 107.19 L432 122.81 L436 138.265 L440 153.224 L444 167.368 L448 180.396 L452 192.03 L456 202.022 L460 210.16 L464 216.269 L468 220.22 L472 221.929 L476 221.358 L480 218.521 L484 213.477 L488 206.334 L492 197.245 L496 186.403 L500 174.039 L504 160.417 L508 145.827 L512 130.579 L516 115 L520 99.421 L524 84.173 L528 69.583 L532 55.961 L536 43.597 L540 32.755 L544 23.666 L548 16.523 L552 11.479 L556 8.642 L560 8.071 L564 9.78 L568 13.731 L572 19.84 L576 27.978 L580 37.97 L584 49.604 L588 62.632 L592 76.776 L596 91.735 L600 107.19 L604 122.81 L608 138.265 L612 153.224 L616 167.368 L620 180.396 L624 192.03 L628 202.022 L632 210.16 L636 216.269 L640 220.22 L644 221.929 L648 221.358 L652 218.521 L656 213.477 L660 206.334 L664 197.245 L668 186.403 L672 174.039 L676 160.417 L680 145.827 L684 130.579 L688 115 L692 99.421 L696 84.173 L700 69.583 L704 55.961 L708 43.597 L712 32.755 L716 23.666 L720 16.523 L724 11.479 L728 8.642 L732 8.071 L736 9.78 L740 13.731 L744 19.84 L748 27.978 L752 37.97 L756 49.604 L760 62.632 L764 76.776 L768 91.735 L772 107.19 L776 122.81 L780 138.265 L784 153.224 L788 167.368 L792 180.396 L796 192.03 L800 202.022 L804 210.16 L808 216.269 L812 220.22 L816 221.929 L820 221.358 L824 218.521 L828 213.477 L832 206.334 L836 197.245 L840 186.403 L844 174.039 L848 160.417 L852 145.827 L856 130.579 L860 115 L864 99.421 L868 84.173 L872 69.583 L876 55.961 L880 43.597 L884 32.755 L888 23.666 L892 16.523 L896 11.479 L900 8.642 L904 8.071 L908 9.78 L912 13.731 L916 19.84 L920 27.978 L924 37.97 L928 49.604 L932 62.632 L936 76.776 L940 91.735 L944 107.19 L948 122.81 L952 138.265 L956 153.224 L960 167.368 L964 180.396 L968 192.03 L972 202.022 L976 210.16 L980 216.269 L984 220.22 L988 221.929 L992 221.358 L996 218.521 L1000 213.477 L1004 206.334 L1008 197.245 L1012 186.403 L1016 174.039 L1020 160.417 L1024 145.827 L1028 130.579 L1032 115 L1036 99.421 L1040 84.173 L1044 69.583" style="stroke:#086a73" vector-effect="non-scaling-stroke"/></g></svg>
+</div><div id="wb" class="wave" style="left:470px;top:560px;width:700px;height:230px">
+  <svg class="wave-axis" width="700" height="230" viewBox="0 0 700 230"><line x1="0" y1="115" x2="700" y2="115"/></svg>
+  <svg id="wb-run" class="wave-run" width="1044" height="230" viewBox="0 0 1044 230"><g id="wb-amp"><path d="M0 115 L4 99.421 L8 84.173 L12 69.583 L16 55.961 L20 43.597 L24 32.755 L28 23.666 L32 16.523 L36 11.479 L40 8.642 L44 8.071 L48 9.78 L52 13.731 L56 19.84 L60 27.978 L64 37.97 L68 49.604 L72 62.632 L76 76.776 L80 91.735 L84 107.19 L88 122.81 L92 138.265 L96 153.224 L100 167.368 L104 180.396 L108 192.03 L112 202.022 L116 210.16 L120 216.269 L124 220.22 L128 221.929 L132 221.358 L136 218.521 L140 213.477 L144 206.334 L148 197.245 L152 186.403 L156 174.039 L160 160.417 L164 145.827 L168 130.579 L172 115 L176 99.421 L180 84.173 L184 69.583 L188 55.961 L192 43.597 L196 32.755 L200 23.666 L204 16.523 L208 11.479 L212 8.642 L216 8.071 L220 9.78 L224 13.731 L228 19.84 L232 27.978 L236 37.97 L240 49.604 L244 62.632 L248 76.776 L252 91.735 L256 107.19 L260 122.81 L264 138.265 L268 153.224 L272 167.368 L276 180.396 L280 192.03 L284 202.022 L288 210.16 L292 216.269 L296 220.22 L300 221.929 L304 221.358 L308 218.521 L312 213.477 L316 206.334 L320 197.245 L324 186.403 L328 174.039 L332 160.417 L336 145.827 L340 130.579 L344 115 L348 99.421 L352 84.173 L356 69.583 L360 55.961 L364 43.597 L368 32.755 L372 23.666 L376 16.523 L380 11.479 L384 8.642 L388 8.071 L392 9.78 L396 13.731 L400 19.84 L404 27.978 L408 37.97 L412 49.604 L416 62.632 L420 76.776 L424 91.735 L428 107.19 L432 122.81 L436 138.265 L440 153.224 L444 167.368 L448 180.396 L452 192.03 L456 202.022 L460 210.16 L464 216.269 L468 220.22 L472 221.929 L476 221.358 L480 218.521 L484 213.477 L488 206.334 L492 197.245 L496 186.403 L500 174.039 L504 160.417 L508 145.827 L512 130.579 L516 115 L520 99.421 L524 84.173 L528 69.583 L532 55.961 L536 43.597 L540 32.755 L544 23.666 L548 16.523 L552 11.479 L556 8.642 L560 8.071 L564 9.78 L568 13.731 L572 19.84 L576 27.978 L580 37.97 L584 49.604 L588 62.632 L592 76.776 L596 91.735 L600 107.19 L604 122.81 L608 138.265 L612 153.224 L616 167.368 L620 180.396 L624 192.03 L628 202.022 L632 210.16 L636 216.269 L640 220.22 L644 221.929 L648 221.358 L652 218.521 L656 213.477 L660 206.334 L664 197.245 L668 186.403 L672 174.039 L676 160.417 L680 145.827 L684 130.579 L688 115 L692 99.421 L696 84.173 L700 69.583 L704 55.961 L708 43.597 L712 32.755 L716 23.666 L720 16.523 L724 11.479 L728 8.642 L732 8.071 L736 9.78 L740 13.731 L744 19.84 L748 27.978 L752 37.97 L756 49.604 L760 62.632 L764 76.776 L768 91.735 L772 107.19 L776 122.81 L780 138.265 L784 153.224 L788 167.368 L792 180.396 L796 192.03 L800 202.022 L804 210.16 L808 216.269 L812 220.22 L816 221.929 L820 221.358 L824 218.521 L828 213.477 L832 206.334 L836 197.245 L840 186.403 L844 174.039 L848 160.417 L852 145.827 L856 130.579 L860 115 L864 99.421 L868 84.173 L872 69.583 L876 55.961 L880 43.597 L884 32.755 L888 23.666 L892 16.523 L896 11.479 L900 8.642 L904 8.071 L908 9.78 L912 13.731 L916 19.84 L920 27.978 L924 37.97 L928 49.604 L932 62.632 L936 76.776 L940 91.735 L944 107.19 L948 122.81 L952 138.265 L956 153.224 L960 167.368 L964 180.396 L968 192.03 L972 202.022 L976 210.16 L980 216.269 L984 220.22 L988 221.929 L992 221.358 L996 218.521 L1000 213.477 L1004 206.334 L1008 197.245 L1012 186.403 L1016 174.039 L1020 160.417 L1024 145.827 L1028 130.579 L1032 115 L1036 99.421 L1040 84.173 L1044 69.583" style="stroke:#c76a1c" vector-effect="non-scaling-stroke"/></g></svg>
+</div>
+<div class="tag-pos" style="left:430px;top:421px;transform:translateX(-100%)"><div id="t-a" class="tag ">약하게 친 소리</div></div><div class="tag-pos" style="left:430px;top:641px;transform:translateX(-100%)"><div id="t-b" class="tag warm">세게 친 소리</div></div>
+<svg class="lead abs" width="1920" height="1080">
+ <g id="g-gap"><line x1="685" y1="334" x2="685" y2="796" class="dash"/><line x1="857" y1="334" x2="857" y2="796" class="dash"/></g>
+ <g id="g-height"><line x1="1210" y1="572" x2="1210" y2="778"/><path d="M1196 590 l14 -18 l14 18 M1196 760 l14 18 l14 -18"/></g>
+</svg>
+<div class="tag-pos" style="left:771px;top:266px;transform:translateX(-50%)"><div id="t-gap" class="tag ">간격 같음 = 높낮이 같음</div></div><div class="tag-pos" style="left:1240px;top:641px;transform:none"><div id="t-height" class="tag warm">높이 다름 = 크기 다름</div></div></div>
+    <div id="pio" class="clip full" data-start="12.6" data-duration="3.4" data-track-index="13" style="z-index:13"><img id="pio-img" class="pio" src="assets/img/pio-guide.svg" alt="" style="left:1480px;top:150px">
+<div class="bubble-pos" style="left:1464px;top:220px"><div id="pio-say" class="bubble">세게 칠수록 커!</div></div></div>
+    <audio id="sfx0" class="clip" src="assets/sfx/drum.ogg" data-start="1.033" data-duration="1.5" data-track-index="60" data-volume="0.22"></audio>
+    <audio id="sfx1" class="clip" src="assets/sfx/drum.ogg" data-start="4.833" data-duration="1.5" data-track-index="61" data-volume="1"></audio>
+    <audio id="sfx2" class="clip" src="assets/sfx/drum.ogg" data-start="8.933" data-duration="1.5" data-track-index="62" data-volume="0.22"></audio>
+    <audio id="sfx3" class="clip" src="assets/sfx/drum.ogg" data-start="9.933" data-duration="1.5" data-track-index="63" data-volume="1"></audio>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo('#head-chip',{opacity:0,x:-24},{opacity:1,x:0,duration:.45,ease:'expo.out'},.05);
+      tl.fromTo('#head-title',{opacity:0,filter:'blur(8px)'},{opacity:1,filter:'blur(0px)',duration:.2,ease:'power2.out'},.15);
+      tl.fromTo('#head-q',{opacity:0,y:12},{opacity:1,y:0,duration:.4,ease:'expo.out'},.35);
+      tl.to('#head-q',{opacity:0,duration:0.2,ease:'power2.in'},3.75);
+      tl.fromTo('#cap0-t',{opacity:0,filter:'blur(8px)'},{opacity:1,filter:'blur(0px)',duration:.18,ease:'power2.out'},0.08);
+      tl.to('#cap0-t',{opacity:0,duration:0.14,ease:'power2.in'},3.84);
+      tl.fromTo('#cap1-t',{opacity:0,filter:'blur(8px)'},{opacity:1,filter:'blur(0px)',duration:.18,ease:'power2.out'},4.08);
+      tl.to('#cap1-t',{opacity:0,duration:0.14,ease:'power2.in'},7.84);
+      tl.fromTo('#cap2-t',{opacity:0,filter:'blur(8px)'},{opacity:1,filter:'blur(0px)',duration:.18,ease:'power2.out'},8.08);
+      tl.to('#cap2-t',{opacity:0,duration:0.14,ease:'power2.in'},11.84);
+      tl.fromTo('#cap3-t',{opacity:0,filter:'blur(8px)'},{opacity:1,filter:'blur(0px)',duration:.18,ease:'power2.out'},12.08);
+      tl.set('#dm',{scaleX:-1,x:150,y:-100,rotation:-10},0);
+      tl.to(['#drum','#dm'],{opacity:0,y:-30,duration:.3,ease:'power3.in'},7.95);
+      tl.set('#wv-amp',{scaleY:.02,svgOrigin:'0 130'},0);
+      tl.fromTo('#wv',{opacity:0},{opacity:1,duration:0.4,ease:'power2.out'},0.2);
+      tl.fromTo('#wv-run',{x:0},{x:-150,duration:0.938,ease:'none',repeat:7},1);
+      tl.to('#wv',{opacity:0,duration:.3,ease:'power3.in'},7.95);
+      tl.to('#dm',{x:162,y:-115,rotation:-12.4,duration:.32,ease:'power2.out'},0.52);
+      tl.to('#dm',{x:0,y:0,rotation:0,duration:.14,ease:'power3.in'},0.86);
+      tl.to('#dm',{x:150,y:-100,rotation:-10,duration:.4,ease:'expo.out'},1);
+      tl.set('#drum',{y:0},1);tl.to('#drum',{keyframes:[{y:3,duration:0.028,ease:'sine.inOut'},{y:-2.726,duration:0.056,ease:'sine.inOut'},{y:2.476,duration:0.056,ease:'sine.inOut'},{y:-2.25,duration:0.056,ease:'sine.inOut'},{y:2.044,duration:0.056,ease:'sine.inOut'},{y:-1.857,duration:0.056,ease:'sine.inOut'},{y:1.687,duration:0.056,ease:'sine.inOut'},{y:-1.533,duration:0.056,ease:'sine.inOut'},{y:1.392,duration:0.056,ease:'sine.inOut'},{y:-1.265,duration:0.056,ease:'sine.inOut'},{y:1.149,duration:0.056,ease:'sine.inOut'},{y:-1.044,duration:0.056,ease:'sine.inOut'},{y:0.949,duration:0.056,ease:'sine.inOut'},{y:-0.862,duration:0.056,ease:'sine.inOut'},{y:0.783,duration:0.056,ease:'sine.inOut'},{y:-0.711,duration:0.056,ease:'sine.inOut'},{y:0.646,duration:0.056,ease:'sine.inOut'},{y:-0.587,duration:0.056,ease:'sine.inOut'},{y:0.533,duration:0.056,ease:'sine.inOut'},{y:-0.485,duration:0.056,ease:'sine.inOut'},{y:0.44,duration:0.056,ease:'sine.inOut'},{y:0,duration:0.028,ease:'sine.out'}]},1);
+      tl.to('#wv-amp',{scaleY:0.24,duration:0.1,ease:'power3.out',svgOrigin:'0 130'},1);
+      tl.to('#wv-amp',{scaleY:.02,duration:1.8,ease:'power2.in',svgOrigin:'0 130'},1.6);
+      tl.fromTo('#t-weak',{opacity:0,scale:.82},{opacity:1,scale:1,duration:.32,ease:'back.out(1.7)'},1.3);
+      tl.fromTo('#t-small',{opacity:0,scale:.82},{opacity:1,scale:1,duration:.32,ease:'back.out(1.7)'},1.6);
+      tl.to('#t-weak',{opacity:0,duration:0.15,ease:'power2.in'},3.65);
+      tl.to('#t-small',{opacity:0,duration:0.15,ease:'power2.in'},3.65);
+      tl.to('#dm',{x:270,y:-250,rotation:-34,duration:.32,ease:'power2.out'},4.32);
+      tl.to('#dm',{x:0,y:0,rotation:0,duration:.14,ease:'power3.in'},4.66);
+      tl.to('#dm',{x:150,y:-100,rotation:-10,duration:.4,ease:'expo.out'},4.8);
+      tl.set('#drum',{y:0},4.8);tl.to('#drum',{keyframes:[{y:11,duration:0.028,ease:'sine.inOut'},{y:-10.097,duration:0.056,ease:'sine.inOut'},{y:9.268,duration:0.056,ease:'sine.inOut'},{y:-8.508,duration:0.056,ease:'sine.inOut'},{y:7.809,duration:0.056,ease:'sine.inOut'},{y:-7.169,duration:0.056,ease:'sine.inOut'},{y:6.58,duration:0.056,ease:'sine.inOut'},{y:-6.04,duration:0.056,ease:'sine.inOut'},{y:5.544,duration:0.056,ease:'sine.inOut'},{y:-5.089,duration:0.056,ease:'sine.inOut'},{y:4.672,duration:0.056,ease:'sine.inOut'},{y:-4.288,duration:0.056,ease:'sine.inOut'},{y:3.936,duration:0.056,ease:'sine.inOut'},{y:-3.613,duration:0.056,ease:'sine.inOut'},{y:3.317,duration:0.056,ease:'sine.inOut'},{y:-3.044,duration:0.056,ease:'sine.inOut'},{y:2.795,duration:0.056,ease:'sine.inOut'},{y:-2.565,duration:0.056,ease:'sine.inOut'},{y:2.355,duration:0.056,ease:'sine.inOut'},{y:-2.161,duration:0.056,ease:'sine.inOut'},{y:1.984,duration:0.056,ease:'sine.inOut'},{y:-1.821,duration:0.056,ease:'sine.inOut'},{y:1.672,duration:0.056,ease:'sine.inOut'},{y:-1.534,duration:0.056,ease:'sine.inOut'},{y:1.409,duration:0.056,ease:'sine.inOut'},{y:-1.293,duration:0.056,ease:'sine.inOut'},{y:1.187,duration:0.056,ease:'sine.inOut'},{y:-1.089,duration:0.056,ease:'sine.inOut'},{y:0,duration:0.028,ease:'sine.out'}]},4.8);
+      tl.to('#wv-amp',{scaleY:0.95,duration:0.1,ease:'power3.out',svgOrigin:'0 130'},4.8);
+      tl.to('#wv-amp',{scaleY:.15,duration:2.6,ease:'power2.in',svgOrigin:'0 130'},5.5);
+      tl.fromTo('#t-strong',{opacity:0,scale:.82},{opacity:1,scale:1,duration:.32,ease:'back.out(1.7)'},5.1);
+      tl.fromTo('#t-big',{opacity:0,scale:.82},{opacity:1,scale:1,duration:.32,ease:'back.out(1.7)'},5.4);
+      tl.to('#t-strong',{opacity:0,duration:0.15,ease:'power2.in'},7.85);
+      tl.to('#t-big',{opacity:0,duration:0.15,ease:'power2.in'},7.85);
+      tl.set('#wa-amp',{scaleY:.02,svgOrigin:'0 115'},0);
+      tl.set('#wb-amp',{scaleY:.02,svgOrigin:'0 115'},0);
+      tl.fromTo('#wa',{opacity:0},{opacity:1,duration:0.35,ease:'power2.out'},8.15);
+      tl.fromTo('#wb',{opacity:0},{opacity:1,duration:0.35,ease:'power2.out'},8.25);
+      tl.fromTo('#t-a',{opacity:0,scale:.82},{opacity:1,scale:1,duration:.32,ease:'back.out(1.7)'},8.3);
+      tl.fromTo('#t-b',{opacity:0,scale:.82},{opacity:1,scale:1,duration:.32,ease:'back.out(1.7)'},8.4);
+      tl.set('#wa-amp',{scaleY:.24,svgOrigin:'0 115'},8);tl.set('#wb-amp',{scaleY:.95,svgOrigin:'0 115'},8);
+      tl.fromTo('#wa-run',{x:0},{x:-172,duration:1.075,ease:'none',repeat:7},8.15);
+      tl.fromTo('#wb-run',{x:0},{x:-172,duration:1.075,ease:'none',repeat:7},8.15);
+      tl.fromTo('#wa',{scale:1},{scale:1.03,duration:.15,yoyo:true,repeat:1,ease:'power2.out'},8.9);
+      tl.fromTo('#wb',{scale:1},{scale:1.03,duration:.15,yoyo:true,repeat:1,ease:'power2.out'},9.9);
+      tl.fromTo('#g-gap',{opacity:0},{opacity:1,duration:0.3,ease:'power2.out'},10.5);
+      tl.fromTo('#t-gap',{opacity:0,scale:.82},{opacity:1,scale:1,duration:.32,ease:'back.out(1.7)'},10.55);
+      tl.fromTo('#g-height',{opacity:0},{opacity:1,duration:0.3,ease:'power2.out'},11);
+      tl.fromTo('#t-height',{opacity:0,scale:.82},{opacity:1,scale:1,duration:.32,ease:'back.out(1.7)'},11.05);
+      tl.fromTo('#pio-img',{y:320},{y:0,duration:.55,ease:'back.out(1.5)'},12.6);
+      tl.fromTo('#pio-img',{scaleY:1,scaleX:1},{scaleY:.9,scaleX:1.06,duration:.12,ease:'power2.out',transformOrigin:'50% 100%'},13.22);tl.to('#pio-img',{scaleY:1,scaleX:1,duration:.3,ease:'back.out(2.2)'},13.34);
+      tl.fromTo('#pio-say',{opacity:0,scale:.82},{opacity:1,scale:1,duration:.32,ease:'back.out(1.7)'},13.35);
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

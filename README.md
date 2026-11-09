@@ -74,7 +74,7 @@ npm.cmd run preview
 - 팝업 중앙 정렬, 48px 이상 조작 영역, 시설별 노트, 마지막 문제 한 개씩 보기를 적용했다. 설정 도움말과 영상 글 설명은 필요할 때 펼친다.
 - 2026-10-22: 구문 검사·38개 테스트·빌드 통과. 20개 활동을 브라우저에서 해결해 배지·영상 5편·정식 인증서까지 검증했다. 세 크기의 활동 60화면·팝업 18화면·최종 질문 15화면을 실측했다. 상세 기록은 [docs/EXPERIENCE-v2.1.md](docs/EXPERIENCE-v2.1.md).
 
-개념 영상을 다시 만들 때는 기존 Pillow와 FFmpeg를 사용해 `python scripts/render-concepts.py`를 실행한다. 특정 영상만 바꾸려면 `--stage 0`~`--stage 4`를 사용한다. 기본 FFmpeg 경로는 `F:/tools/ffmpeg/ffmpeg.exe`이고 `--ffmpeg`로 바꿀 수 있다. 새 생성 그림과 로컬 CC0 녹음을 읽어 `media/concepts/`에 영상을 저장하며 작업용 오디오는 `.work/concepts/`에 저장한다.
+개념 영상(2026-11-09부터 HyperFrames 「삐오의 소리 노트」)을 다시 만들 때는 외장 SSD 임시 폴더를 `TMPDIR`로 잡고 `node films/build-films.mjs`로 `films/<id>/`를 만든 뒤, 각 폴더에서 `hyperframes check --json`으로 오류 0을 확인하고 `node films/render-films.mjs [id]`를 실행한다. 결과는 같은 경로 `media/concepts/<id>.mp4`(1280×720, 16초)와 결론 장면 포스터 `<id>.jpg`로 저장된다. 자막 문장은 `src/concepts.js`에서 가져오므로 문장을 바꾸면 VTT도 함께 고치고 `npm test`(시간표 일치 검사)를 돌린다. 리뷰 기록은 `films/REVIEW.md`. 이전 Pillow 방식 `scripts/render-concepts.py`는 기록용으로만 남겨 두었다.
 
 ## v2.2 · 납품 전 고도화 (2026-10-30)
 

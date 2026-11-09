@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>떨림이 소리를 만들어 · 삐오의 소리 노트</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+@font-face{font-family:"Note Sans";src:local("Apple SD Gothic Neo"),local("AppleSDGothicNeo-Regular");font-weight:400}
+@font-face{font-family:"Note Sans";src:local("Apple SD Gothic Neo Bold"),local("AppleSDGothicNeo-Bold");font-weight:700}
+@font-face{font-family:"Note Sans";src:local("Apple SD Gothic Neo ExtraBold"),local("AppleSDGothicNeo-ExtraBold");font-weight:800}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1920px;height:1080px;overflow:hidden;background:#fffdf3}
+#root{position:relative;width:100%;height:100%;font-family:"Note Sans",sans-serif;color:#17394b;word-break:keep-all}
+.full{position:absolute;inset:0}
+.abs{position:absolute}
+.paper{position:absolute;inset:0;background-color:#fffdf3;background-image:linear-gradient(#e4ede0 2px,transparent 2px),linear-gradient(90deg,#e4ede0 2px,transparent 2px);background-size:60px 60px}
+.head{position:absolute;left:192px;top:104px}
+.chip{display:inline-block;background:#086a73;color:#fff;font-size:30px;font-weight:700;padding:8px 22px;border-radius:999px}
+.head h1{font-size:68px;font-weight:800;line-height:1.1;margin-top:14px;letter-spacing:-.01em}
+.question{font-size:40px;font-weight:700;color:#086a73;margin-top:10px}
+.cap-band{position:absolute;left:192px;right:192px;top:846px;height:124px;background:#17394b;border-radius:30px;display:flex;align-items:center;justify-content:center}
+.cap-band p{color:#fff;font-size:58px;font-weight:700;letter-spacing:-.01em}
+.tag-pos{position:absolute}
+.tag{background:#fff;border:4px solid #17394b;border-radius:20px;padding:8px 24px;font-size:42px;font-weight:800;white-space:nowrap;box-shadow:0 6px 0 rgba(23,57,75,.16)}
+.tag.warm{border-color:#c76a1c;color:#7a3d08}
+.lead line,.lead path{stroke:#17394b;stroke-width:5;stroke-linecap:round;fill:none}
+.lead .dash{stroke:#486675;stroke-dasharray:10 12;stroke-width:4}
+.wave{position:absolute;overflow:hidden;border-radius:18px;background:rgba(188,236,237,.35);border:3px solid #bad0c8}
+.wave svg{position:absolute;left:0;top:0;overflow:visible}
+.wave-axis line{stroke:#bad0c8;stroke-width:3;stroke-dasharray:8 10}
+.wave-run path{fill:none;stroke-width:8;stroke-linecap:round;stroke-linejoin:round}
+.blade-window{position:absolute;left:0;top:0;width:100%;height:100%;overflow:hidden}
+.blade-window img{position:absolute;left:0}
+.push path{stroke:#c76a1c;stroke-width:9;stroke-linecap:round;stroke-linejoin:round;fill:none}
+.pio{position:absolute;width:250px;height:250px}
+.bubble-pos{position:absolute;transform:translateX(-100%)}
+.bubble{background:#fff;border:4px solid #086a73;border-radius:28px;padding:14px 30px;font-size:46px;font-weight:800;color:#086a73;white-space:nowrap;box-shadow:0 6px 0 rgba(8,106,115,.18)}
+.arc path{stroke:#086a73;stroke-width:9;stroke-linecap:round;fill:none}
+.burst path{stroke:#c76a1c;stroke-width:9;stroke-linecap:round}
+.ring{width:140px;height:140px;border-radius:50%;border:8px solid #ffbd58;box-shadow:0 0 0 6px rgba(255,189,88,.25)}
+.ripple{width:120px;height:120px;border-radius:50%;border:6px solid #fff}
+.pulse{width:120px;height:18px;border-radius:9px;background:#fff;border:5px solid #086a73;box-shadow:0 0 0 6px rgba(188,236,237,.9)}
+.band{border-radius:65px;background:#bceced;border:5px solid #086a73;overflow:hidden}
+.roll{position:absolute;inset:0;overflow:hidden}
+.roll-in span{display:flex;height:130px;align-items:center;justify-content:center;font-size:56px;font-weight:800;color:#17394b}
+.meter{display:flex;flex-direction:column;gap:10px}
+.meter .bar{width:90px;height:34px;border-radius:10px;background:#086a73}
+#turn path{stroke:#c76a1c;stroke-width:9}
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="16" data-width="1920" data-height="1080">
+    <div id="ground" class="clip full" data-start="0" data-duration="16" data-track-index="2" style="z-index:2"><div class="paper"></div></div>
+    <div id="header" class="clip full" data-start="0" data-duration="16" data-track-index="3" style="z-index:3"><div class="head"><div id="head-chip" class="chip">삐오의 소리 노트</div><h1 id="head-title">떨림이 소리를 만들어</h1><p id="head-q" class="question">소리는 어떻게 생길까?</p></div></div>
+    <div id="cap0" class="clip full" data-start="0" data-duration="4" data-track-index="4" style="z-index:4"><div class="cap-band"><p id="cap0-t">물체를 울리면 떨림이 시작돼.</p></div></div>
+    <div id="cap1" class="clip full" data-start="4" data-duration="4" data-track-index="5" style="z-index:5"><div class="cap-band"><p id="cap1-t">떨리는 동안 소리가 나.</p></div></div>
+    <div id="cap2" class="clip full" data-start="8" data-duration="4" data-track-index="6" style="z-index:6"><div class="cap-band"><p id="cap2-t">손으로 잡으면 떨림이 멈춰.</p></div></div>
+    <div id="cap3" class="clip full" data-start="12" data-duration="4" data-track-index="7" style="z-index:7"><div class="cap-band"><p id="cap3-t">떨림이 멈추면 소리도 멈춰.</p></div></div>
+    <div id="fork" class="clip full" data-start="0" data-duration="16" data-track-index="8" style="z-index:8"><img id="fork-stem" class="abs" src="assets/img/tuning-fork.png" alt="" style="left:470px;top:330px;width:320px;height:480px;clip-path:inset(56% 0 0 0)">
+<img id="fork-tines" class="abs" src="assets/img/tuning-fork.png" alt="" style="left:470px;top:330px;width:320px;height:480px;clip-path:inset(0 0 44% 0);transform-origin:50% 56%"></div>
+    <div id="fork-mallet" class="clip full" data-start="0" data-duration="6.2" data-track-index="9" style="z-index:9"><img id="fm" class="abs" src="assets/img/mallet.png" alt="" style="left:624.8px;top:379px;width:360px;height:240px"></div>
+    <div id="w" class="clip full" data-start="0" data-duration="16" data-track-index="10" style="z-index:10"><div id="wv" class="wave" style="left:1120px;top:380px;width:520px;height:210px">
+  <svg class="wave-axis" width="520" height="210" viewBox="0 0 520 210"><line x1="0" y1="105" x2="520" y2="105"/></svg>
+  <svg id="wv-run" class="wave-run" width="820" height="210" viewBox="0 0 820 210"><g id="wv-amp"><path d="M0 105 L4 88.823 L8 73.1 L12 58.27 L16 44.749 L20 32.915 L24 23.1 L28 15.579 L32 10.563 L36 8.191 L40 8.531 L44 11.573 L48 17.232 L52 25.349 L56 35.696 L60 47.985 L64 61.87 L68 76.964 L72 92.843 L76 109.062 L80 125.167 L84 140.708 L88 155.249 L92 168.382 L96 179.74 L100 189.004 L104 195.916 L108 200.282 L112 201.979 L116 200.959 L120 197.252 L124 190.962 L128 182.263 L132 171.401 L136 158.679 L140 144.453 L144 129.123 L148 113.117 L152 96.883 L156 80.877 L160 65.547 L164 51.321 L168 38.599 L172 27.737 L176 19.038 L180 12.748 L184 9.041 L188 8.021 L192 9.718 L196 14.084 L200 20.996 L204 30.26 L208 41.618 L212 54.751 L216 69.292 L220 84.833 L224 100.938 L228 117.157 L232 133.036 L236 148.13 L240 162.015 L244 174.304 L248 184.651 L252 192.768 L256 198.427 L260 201.469 L264 201.809 L268 199.437 L272 194.421 L276 186.9 L280 177.085 L284 165.251 L288 151.73 L292 136.9 L296 121.177 L300 105 L304 88.823 L308 73.1 L312 58.27 L316 44.749 L320 32.915 L324 23.1 L328 15.579 L332 10.563 L336 8.191 L340 8.531 L344 11.573 L348 17.232 L352 25.349 L356 35.696 L360 47.985 L364 61.87 L368 76.964 L372 92.843 L376 109.062 L380 125.167 L384 140.708 L388 155.249 L392 168.382 L396 179.74 L400 189.004 L404 195.916 L408 200.282 L412 201.979 L416 200.959 L420 197.252 L424 190.962 L428 182.263 L432 171.401 L436 158.679 L440 144.453 L444 129.123 L448 113.117 L452 96.883 L456 80.877 L460 65.547 L464 51.321 L468 38.599 L472 27.737 L476 19.038 L480 12.748 L484 9.041 L488 8.021 L492 9.718 L496 14.084 L500 20.996 L504 30.26 L508 41.618 L512 54.751 L516 69.292 L520 84.833 L524 100.938 L528 117.157 L532 133.036 L536 148.13 L540 162.015 L544 174.304 L548 184.651 L552 192.768 L556 198.427 L560 201.469 L564 201.809 L568 199.437 L572 194.421 L576 186.9 L580 177.085 L584 165.251 L588 151.73 L592 136.9 L596 121.177 L600 105 L604 88.823 L608 73.1 L612 58.27 L616 44.749 L620 32.915 L624 23.1 L628 15.579 L632 10.563 L636 8.191 L640 8.531 L644 11.573 L648 17.232 L652 25.349 L656 35.696 L660 47.985 L664 61.87 L668 76.964 L672 92.843 L676 109.062 L680 125.167 L684 140.708 L688 155.249 L692 168.382 L696 179.74 L700 189.004 L704 195.916 L708 200.282 L712 201.979 L716 200.959 L720 197.252 L724 190.962 L728 182.263 L732 171.401 L736 158.679 L740 144.453 L744 129.123 L748 113.117 L752 96.883 L756 80.877 L760 65.547 L764 51.321 L768 38.599 L772 27.737 L776 19.038 L780 12.748 L784 9.041 L788 8.021 L792 9.718 L796 14.084 L800 20.996 L804 30.26 L808 41.618 L812 54.751 L816 69.292 L820 84.833" style="stroke:#086a73" vector-effect="non-scaling-stroke"/></g></svg>
+</div></div>
+    <div id="lab1" class="clip full" data-start="1.4" data-duration="7.6" data-track-index="11" style="z-index:11"><div class="tag-pos" style="left:430px;top:370px;transform:translateX(-100%)"><div id="t-shake" class="tag ">떨림</div></div><svg class="lead abs" width="1920" height="1080"><line id="l-shake" x1="436" y1="402" x2="598" y2="440"/></svg></div>
+    <div id="lab2" class="clip full" data-start="4.9" data-duration="4.1" data-track-index="12" style="z-index:12"><div class="tag-pos" style="left:1380px;top:310px;transform:translateX(-50%)"><div id="t-sound" class="tag ">소리</div></div></div>
+    <div id="hand" class="clip full" data-start="8.2" data-duration="7.8" data-track-index="13" style="z-index:13"><div id="hand" class="abs" style="left:510px;top:360px"><svg viewBox="0 0 220 200" width="220" height="200"><g fill="#f6c9a4" stroke="#8a5a3c" stroke-width="6" stroke-linejoin="round">
+<rect x="40" y="70" width="150" height="110" rx="46"/><rect x="18" y="38" width="44" height="96" rx="22" transform="rotate(-24 40 86)"/>
+<rect x="70" y="10" width="34" height="92" rx="17"/><rect x="106" y="4" width="34" height="98" rx="17"/><rect x="142" y="14" width="34" height="90" rx="17"/></g></svg></div></div>
+    <div id="lab3" class="clip full" data-start="9.4" data-duration="6.6" data-track-index="14" style="z-index:14"><div class="tag-pos" style="left:630px;top:254px;transform:translateX(-50%)"><div id="t-stop" class="tag warm">떨림 멈춤</div></div></div>
+    <div id="lab4" class="clip full" data-start="12.3" data-duration="3.7" data-track-index="15" style="z-index:15"><div class="tag-pos" style="left:1380px;top:310px;transform:translateX(-50%)"><div id="t-quiet" class="tag warm">소리 없음</div></div></div>
+    <div id="pio" class="clip full" data-start="12.7" data-duration="3.3" data-track-index="16" style="z-index:16"><img id="pio-img" class="pio" src="assets/img/pio-guide.svg" alt="" style="left:1490px;top:590px">
+<div class="bubble-pos" style="left:1474px;top:660px"><div id="pio-say" class="bubble">조용해졌어!</div></div></div>
+    <audio id="sfx0" class="clip" src="assets/sfx/fork.ogg" data-start="1.033" data-duration="6.5" data-track-index="60" data-volume="0.9"></audio>
+    <audio id="sfx1" class="clip" src="assets/sfx/fork.ogg" data-start="4.533" data-duration="4.8" data-track-index="61" data-volume="0.9" data-fade-out="0.3"></audio>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo('#head-chip',{opacity:0,x:-24},{opacity:1,x:0,duration:.45,ease:'expo.out'},.05);
+      tl.fromTo('#head-title',{opacity:0,filter:'blur(8px)'},{opacity:1,filter:'blur(0px)',duration:.2,ease:'power2.out'},.15);
+      tl.fromTo('#head-q',{opacity:0,y:12},{opacity:1,y:0,duration:.4,ease:'expo.out'},.35);
+      tl.to('#head-q',{opacity:0,duration:0.2,ease:'power2.in'},3.75);
+      tl.fromTo('#cap0-t',{opacity:0,filter:'blur(8px)'},{opacity:1,filter:'blur(0px)',duration:.18,ease:'power2.out'},0.08);
+      tl.to('#cap0-t',{opacity:0,duration:0.14,ease:'power2.in'},3.84);
+      tl.fromTo('#cap1-t',{opacity:0,filter:'blur(8px)'},{opacity:1,filter:'blur(0px)',duration:.18,ease:'power2.out'},4.08);
+      tl.to('#cap1-t',{opacity:0,duration:0.14,ease:'power2.in'},7.84);
+      tl.fromTo('#cap2-t',{opacity:0,filter:'blur(8px)'},{opacity:1,filter:'blur(0px)',duration:.18,ease:'power2.out'},8.08);
+      tl.to('#cap2-t',{opacity:0,duration:0.14,ease:'power2.in'},11.84);
+      tl.fromTo('#cap3-t',{opacity:0,filter:'blur(8px)'},{opacity:1,filter:'blur(0px)',duration:.18,ease:'power2.out'},12.08);
+      tl.set('#fm',{scaleX:-1,x:150,y:-100,rotation:-10},0);
+      tl.to('#fm',{opacity:0,duration:.3},5.6);
+      tl.set('#wv-amp',{scaleY:.02,svgOrigin:'0 105'},0);
+      tl.fromTo('#wv',{opacity:0},{opacity:1,duration:0.4,ease:'power2.out'},0.2);
+      tl.fromTo('#wv-run',{x:0},{x:-150,duration:0.938,ease:'none',repeat:8},1);
+      tl.to('#fm',{x:198,y:-160,rotation:-19.6,duration:.32,ease:'power2.out'},0.52);
+      tl.to('#fm',{x:0,y:0,rotation:0,duration:.14,ease:'power3.in'},0.86);
+      tl.to('#fm',{x:150,y:-100,rotation:-10,duration:.4,ease:'expo.out'},1);
+      tl.set('#fork-tines',{scaleX:1},1);tl.to('#fork-tines',{keyframes:[{scaleX:1.06,duration:0.042,ease:'sine.inOut'},{scaleX:0.941,duration:0.083,ease:'sine.inOut'},{scaleX:1.058,duration:0.083,ease:'sine.inOut'},{scaleX:0.943,duration:0.083,ease:'sine.inOut'},{scaleX:1.056,duration:0.083,ease:'sine.inOut'},{scaleX:0.945,duration:0.083,ease:'sine.inOut'},{scaleX:1.054,duration:0.083,ease:'sine.inOut'},{scaleX:0.947,duration:0.083,ease:'sine.inOut'},{scaleX:1.052,duration:0.083,ease:'sine.inOut'},{scaleX:0.949,duration:0.083,ease:'sine.inOut'},{scaleX:1.05,duration:0.083,ease:'sine.inOut'},{scaleX:0.95,duration:0.083,ease:'sine.inOut'},{scaleX:1.049,duration:0.083,ease:'sine.inOut'},{scaleX:0.952,duration:0.083,ease:'sine.inOut'},{scaleX:1.047,duration:0.083,ease:'sine.inOut'},{scaleX:0.954,duration:0.083,ease:'sine.inOut'},{scaleX:1.045,duration:0.083,ease:'sine.inOut'},{scaleX:0.955,duration:0.083,ease:'sine.inOut'},{scaleX:1.044,duration:0.083,ease:'sine.inOut'},{scaleX:0.957,duration:0.083,ease:'sine.inOut'},{scaleX:1.042,duration:0.083,ease:'sine.inOut'},{scaleX:0.958,duration:0.083,ease:'sine.inOut'},{scaleX:1.041,duration:0.083,ease:'sine.inOut'},{scaleX:0.96,duration:0.083,ease:'sine.inOut'},{scaleX:1.04,duration:0.083,ease:'sine.inOut'},{scaleX:0.961,duration:0.083,ease:'sine.inOut'},{scaleX:1.038,duration:0.083,ease:'sine.inOut'},{scaleX:0.962,duration:0.083,ease:'sine.inOut'},{scaleX:1.037,duration:0.083,ease:'sine.inOut'},{scaleX:0.964,duration:0.083,ease:'sine.inOut'},{scaleX:1.036,duration:0.083,ease:'sine.inOut'},{scaleX:0.965,duration:0.083,ease:'sine.inOut'},{scaleX:1.034,duration:0.083,ease:'sine.inOut'},{scaleX:0.966,duration:0.083,ease:'sine.inOut'},{scaleX:1.033,duration:0.083,ease:'sine.inOut'},{scaleX:0.967,duration:0.083,ease:'sine.inOut'},{scaleX:1.032,duration:0.083,ease:'sine.inOut'},{scaleX:0.968,duration:0.083,ease:'sine.inOut'},{scaleX:1.031,duration:0.083,ease:'sine.inOut'},{scaleX:0.969,duration:0.083,ease:'sine.inOut'},{scaleX:1,duration:0.042,ease:'sine.out'}]},1);
+      tl.to('#wv-amp',{scaleY:1,duration:0.12,ease:'power3.out',svgOrigin:'0 105'},1);
+      tl.to('#wv-amp',{scaleY:.55,duration:3.3,ease:'power1.in',svgOrigin:'0 105'},1.12);
+      tl.fromTo('#t-shake',{opacity:0,scale:.82},{opacity:1,scale:1,duration:.32,ease:'back.out(1.7)'},1.4);
+      tl.fromTo('#l-shake',{opacity:0},{opacity:1,duration:0.2,ease:'power2.out'},1.45);
+      tl.to('#fm',{x:190,y:-150,rotation:-18,duration:.32,ease:'power2.out'},4.02);
+      tl.to('#fm',{x:0,y:0,rotation:0,duration:.14,ease:'power3.in'},4.36);
+      tl.to('#fm',{x:150,y:-100,rotation:-10,duration:.4,ease:'expo.out'},4.5);
+      tl.set('#fork-tines',{scaleX:1},4.5);tl.to('#fork-tines',{keyframes:[{scaleX:1.06,duration:0.042,ease:'sine.inOut'},{scaleX:0.941,duration:0.083,ease:'sine.inOut'},{scaleX:1.059,duration:0.083,ease:'sine.inOut'},{scaleX:0.942,duration:0.083,ease:'sine.inOut'},{scaleX:1.058,duration:0.083,ease:'sine.inOut'},{scaleX:0.943,duration:0.083,ease:'sine.inOut'},{scaleX:1.057,duration:0.083,ease:'sine.inOut'},{scaleX:0.944,duration:0.083,ease:'sine.inOut'},{scaleX:1.055,duration:0.083,ease:'sine.inOut'},{scaleX:0.945,duration:0.083,ease:'sine.inOut'},{scaleX:1.054,duration:0.083,ease:'sine.inOut'},{scaleX:0.946,duration:0.083,ease:'sine.inOut'},{scaleX:1.053,duration:0.083,ease:'sine.inOut'},{scaleX:0.947,duration:0.083,ease:'sine.inOut'},{scaleX:1.052,duration:0.083,ease:'sine.inOut'},{scaleX:0.948,duration:0.083,ease:'sine.inOut'},{scaleX:1.051,duration:0.083,ease:'sine.inOut'},{scaleX:0.949,duration:0.083,ease:'sine.inOut'},{scaleX:1.05,duration:0.083,ease:'sine.inOut'},{scaleX:0.95,duration:0.083,ease:'sine.inOut'},{scaleX:1.049,duration:0.083,ease:'sine.inOut'},{scaleX:0.951,duration:0.083,ease:'sine.inOut'},{scaleX:1.048,duration:0.083,ease:'sine.inOut'},{scaleX:0.952,duration:0.083,ease:'sine.inOut'},{scaleX:1.047,duration:0.083,ease:'sine.inOut'},{scaleX:0.953,duration:0.083,ease:'sine.inOut'},{scaleX:1.046,duration:0.083,ease:'sine.inOut'},{scaleX:0.954,duration:0.083,ease:'sine.inOut'},{scaleX:1.045,duration:0.083,ease:'sine.inOut'},{scaleX:0.955,duration:0.083,ease:'sine.inOut'},{scaleX:1.044,duration:0.083,ease:'sine.inOut'},{scaleX:0.956,duration:0.083,ease:'sine.inOut'},{scaleX:1.044,duration:0.083,ease:'sine.inOut'},{scaleX:0.957,duration:0.083,ease:'sine.inOut'},{scaleX:1.043,duration:0.083,ease:'sine.inOut'},{scaleX:0.958,duration:0.083,ease:'sine.inOut'},{scaleX:1.042,duration:0.083,ease:'sine.inOut'},{scaleX:0.959,duration:0.083,ease:'sine.inOut'},{scaleX:1.041,duration:0.083,ease:'sine.inOut'},{scaleX:0.959,duration:0.083,ease:'sine.inOut'},{scaleX:1.04,duration:0.083,ease:'sine.inOut'},{scaleX:0.96,duration:0.083,ease:'sine.inOut'},{scaleX:1.039,duration:0.083,ease:'sine.inOut'},{scaleX:0.961,duration:0.083,ease:'sine.inOut'},{scaleX:1.039,duration:0.083,ease:'sine.inOut'},{scaleX:0.962,duration:0.083,ease:'sine.inOut'},{scaleX:1.038,duration:0.083,ease:'sine.inOut'},{scaleX:0.962,duration:0.083,ease:'sine.inOut'},{scaleX:1.037,duration:0.083,ease:'sine.inOut'},{scaleX:0.963,duration:0.083,ease:'sine.inOut'},{scaleX:1.036,duration:0.083,ease:'sine.inOut'},{scaleX:0.964,duration:0.083,ease:'sine.inOut'},{scaleX:1.036,duration:0.083,ease:'sine.inOut'},{scaleX:0.965,duration:0.083,ease:'sine.inOut'},{scaleX:1,duration:0.042,ease:'sine.out'}]},4.5);
+      tl.to('#wv-amp',{scaleY:1,duration:.1,ease:'power3.out',svgOrigin:'0 105'},4.5);tl.to('#wv-amp',{scaleY:.62,duration:4.3,ease:'power1.in',svgOrigin:'0 105'},4.62);
+      tl.fromTo('#t-sound',{opacity:0,scale:.82},{opacity:1,scale:1,duration:.32,ease:'back.out(1.7)'},4.9);
+      tl.fromTo('#hand',{x:-520,opacity:0},{x:0,opacity:1,duration:.55,ease:'expo.out'},8.3);tl.fromTo('#hand',{scale:1},{scale:.93,duration:.12,ease:'power2.out'},8.95);tl.to('#hand',{scale:1,duration:.2,ease:'power2.out'},9.07);
+      tl.to('#fork-tines',{scaleX:1,duration:.3,ease:'power2.out'},9.0);tl.to('#wv-amp',{scaleY:.02,duration:.3,ease:'power2.out',svgOrigin:'0 105'},9.0);
+      tl.to('#t-shake',{opacity:0,duration:0.2,ease:'power2.in'},8.8);
+      tl.to('#l-shake',{opacity:0,duration:0.2,ease:'power2.in'},8.8);
+      tl.to('#t-sound',{opacity:0,duration:0.2,ease:'power2.in'},8.8);
+      tl.fromTo('#t-stop',{opacity:0,scale:.82},{opacity:1,scale:1,duration:.32,ease:'back.out(1.7)'},9.4);
+      tl.fromTo('#t-quiet',{opacity:0,scale:.82},{opacity:1,scale:1,duration:.32,ease:'back.out(1.7)'},12.3);
+      tl.fromTo('#pio-img',{y:320},{y:0,duration:.55,ease:'back.out(1.5)'},12.7);
+      tl.fromTo('#pio-img',{scaleY:1,scaleX:1},{scaleY:.9,scaleX:1.06,duration:.12,ease:'power2.out',transformOrigin:'50% 100%'},13.32);tl.to('#pio-img',{scaleY:1,scaleX:1,duration:.3,ease:'back.out(2.2)'},13.44);
+      tl.fromTo('#pio-say',{opacity:0,scale:.82},{opacity:1,scale:1,duration:.32,ease:'back.out(1.7)'},13.45);
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

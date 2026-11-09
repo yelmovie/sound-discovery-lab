@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>짧은 자, 빠른 떨림 · 삐오의 소리 노트</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+    <style>
+@font-face{font-family:"Note Sans";src:local("Apple SD Gothic Neo"),local("AppleSDGothicNeo-Regular");font-weight:400}
+@font-face{font-family:"Note Sans";src:local("Apple SD Gothic Neo Bold"),local("AppleSDGothicNeo-Bold");font-weight:700}
+@font-face{font-family:"Note Sans";src:local("Apple SD Gothic Neo ExtraBold"),local("AppleSDGothicNeo-ExtraBold");font-weight:800}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1920px;height:1080px;overflow:hidden;background:#fffdf3}
+#root{position:relative;width:100%;height:100%;font-family:"Note Sans",sans-serif;color:#17394b;word-break:keep-all}
+.full{position:absolute;inset:0}
+.abs{position:absolute}
+.paper{position:absolute;inset:0;background-color:#fffdf3;background-image:linear-gradient(#e4ede0 2px,transparent 2px),linear-gradient(90deg,#e4ede0 2px,transparent 2px);background-size:60px 60px}
+.head{position:absolute;left:192px;top:104px}
+.chip{display:inline-block;background:#086a73;color:#fff;font-size:30px;font-weight:700;padding:8px 22px;border-radius:999px}
+.head h1{font-size:68px;font-weight:800;line-height:1.1;margin-top:14px;letter-spacing:-.01em}
+.question{font-size:40px;font-weight:700;color:#086a73;margin-top:10px}
+.cap-band{position:absolute;left:192px;right:192px;top:846px;height:124px;background:#17394b;border-radius:30px;display:flex;align-items:center;justify-content:center}
+.cap-band p{color:#fff;font-size:58px;font-weight:700;letter-spacing:-.01em}
+.tag-pos{position:absolute}
+.tag{background:#fff;border:4px solid #17394b;border-radius:20px;padding:8px 24px;font-size:42px;font-weight:800;white-space:nowrap;box-shadow:0 6px 0 rgba(23,57,75,.16)}
+.tag.warm{border-color:#c76a1c;color:#7a3d08}
+.lead line,.lead path{stroke:#17394b;stroke-width:5;stroke-linecap:round;fill:none}
+.lead .dash{stroke:#486675;stroke-dasharray:10 12;stroke-width:4}
+.wave{position:absolute;overflow:hidden;border-radius:18px;background:rgba(188,236,237,.35);border:3px solid #bad0c8}
+.wave svg{position:absolute;left:0;top:0;overflow:visible}
+.wave-axis line{stroke:#bad0c8;stroke-width:3;stroke-dasharray:8 10}
+.wave-run path{fill:none;stroke-width:8;stroke-linecap:round;stroke-linejoin:round}
+.blade-window{position:absolute;left:0;top:0;width:100%;height:100%;overflow:hidden}
+.blade-window img{position:absolute;left:0}
+.push path{stroke:#c76a1c;stroke-width:9;stroke-linecap:round;stroke-linejoin:round;fill:none}
+.pio{position:absolute;width:250px;height:250px}
+.bubble-pos{position:absolute;transform:translateX(-100%)}
+.bubble{background:#fff;border:4px solid #086a73;border-radius:28px;padding:14px 30px;font-size:46px;font-weight:800;color:#086a73;white-space:nowrap;box-shadow:0 6px 0 rgba(8,106,115,.18)}
+.arc path{stroke:#086a73;stroke-width:9;stroke-linecap:round;fill:none}
+.burst path{stroke:#c76a1c;stroke-width:9;stroke-linecap:round}
+.ring{width:140px;height:140px;border-radius:50%;border:8px solid #ffbd58;box-shadow:0 0 0 6px rgba(255,189,88,.25)}
+.ripple{width:120px;height:120px;border-radius:50%;border:6px solid #fff}
+.pulse{width:120px;height:18px;border-radius:9px;background:#fff;border:5px solid #086a73;box-shadow:0 0 0 6px rgba(188,236,237,.9)}
+.band{border-radius:65px;background:#bceced;border:5px solid #086a73;overflow:hidden}
+.roll{position:absolute;inset:0;overflow:hidden}
+.roll-in span{display:flex;height:130px;align-items:center;justify-content:center;font-size:56px;font-weight:800;color:#17394b}
+.meter{display:flex;flex-direction:column;gap:10px}
+.meter .bar{width:90px;height:34px;border-radius:10px;background:#086a73}
+#turn path{stroke:#c76a1c;stroke-width:9}
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="16" data-width="1920" data-height="1080">
+    <div id="ground" class="clip full" data-start="0" data-duration="16" data-track-index="2" style="z-index:2"><div class="paper"></div></div>
+    <div id="header" class="clip full" data-start="0" data-duration="16" data-track-index="3" style="z-index:3"><div class="head"><div id="head-chip" class="chip">삐오의 소리 노트</div><h1 id="head-title">짧은 자, 빠른 떨림</h1><p id="head-q" class="question">자의 소리를 높이려면?</p></div></div>
+    <div id="cap0" class="clip full" data-start="0" data-duration="4" data-track-index="4" style="z-index:4"><div class="cap-band"><p id="cap0-t">같은 자를 같은 힘으로 튕겨 봐.</p></div></div>
+    <div id="cap1" class="clip full" data-start="4" data-duration="4" data-track-index="5" style="z-index:5"><div class="cap-band"><p id="cap1-t">긴 부분은 천천히 떨려 낮은 소리.</p></div></div>
+    <div id="cap2" class="clip full" data-start="8" data-duration="4" data-track-index="6" style="z-index:6"><div class="cap-band"><p id="cap2-t">짧은 부분은 빠르게 떨려 높은 소리.</p></div></div>
+    <div id="cap3" class="clip full" data-start="12" data-duration="4" data-track-index="7" style="z-index:7"><div class="cap-band"><p id="cap3-t">길이로 높낮이, 힘으로 크기를 바꿔.</p></div></div>
+    <div id="ruler" class="clip full" data-start="0" data-duration="16" data-track-index="8" style="z-index:8"><div id="pivot" class="abs" style="left:844px;top:422px;width:640px;height:80px;transform-origin:0% 50%">
+  <div class="blade-window"><img id="blade" src="assets/img/ruler-blade.webp" alt="" style="width:640px;height:213.125px;top:-66.563px"></div></div>
+<img id="base" class="abs" src="assets/img/ruler-base.webp" alt="" style="left:250px;top:300px;width:600px;height:300px">
+<svg class="lead abs" width="1920" height="1080"><g id="g-free"><g id="g-free-s"><line x1="844" y1="526" x2="1484" y2="526"/><line x1="844" y1="512" x2="844" y2="540"/><line x1="1484" y1="512" x2="1484" y2="540" id="free-end"/></g></g></svg>
+<div class="tag-pos" style="left:466px;top:608px;transform:translateX(-50%)"><div id="t-fixed" class="tag ">책상에 고정</div></div><div class="tag-pos" style="left:1164px;top:554px;transform:translateX(-50%)"><div id="t-free" class="tag ">떨리는 부분</div></div>
+<div id="push" class="abs push" style="left:1414px;top:272px"><svg width="60" height="90" viewBox="0 0 60 90"><path d="M30 6v66M10 52l20 24 20-24" /></svg></div>
+<div class="tag-pos" style="left:1444px;top:192px;transform:translateX(-50%)"><div id="t-force" class="tag ">같은 힘으로 튕기기</div></div></div>
+    <div id="wl" class="clip full" data-start="4.3" data-duration="3.9" data-track-index="9" style="z-index:9"><div id="wl" class="wave" style="left:960px;top:650px;width:540px;height:150px">
+  <svg class="wave-axis" width="540" height="150" viewBox="0 0 540 150"><line x1="0" y1="75" x2="540" y2="75"/></svg>
+  <svg id="wl-run" class="wave-run" width="1080" height="150" viewBox="0 0 1080 150"><g id="wl-amp"><path d="M0 75 L4 68.772 L8 62.599 L12 56.532 L16 50.626 L20 44.93 L24 39.495 L28 34.368 L32 29.592 L36 25.209 L40 21.258 L44 17.772 L48 14.781 L52 12.311 L56 10.385 L60 9.018 L64 8.222 L68 8.005 L72 8.367 L76 9.306 L80 10.815 L84 12.879 L88 15.481 L92 18.598 L96 22.203 L100 26.266 L104 30.751 L108 35.618 L112 40.827 L116 46.332 L120 52.085 L124 58.036 L128 64.134 L132 70.326 L136 76.559 L140 82.778 L144 88.93 L148 94.961 L152 100.82 L156 106.455 L160 111.817 L164 116.861 L168 121.542 L172 125.82 L176 129.659 L180 133.024 L184 135.886 L188 138.222 L192 140.01 L196 141.235 L200 141.887 L204 141.959 L208 141.452 L212 140.369 L216 138.721 L220 136.52 L224 133.788 L228 130.546 L232 126.823 L236 122.651 L240 118.067 L244 113.11 L248 107.823 L252 102.251 L256 96.444 L260 90.451 L264 84.325 L268 78.117 L272 71.883 L276 65.675 L280 59.549 L284 53.556 L288 47.749 L292 42.177 L296 36.89 L300 31.933 L304 27.349 L308 23.177 L312 19.454 L316 16.212 L320 13.48 L324 11.279 L328 9.631 L332 8.548 L336 8.041 L340 8.113 L344 8.765 L348 9.99 L352 11.778 L356 14.114 L360 16.976 L364 20.341 L368 24.18 L372 28.458 L376 33.139 L380 38.183 L384 43.545 L388 49.18 L392 55.039 L396 61.07 L400 67.222 L404 73.441 L408 79.674 L412 85.866 L416 91.964 L420 97.915 L424 103.668 L428 109.173 L432 114.382 L436 119.249 L440 123.734 L444 127.797 L448 131.402 L452 134.519 L456 137.121 L460 139.185 L464 140.694 L468 141.633 L472 141.995 L476 141.778 L480 140.982 L484 139.615 L488 137.689 L492 135.219 L496 132.228 L500 128.742 L504 124.791 L508 120.408 L512 115.632 L516 110.505 L520 105.07 L524 99.374 L528 93.468 L532 87.401 L536 81.228 L540 75 L544 68.772 L548 62.599 L552 56.532 L556 50.626 L560 44.93 L564 39.495 L568 34.368 L572 29.592 L576 25.209 L580 21.258 L584 17.772 L588 14.781 L592 12.311 L596 10.385 L600 9.018 L604 8.222 L608 8.005 L612 8.367 L616 9.306 L620 10.815 L624 12.879 L628 15.481 L632 18.598 L636 22.203 L640 26.266 L644 30.751 L648 35.618 L652 40.827 L656 46.332 L660 52.085 L664 58.036 L668 64.134 L672 70.326 L676 76.559 L680 82.778 L684 88.93 L688 94.961 L692 100.82 L696 106.455 L700 111.817 L704 116.861 L708 121.542 L712 125.82 L716 129.659 L720 133.024 L724 135.886 L728 138.222 L732 140.01 L736 141.235 L740 141.887 L744 141.959 L748 141.452 L752 140.369 L756 138.721 L760 136.52 L764 133.788 L768 130.546 L772 126.823 L776 122.651 L780 118.067 L784 113.11 L788 107.823 L792 102.251 L796 96.444 L800 90.451 L804 84.325 L808 78.117 L812 71.883 L816 65.675 L820 59.549 L824 53.556 L828 47.749 L832 42.177 L836 36.89 L840 31.933 L844 27.349 L848 23.177 L852 19.454 L856 16.212 L860 13.48 L864 11.279 L868 9.631 L872 8.548 L876 8.041 L880 8.113 L884 8.765 L888 9.99 L892 11.778 L896 14.114 L900 16.976 L904 20.341 L908 24.18 L912 28.458 L916 33.139 L920 38.183 L924 43.545 L928 49.18 L932 55.039 L936 61.07 L940 67.222 L944 73.441 L948 79.674 L952 85.866 L956 91.964 L960 97.915 L964 103.668 L968 109.173 L972 114.382 L976 119.249 L980 123.734 L984 127.797 L988 131.402 L992 134.519 L996 137.121 L1000 139.185 L1004 140.694 L1008 141.633 L1012 141.995 L1016 141.778 L1020 140.982 L1024 139.615 L1028 137.689 L1032 135.219 L1036 132.228 L1040 128.742 L1044 124.791 L1048 120.408 L1052 115.632 L1056 110.505 L1060 105.07 L1064 99.374 L1068 93.468 L1072 87.401 L1076 81.228 L1080 75" style="stroke:#086a73" vector-effect="non-scaling-stroke"/></g></svg>
+</div></div>
+    <div id="lab2" class="clip full" data-start="5" data-duration="2.95" data-track-index="10" style="z-index:10"><div class="tag-pos" style="left:1464px;top:312px;transform:translateX(-50%)"><div id="t-slow" class="tag ">천천히 떨림</div></div><div class="tag-pos" style="left:1230px;top:586px;transform:translateX(-50%)"><div id="t-low" class="tag ">낮은 소리</div></div></div>
+    <div id="ws" class="clip full" data-start="8.8" data-duration="3.3" data-track-index="11" style="z-index:11"><div id="ws" class="wave" style="left:960px;top:650px;width:540px;height:150px">
+  <svg class="wave-axis" width="540" height="150" viewBox="0 0 540 150"><line x1="0" y1="75" x2="540" y2="75"/></svg>
+  <svg id="ws-run" class="wave-run" width="756" height="150" viewBox="0 0 756 150"><g id="ws-amp"><path d="M0 75 L4 59.549 L8 44.93 L12 31.933 L16 21.258 L20 13.48 L24 9.018 L28 8.113 L32 10.815 L36 16.976 L40 26.266 L44 38.183 L48 52.085 L52 67.222 L56 82.778 L60 97.915 L64 111.817 L68 123.734 L72 133.024 L76 139.185 L80 141.887 L84 140.982 L88 136.52 L92 128.742 L96 118.067 L100 105.07 L104 90.451 L108 75 L112 59.549 L116 44.93 L120 31.933 L124 21.258 L128 13.48 L132 9.018 L136 8.113 L140 10.815 L144 16.976 L148 26.266 L152 38.183 L156 52.085 L160 67.222 L164 82.778 L168 97.915 L172 111.817 L176 123.734 L180 133.024 L184 139.185 L188 141.887 L192 140.982 L196 136.52 L200 128.742 L204 118.067 L208 105.07 L212 90.451 L216 75 L220 59.549 L224 44.93 L228 31.933 L232 21.258 L236 13.48 L240 9.018 L244 8.113 L248 10.815 L252 16.976 L256 26.266 L260 38.183 L264 52.085 L268 67.222 L272 82.778 L276 97.915 L280 111.817 L284 123.734 L288 133.024 L292 139.185 L296 141.887 L300 140.982 L304 136.52 L308 128.742 L312 118.067 L316 105.07 L320 90.451 L324 75 L328 59.549 L332 44.93 L336 31.933 L340 21.258 L344 13.48 L348 9.018 L352 8.113 L356 10.815 L360 16.976 L364 26.266 L368 38.183 L372 52.085 L376 67.222 L380 82.778 L384 97.915 L388 111.817 L392 123.734 L396 133.024 L400 139.185 L404 141.887 L408 140.982 L412 136.52 L416 128.742 L420 118.067 L424 105.07 L428 90.451 L432 75 L436 59.549 L440 44.93 L444 31.933 L448 21.258 L452 13.48 L456 9.018 L460 8.113 L464 10.815 L468 16.976 L472 26.266 L476 38.183 L480 52.085 L484 67.222 L488 82.778 L492 97.915 L496 111.817 L500 123.734 L504 133.024 L508 139.185 L512 141.887 L516 140.982 L520 136.52 L524 128.742 L528 118.067 L532 105.07 L536 90.451 L540 75 L544 59.549 L548 44.93 L552 31.933 L556 21.258 L560 13.48 L564 9.018 L568 8.113 L572 10.815 L576 16.976 L580 26.266 L584 38.183 L588 52.085 L592 67.222 L596 82.778 L600 97.915 L604 111.817 L608 123.734 L612 133.024 L616 139.185 L620 141.887 L624 140.982 L628 136.52 L632 128.742 L636 118.067 L640 105.07 L644 90.451 L648 75 L652 59.549 L656 44.93 L660 31.933 L664 21.258 L668 13.48 L672 9.018 L676 8.113 L680 10.815 L684 16.976 L688 26.266 L692 38.183 L696 52.085 L700 67.222 L704 82.778 L708 97.915 L712 111.817 L716 123.734 L720 133.024 L724 139.185 L728 141.887 L732 140.982 L736 136.52 L740 128.742 L744 118.067 L748 105.07 L752 90.451 L756 75" style="stroke:#086a73" vector-effect="non-scaling-stroke"/></g></svg>
+</div></div>
+    <div id="lab3" class="clip full" data-start="9.6" data-duration="2.35" data-track-index="12" style="z-index:12"><div class="tag-pos" style="left:1098px;top:312px;transform:translateX(-50%)"><div id="t-fast" class="tag ">빠르게 떨림</div></div><div class="tag-pos" style="left:1230px;top:586px;transform:translateX(-50%)"><div id="t-high" class="tag warm">높은 소리</div></div></div>
+    <div id="ans" class="clip full" data-start="12" data-duration="4" data-track-index="13" style="z-index:13"><div id="a1" class="wave" style="left:640px;top:470px;width:760px;height:130px">
+  <svg class="wave-axis" width="760" height="130" viewBox="0 0 760 130"><line x1="0" y1="65" x2="760" y2="65"/></svg>
+  <svg id="a1-run" class="wave-run" width="1300" height="130" viewBox="0 0 1300 130"><g id="a1-amp"><path d="M0 65 L4 59.702 L8 54.45 L12 49.289 L16 44.264 L20 39.418 L24 34.795 L28 30.432 L32 26.369 L36 22.641 L40 19.279 L44 16.313 L48 13.769 L52 11.668 L56 10.029 L60 8.866 L64 8.189 L68 8.004 L72 8.312 L76 9.111 L80 10.395 L84 12.151 L88 14.364 L92 17.016 L96 20.083 L100 23.54 L104 27.355 L108 31.496 L112 35.928 L116 40.611 L120 45.505 L124 50.568 L128 55.756 L132 61.024 L136 66.326 L140 71.617 L144 76.851 L148 81.982 L152 86.966 L156 91.76 L160 96.322 L164 100.613 L168 104.596 L172 108.235 L176 111.501 L180 114.363 L184 116.799 L188 118.786 L192 120.307 L196 121.349 L200 121.904 L204 121.965 L208 121.534 L212 120.613 L216 119.21 L220 117.338 L224 115.013 L228 112.255 L232 109.088 L236 105.539 L240 101.639 L244 97.422 L248 92.924 L252 88.184 L256 83.244 L260 78.145 L264 72.933 L268 67.652 L272 62.348 L276 57.067 L280 51.855 L284 46.756 L288 41.816 L292 37.076 L296 32.578 L300 28.361 L304 24.461 L308 20.912 L312 17.745 L316 14.987 L320 12.662 L324 10.79 L328 9.387 L332 8.466 L336 8.035 L340 8.096 L344 8.651 L348 9.693 L352 11.214 L356 13.201 L360 15.637 L364 18.499 L368 21.765 L372 25.404 L376 29.387 L380 33.678 L384 38.24 L388 43.034 L392 48.018 L396 53.149 L400 58.383 L404 63.674 L408 68.976 L412 74.244 L416 79.432 L420 84.495 L424 89.389 L428 94.072 L432 98.504 L436 102.645 L440 106.46 L444 109.917 L448 112.984 L452 115.636 L456 117.849 L460 119.605 L464 120.889 L468 121.688 L472 121.996 L476 121.811 L480 121.134 L484 119.971 L488 118.332 L492 116.231 L496 113.687 L500 110.721 L504 107.359 L508 103.631 L512 99.568 L516 95.205 L520 90.582 L524 85.736 L528 80.711 L532 75.55 L536 70.298 L540 65 L544 59.702 L548 54.45 L552 49.289 L556 44.264 L560 39.418 L564 34.795 L568 30.432 L572 26.369 L576 22.641 L580 19.279 L584 16.313 L588 13.769 L592 11.668 L596 10.029 L600 8.866 L604 8.189 L608 8.004 L612 8.312 L616 9.111 L620 10.395 L624 12.151 L628 14.364 L632 17.016 L636 20.083 L640 23.54 L644 27.355 L648 31.496 L652 35.928 L656 40.611 L660 45.505 L664 50.568 L668 55.756 L672 61.024 L676 66.326 L680 71.617 L684 76.851 L688 81.982 L692 86.966 L696 91.76 L700 96.322 L704 100.613 L708 104.596 L712 108.235 L716 111.501 L720 114.363 L724 116.799 L728 118.786 L732 120.307 L736 121.349 L740 121.904 L744 121.965 L748 121.534 L752 120.613 L756 119.21 L760 117.338 L764 115.013 L768 112.255 L772 109.088 L776 105.539 L780 101.639 L784 97.422 L788 92.924 L792 88.184 L796 83.244 L800 78.145 L804 72.933 L808 67.652 L812 62.348 L816 57.067 L820 51.855 L824 46.756 L828 41.816 L832 37.076 L836 32.578 L840 28.361 L844 24.461 L848 20.912 L852 17.745 L856 14.987 L860 12.662 L864 10.79 L868 9.387 L872 8.466 L876 8.035 L880 8.096 L884 8.651 L888 9.693 L892 11.214 L896 13.201 L900 15.637 L904 18.499 L908 21.765 L912 25.404 L916 29.387 L920 33.678 L924 38.24 L928 43.034 L932 48.018 L936 53.149 L940 58.383 L944 63.674 L948 68.976 L952 74.244 L956 79.432 L960 84.495 L964 89.389 L968 94.072 L972 98.504 L976 102.645 L980 106.46 L984 109.917 L988 112.984 L992 115.636 L996 117.849 L1000 119.605 L1004 120.889 L1008 121.688 L1012 121.996 L1016 121.811 L1020 121.134 L1024 119.971 L1028 118.332 L1032 116.231 L1036 113.687 L1040 110.721 L1044 107.359 L1048 103.631 L1052 99.568 L1056 95.205 L1060 90.582 L1064 85.736 L1068 80.711 L1072 75.55 L1076 70.298 L1080 65 L1084 59.702 L1088 54.45 L1092 49.289 L1096 44.264 L1100 39.418 L1104 34.795 L1108 30.432 L1112 26.369 L1116 22.641 L1120 19.279 L1124 16.313 L1128 13.769 L1132 11.668 L1136 10.029 L1140 8.866 L1144 8.189 L1148 8.004 L1152 8.312 L1156 9.111 L1160 10.395 L1164 12.151 L1168 14.364 L1172 17.016 L1176 20.083 L1180 23.54 L1184 27.355 L1188 31.496 L1192 35.928 L1196 40.611 L1200 45.505 L1204 50.568 L1208 55.756 L1212 61.024 L1216 66.326 L1220 71.617 L1224 76.851 L1228 81.982 L1232 86.966 L1236 91.76 L1240 96.322 L1244 100.613 L1248 104.596 L1252 108.235 L1256 111.501 L1260 114.363 L1264 116.799 L1268 118.786 L1272 120.307 L1276 121.349 L1280 121.904 L1284 121.965 L1288 121.534 L1292 120.613 L1296 119.21 L1300 117.338" style="stroke:#086a73" vector-effect="non-scaling-stroke"/></g></svg>
+</div><div id="a2" class="wave" style="left:640px;top:640px;width:760px;height:130px">
+  <svg class="wave-axis" width="760" height="130" viewBox="0 0 760 130"><line x1="0" y1="65" x2="760" y2="65"/></svg>
+  <svg id="a2-run" class="wave-run" width="976" height="130" viewBox="0 0 976 130"><g id="a2-amp"><path d="M0 65 L4 51.855 L8 39.418 L12 28.361 L16 19.279 L20 12.662 L24 8.866 L28 8.096 L32 10.395 L36 15.637 L40 23.54 L44 33.678 L48 45.505 L52 58.383 L56 71.617 L60 84.495 L64 96.322 L68 106.46 L72 114.363 L76 119.605 L80 121.904 L84 121.134 L88 117.338 L92 110.721 L96 101.639 L100 90.582 L104 78.145 L108 65 L112 51.855 L116 39.418 L120 28.361 L124 19.279 L128 12.662 L132 8.866 L136 8.096 L140 10.395 L144 15.637 L148 23.54 L152 33.678 L156 45.505 L160 58.383 L164 71.617 L168 84.495 L172 96.322 L176 106.46 L180 114.363 L184 119.605 L188 121.904 L192 121.134 L196 117.338 L200 110.721 L204 101.639 L208 90.582 L212 78.145 L216 65 L220 51.855 L224 39.418 L228 28.361 L232 19.279 L236 12.662 L240 8.866 L244 8.096 L248 10.395 L252 15.637 L256 23.54 L260 33.678 L264 45.505 L268 58.383 L272 71.617 L276 84.495 L280 96.322 L284 106.46 L288 114.363 L292 119.605 L296 121.904 L300 121.134 L304 117.338 L308 110.721 L312 101.639 L316 90.582 L320 78.145 L324 65 L328 51.855 L332 39.418 L336 28.361 L340 19.279 L344 12.662 L348 8.866 L352 8.096 L356 10.395 L360 15.637 L364 23.54 L368 33.678 L372 45.505 L376 58.383 L380 71.617 L384 84.495 L388 96.322 L392 106.46 L396 114.363 L400 119.605 L404 121.904 L408 121.134 L412 117.338 L416 110.721 L420 101.639 L424 90.582 L428 78.145 L432 65 L436 51.855 L440 39.418 L444 28.361 L448 19.279 L452 12.662 L456 8.866 L460 8.096 L464 10.395 L468 15.637 L472 23.54 L476 33.678 L480 45.505 L484 58.383 L488 71.617 L492 84.495 L496 96.322 L500 106.46 L504 114.363 L508 119.605 L512 121.904 L516 121.134 L520 117.338 L524 110.721 L528 101.639 L532 90.582 L536 78.145 L540 65 L544 51.855 L548 39.418 L552 28.361 L556 19.279 L560 12.662 L564 8.866 L568 8.096 L572 10.395 L576 15.637 L580 23.54 L584 33.678 L588 45.505 L592 58.383 L596 71.617 L600 84.495 L604 96.322 L608 106.46 L612 114.363 L616 119.605 L620 121.904 L624 121.134 L628 117.338 L632 110.721 L636 101.639 L640 90.582 L644 78.145 L648 65 L652 51.855 L656 39.418 L660 28.361 L664 19.279 L668 12.662 L672 8.866 L676 8.096 L680 10.395 L684 15.637 L688 23.54 L692 33.678 L696 45.505 L700 58.383 L704 71.617 L708 84.495 L712 96.322 L716 106.46 L720 114.363 L724 119.605 L728 121.904 L732 121.134 L736 117.338 L740 110.721 L744 101.639 L748 90.582 L752 78.145 L756 65 L760 51.855 L764 39.418 L768 28.361 L772 19.279 L776 12.662 L780 8.866 L784 8.096 L788 10.395 L792 15.637 L796 23.54 L800 33.678 L804 45.505 L808 58.383 L812 71.617 L816 84.495 L820 96.322 L824 106.46 L828 114.363 L832 119.605 L836 121.904 L840 121.134 L844 117.338 L848 110.721 L852 101.639 L856 90.582 L860 78.145 L864 65 L868 51.855 L872 39.418 L876 28.361 L880 19.279 L884 12.662 L888 8.866 L892 8.096 L896 10.395 L900 15.637 L904 23.54 L908 33.678 L912 45.505 L916 58.383 L920 71.617 L924 84.495 L928 96.322 L932 106.46 L936 114.363 L940 119.605 L944 121.904 L948 121.134 L952 117.338 L956 110.721 L960 101.639 L964 90.582 L968 78.145 L972 65 L976 51.855" style="stroke:#c76a1c" vector-effect="non-scaling-stroke"/></g></svg>
+</div>
+<div class="tag-pos" style="left:610px;top:501px;transform:translateX(-100%)"><div id="t-a1" class="tag ">긴 자 · 낮은 소리</div></div><div class="tag-pos" style="left:610px;top:671px;transform:translateX(-100%)"><div id="t-a2" class="tag warm">짧은 자 · 높은 소리</div></div></div>
+    <div id="pio" class="clip full" data-start="13" data-duration="3" data-track-index="14" style="z-index:14"><img id="pio-img" class="pio" src="assets/img/pio-guide.svg" alt="" style="left:1480px;top:150px">
+<div class="bubble-pos" style="left:1464px;top:220px"><div id="pio-say" class="bubble">짧을수록 높아!</div></div></div>
+    <audio id="sfx0" class="clip" src="assets/sfx/ruler-long.ogg" data-start="4.483" data-duration="1.1" data-track-index="60" data-volume="1.6"></audio>
+    <audio id="sfx1" class="clip" src="assets/sfx/ruler-long.ogg" data-start="6.383" data-duration="1.1" data-track-index="61" data-volume="1.6"></audio>
+    <audio id="sfx2" class="clip" src="assets/sfx/ruler-short.ogg" data-start="9.133" data-duration="0.443" data-track-index="62" data-volume="1.6"></audio>
+    <audio id="sfx3" class="clip" src="assets/sfx/ruler-short.ogg" data-start="10.633" data-duration="0.443" data-track-index="63" data-volume="1.6"></audio>
+    <audio id="sfx4" class="clip" src="assets/sfx/ruler-long.ogg" data-start="12.633" data-duration="1.1" data-track-index="64" data-volume="1.6"></audio>
+    <audio id="sfx5" class="clip" src="assets/sfx/ruler-short.ogg" data-start="13.533" data-duration="0.443" data-track-index="65" data-volume="1.6"></audio>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.fromTo('#head-chip',{opacity:0,x:-24},{opacity:1,x:0,duration:.45,ease:'expo.out'},.05);
+      tl.fromTo('#head-title',{opacity:0,filter:'blur(8px)'},{opacity:1,filter:'blur(0px)',duration:.2,ease:'power2.out'},.15);
+      tl.fromTo('#head-q',{opacity:0,y:12},{opacity:1,y:0,duration:.4,ease:'expo.out'},.35);
+      tl.to('#head-q',{opacity:0,duration:0.2,ease:'power2.in'},3.75);
+      tl.fromTo('#cap0-t',{opacity:0,filter:'blur(8px)'},{opacity:1,filter:'blur(0px)',duration:.18,ease:'power2.out'},0.08);
+      tl.to('#cap0-t',{opacity:0,duration:0.14,ease:'power2.in'},3.84);
+      tl.fromTo('#cap1-t',{opacity:0,filter:'blur(8px)'},{opacity:1,filter:'blur(0px)',duration:.18,ease:'power2.out'},4.08);
+      tl.to('#cap1-t',{opacity:0,duration:0.14,ease:'power2.in'},7.84);
+      tl.fromTo('#cap2-t',{opacity:0,filter:'blur(8px)'},{opacity:1,filter:'blur(0px)',duration:.18,ease:'power2.out'},8.08);
+      tl.to('#cap2-t',{opacity:0,duration:0.14,ease:'power2.in'},11.84);
+      tl.fromTo('#cap3-t',{opacity:0,filter:'blur(8px)'},{opacity:1,filter:'blur(0px)',duration:.18,ease:'power2.out'},12.08);
+      tl.set('#pivot',{rotation:0},0);
+      tl.fromTo('#t-fixed',{opacity:0,scale:.82},{opacity:1,scale:1,duration:.32,ease:'back.out(1.7)'},0.6);
+      tl.fromTo('#g-free',{opacity:0},{opacity:1,duration:0.3,ease:'power2.out'},1);
+      tl.fromTo('#t-free',{opacity:0,scale:.82},{opacity:1,scale:1,duration:.32,ease:'back.out(1.7)'},1.05);
+      tl.fromTo('#push',{opacity:0,y:-30},{opacity:1,y:0,duration:.4,ease:'expo.out'},1.6);
+      tl.fromTo('#t-force',{opacity:0,scale:.82},{opacity:1,scale:1,duration:.32,ease:'back.out(1.7)'},1.7);
+      tl.to('#t-fixed',{opacity:0,duration:0.2,ease:'power2.in'},3.8);
+      tl.to('#t-free',{opacity:0,duration:0.2,ease:'power2.in'},3.8);
+      tl.to('#push',{y:24,duration:.22,ease:'power2.out'},4.15);tl.to('#push',{opacity:0,duration:.2},4.45);
+      tl.to('#t-force',{opacity:0,duration:0.2,ease:'power2.in'},4.45);
+      tl.set('#wl-amp',{scaleY:.02,svgOrigin:'0 75'},0);
+      tl.fromTo('#wl',{opacity:0},{opacity:1,duration:0.3,ease:'power2.out'},4.45);
+      tl.fromTo('#wl-run',{x:0},{x:-270,duration:2.077,ease:'none',repeat:1},4.45);
+      tl.set('#wl-amp',{scaleY:.8,svgOrigin:'0 75'},4.3);
+      tl.to('#pivot',{rotation:6,duration:.25,ease:'power2.out'},4.15);
+      tl.set('#pivot',{rotation:0},4.45);tl.to('#pivot',{keyframes:[{rotation:6,duration:0.096,ease:'sine.inOut'},{rotation:-4.183,duration:0.192,ease:'sine.inOut'},{rotation:2.916,duration:0.192,ease:'sine.inOut'},{rotation:-2.033,duration:0.192,ease:'sine.inOut'},{rotation:1.417,duration:0.192,ease:'sine.inOut'},{rotation:-0.988,duration:0.192,ease:'sine.inOut'},{rotation:0.689,duration:0.192,ease:'sine.inOut'},{rotation:0,duration:0.096,ease:'sine.out'}]},4.45);
+      tl.to('#pivot',{rotation:6,duration:.25,ease:'power2.out'},6.05);
+      tl.set('#pivot',{rotation:0},6.35);tl.to('#pivot',{keyframes:[{rotation:6,duration:0.096,ease:'sine.inOut'},{rotation:-4.183,duration:0.192,ease:'sine.inOut'},{rotation:2.916,duration:0.192,ease:'sine.inOut'},{rotation:-2.033,duration:0.192,ease:'sine.inOut'},{rotation:1.417,duration:0.192,ease:'sine.inOut'},{rotation:-0.988,duration:0.192,ease:'sine.inOut'},{rotation:0.689,duration:0.192,ease:'sine.inOut'},{rotation:0,duration:0.096,ease:'sine.out'}]},6.35);
+      tl.fromTo('#t-slow',{opacity:0,scale:.82},{opacity:1,scale:1,duration:.32,ease:'back.out(1.7)'},5);
+      tl.fromTo('#t-low',{opacity:0,scale:.82},{opacity:1,scale:1,duration:.32,ease:'back.out(1.7)'},5.3);
+      tl.to('#t-slow',{opacity:0,duration:0.15,ease:'power2.in'},7.8);
+      tl.to('#t-low',{opacity:0,duration:0.15,ease:'power2.in'},7.8);
+      tl.to('#wl',{opacity:0,duration:0.2,ease:'power2.in'},7.9);
+      tl.fromTo('#blade',{x:0},{x:-426,duration:.6,ease:'power2.inOut'},8.15);
+      tl.fromTo('#g-free-s',{scaleX:1},{scaleX:0.334,duration:.6,ease:'power2.inOut',svgOrigin:'844 526'},8.15);
+      tl.set('#ws-amp',{scaleY:.02,svgOrigin:'0 75'},0);
+      tl.fromTo('#ws',{opacity:0},{opacity:1,duration:0.3,ease:'power2.out'},9.1);
+      tl.fromTo('#ws-run',{x:0},{x:-108,duration:0.831,ease:'none',repeat:3},9.1);
+      tl.set('#ws-amp',{scaleY:.8,svgOrigin:'0 75'},8.8);
+      tl.to('#pivot',{rotation:4,duration:.25,ease:'power2.out'},8.8);
+      tl.set('#pivot',{rotation:0},9.1);tl.to('#pivot',{keyframes:[{rotation:4,duration:0.038,ease:'sine.inOut'},{rotation:-3.34,duration:0.077,ease:'sine.inOut'},{rotation:2.788,duration:0.077,ease:'sine.inOut'},{rotation:-2.328,duration:0.077,ease:'sine.inOut'},{rotation:1.944,duration:0.077,ease:'sine.inOut'},{rotation:-1.623,duration:0.077,ease:'sine.inOut'},{rotation:1.355,duration:0.077,ease:'sine.inOut'},{rotation:-1.131,duration:0.077,ease:'sine.inOut'},{rotation:0.945,duration:0.077,ease:'sine.inOut'},{rotation:-0.789,duration:0.077,ease:'sine.inOut'},{rotation:0.658,duration:0.077,ease:'sine.inOut'},{rotation:-0.55,duration:0.077,ease:'sine.inOut'},{rotation:0.459,duration:0.077,ease:'sine.inOut'},{rotation:-0.383,duration:0.077,ease:'sine.inOut'},{rotation:0,duration:0.038,ease:'sine.out'}]},9.1);
+      tl.to('#pivot',{rotation:4,duration:.25,ease:'power2.out'},10.3);
+      tl.set('#pivot',{rotation:0},10.6);tl.to('#pivot',{keyframes:[{rotation:4,duration:0.038,ease:'sine.inOut'},{rotation:-3.34,duration:0.077,ease:'sine.inOut'},{rotation:2.788,duration:0.077,ease:'sine.inOut'},{rotation:-2.328,duration:0.077,ease:'sine.inOut'},{rotation:1.944,duration:0.077,ease:'sine.inOut'},{rotation:-1.623,duration:0.077,ease:'sine.inOut'},{rotation:1.355,duration:0.077,ease:'sine.inOut'},{rotation:-1.131,duration:0.077,ease:'sine.inOut'},{rotation:0.945,duration:0.077,ease:'sine.inOut'},{rotation:-0.789,duration:0.077,ease:'sine.inOut'},{rotation:0.658,duration:0.077,ease:'sine.inOut'},{rotation:-0.55,duration:0.077,ease:'sine.inOut'},{rotation:0.459,duration:0.077,ease:'sine.inOut'},{rotation:-0.383,duration:0.077,ease:'sine.inOut'},{rotation:0,duration:0.038,ease:'sine.out'}]},10.6);
+      tl.fromTo('#t-fast',{opacity:0,scale:.82},{opacity:1,scale:1,duration:.32,ease:'back.out(1.7)'},9.6);
+      tl.fromTo('#t-high',{opacity:0,scale:.82},{opacity:1,scale:1,duration:.32,ease:'back.out(1.7)'},9.9);
+      tl.to('#t-fast',{opacity:0,duration:0.15,ease:'power2.in'},11.8);
+      tl.to('#t-high',{opacity:0,duration:0.15,ease:'power2.in'},11.8);
+      tl.to('#ws',{opacity:0,duration:0.2,ease:'power2.in'},11.9);
+      tl.set('#a1-amp',{scaleY:.02,svgOrigin:'0 65'},0);
+      tl.set('#a2-amp',{scaleY:.02,svgOrigin:'0 65'},0);
+      tl.to(['#pivot','#base','#g-free'],{opacity:0,duration:.35,ease:'power2.out'},12.0);
+      tl.set(['#a1-amp','#a2-amp'],{scaleY:.8,svgOrigin:'0 65'},12);
+      tl.fromTo('#a1',{opacity:0},{opacity:1,duration:0.3,ease:'power2.out'},12.15);
+      tl.fromTo('#a2',{opacity:0},{opacity:1,duration:0.3,ease:'power2.out'},12.3);
+      tl.fromTo('#t-a1',{opacity:0,scale:.82},{opacity:1,scale:1,duration:.32,ease:'back.out(1.7)'},12.2);
+      tl.fromTo('#t-a2',{opacity:0,scale:.82},{opacity:1,scale:1,duration:.32,ease:'back.out(1.7)'},12.35);
+      tl.fromTo('#a1-run',{x:0},{x:-270,duration:2.077,ease:'none',repeat:1},12.15);
+      tl.fromTo('#a2-run',{x:0},{x:-108,duration:0.831,ease:'none',repeat:4},12.15);
+      tl.fromTo('#pio-img',{y:320},{y:0,duration:.55,ease:'back.out(1.5)'},13);
+      tl.fromTo('#pio-img',{scaleY:1,scaleX:1},{scaleY:.9,scaleX:1.06,duration:.12,ease:'power2.out',transformOrigin:'50% 100%'},13.62);tl.to('#pio-img',{scaleY:1,scaleX:1,duration:.3,ease:'back.out(2.2)'},13.74);
+      tl.fromTo('#pio-say',{opacity:0,scale:.82},{opacity:1,scale:1,duration:.32,ease:'back.out(1.7)'},13.75);
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
