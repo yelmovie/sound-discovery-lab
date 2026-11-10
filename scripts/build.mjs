@@ -19,7 +19,7 @@ for (const file of ['index.html','src','sw.js','manifest.webmanifest',...shareAs
 }
 // Precache the code, title, map and interface sounds; lesson art caches as students reach it.
 const sources=(await readdir(path.join(root,'src'))).filter(file=>!file.startsWith("._")&&/\.(js|css)$/.test(file)).map(file=>`/src/${file}`);
-const shell=['/','/index.html','/manifest.webmanifest',...sources,...assets.filter(file=>/^(image\/(branding|generated\/(ullim-village|explorer-walk|bird-walk|pio-guide))|media\/audio\/.*\.(ogg|m4a)$)/.test(file)).map(file=>`/${file}`),...shareAssets.filter(file=>file.includes('icons')).map(file=>`/${file}`),`/${backgrounds[1]}`];
+const shell=['/','/index.html','/manifest.webmanifest',...sources,...assets.filter(file=>/^(image\/(branding|generated\/(ullim-village|explorer-walk|bird-walk|pio-guide))|media\/audio\/.*\.(ogg|m4a)$)/.test(file)||file.startsWith('media/fonts/')).map(file=>`/${file}`),...shareAssets.filter(file=>file.includes('icons')).map(file=>`/${file}`),`/${backgrounds[1]}`];
 const swPath=path.join(root,'dist','sw.js'),sw=await readFile(swPath,'utf8');
 const stamped=sw.replace("const CACHE_VERSION='dev';",`const CACHE_VERSION='${pkg.version}-${Date.now().toString(36)}';`).replace("const APP_SHELL=['/','/index.html','/manifest.webmanifest'];",`const APP_SHELL=${JSON.stringify(shell)};`);
 if(stamped===sw||!stamped.includes(`'${pkg.version}-`))throw new Error('sw.js CACHE_VERSION/APP_SHELL markers not found.');

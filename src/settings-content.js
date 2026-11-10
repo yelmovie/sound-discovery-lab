@@ -26,9 +26,12 @@ export const settingsContent = {
     '캐릭터·배경·장식은 프로젝트 제공 이미지와 자체 AI 생성 이미지예요.',
     '실험에는 실제 북·자·고무줄·소리굽쇠의 CC0 녹음을 사용해요. 나무 배치음과 복구 멜로디도 CC0 샘플로 구성했어요.',
     '화면 효과음은 Kenney Interface Sounds, 악기 샘플은 Versilian Studios VCSL, 자·고무줄은 Freesound, 소리굽쇠는 Wikimedia Commons의 CC0 공개 자료예요.',
+    '삐오와 주민 대사 29줄은 실제 사람을 모사하지 않은 AI 생성 음성이에요. 소리를 꺼도 대사를 글로 볼 수 있어요.',
     '출처와 라이선스 확인 범위는 프로젝트의 docs/CREDITS.md에서 확인할 수 있어요.'
   ],
   sources:[
+    '화면 글꼴: 네이버 나눔스퀘어 네오 · SIL Open Font License 1.1 · campaign.naver.com/nanumsquare_neo/',
+    '캐릭터 음성: 로컬 모모의 Qwen3-TTS로 생성 · 모델 Apache-2.0 · 파일별 제작·검증 정보는 docs/VOICE-PROVENANCE-20261110.json.',
     '소리의 성질 성취기준 · 경기도교육청 2022 개정 교육과정 편성 안내(goe.go.kr).',
     '진동·크기·높낮이·전달·배려 실험과 16초 개념 영상 5편 · 자체 구성, CC0 녹음과 비교용 소리 모델.',
     '화면 반응 효과음: Kenney, Interface Sounds 1.0 · CC0 · https://kenney.nl/assets/interface-sounds',
