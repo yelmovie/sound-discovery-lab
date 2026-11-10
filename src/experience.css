@@ -596,3 +596,10 @@ body:has(.admin-dock) :is(.lesson-page,.final-page,.result-page){padding-bottom:
 }
 
 .map-tool{width:52px;min-width:48px;min-height:48px;justify-content:center;padding:6px}
+/* Character voice replay (2026-11-10) */
+.voice-replay[hidden]{display:none!important}
+.voice-replay{flex:none;vertical-align:middle;margin-left:8px}
+h1 .voice-replay,h3 .voice-replay{width:48px;height:48px;min-width:48px}
+.map-help .voice-replay{position:absolute;right:-58px;top:50%;transform:translateY(-50%);margin:0}
+/* Korean words in the core panel wrap whole (2026-11-10) */
+.final-focus .core-control{word-break:keep-all}

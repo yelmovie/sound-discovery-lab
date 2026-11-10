@@ -9,7 +9,7 @@ export function mountNpcGuide(host, {src, text, enabled, quiet = () => {}}) {
   dialog.setAttribute('aria-label','탐험 안내 음성');
   dialog.style.cssText='max-width:min(480px,calc(100vw - 32px));max-height:85dvh;overflow:auto;padding:24px;border:2px solid #789;border-radius:20px;color:#172b40;background:#fff';
   const caption=document.createElement('p'); caption.textContent=text; caption.style.lineHeight='1.7';
-  const label=document.createElement('p');label.textContent='모모로 만든 AI 안내 음성 · 자막은 소리 없이도 볼 수 있어요.';
+  const label=document.createElement('p');label.textContent='AI로 만든 삐오 목소리예요. 소리를 꺼도 위의 글로 볼 수 있어요.';
   const play=document.createElement('button');play.type='button';
   const close=document.createElement('button');close.type='button';close.textContent='닫기';
   for(const b of [play,close])b.style.cssText='min-height:48px;min-width:48px;padding:10px 16px;margin:4px;border-radius:12px;font:inherit;cursor:pointer';

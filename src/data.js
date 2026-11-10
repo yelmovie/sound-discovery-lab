@@ -1,5 +1,6 @@
 import { conceptArtAssets } from './illustrations.js';
 import { recordedAudioAssets } from './samples.js';
+import { voiceAssets } from './voice.js';
 export const backgrounds = [
   '017_53e4619e94','018_99f70fe2eb','019_4e1f52e30a','020_c5bbc97e3d','021_3dc9c418f5',
   '022_13fc18d100','023_890a4c0418','024_d5aa1da920','025_e972cdea3c','026_f04b11de8f'
@@ -10,7 +11,7 @@ export const props = Object.fromEntries(['core','ring','tuning-fork','fork-stand
 export const villageAssets = ['image/generated/ullim-village.jpg',...['explorer-walk','bird-walk'].map(name => `image/generated/${name}.png`)];
 import { conceptAssets } from './concepts.js';
 export const interfaceSounds={tap:'click_003',open:'open_001',drop:'place_wood',hint:'select_003',success:'confirmation_002',badge:'restore_chime'};
-export const assets = [...new Set(['media/audio/npc-welcome.m4a',...recordedAudioAssets, ...conceptArtAssets,...backgrounds, characters, titleLogo, ...Object.values(props), ...villageAssets, 'image/generated/pio-guide.svg',...conceptAssets,...Object.values(interfaceSounds).map(n=>`media/audio/${n}.ogg`),'media/audio/License.txt','media/audio/sources.json','media/concepts/manifest.json'])];
+export const assets = [...new Set([...voiceAssets,...recordedAudioAssets, ...conceptArtAssets,...backgrounds, characters, titleLogo, ...Object.values(props), ...villageAssets, 'image/generated/pio-guide.svg',...conceptAssets,...Object.values(interfaceSounds).map(n=>`media/audio/${n}.ogg`),'media/audio/License.txt','media/audio/sources.json','media/concepts/manifest.json'])];
 export { APP_VERSION } from './version.js';
 // Curriculum link per facility. Teacher review is still pending, so needsReview stays true until a reviewer signs off.
 export const CURRICULUM_REVIEW = Object.freeze({needsReview:true, source:'2022 개정 과학과 교육과정 3~4학년군 (7) 소리의 성질', reviewer:null, reviewedAt:null});

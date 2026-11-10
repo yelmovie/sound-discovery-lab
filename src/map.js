@@ -216,7 +216,7 @@ export function mountMap(canvas,state,onArrive,options={}){
     const friend=world.doors.find(d=>d.stage<5&&done[d.stage]&&distance(position,d.resident)<105)||null;
     if(friend!==chatting){
       chatting=friend;bubble.hidden=!friend;
-      if(friend){bubble.textContent=options.residentLine?.(friend.stage)||'';bubble.style.left=`${(friend.resident.x+(position.x<friend.resident.x?90:-90))/world.width*100}%`;bubble.style.top=`${(friend.resident.y-46)/world.height*100}%`;}
+      if(friend){bubble.textContent=options.residentLine?.(friend.stage)||'';options.onFriend?.(friend.stage);bubble.style.left=`${(friend.resident.x+(position.x<friend.resident.x?90:-90))/world.width*100}%`;bubble.style.top=`${(friend.resident.y-46)/world.height*100}%`;}
     }
   }
   function faceMovement(before,after){const dx=after.x-before.x,dy=after.y-before.y;return Math.abs(dx)>Math.abs(dy)?dx<0?'left':'right':dy<0?'up':'down';}
