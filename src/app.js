@@ -5,7 +5,7 @@ import { transferSound } from './samples.js';
 import { backgrounds, titleLogo, stages, lessons, instruments, lengths, media, transferCases, diagnosisFields, solutions, finalTasks, props, achievements, legacyIndex, LESSON_COUNT, stageLessons } from './data.js';
 import { STORAGE_KEY, freshState, readState, createSaveSession, evidenceCount, stageDone, canLesson, canRoute, recordEvidence, checkLesson, checkFinal, nextDiagnosisField } from './model.js';
 import { SoundEngine } from './audio.js';
-import { createVoice, voiceFor } from './voice.js';
+import { createVoice, voiceFor, voiceCue } from './voice.js';
 import {mountSignalRestoration} from './signal-restoration.js';
 import { mountMap } from './map.js';
 import { challengeView, runChallenge } from './challenges.js';
@@ -184,7 +184,7 @@ function syncLessonCue(){
  const i=Number(route.split('/')[1]),ps=experimentPlayer.status(),cue=lessonCue(i,work(i),evidenceMatches(state,i));
  const text=app.querySelector('#coach-hint');if(text)text.textContent=ps.state!=='idle'&&ps.message?ps.message:feedback?.text||cue.text;
  const said=voiceFor(text?.textContent),replay=app.querySelector('.next-instruction .voice-replay');if(replay){replay.hidden=!said;if(said)replay.dataset.voice=said;}
- if(voiceSeen.route!==route)voiceSeen={route,text:text?.textContent||''};else if(text&&text.textContent!==voiceSeen.text){voiceSeen.text=text.textContent;if(said)voice.say(said,said==='retry'?150:1300);}
+ if(voiceSeen.route!==route)voiceSeen={route,text:text?.textContent||''};else if(text&&text.textContent!==voiceSeen.text){voiceSeen.text=text.textContent;if(said)voice.say(voiceCue(said,Boolean(app.querySelector('.challenge-complete'))),said==='retry'?150:1300);}
  app.querySelectorAll('.next-target,.next-choice-group').forEach(e=>e.classList.remove('next-target','next-choice-group'));
  const selector=ps.state!=='idle'&&ps.nextSelector?ps.nextSelector:cue.target;
  if(!selector)return;
@@ -310,7 +310,7 @@ app.addEventListener('change',e=>{
  app.querySelector('#ruler-length')?.focus({preventScroll:true});
 });
 async function handleClick(e){void sound.unlock();const b=e.target.closest('button[data-action]');if(!b||b.disabled)return;const a=b.dataset.action,i=route.startsWith('lesson/')?Number(route.split('/')[1]):-1,w=i>=0?work(i):{};
-  if(a==='voice-replay'){const id=b.dataset.voice;voice.say(voiceChains[id]||[id]);return;}
+  if(a==='voice-replay'){const id=b.dataset.voice;voice.say(voiceChains[id]||voiceCue(id,Boolean(app.querySelector('.challenge-complete'))));return;}
   voice.stop();
   if(e.detail>1&&['continue','goto','restore'].includes(a))return;
   if(a==='auto-play'){

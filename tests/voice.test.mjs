@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createVoice,voiceLines,voiceFor,voiceAssets} from '../src/voice.js';
+import {createVoice,voiceLines,voiceFor,voiceAssets,voiceCue} from '../src/voice.js';
 const wait=()=>new Promise(resolve=>setTimeout(resolve,5));
 function harness(){
  const instances=[],quiet=[],listeners={};let enabled=true;
@@ -16,3 +16,5 @@ test('a new line cancels the previous line and queue',async()=>{const h=harness(
 test('muted or hidden state cannot start narration',async()=>{const h=harness();try{h.mute();h.voice.say('story-1');await wait();assert.equal(h.instances.length,0);assert.equal(h.voice.playing,null);}finally{h.restore();}const h2=harness();try{document.hidden=true;h2.voice.say('story-1');await wait();assert.equal(h2.instances.length,0);}finally{h2.restore();}});
 test('hiding the page or stopping clears queued voice and releases quiet state',async()=>{const h=harness();try{h.voice.say(['story-1','story-2']);await wait();document.hidden=true;h.listeners.visibilitychange();assert(h.instances[0].paused);assert.equal(h.voice.playing,null);assert.equal(h.quiet.at(-1),false);await wait();assert.equal(h.instances.length,1);}finally{h.restore();}});
 test('explicit stop cancels delayed narration',async()=>{const h=harness();try{h.voice.say('story-1',15);h.voice.stop();await new Promise(resolve=>setTimeout(resolve,25));assert.equal(h.instances.length,0);assert.equal(h.quiet.at(-1),false);}finally{h.restore();}});
+
+test('request completion reads its heading before either next-step cue',()=>{assert.deepEqual(voiceCue('lesson-done',true),['quest-done','lesson-done']);assert.deepEqual(voiceCue('stage-done',true),['quest-done','stage-done']);assert.deepEqual(voiceCue('lesson-done',false),['lesson-done']);assert.deepEqual(voiceCue('retry',true),['retry']);});

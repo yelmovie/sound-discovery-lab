@@ -37,6 +37,8 @@ export const voiceAssets=Object.values(voiceLines).map(line=>line.src.slice(1));
 const byText=new Map(Object.entries(voiceLines).map(([id,line])=>[line.text,id]));
 /** The voice line whose words match this on-screen text exactly, if there is one. */
 export function voiceFor(text){return byText.get(String(text||'').trim())||null;}
+/** Reads the visible request-completion heading before its next-step cue. */
+export function voiceCue(id,requestComplete=false){return requestComplete&&['lesson-done','stage-done'].includes(id)?['quest-done',id]:[id];}
 
 export function createVoice({enabled,quiet=()=>{}}){
  let audio=null,chain=[],ticket=0,timer=null,current=null;
