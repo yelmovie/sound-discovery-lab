@@ -1,0 +1,47 @@
+{
+  "date": "2026-11-10",
+  "tool": "sharp 0.35.5 (existing installed tool; no project dependency added)",
+  "originalsPreserved": true,
+  "sourceRights": "Existing provenance unchanged; this encoding is not a new copyright clearance.",
+  "assets": [
+    {
+      "input": "image/generated/explorer-walk.png",
+      "output": "image/generated/explorer-walk.webp",
+      "beforeBytes": 1451800,
+      "afterBytes": 1148654,
+      "width": 1263,
+      "height": 1246,
+      "visibleChangedChannels": 0,
+      "maxChannelDelta": 0,
+      "lossless": true,
+      "sourceSha256": "ee54dacddd6a39352f4b304c450b43076a9c4aaa9697c121a96efad8eb0fb8eb",
+      "runtimeSha256": "a3015d5e790cba562bc7d79d4cad3de880295b0dbaecec6f2d7eb440f8517421"
+    },
+    {
+      "input": "image/generated/bird-walk.png",
+      "output": "image/generated/bird-walk.webp",
+      "beforeBytes": 1151254,
+      "afterBytes": 937600,
+      "width": 1266,
+      "height": 1243,
+      "visibleChangedChannels": 0,
+      "maxChannelDelta": 0,
+      "lossless": true,
+      "sourceSha256": "3422e7d4bbfe0f269d0ca146a8ce475b547162cb6eb635071edea1b59ed641bc",
+      "runtimeSha256": "74f11d9ccb33934f982abe34620c66f772941fdda4910245ae9c9d7a6ca128be"
+    },
+    {
+      "input": "image/generated/ullim-village.jpg",
+      "output": "image/generated/ullim-village.webp",
+      "beforeBytes": 1116847,
+      "afterBytes": 726346,
+      "width": 1672,
+      "height": 941,
+      "visibleChangedChannels": 4067407,
+      "maxChannelDelta": 37,
+      "lossless": false,
+      "sourceSha256": "f3a1bbba98791e0c8b63ccf8ff08908f9ba9d79e7e046be74b13373ed40ed61c",
+      "runtimeSha256": "91de727cda6bca8f4e979f1896626c8515b5cc43bbdfbd73c22b68e24adfbc9b"
+    }
+  ]
+}

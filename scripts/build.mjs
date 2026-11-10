@@ -1,4 +1,4 @@
-import { cp, mkdir, stat, readFile, writeFile, readdir } from 'node:fs/promises';
+import { cp, mkdir, stat, readFile, writeFile, readdir, rm } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
@@ -17,6 +17,8 @@ for (const file of ['index.html','src','sw.js','manifest.webmanifest',...shareAs
   await mkdir(path.dirname(path.join(root,'dist',file)),{recursive:true});
   await cp(path.join(root,file),path.join(root,'dist',file),{recursive:true,filter:source=>!path.basename(source).startsWith('._')});
 }
+// Keep source artwork untouched, but do not deploy stale copies from an earlier build.
+for (const name of ['explorer-walk.png','bird-walk.png','ullim-village.jpg']) await rm(path.join(root,'dist','image','generated',name),{force:true});
 // Precache the code, title, map and interface sounds; lesson art caches as students reach it.
 const sources=(await readdir(path.join(root,'src'))).filter(file=>!file.startsWith("._")&&/\.(js|css)$/.test(file)).map(file=>`/src/${file}`);
 const shell=['/','/index.html','/manifest.webmanifest',...sources,...assets.filter(file=>/^(image\/(branding|generated\/(ullim-village|explorer-walk|bird-walk|pio-guide))|media\/audio\/.*\.(ogg|m4a)$)/.test(file)||file.startsWith('media/fonts/')).map(file=>`/${file}`),...shareAssets.filter(file=>file.includes('icons')).map(file=>`/${file}`),`/${backgrounds[1]}`];

@@ -1,0 +1,156 @@
+{
+  "phase": "final-reading-fixed",
+  "states": 302,
+  "counts": {},
+  "runtimeErrors": [],
+  "checks": [
+    "all four speed options accept real selection",
+    "play/pause/resume/speed2 and observed objects without automatic answer",
+    "automatic parts: no answer, proof or evidence fabrication",
+    "automatic rhythm: no answer, proof or evidence fabrication",
+    "automatic signal: no answer, proof or evidence fabrication",
+    "automatic sort: no answer, proof or evidence fabrication",
+    "automatic melody: no answer, proof or evidence fabrication",
+    "automatic mix: no answer, proof or evidence fabrication",
+    "automatic sensor: no answer, proof or evidence fabrication",
+    "automatic classify: no answer, proof or evidence fabrication",
+    "automatic solutions: no answer, proof or evidence fabrication",
+    "automatic festival: no answer, proof or evidence fabrication",
+    "automatic observation preserves an already chosen wrong solution",
+    "student-chosen correct solution completes exactly one observed round",
+    "speed1 and speed2 send identical pitch, level and sound duration to the sound engine",
+    "modal opening stops player and closing does not resume",
+    "modal cancellation restores original experiment picture after temporary preview",
+    "resuming after the original sound expires re-observes and can stop the fork",
+    "manual action stops automatic player",
+    "visibilitychange hidden handler stops player",
+    "pagehide cancels observation scheduler and pending work mutations",
+    "navigation stops pending observation mutations",
+    "auxiliary notebook opens correct stage and returns focus to tools",
+    "auxiliary concept video retains captions and returns focus to tools",
+    "final question selection advances while restoration still requires completion",
+    "product source hashes remained unchanged throughout final-reading-fixed verification"
+  ],
+  "sourceHashes": {
+    "/index.html": "266adaba845c95b7c9d8bef49c6d67f7c4aacd7fcbaf8d0aaef31b06c8f0b2a7",
+    "/src/app.js": "bef3681ba5ba8af3c2462a3c3d5f205e737127bc37fcff865a44bb613d51ccb0",
+    "/src/audio.js": "6f204350b19e8da27630db44028eb71faf59b47b6bc50073d7b100a79cce6839",
+    "/src/challenge-design.css": "3a4fc1b25b6478b1fe2dd1081597e5f6a7b41495e10637bf538fe35ed192245a",
+    "/src/challenges.js": "0ac7033e04419877ab0bf418ca9e60b93215dcc34e58ca4677e5787e7f7232d1",
+    "/src/companion.js": "8218e8d911ca19fb5b0d0ce976fe5fb3fd2397db0b296b1e1cb8ccf6bc4aff1e",
+    "/src/concept-focus.css": "d4a448b57fdf9bf43cf31dc184e82f5492d74a590dfbc78564968434c2ba4766",
+    "/src/concepts.js": "07278e3be37d52a29ceb8b9355b061750ffc3b56fc2ad7537c751943f56cb6bc",
+    "/src/data.js": "1d579d6c181a2cab051e70196c1994a17d65fe3f7d2a94d1e7f3ca37a3e35d1a",
+    "/src/experience.css": "4d82bfb46eee3644ed4e889e036de60ec6af0b130fa087b3c2dc3ad019432176",
+    "/src/experiment-player.js": "76420b76ddcae55908f02c0aea516d27469355a57634aa3f5b4a6976fa999dc4",
+    "/src/illustrations.css": "e853c5715394b5701e381b3ded70e78a12c8b61b685e39dce91df9812bc88180",
+    "/src/illustrations.js": "d42ee82fa269c1fc9237c2296de69ee021fc1b71f0067cb2d72212c67aded494",
+    "/src/manipulations.js": "c793f0846a609d84d6bed1191146a433c412e0a139b226959c9b75b8c0356a4f",
+    "/src/map-world.js": "92db33d5aa0ef3d27aff7c098c8ad5283e458e8a18ceae4d635f870cc0720a17",
+    "/src/map.js": "db099d7408c61cbdb727b2dddfa1350e5e36ee8a116ba0f88896ba3175268985",
+    "/src/model.js": "bbcf9d68a042c10bf1f4134b3a7a727f644635a748efec5d0117f684037f3d38",
+    "/src/npc-guide.js": "003f361dbeaf6ef837cb208f076ad6ffd68b88ca7f8616ace6a624594429c9cc",
+    "/src/progress.js": "8d266e0cee9ab560aec51bb497030fe563ac00f79233bffb5c29a2c379029bfa",
+    "/src/samples.js": "df60d40c00e27381e69fbf8c8bddd969894c6cafc20bca2a7abfd8401fc146d6",
+    "/src/settings-content.js": "e1139dbf473db5d99b03165032d0fc389c24ccf279cb85b47b9db36bb45de750",
+    "/src/signal-restoration.css": "76cd992745495e28ef25b3fd3e80dab21c55b7ccb97f5a0ea7cea4071ac55fbe",
+    "/src/signal-restoration.js": "39072903aa8d60b2b1d90e364723d6486658e67649e76a05c964a88953e9c343",
+    "/src/style.css": "49ffce8933152390c017774e61088855429bf5f5a0b0c598c991810bab982b91",
+    "/src/version.js": "803bacfdd2464f4613305474381873af722a4358dd0d72626c9d0905425cc9a0",
+    "/src/voice.js": "aafb17de05772f72d7b72b185e245b07c17118bf4524750146b46279b30c7445",
+    "/src/workbench.css": "60155f889792a6a9f6e42cf21d09d0a713c45d25a51c0f5b66e053790c46d8e7",
+    "/": "266adaba845c95b7c9d8bef49c6d67f7c4aacd7fcbaf8d0aaef31b06c8f0b2a7"
+  },
+  "viewportMetrics": [
+    {
+      "viewport": [
+        360,
+        740
+      ],
+      "states": 38,
+      "minimumTarget": 44,
+      "minimumFont": 9.8,
+      "issues": 0
+    },
+    {
+      "viewport": [
+        390,
+        844
+      ],
+      "states": 40,
+      "minimumTarget": 44,
+      "minimumFont": 14,
+      "issues": 0
+    },
+    {
+      "viewport": [
+        740,
+        360
+      ],
+      "states": 38,
+      "minimumTarget": 48,
+      "minimumFont": 9.7,
+      "issues": 0
+    },
+    {
+      "viewport": [
+        915,
+        412
+      ],
+      "states": 38,
+      "minimumTarget": 48,
+      "minimumFont": 14,
+      "issues": 0
+    },
+    {
+      "viewport": [
+        1024,
+        600
+      ],
+      "states": 40,
+      "minimumTarget": 48,
+      "minimumFont": 14,
+      "issues": 0
+    },
+    {
+      "viewport": [
+        1024,
+        768
+      ],
+      "states": 20,
+      "minimumTarget": 48,
+      "minimumFont": 16,
+      "issues": 0
+    },
+    {
+      "viewport": [
+        1280,
+        800
+      ],
+      "states": 48,
+      "minimumTarget": 48,
+      "minimumFont": 16,
+      "issues": 0
+    },
+    {
+      "viewport": [
+        1366,
+        768
+      ],
+      "states": 20,
+      "minimumTarget": 48,
+      "minimumFont": 16,
+      "issues": 0
+    },
+    {
+      "viewport": [
+        1920,
+        1080
+      ],
+      "states": 20,
+      "minimumTarget": 48,
+      "minimumFont": 18,
+      "issues": 0
+    }
+  ]
+}

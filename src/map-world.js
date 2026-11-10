@@ -1,9 +1,9 @@
-// Checked against image/generated/ullim-village.jpg. Normalized coordinates keep
+// Checked against image/generated/ullim-village.webp. Normalized coordinates keep
 // the picture, labels, light anchors and road graph in the same coordinate space.
 const width=1672,height=941;
 const point=(x,y)=>({x:x/width,y:y/height});
 export const mapLayout={
-  width,height,roadWidth:26,image:'image/generated/ullim-village.jpg',explorer:'image/generated/explorer-walk.png',companion:'image/generated/bird-walk.png',spawn:'spawn',
+  width,height,roadWidth:26,image:'image/generated/ullim-village.webp',explorer:'image/generated/explorer-walk.webp',companion:'image/generated/bird-walk.webp',spawn:'spawn',
   // Centre lines and half widths are traced from the sand colour of the artwork, kept a
   // few pixels inside it so feet stay on the path. Narrow widths are stairs, stones and the bridge.
   nodes:{

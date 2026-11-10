@@ -1,0 +1,145 @@
+{
+  "baselineCommit": "222374d",
+  "branch": "codex/overnight-sound-20261110",
+  "unitTests": {
+    "passed": 119,
+    "failed": 0
+  },
+  "syntax": "PASS",
+  "build": {
+    "status": "PASS",
+    "note": "See build output for authoritative asset and precache counts; previous source assets preserved, three retired copies excluded from dist."
+  },
+  "fullStudentPlay": {
+    "checks": 139,
+    "auditStates": 486,
+    "runtimeErrors": [],
+    "issues": [],
+    "repairs": [],
+    "sourceChangesDuringTest": []
+  },
+  "layoutSweep": {
+    "states": 302,
+    "counts": {},
+    "runtimeErrors": [],
+    "viewportMetrics": [
+      {
+        "viewport": [
+          360,
+          740
+        ],
+        "states": 38,
+        "minimumTarget": 44,
+        "minimumFont": 9.8,
+        "issues": 0
+      },
+      {
+        "viewport": [
+          390,
+          844
+        ],
+        "states": 40,
+        "minimumTarget": 44,
+        "minimumFont": 14,
+        "issues": 0
+      },
+      {
+        "viewport": [
+          740,
+          360
+        ],
+        "states": 38,
+        "minimumTarget": 48,
+        "minimumFont": 9.7,
+        "issues": 0
+      },
+      {
+        "viewport": [
+          915,
+          412
+        ],
+        "states": 38,
+        "minimumTarget": 48,
+        "minimumFont": 14,
+        "issues": 0
+      },
+      {
+        "viewport": [
+          1024,
+          600
+        ],
+        "states": 40,
+        "minimumTarget": 48,
+        "minimumFont": 14,
+        "issues": 0
+      },
+      {
+        "viewport": [
+          1024,
+          768
+        ],
+        "states": 20,
+        "minimumTarget": 48,
+        "minimumFont": 16,
+        "issues": 0
+      },
+      {
+        "viewport": [
+          1280,
+          800
+        ],
+        "states": 48,
+        "minimumTarget": 48,
+        "minimumFont": 16,
+        "issues": 0
+      },
+      {
+        "viewport": [
+          1366,
+          768
+        ],
+        "states": 20,
+        "minimumTarget": 48,
+        "minimumFont": 16,
+        "issues": 0
+      },
+      {
+        "viewport": [
+          1920,
+          1080
+        ],
+        "states": 20,
+        "minimumTarget": 48,
+        "minimumFont": 18,
+        "issues": 0
+      }
+    ],
+    "readingThreshold": "18px at width >=1800,14px at width >=900,lower widths reported but not automatically rejected"
+  },
+  "loading": [
+    {
+      "throttle": false,
+      "readyMs": 107,
+      "bytes": 2988241,
+      "fcp": 60
+    },
+    {
+      "throttle": true,
+      "readyMs": 2612,
+      "bytes": 2966883,
+      "fcp": 516
+    }
+  ],
+  "offline": "PASS: map and three optimized assets available offline",
+  "fontFamiliesChanged": false,
+  "originalAssetsPreserved": true,
+  "originalRepositoriesChanged": false,
+  "publicDeployment": "NOT RUN: parent integration required",
+  "remaining": [
+    "Teacher review and actual students",
+    "School physical devices and speaker listening",
+    "360x740 / 740x360 small explanatory text",
+    "Existing asset rights documentation",
+    "Public URL smoke after integration"
+  ]
+}

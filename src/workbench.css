@@ -155,7 +155,7 @@ body:has(.single-screen) .admin-dock.admin-menu{position:static;display:flex;fle
 body:has(.single-screen) .admin-chip{display:none}
 body:has(.single-screen) .admin-skip{min-height:48px;font-size:18px;padding:8px 12px}
 body:has(.single-screen) .admin-arrows{gap:4px;padding:4px;background:#fff8e6;border-radius:12px}
-body:has(.single-screen) .admin-arrow{width:44px;min-height:44px;height:44px;font-size:20px}
+body:has(.single-screen) .admin-arrow{width:48px;min-height:48px;height:48px;font-size:20px}
 @container experiment (max-height:430px){
  .experiment-content{gap:8px}
  .experiment-content .instrument > :is(.prop-assembly,.concept-art,.illustrated-ruler){height:clamp(44px,24cqh,100px)}
@@ -277,16 +277,16 @@ body:has(.single-screen) .admin-arrow{width:44px;min-height:44px;height:44px;fon
  .lesson-heading .stage-badge{font-size:14px}
  .lesson-heading .stage-badge .icon{width:16px;height:16px}
  .lesson-heading .chapter-switch{gap:2px;padding:2px}
- .lesson-heading .chapter{min-width:44px;min-height:44px;font-size:16px;padding:4px}
+ .lesson-heading .chapter{min-width:48px;min-height:48px;font-size:16px;padding:4px}
  .activity-footer{gap:8px;padding:6px 8px}
- .activity-footer .btn,.activity-footer .icon-btn,.activity-footer select{min-height:44px;height:44px}
- .activity-footer .icon-btn{width:44px;min-width:44px}
+ .activity-footer .btn,.activity-footer .icon-btn,.activity-footer select{min-height:48px;height:48px}
+ .activity-footer .icon-btn{width:48px;min-width:48px}
  .activity-footer select{width:64px;font-size:16px}
  .auto-play{min-width:100px}
  #coach-hint{font-size:16px}
  .next-marker{width:24px;height:24px;font-size:20px}
  body:has(.single-screen) .game-hud{top:8px;left:10px;right:10px}
- body:has(.single-screen) .game-hud .icon-btn{width:44px;min-width:44px;height:44px;border-radius:12px}
+ body:has(.single-screen) .game-hud .icon-btn{width:48px;min-width:48px;height:48px;border-radius:12px}
  body:has(.single-screen) .game-hud nav{gap:6px}
 }
 @media(max-width:600px) and (orientation:portrait){
@@ -403,4 +403,9 @@ body:has(.single-screen) .admin-arrow{width:44px;min-height:44px;height:44px;fon
 @media(max-width:1100px),(max-height:620px){.final-focus,.result-page{padding-top:86px}.final-focus .final-grid{grid-template-columns:minmax(0,1fr)}.final-focus .core-control{display:block;text-align:center}.final-focus .core-control .mini-core{margin:0 auto 10px}}
 @media(max-width:600px){.final-focus{padding-left:12px;padding-right:12px}.final-steps{gap:5px}.final-steps .chapter{flex-basis:calc(33% - 5px);min-height:48px}.final-focus .final-task{padding:16px 12px}.final-focus .final-task h2{font-size:25px}.final-navigation .small-note{width:100%;margin:0}.modal-footer .btn{flex:1 1 120px}}
 .lesson-page.single-screen .experiment-content :is(button,input[type=range]){min-height:calc(44px / var(--content-fit));min-width:calc(44px / var(--content-fit))}
+/* Keep tablet/landscape actions at 48px without further shrinking narrow portrait copy. */
+@media(min-width:601px),(orientation:landscape){.lesson-page.single-screen .experiment-content :is(button,input[type=range]){min-height:calc(48px / var(--content-fit));min-width:calc(48px / var(--content-fit))}}
 @media(prefers-reduced-motion:reduce){.next-target,.next-choice-group{animation:none;transition:none}}
+
+/* Fitting must not shrink these short action labels below the compact reading floor. */
+@media(min-width:601px),(orientation:landscape){.experiment-content .noise-story .btn,.experiment-content .diagnostic .choice,.experiment-content .challenge-complete .btn{font-size:max(var(--read-small),calc(14px / var(--content-fit)))}}

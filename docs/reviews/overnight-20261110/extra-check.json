@@ -1,0 +1,44 @@
+{
+  "errors": [],
+  "materialIcons": [
+    {
+      "label": "공기",
+      "path": "M3 8h12a3 3 0 1 0-3-3M2 12h17a3 3 0 1 1-3 3M5 17h5"
+    },
+    {
+      "label": "물",
+      "path": "M12 3C9 7 5 11 5 15a7 7 0 0 0 14 0c0-4-4-8-7-12ZM8 16a4 4 0 0 0 4 3"
+    },
+    {
+      "label": "고체",
+      "path": "M4 7 12 3l8 4v10l-8 4-8-4zM4 7l8 4 8-4M12 11v10"
+    }
+  ],
+  "wrongProof": 0,
+  "correctProof": 1,
+  "reducedPulse": {
+    "animation": "none",
+    "observed": true
+  },
+  "offline": {
+    "controlled": true,
+    "map": true,
+    "assets": [
+      {
+        "name": "ullim-village",
+        "status": 200,
+        "bytes": 726346
+      },
+      {
+        "name": "explorer-walk",
+        "status": 200,
+        "bytes": 1148654
+      },
+      {
+        "name": "bird-walk",
+        "status": 200,
+        "bytes": 937600
+      }
+    ]
+  }
+}
