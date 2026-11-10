@@ -1,0 +1,14 @@
+[
+  {
+    "file": "image/generated/concepts/care-volume.webp",
+    "match": true,
+    "bytes": 106114,
+    "firstAttempt": "The read operation timed out"
+  },
+  {
+    "file": "image/generated/concepts/sound-parcel.webp",
+    "match": true,
+    "bytes": 56006,
+    "firstAttempt": "The read operation timed out"
+  }
+]

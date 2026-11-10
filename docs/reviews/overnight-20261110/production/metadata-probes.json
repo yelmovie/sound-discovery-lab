@@ -1,0 +1,26 @@
+[
+  {
+    "path": "/._index.html",
+    "status": 404,
+    "contentType": null,
+    "sample": ""
+  },
+  {
+    "path": "/.DS_Store",
+    "status": 404,
+    "contentType": null,
+    "sample": ""
+  },
+  {
+    "path": "/src/._app.js",
+    "status": 404,
+    "contentType": null,
+    "sample": ""
+  },
+  {
+    "path": "/image/generated/._explorer-walk.webp",
+    "status": 404,
+    "contentType": null,
+    "sample": ""
+  }
+]

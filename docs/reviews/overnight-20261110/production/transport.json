@@ -1,0 +1,86 @@
+[
+  {
+    "http1": false,
+    "elapsed": 1662,
+    "images": [
+      {
+        "name": "ullim-village",
+        "ok": true,
+        "width": 1672,
+        "timing": [
+          {
+            "protocol": "h3",
+            "duration": 1506.2999999970198,
+            "bytes": 726646
+          }
+        ]
+      },
+      {
+        "name": "explorer-walk",
+        "ok": true,
+        "width": 1263,
+        "timing": [
+          {
+            "protocol": "h3",
+            "duration": 1640.699999999255,
+            "bytes": 1148954
+          }
+        ]
+      },
+      {
+        "name": "bird-walk",
+        "ok": true,
+        "width": 1266,
+        "timing": [
+          {
+            "protocol": "h3",
+            "duration": 1610.4000000022352,
+            "bytes": 937900
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "http1": true,
+    "elapsed": 4250,
+    "images": [
+      {
+        "name": "ullim-village",
+        "ok": true,
+        "width": 1672,
+        "timing": [
+          {
+            "protocol": "h3",
+            "duration": 4227.39999999851,
+            "bytes": 726646
+          }
+        ]
+      },
+      {
+        "name": "explorer-walk",
+        "ok": true,
+        "width": 1263,
+        "timing": [
+          {
+            "protocol": "h3",
+            "duration": 3934.89999999851,
+            "bytes": 1148954
+          }
+        ]
+      },
+      {
+        "name": "bird-walk",
+        "ok": true,
+        "width": 1266,
+        "timing": [
+          {
+            "protocol": "h3",
+            "duration": 4228.800000000745,
+            "bytes": 937900
+          }
+        ]
+      }
+    ]
+  }
+]

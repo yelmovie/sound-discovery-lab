@@ -1,0 +1,147 @@
+{
+  "url": "https://sound-discovery-lab.yelsam.workers.dev",
+  "source": "2bff6a3372c32da2ec5aec2f6c50a7ac2ddca442",
+  "viewports": [
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "readyMs": 3118,
+      "firstMinimumFont": 16,
+      "firstMinimumTarget": 48,
+      "restoredEvidence": true,
+      "wrongAnswerBlocked": true,
+      "observationsDoNotAward": true,
+      "settingsEscape": true,
+      "enteredNextActivity": true,
+      "issues": []
+    },
+    {
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "readyMs": 3507,
+      "firstMinimumFont": 16,
+      "firstMinimumTarget": 48,
+      "restoredEvidence": true,
+      "wrongAnswerBlocked": true,
+      "observationsDoNotAward": true,
+      "settingsEscape": true,
+      "enteredNextActivity": true,
+      "issues": []
+    },
+    {
+      "viewport": {
+        "width": 915,
+        "height": 412
+      },
+      "readyMs": 2253,
+      "firstMinimumFont": 16,
+      "firstMinimumTarget": 48,
+      "restoredEvidence": true,
+      "wrongAnswerBlocked": true,
+      "observationsDoNotAward": true,
+      "settingsEscape": true,
+      "enteredNextActivity": true,
+      "issues": []
+    }
+  ],
+  "errors": [],
+  "canceledRequests": [
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/explorer-walk.webp",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/bird-walk.webp",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/fork-stand.png",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/mallet.png",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/drum.png",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/fork-stand.png",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/tuning-fork.png",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/drum.png",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/mallet.png",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/tuning-fork.png",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/mallet.png",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/tuning-fork.png",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/drum.png",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/fork-stand.png",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/fork-stand.png",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/drum.png",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/tuning-fork.png",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/mallet.png",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/fork-stand.png",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/tuning-fork.png",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/fork-stand.png",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/drum.png",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/mallet.png",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/mallet.png",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/tuning-fork.png",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/drum.png"
+  ],
+  "requests": [
+    "https://sound-discovery-lab.yelsam.workers.dev/",
+    "https://sound-discovery-lab.yelsam.workers.dev/src/style.css",
+    "https://sound-discovery-lab.yelsam.workers.dev/src/experience.css",
+    "https://sound-discovery-lab.yelsam.workers.dev/src/illustrations.css",
+    "https://sound-discovery-lab.yelsam.workers.dev/src/workbench.css",
+    "https://sound-discovery-lab.yelsam.workers.dev/src/challenge-design.css",
+    "https://sound-discovery-lab.yelsam.workers.dev/src/concept-focus.css",
+    "https://sound-discovery-lab.yelsam.workers.dev/src/signal-restoration.css",
+    "https://sound-discovery-lab.yelsam.workers.dev/src/app.js",
+    "https://sound-discovery-lab.yelsam.workers.dev/src/npc-guide.js",
+    "https://sound-discovery-lab.yelsam.workers.dev/src/illustrations.js",
+    "https://sound-discovery-lab.yelsam.workers.dev/src/samples.js",
+    "https://sound-discovery-lab.yelsam.workers.dev/src/data.js",
+    "https://sound-discovery-lab.yelsam.workers.dev/src/model.js",
+    "https://sound-discovery-lab.yelsam.workers.dev/src/audio.js",
+    "https://sound-discovery-lab.yelsam.workers.dev/src/voice.js",
+    "https://sound-discovery-lab.yelsam.workers.dev/src/signal-restoration.js",
+    "https://sound-discovery-lab.yelsam.workers.dev/src/map.js",
+    "https://sound-discovery-lab.yelsam.workers.dev/src/challenges.js",
+    "https://sound-discovery-lab.yelsam.workers.dev/src/settings-content.js",
+    "https://sound-discovery-lab.yelsam.workers.dev/src/version.js",
+    "https://sound-discovery-lab.yelsam.workers.dev/src/concepts.js",
+    "https://sound-discovery-lab.yelsam.workers.dev/src/companion.js",
+    "https://sound-discovery-lab.yelsam.workers.dev/src/manipulations.js",
+    "https://sound-discovery-lab.yelsam.workers.dev/src/progress.js",
+    "https://sound-discovery-lab.yelsam.workers.dev/src/experiment-player.js",
+    "https://sound-discovery-lab.yelsam.workers.dev/src/map-world.js",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/branding/title-logo.png",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/pio-guide.svg",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/backgrounds/chatgpt_generated_018_99f70fe2eb.jpg",
+    "https://sound-discovery-lab.yelsam.workers.dev/media/fonts/NanumSquareNeoTTF-bRg.woff2",
+    "https://sound-discovery-lab.yelsam.workers.dev/media/fonts/NanumSquareNeoTTF-dEb.woff2",
+    "https://sound-discovery-lab.yelsam.workers.dev/media/fonts/NanumSquareNeoTTF-cBd.woff2",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/ullim-village.webp",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/explorer-walk.webp",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/bird-walk.webp",
+    "https://sound-discovery-lab.yelsam.workers.dev/media/audio/click_003.ogg",
+    "https://sound-discovery-lab.yelsam.workers.dev/media/audio/voices/mission-1.mp3",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/backgrounds/chatgpt_generated_017_53e4619e94.jpg",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/concepts/ruler-blade.webp",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/drum.png",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/mallet.png",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/fork-stand.png",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/tuning-fork.png",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/concepts/rubber-instrument.webp",
+    "https://sound-discovery-lab.yelsam.workers.dev/image/generated/concepts/ruler-base.webp",
+    "https://sound-discovery-lab.yelsam.workers.dev/media/audio/experiments/rubber.ogg",
+    "https://sound-discovery-lab.yelsam.workers.dev/media/audio/experiments/ruler.ogg",
+    "https://sound-discovery-lab.yelsam.workers.dev/media/audio/experiments/drum.ogg",
+    "https://sound-discovery-lab.yelsam.workers.dev/media/audio/experiments/fork.ogg",
+    "https://sound-discovery-lab.yelsam.workers.dev/media/audio/open_001.ogg"
+  ],
+  "mapRetries": [
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 800
+      },
+      "retry": 1
+    }
+  ],
+  "externalDomains": [],
+  "offline": {
+    "controlled": true,
+    "map": true
+  }
+}

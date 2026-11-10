@@ -1,0 +1,15 @@
+{
+  "sourceCommit": "2bff6a3372c32da2ec5aec2f6c50a7ac2ddca442",
+  "sourceBranch": "map-upgrade",
+  "origin": "https://github.com/yelmovie/sound-discovery-lab.git",
+  "url": "https://sound-discovery-lab.yelsam.workers.dev",
+  "versionId": "efdfa077-d026-4db3-b493-e64073e60c96",
+  "deploymentId": "9711aca1-133a-4dab-bc05-fb8b86848521",
+  "trafficPercentage": 100,
+  "previousVersionId": "e5a5a2e8-0f79-4f23-9b42-d7ad07ffb163",
+  "matchedRuntimeFiles": 150,
+  "stagingMetadataFiles": 0,
+  "operationalBrowserSmokes": 3,
+  "operationalOffline": true,
+  "warning": "Intermittent map asset timeout observed; final run required one genuine retry at 1280x800. Cause not established. No application code was changed during deployment diagnosis."
+}
