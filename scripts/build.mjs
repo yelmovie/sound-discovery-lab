@@ -15,14 +15,14 @@ for (const file of await readdir(path.join(root, 'src'))) {
 }
 for (const file of assets) await stat(path.join(root,file));
 for (const file of ['sw.js','manifest.webmanifest','image/og/ullim-og.jpg','image/icons/icon-192.png','image/icons/icon-512.png']) await stat(path.join(root,file));
+// A fresh output prevents artwork from earlier builds leaking into production.
+await rm(path.join(root,'dist'),{recursive:true,force:true});
 await mkdir(path.join(root,'dist'),{recursive:true});
 const shareAssets=['image/og/ullim-og.jpg','image/icons/icon-192.png','image/icons/icon-512.png'];
 for (const file of ['index.html','src','sw.js','manifest.webmanifest',...shareAssets,...assets]) {
   await mkdir(path.dirname(path.join(root,'dist',file)),{recursive:true});
   await cp(path.join(root,file),path.join(root,'dist',file),{recursive:true,filter:source=>!path.basename(source).startsWith('._')});
 }
-// Keep source artwork untouched, but do not deploy stale copies from an earlier build.
-for (const name of ['explorer-walk.png','bird-walk.png','ullim-village.jpg']) await rm(path.join(root,'dist','image','generated',name),{force:true});
 // Precache the code, title, map and interface sounds; lesson art caches as students reach it.
 const sources=(await readdir(path.join(root,'src'))).filter(file=>!file.startsWith("._")&&/\.(js|css)$/.test(file)).map(file=>`/src/${file}`);
 const shell=['/','/index.html','/manifest.webmanifest',...sources,...assets.filter(file=>/^(image\/(branding|generated\/(ullim-village|explorer-walk|bird-walk|pio-guide))|media\/audio\/.*\.(ogg|m4a)$)/.test(file)||file.startsWith('media/fonts/')).map(file=>`/${file}`),...shareAssets.filter(file=>file.includes('icons')).map(file=>`/${file}`),`/${backgrounds[1]}`];

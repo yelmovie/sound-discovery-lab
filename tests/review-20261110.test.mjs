@@ -64,4 +64,8 @@ test('signal restoration keys get shorter as the note gets higher', async () => 
   const height=selector=>Number(new RegExp(`${selector.replace(/[.()]/g,'\\$&')}\\{[^}]*min-height:(\\d+)px`).exec(css)?.[1]);
   const low=height('.signal-keys button'),mid=height('.signal-keys button:nth-child(2)'),high=height('.signal-keys button:nth-child(3)');
   assert.ok(low>mid&&mid>high,`도 ${low} > 미 ${mid} > 솔 ${high}`);
+  const compact = css.slice(css.indexOf('@media(max-height:650px)'), css.indexOf('@media(prefers-reduced-motion'));
+  const compactHeight = (selector, fallback) => Number(new RegExp(`${selector.replace(/[.()]/g,'\\$&')}\\{[^}]*min-height:(\\d+)px`).exec(compact)?.[1] || fallback);
+  const compactKeys = [compactHeight('.signal-keys button', low), compactHeight('.signal-keys button:nth-child(2)', mid), compactHeight('.signal-keys button:nth-child(3)', high)];
+  assert.ok(compactKeys[0] > compactKeys[1] && compactKeys[1] > compactKeys[2], `compact pitch order ${compactKeys}`);
 });
