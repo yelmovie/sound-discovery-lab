@@ -21,7 +21,7 @@ test('finding a vibrating part requires observation and awards on the answer its
 test('rhythm ends on its last beat without cutting off the final experimental note',()=>{
   const t=trial('rhythm');
   t.act('ring');t.act('ring');t.act('ring');assert.equal(count(t),0);
-  assert.match(t.w.challenge.message,/처음부터/);
+  assert.match(t.w.challenge.message,/그대로/);
   t.act('ring');assert.deepEqual(t.w.challenge.sequence,['울림']);
   t.act('rest');t.events.length=0;t.act('ring');
   assert.equal(count(t),1);

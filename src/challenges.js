@@ -1,3 +1,4 @@
+import { missionScene } from './action-missions.js';
 import { art } from './illustrations.js';
 import { transferSound } from './samples.js';
 import { lengths, media } from './data.js';
@@ -71,11 +72,12 @@ export function challengeView(id,w,h) {
   const round=c.proof?.length||0;
   const control=(text,action,attrs='',cls='btn secondary')=>b(text,`challenge-${action}`,`data-round="${round}" ${attrs}`,cls);
   const choose=(text,value,selected)=>control(text,'select',`data-value="${value}" aria-pressed="${selected===value}"`,`choice ${selected===value?'selected':''}`);
+  const scene=missionScene(id,c,challengeRoundCount(id));
   const pips=`<div class="quest-progress" aria-label="의뢰 ${challengeRoundCount(id)}개 중 ${round}개 완료"><span>${done?'의뢰 완료':`${k+1} / ${challengeRoundCount(id)}`}</span></div>`;
   const object=tool=>`<span class="challenge-object-art">${toolGraphic(tool)}</span>`;
   const beat=(label,n,filled=false,pitch=null)=>`<span class="signal-tile ${filled?'filled':''} ${label==='쉼'?'is-rest':''}" aria-label="${n+1}번째 ${label}${filled?', 연주했어':''}"><svg class="signal-trace" viewBox="0 0 72 30" aria-hidden="true"><path d="${label==='쉼'?'M4 15H68':pitch!==null?`M4 ${pitch===6?6:pitch===12?15:24}H68`:'M4 15H12L18 5L26 25L34 5L42 25L50 5L58 15H68'}"/></svg><b>${label}${filled?' ✓':''}</b></span>`;
   const performance=(label,sequence)=>`<p class="performance-line"><b>${label}</b><span>${sequence||'—'}</span></p>`;
-  if(done)return `<div class="challenge-shell challenge-complete round-success" data-challenge="${id}" data-round="${round}"><div class="success-emblem">${icon('check')}</div><h2>주민의 의뢰를 모두 해결했어!</h2>${h.summary?`<p class="challenge-summary">${h.summary}</p>`:''}${control('다시 도전','replay','','btn quiet')}</div>`;
+  if(done)return `<div class="challenge-shell challenge-complete round-success" data-challenge="${id}" data-round="${round}">${scene}<div class="success-emblem">${icon('check')}</div><h2>주민의 의뢰를 모두 해결했어!</h2>${h.summary?`<p class="challenge-summary">${h.summary}</p>`:''}${control('다시 도전','replay','','btn quiet')}</div>`;
   let body='';
   if(id==='parts'){
     const p=parts[k];body=`<div class="hotspot-scene"><button class="challenge-object object-touch ${c.heard?'observed':''}" data-action="challenge-listen" aria-label="${p.name} 직접 울려 보기">${object(p.tool)}<span class="object-caption">${p.name} · ${c.heard?'✓ 다시 울리기':'울려 보기'}</span></button></div><div class="challenge-tools labelled-choices" aria-label="떨리는 부분 선택">${p.answers.map((x,n)=>choose(`<span class="answer-marker">${n+1}</span><span>${x}</span>`,n,c.selected)).join('')}</div>`;
@@ -101,7 +103,7 @@ export function challengeView(id,w,h) {
   }
   // Raw drag sources and sliders carry the same round token as action buttons.
   body=body.replace(/<(button|input|div)\b[^>]*>/g,tag=>/data-(?:action|drag-kind|drop-kind|challenge-param)=/.test(tag)&&!tag.includes('data-round=')?tag.replace(/^<(\w+)/,`<$1 data-round="${round}"`):tag);
-  return `<div class="challenge-shell ${c.kind==='success'?'round-success':''}" data-challenge="${id}" data-round="${round}">${pips}<div class="challenge-workspace">${body}</div></div>`;
+  return `<div class="challenge-shell ${c.kind==='success'?'round-success':''}" data-challenge="${id}" data-round="${round}">${pips}<div class="challenge-workspace">${scene}${body}</div></div>`;
 }
 
 export function runChallenge(id,w,action,data={},sound) {
@@ -129,7 +131,9 @@ export function runChallenge(id,w,action,data={},sound) {
     if(!['ring','rest'].includes(action))return;
     if((c.sequence||[]).length>=rhythms[k].length){c.sequence=[];c.sounding=false;}
     if(action==='rest'&&!c.sounding)return wrong('먼저 울려야 떨림을 멈출 수 있어.');
-    c.sounding=action==='ring';c.sequence=[...(c.sequence||[]),c.sounding?'울림':'쉼'];
+    const attempted=action==='ring'?'울림':'쉼',position=(c.sequence||[]).length;
+    if(attempted!==rhythms[k][position]){return wrong(`이 발판은 ${rhythms[k][position]} 신호가 필요해. 앞서 연결한 길은 그대로야.`);}
+    c.sounding=action==='ring';c.sequence=[...(c.sequence||[]),attempted];
     if(c.sounding)sound.play({frequency:520,kind:'fork',duration:c.sequence.length===rhythms[k].length?.65:4});else sound.stop();
     if(c.sequence.length<rhythms[k].length)return;
     return c.sequence.join(',')===rhythms[k].join(',')?finish('울림과 쉼의 신호가 도착했어!'):wrong('목표와 다른 박이 있어. 울리기를 누르면 처음부터 다시 연주해.');
