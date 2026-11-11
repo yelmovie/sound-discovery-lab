@@ -11,7 +11,7 @@ export function missionScene(id, challenge, total) {
   return `<section class="action-mission ${status.complete ? 'mission-open' : ''}" aria-label="${mission[0]}">
     <div class="mission-copy"><b>${mission[0]}</b><span>${status.complete ? '길이 열렸어! 다음 탐험으로 가자.' : mission[1]}</span></div>
     <div class="mission-route" aria-hidden="true"><i class="mission-traveller" style="--travel:${status.ratio}"><img src="/image/generated/pio-guide.svg" alt=""></i>${gates}</div>
-    <small class="mission-caption">시간 제한 없이 소리의 성질로 해결해요. 장치의 조건은 게임 속 약속이에요.</small>
+    <small class="mission-caption">${id === 'festival' ? '음악·안내·의자 소리를 조절해 봐.' : '시간 제한 없이 소리의 성질로 해결해요. 장치의 조건은 게임 속 약속이에요.'}</small>
     <div class="mission-status" role="status">${status.done} / ${total} 통과</div>
   </section>`;
 }
