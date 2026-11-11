@@ -8,7 +8,11 @@ if (process.platform === 'win32') process.env.TEMP = process.env.TMP = 'D:\\DevT
 const root = fileURLToPath(new URL('../', import.meta.url));
 const pkg=JSON.parse(await readFile(path.join(root,'package.json'),'utf8'));
 await writeFile(path.join(root,'src/version.js'),`// Updated from package.json by scripts/build.mjs.\nexport const APP_VERSION = ${JSON.stringify(pkg.version)};\n`);
-for (const file of ['challenges.js','map-world.js','settings-content.js','version.js','app.js','audio.js','map.js','model.js','data.js','concepts.js','companion.js','manipulations.js','progress.js','illustrations.js','samples.js','experiment-player.js']) execFileSync(process.execPath, ['--check', path.join(root,'src',file)]);
+for (const file of await readdir(path.join(root, 'src'))) {
+  if (file.endsWith('.js') && !file.startsWith('._')) {
+    execFileSync(process.execPath, ['--check', path.join(root, 'src', file)]);
+  }
+}
 for (const file of assets) await stat(path.join(root,file));
 for (const file of ['sw.js','manifest.webmanifest','image/og/ullim-og.jpg','image/icons/icon-192.png','image/icons/icon-512.png']) await stat(path.join(root,file));
 await mkdir(path.join(root,'dist'),{recursive:true});

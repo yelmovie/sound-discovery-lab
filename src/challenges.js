@@ -73,7 +73,6 @@ export function challengeView(id,w,h) {
   const control=(text,action,attrs='',cls='btn secondary')=>b(text,`challenge-${action}`,`data-round="${round}" ${attrs}`,cls);
   const choose=(text,value,selected)=>control(text,'select',`data-value="${value}" aria-pressed="${selected===value}"`,`choice ${selected===value?'selected':''}`);
   const scene=missionScene(id,c,challengeRoundCount(id));
-  const pips=`<div class="quest-progress" aria-label="의뢰 ${challengeRoundCount(id)}개 중 ${round}개 완료"><span>${done?'의뢰 완료':`${k+1} / ${challengeRoundCount(id)}`}</span></div>`;
   const object=tool=>`<span class="challenge-object-art">${toolGraphic(tool)}</span>`;
   const beat=(label,n,filled=false,pitch=null)=>`<span class="signal-tile ${filled?'filled':''} ${label==='쉼'?'is-rest':''}" aria-label="${n+1}번째 ${label}${filled?', 연주했어':''}"><svg class="signal-trace" viewBox="0 0 72 30" aria-hidden="true"><path d="${label==='쉼'?'M4 15H68':pitch!==null?`M4 ${pitch===6?6:pitch===12?15:24}H68`:'M4 15H12L18 5L26 25L34 5L42 25L50 5L58 15H68'}"/></svg><b>${label}${filled?' ✓':''}</b></span>`;
   const performance=(label,sequence)=>`<p class="performance-line"><b>${label}</b><span>${sequence||'—'}</span></p>`;
@@ -103,7 +102,7 @@ export function challengeView(id,w,h) {
   }
   // Raw drag sources and sliders carry the same round token as action buttons.
   body=body.replace(/<(button|input|div)\b[^>]*>/g,tag=>/data-(?:action|drag-kind|drop-kind|challenge-param)=/.test(tag)&&!tag.includes('data-round=')?tag.replace(/^<(\w+)/,`<$1 data-round="${round}"`):tag);
-  return `<div class="challenge-shell ${c.kind==='success'?'round-success':''}" data-challenge="${id}" data-round="${round}">${pips}<div class="challenge-workspace">${scene}${body}</div></div>`;
+  return `<div class="challenge-shell ${c.kind==='success'?'round-success':''}" data-challenge="${id}" data-round="${round}">${scene}<div class="challenge-workspace">${body}</div></div>`;
 }
 
 export function runChallenge(id,w,action,data={},sound) {

@@ -1,1 +1,113 @@
-.action-mission{width:100%;border-radius:18px;background:linear-gradient(120deg,#f6ffffbb,#daf3ef88);border:1px solid #fff9;padding:8px 14px;display:grid;gap:4px;color:#183f46}.mission-copy{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.mission-copy b{font-size:1.05em}.mission-copy span{font-size:.9em}.mission-route{height:54px;display:flex;align-items:end;justify-content:space-around;position:relative;border-bottom:4px solid #629fa7}.mission-gate{border:3px solid #8caab2;border-bottom:0;border-radius:12px 12px 0 0;min-width:30px;text-align:center;height:25px;background:#fff9}.mission-gate.open{background:#8bddd2;border-color:#218a80}.mission-traveller{position:absolute;left:var(--travel);bottom:4px;width:44px;height:44px;transition:left .4s ease;z-index:1}.mission-traveller img{width:100%;height:100%;object-fit:contain}.mission-status{font-weight:700;font-size:.85em}.action-mission small{font-size:.68em}.challenge-workspace:has(.action-mission){gap:8px}.challenge-complete .action-mission{max-width:760px}.mission-open .mission-route{border-color:#e2ae3d}@media(max-height:600px){.mission-route{height:32px}.mission-traveller{width:30px;height:30px}.action-mission{padding:4px 10px;gap:2px}.action-mission small{display:none}.mission-copy{font-size:13px}.mission-gate{height:16px}}@media(prefers-reduced-motion:reduce){.mission-traveller{transition:none}}
+/* Progress has its own row so each experiment keeps its authored grid. */
+.action-mission {
+  --mission-line: #629fa7;
+  --mission-complete: #218a80;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(160px, .32fr);
+  align-items: center;
+  gap: 4px 16px;
+  width: 100%;
+  padding: 8px 16px;
+  border: 1px solid #fff9;
+  border-radius: 16px;
+  background: #edf8f3d9;
+  color: var(--ink);
+  font-size: var(--read-small);
+  line-height: 1.3;
+}
+
+.mission-copy {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+}
+
+.mission-copy b { font-size: var(--read); }
+.mission-caption { font-size: var(--read-small); color: var(--muted); }
+.mission-status { font-weight: 800; text-align: right; }
+
+.mission-route {
+  position: relative;
+  display: flex;
+  align-items: end;
+  justify-content: space-around;
+  height: 32px;
+  padding-left: 32px;
+  border-bottom: 2px solid var(--mission-line);
+}
+
+.mission-gate {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--mission-line);
+  border-bottom: 0;
+  border-radius: 8px 8px 0 0;
+  background: var(--paper);
+}
+
+.mission-gate svg { width: 16px; height: 16px; }
+.mission-gate path { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.mission-gate.open { background: var(--cyan); border-color: var(--mission-complete); }
+
+.mission-traveller {
+  position: absolute;
+  left: calc((100% - 32px) * var(--travel));
+  bottom: 0;
+  width: 32px;
+  height: 100%;
+  z-index: 1;
+}
+
+.mission-traveller img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.mission-open .mission-route { border-color: var(--mission-complete); }
+.challenge-complete .action-mission { max-width: 960px; }
+
+@container experiment (max-width: 700px) {
+  .action-mission { grid-template-columns: minmax(0, 1fr) 104px; gap: 4px 8px; padding: 8px; }
+  .mission-copy { gap: 4px; }
+  .mission-copy span { display: none; }
+  .mission-caption { grid-column: 1; }
+  .mission-route { padding-left: 24px; }
+  .mission-gate { width: 16px; height: 20px; }
+  .mission-gate svg { width: 12px; height: 12px; }
+}
+
+@container experiment (max-height: 440px) {
+  .action-mission { grid-template-columns: minmax(0, 1fr) 120px auto; gap: 8px; padding: 4px 8px; }
+  .mission-copy span, .mission-caption { display: none; }
+  .mission-copy b { font-size: var(--read-small); }
+  .mission-route { height: 24px; }
+  .mission-status { white-space: nowrap; }
+}
+
+@container experiment (max-width: 420px) and (max-height: 440px) {
+  .action-mission { grid-template-columns: minmax(0, 1fr) auto; }
+  .mission-route { display: none; }
+}
+
+@container experiment (max-height: 500px) {
+  .challenge-shell.challenge-complete {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr) auto;
+    grid-template-rows: auto 1fr 1fr;
+    align-items: center;
+    gap: 8px 16px;
+    padding: 4px;
+  }
+  .challenge-complete .action-mission { grid-column: 1 / -1; grid-row: 1; max-width: none; }
+  .challenge-shell.challenge-complete .success-emblem { grid-column: 1; grid-row: 2 / 4; width: 64px; height: 64px; }
+  .challenge-complete h2 { grid-column: 2; grid-row: 2; align-self: end; }
+  .challenge-shell.challenge-complete .challenge-summary { grid-column: 2; grid-row: 3; align-self: start; max-width: none; padding: 8px 12px; }
+  .challenge-complete .btn { grid-column: 3; grid-row: 2 / 4; }
+}
+
+@container experiment (max-width: 560px) and (max-height: 500px) {
+  .challenge-shell.challenge-complete { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto minmax(0, 1fr) auto; gap: 8px; }
+  .challenge-shell.challenge-complete .success-emblem { display: none; }
+  .challenge-complete h2 { grid-column: 1; grid-row: 2; align-self: center; }
+  .challenge-shell.challenge-complete .challenge-summary { grid-column: 1; grid-row: 3; align-self: center; }
+  .challenge-complete .btn { grid-column: 1; grid-row: 4; }
+}

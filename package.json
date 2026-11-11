@@ -8,7 +8,7 @@
     "build": "node scripts/build.mjs",
     "preview": "node scripts/server.mjs --dist",
     "test": "node --test tests/*.test.mjs",
-    "check": "node --check src/app.js && node --check src/audio.js && node --check src/map.js && node --check src/map-world.js && node --check src/model.js && node --check src/data.js && node --check src/challenges.js && node --check src/settings-content.js && node --check src/concepts.js && node --check src/companion.js && node --check src/manipulations.js && node --check src/progress.js && node --check src/illustrations.js && node --check src/samples.js && node --check src/experiment-player.js"
+    "check": "node --check src/app.js && node --check src/audio.js && node --check src/map.js && node --check src/map-world.js && node --check src/model.js && node --check src/data.js && node --check src/challenges.js && node --check src/settings-content.js && node --check src/concepts.js && node --check src/companion.js && node --check src/manipulations.js && node --check src/progress.js && node --check src/illustrations.js && node --check src/samples.js && node --check src/experiment-player.js && node --check src/action-missions.js && node --check src/signal-restoration.js && node --check src/npc-guide.js && node --check src/voice.js && node --check src/version.js"
   },
   "engines": {
     "node": ">=20"

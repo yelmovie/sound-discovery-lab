@@ -41,7 +41,7 @@ function audit(){
  if(document.documentElement.scrollWidth>innerWidth+2)issues.push({type:'document-horizontal-overflow',detail:document.documentElement.scrollWidth-innerWidth});
  for(const e of scope.querySelectorAll('button,input,summary,select,textarea')){
   if(!visible(e))continue;const r=e.getBoundingClientRect();
-  if(r.width<38||r.height<38)add('small-target',e,`${r.width.toFixed(1)}×${r.height.toFixed(1)}`);
+  if(r.width<43.5||r.height<43.5)add('small-target',e,`${r.width.toFixed(1)}×${r.height.toFixed(1)}; minimum 44px`);
   let p=e.parentElement,canScroll=false,clippedCenter=false;
   for(;p;p=p.parentElement){const c=getComputedStyle(p),b=p.getBoundingClientRect();if(scrolls(p))canScroll=true;if(/auto|scroll|hidden|clip/.test(c.overflowY)&&(r.top+r.height/2<b.top||r.top+r.height/2>b.bottom))clippedCenter=true;}
   if(!inView(r)&&!canScroll&&!documentScrolls&&!scrolls(document.documentElement)&&!scrolls(document.body))add('unreachable',e,'outside viewport without scroll ancestor');
