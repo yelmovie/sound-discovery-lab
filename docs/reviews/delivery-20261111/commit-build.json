@@ -1,0 +1,830 @@
+{
+  "commit": "0ce479236e3b5cc331bb270912dcc4f4179e77d9",
+  "files": [
+    {
+      "file": "image/backgrounds/chatgpt_generated_017_53e4619e94.jpg",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/backgrounds/chatgpt_generated_018_99f70fe2eb.jpg",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/backgrounds/chatgpt_generated_019_4e1f52e30a.jpg",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/backgrounds/chatgpt_generated_020_c5bbc97e3d.jpg",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/backgrounds/chatgpt_generated_021_3dc9c418f5.jpg",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/backgrounds/chatgpt_generated_022_13fc18d100.jpg",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/backgrounds/chatgpt_generated_023_890a4c0418.jpg",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/backgrounds/chatgpt_generated_024_d5aa1da920.jpg",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/backgrounds/chatgpt_generated_025_e972cdea3c.jpg",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/backgrounds/chatgpt_generated_026_f04b11de8f.jpg",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/branding/title-logo.png",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/characters/chatgpt_generated_028_ee0700142c.jpg",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/generated/bird-walk.webp",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/generated/concepts/care-pad.webp",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/generated/concepts/care-place.webp",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/generated/concepts/care-time.webp",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/generated/concepts/care-volume.webp",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/generated/concepts/drum-pad.webp",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/generated/concepts/library-noise.webp",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/generated/concepts/manifest.json",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/generated/concepts/rubber-instrument.webp",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/generated/concepts/ruler-base.webp",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/generated/concepts/ruler-blade.webp",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/generated/concepts/sound-parcel.webp",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/generated/concepts/travel-air.webp",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/generated/concepts/travel-solid.webp",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/generated/concepts/travel-water.webp",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/generated/core.png",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/generated/drum.png",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/generated/explorer-walk.webp",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/generated/fork-stand.png",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/generated/kalimba.png",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/generated/mallet.png",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/generated/pio-guide.svg",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/generated/receiver.png",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/generated/ring.png",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/generated/tine.png",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/generated/transmitter.png",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/generated/tuning-fork.png",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/generated/ullim-village.webp",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/icons/icon-192.png",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/icons/icon-512.png",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "image/og/ullim-og.jpg",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "index.html",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "manifest.webmanifest",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/License.txt",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/click_003.ogg",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/confirmation_002.ogg",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/experiments/VCSL-LICENSE.txt",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/experiments/drum.ogg",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/experiments/fork.ogg",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/experiments/rubber.ogg",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/experiments/ruler.ogg",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/experiments/sources.json",
+      "committed": true,
+      "exactBlobMatch": false,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/open_001.ogg",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/place_wood.ogg",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/restore_chime.ogg",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/select_003.ogg",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/sources.json",
+      "committed": true,
+      "exactBlobMatch": false,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/voices/ending-1.mp3",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/voices/ending-2.mp3",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/voices/final-core.mp3",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/voices/final-title.mp3",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/voices/guide-1.mp3",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/voices/guide-2.mp3",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/voices/guide-3.mp3",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/voices/guide-4.mp3",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/voices/lesson-done.mp3",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/voices/mission-1.mp3",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/voices/mission-2.mp3",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/voices/mission-3.mp3",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/voices/mission-4.mp3",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/voices/mission-5.mp3",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/voices/mission-core.mp3",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/voices/quest-done.mp3",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/voices/reader-complaint.mp3",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/voices/restored-1.mp3",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/voices/restored-2.mp3",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/voices/restored-3.mp3",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/voices/restored-4.mp3",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/voices/restored-5.mp3",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/voices/retry.mp3",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/voices/stage-done.mp3",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/voices/story-1.mp3",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/voices/story-2.mp3",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/voices/story-3.mp3",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/voices/title-bubble.mp3",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/audio/voices/welcome.mp3",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/concepts/care.jpg",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/concepts/care.mp4",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/concepts/care.vtt",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/concepts/manifest.json",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/concepts/pitch.jpg",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/concepts/pitch.mp4",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/concepts/pitch.vtt",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/concepts/travel.jpg",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/concepts/travel.mp4",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/concepts/travel.vtt",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/concepts/vibration.jpg",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/concepts/vibration.mp4",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/concepts/vibration.vtt",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/concepts/volume.jpg",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/concepts/volume.mp4",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/concepts/volume.vtt",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/fonts/NanumSquareNeo-OFL.txt",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/fonts/NanumSquareNeoTTF-bRg.woff2",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/fonts/NanumSquareNeoTTF-cBd.woff2",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "media/fonts/NanumSquareNeoTTF-dEb.woff2",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "src/action-missions.css",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "src/action-missions.js",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "src/app.js",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "src/audio.js",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "src/challenge-design.css",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "src/challenges.js",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "src/companion.js",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "src/concept-focus.css",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "src/concepts.js",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "src/data.js",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "src/experience.css",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "src/experiment-player.js",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "src/illustrations.css",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "src/illustrations.js",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "src/manipulations.js",
+      "committed": true,
+      "exactBlobMatch": false,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "src/map-world.js",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "src/map.js",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "src/model.js",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "src/npc-guide.js",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "src/progress.js",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "src/samples.js",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "src/scenery-surfaces.css",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "src/settings-content.js",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "src/signal-restoration.css",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "src/signal-restoration.js",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "src/style.css",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "src/version.js",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "src/voice.js",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    },
+    {
+      "file": "src/workbench.css",
+      "committed": true,
+      "exactBlobMatch": true,
+      "matchesAfterLineEndingNormalization": true
+    }
+  ],
+  "generated": [
+    "sw.js cache version and precache list from verified build"
+  ]
+}

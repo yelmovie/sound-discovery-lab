@@ -1,0 +1,498 @@
+{
+  "runtimeCommit": "0ce479236e3b5cc331bb270912dcc4f4179e77d9",
+  "branch": "map-upgrade",
+  "deployment": "1f5b7086-f2d8-4824-80c4-4c8f3cbd3ba0",
+  "version": "63a7ee7c-a75f-4e4f-8e12-d0459fc7bc76",
+  "trafficPercent": 100,
+  "tests": {
+    "passed": 122,
+    "failed": 0
+  },
+  "build": {
+    "assets": 103,
+    "precache": 54,
+    "files": 138,
+    "bytes": 20489481
+  },
+  "studentPlay": {
+    "sourceCommit": "b650ea1",
+    "checks": 139,
+    "states": 483,
+    "runtime": [],
+    "issues": [],
+    "changedDuringRun": [],
+    "laterRuntimeChanges": [
+      "src/signal-restoration.css"
+    ]
+  },
+  "responsive": {
+    "activityStates": 200,
+    "issues": {},
+    "completedStates": 80,
+    "completedIssues": {},
+    "auxiliaryStates": 112,
+    "auxiliaryIssues": 0,
+    "touchAndKeyboard": [
+      "Chromium synthesized touch drag changes the ruler from 18 to 6 cm",
+      "Touch selection and destination taps complete a sound-parcel round",
+      "Settings traps keyboard focus and Escape restores the invoking control",
+      "Certificate is visible in print media and A4 PDF rendering succeeds"
+    ]
+  },
+  "public": {
+    "matchingHashes": 138,
+    "hashRetries": [
+      {
+        "file": "/media/concepts/care.mp4",
+        "attempt": 1,
+        "error": "TimeoutError: The operation was aborted due to timeout"
+      }
+    ],
+    "hashErrors": [],
+    "smokeChecks": [
+      "1280x800: touch start, map, observation, wrong/right answer, reload persistence, settings, next lesson",
+      "1024x768: touch start, map, observation, wrong/right answer, reload persistence, settings, next lesson",
+      "915x412: touch start, map, observation, wrong/right answer, reload persistence, settings, next lesson"
+    ],
+    "smokeErrors": [],
+    "exactGitBlobMatches": 134,
+    "lineEndingOnly": [
+      "media/audio/experiments/sources.json",
+      "media/audio/sources.json",
+      "src/manipulations.js"
+    ],
+    "retiredFiles": [
+      {
+        "file": "/image/backgrounds/chatgpt_generated_019_4e1f52e30a.png",
+        "status": 404
+      },
+      {
+        "file": "/image/backgrounds/chatgpt_generated_017_53e4619e94.png",
+        "status": 404
+      },
+      {
+        "file": "/image/backgrounds/chatgpt_generated_020_c5bbc97e3d.png",
+        "status": 404
+      },
+      {
+        "file": "/image/backgrounds/chatgpt_generated_022_13fc18d100.png",
+        "status": 404
+      },
+      {
+        "file": "/image/backgrounds/chatgpt_generated_023_890a4c0418.png",
+        "status": 404
+      },
+      {
+        "file": "/image/backgrounds/chatgpt_generated_024_d5aa1da920.png",
+        "status": 404
+      },
+      {
+        "file": "/image/backgrounds/chatgpt_generated_025_e972cdea3c.png",
+        "status": 404
+      },
+      {
+        "file": "/image/backgrounds/chatgpt_generated_021_3dc9c418f5.png",
+        "status": 404
+      },
+      {
+        "file": "/image/backgrounds/chatgpt_generated_026_f04b11de8f.png",
+        "status": 404
+      },
+      {
+        "file": "/image/characters/chatgpt_generated_028_ee0700142c.png",
+        "status": 404
+      },
+      {
+        "file": "/image/generated/ullim-village.png",
+        "status": 404
+      },
+      {
+        "file": "/media/audio/drop_001.ogg",
+        "status": 404
+      },
+      {
+        "file": "/image/backgrounds/chatgpt_generated_018_99f70fe2eb.png",
+        "status": 404
+      },
+      {
+        "file": "/media/audio/maximize_008.ogg",
+        "status": 404
+      },
+      {
+        "file": "/media/audio/npc-welcome.m4a",
+        "status": 404
+      }
+    ],
+    "reconciliation": [
+      "1920x1080: signal keys descend, three notes save once, evidence unchanged, Escape closes",
+      "1024x768: signal keys descend, three notes save once, evidence unchanged, Escape closes",
+      "915x412: signal keys descend, three notes save once, evidence unchanged, Escape closes",
+      "390x844: signal keys descend, three notes save once, evidence unchanged, Escape closes",
+      "Public request completion replay reads quest-done before lesson-done",
+      "All 29 public voice files play through ended at 4x technical verification"
+    ],
+    "signalPanels": [
+      {
+        "label": "before",
+        "width": 1920,
+        "height": 1080,
+        "rect": {
+          "x": 16,
+          "y": 74,
+          "width": 310,
+          "height": 454.28125,
+          "top": 74,
+          "right": 326,
+          "bottom": 528.28125,
+          "left": 16
+        },
+        "heights": [
+          110,
+          102,
+          96
+        ],
+        "font": 18,
+        "select": 48
+      },
+      {
+        "label": "complete",
+        "width": 1920,
+        "height": 1080,
+        "rect": {
+          "x": 16,
+          "y": 74,
+          "width": 310,
+          "height": 428.1875,
+          "top": 74,
+          "right": 326,
+          "bottom": 502.1875,
+          "left": 16
+        },
+        "heights": [
+          110,
+          102,
+          97
+        ],
+        "font": 18,
+        "select": 48
+      },
+      {
+        "label": "before",
+        "width": 1024,
+        "height": 768,
+        "rect": {
+          "x": 16,
+          "y": 74,
+          "width": 310,
+          "height": 416.59375,
+          "top": 74,
+          "right": 326,
+          "bottom": 490.59375,
+          "left": 16
+        },
+        "heights": [
+          110,
+          102,
+          93
+        ],
+        "font": 14,
+        "select": 48
+      },
+      {
+        "label": "complete",
+        "width": 1024,
+        "height": 768,
+        "rect": {
+          "x": 16,
+          "y": 74,
+          "width": 310,
+          "height": 416.59375,
+          "top": 74,
+          "right": 326,
+          "bottom": 490.59375,
+          "left": 16
+        },
+        "heights": [
+          110,
+          102,
+          93
+        ],
+        "font": 14,
+        "select": 48
+      },
+      {
+        "label": "before",
+        "width": 915,
+        "height": 412,
+        "rect": {
+          "x": 16,
+          "y": 65,
+          "width": 285,
+          "height": 326,
+          "top": 65,
+          "right": 301,
+          "bottom": 391,
+          "left": 16
+        },
+        "heights": [
+          110,
+          100,
+          90
+        ],
+        "font": 14,
+        "select": 48
+      },
+      {
+        "label": "complete",
+        "width": 915,
+        "height": 412,
+        "rect": {
+          "x": 16,
+          "y": 65,
+          "width": 285,
+          "height": 326,
+          "top": 65,
+          "right": 301,
+          "bottom": 391,
+          "left": 16
+        },
+        "heights": [
+          110,
+          100,
+          90
+        ],
+        "font": 14,
+        "select": 48
+      },
+      {
+        "label": "before",
+        "width": 390,
+        "height": 844,
+        "rect": {
+          "x": 16,
+          "y": 74,
+          "width": 310,
+          "height": 416.59375,
+          "top": 74,
+          "right": 326,
+          "bottom": 490.59375,
+          "left": 16
+        },
+        "heights": [
+          110,
+          102,
+          93
+        ],
+        "font": 14,
+        "select": 48
+      },
+      {
+        "label": "complete",
+        "width": 390,
+        "height": 844,
+        "rect": {
+          "x": 16,
+          "y": 74,
+          "width": 310,
+          "height": 416.59375,
+          "top": 74,
+          "right": 326,
+          "bottom": 490.59375,
+          "left": 16
+        },
+        "heights": [
+          110,
+          102,
+          93
+        ],
+        "font": 14,
+        "select": 48
+      }
+    ],
+    "voicePlayback": [
+      {
+        "id": "welcome",
+        "duration": 9.439002,
+        "ended": true
+      },
+      {
+        "id": "title-bubble",
+        "duration": 1.684218,
+        "ended": true
+      },
+      {
+        "id": "story-1",
+        "duration": 2.292086,
+        "ended": true
+      },
+      {
+        "id": "story-2",
+        "duration": 9.543855,
+        "ended": true
+      },
+      {
+        "id": "story-3",
+        "duration": 6.88,
+        "ended": true
+      },
+      {
+        "id": "guide-1",
+        "duration": 2.583379,
+        "ended": true
+      },
+      {
+        "id": "guide-2",
+        "duration": 10.32,
+        "ended": true
+      },
+      {
+        "id": "guide-3",
+        "duration": 8.56,
+        "ended": true
+      },
+      {
+        "id": "guide-4",
+        "duration": 4.747052,
+        "ended": true
+      },
+      {
+        "id": "mission-1",
+        "duration": 2.260227,
+        "ended": true
+      },
+      {
+        "id": "mission-2",
+        "duration": 2.452086,
+        "ended": true
+      },
+      {
+        "id": "mission-3",
+        "duration": 2.744014,
+        "ended": true
+      },
+      {
+        "id": "mission-4",
+        "duration": 2.345646,
+        "ended": true
+      },
+      {
+        "id": "mission-5",
+        "duration": 2.938209,
+        "ended": true
+      },
+      {
+        "id": "mission-core",
+        "duration": 3.064717,
+        "ended": true
+      },
+      {
+        "id": "restored-1",
+        "duration": 2.550726,
+        "ended": true
+      },
+      {
+        "id": "restored-2",
+        "duration": 2.044354,
+        "ended": true
+      },
+      {
+        "id": "restored-3",
+        "duration": 6.1878,
+        "ended": true
+      },
+      {
+        "id": "restored-4",
+        "duration": 2.430454,
+        "ended": true
+      },
+      {
+        "id": "restored-5",
+        "duration": 4.219093,
+        "ended": true
+      },
+      {
+        "id": "reader-complaint",
+        "duration": 1.920839,
+        "ended": true
+      },
+      {
+        "id": "lesson-done",
+        "duration": 2.803129,
+        "ended": true
+      },
+      {
+        "id": "stage-done",
+        "duration": 3.705261,
+        "ended": true
+      },
+      {
+        "id": "quest-done",
+        "duration": 2.312585,
+        "ended": true
+      },
+      {
+        "id": "retry",
+        "duration": 4.691043,
+        "ended": true
+      },
+      {
+        "id": "final-title",
+        "duration": 1.990884,
+        "ended": true
+      },
+      {
+        "id": "final-core",
+        "duration": 2.762971,
+        "ended": true
+      },
+      {
+        "id": "ending-1",
+        "duration": 2.610544,
+        "ended": true
+      },
+      {
+        "id": "ending-2",
+        "duration": 7.92,
+        "ended": true
+      }
+    ],
+    "errors": [],
+    "offline": {
+      "loading": [],
+      "checks": [
+        "NPC guide opens by touch and Escape restores trigger focus",
+        "Warm lesson reloads offline with preserved observation and interactive controls"
+      ],
+      "errors": [],
+      "cacheKeys": [
+        "ullim-city-2.2.0-mwc95j7m"
+      ]
+    },
+    "coldReloadFixtureFailures": 3
+  },
+  "loading": {
+    "sharedMachine": true,
+    "limitedNetworkReadyMs": [
+      11371.79999999702,
+      17613.5,
+      19572.20000000298
+    ],
+    "publicReadyMs": [
+      6024.0999999940395,
+      5983.0999999940395,
+      4437.800000011921
+    ],
+    "publicBytes": [
+      2713308,
+      2713359,
+      2710650
+    ]
+  },
+  "score": {
+    "total": 85,
+    "outOf": 100,
+    "verdict": "conditional",
+    "physicalTablet": false,
+    "speakerListening": false
+  }
+}

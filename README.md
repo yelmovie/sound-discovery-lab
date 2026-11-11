@@ -11,27 +11,38 @@
 설계와 검증 범위는 [한 화면 구현 기준](docs/SINGLE-SCREEN-PLAN-20261108.md)과 [검증 기록](docs/reviews/SINGLE-SCREEN-20261108.md)에 기록한다.
 
 
+## 납품 주소
+
+[울림도시 대작전 운영 사이트](https://sound-discovery-lab.yelsam.workers.dev)
+
+2026-11-12 배포물은138개 파일, 약20.5MB다. 작업 기록과 커밋·공개 파일의 대조 및 누락 복구 결과는 `docs/reviews/RECONCILIATION-20261112.md`에 기록한다.
+
+2026-11-11 최종 검토와 재현 가능한 검사 범위는 `docs/reviews/RELEASE-REVIEW-20261111.md`, 점수 산정은 `docs/reviews/SCORE-20261111.md`에 기록한다.
+
 ## 바로 실행
 
 Node.js 20 이상이 필요하며 외부 패키지 설치는 없다.
 
-```powershell
-cd 'F:\iscreammedia_sc34\11 sound'
-npm.cmd start
+프로젝트 폴더에서 실행한다. macOS의 작업·캐시·임시 경로는 외장 SSD를 사용한다.
+
+```sh
+npm start
 ```
 
-브라우저에서 **http://127.0.0.1:4173** 을 연다. 종료는 터미널의 Ctrl+C다. Start-Ullim.ps1로도 실행할 수 있다. 포트가 사용 중이면 기존 서버를 확인하거나 `$env:PORT='4174'`로 다른 포트를 지정한다. 서버는 이 컴퓨터의 127.0.0.1에서만 열린다. 실제 태블릿 원격 접속·외부 배포는 포함하지 않는다.
+Windows PowerShell에서는 `npm.cmd start`를 사용한다.
+
+브라우저에서 **http://127.0.0.1:4173** 을 연다. 종료는 터미널의 Ctrl+C다. Start-Ullim.ps1로도 실행할 수 있다. 포트가 사용 중이면 기존 서버를 확인하거나 `$env:PORT='4174'`로 다른 포트를 지정한다. 서버는 이 컴퓨터의 127.0.0.1에서만 열린다. 태블릿에서는 위 운영 사이트에 접속한다.
 
 ## 검증·빌드
 
-```powershell
-npm.cmd run check
-npm.cmd test
-npm.cmd run build
-npm.cmd run preview
+```sh
+npm run check
+npm test
+npm run build
+npm run preview
 ```
 
-빌드는 dist/에 실행 파일과 참조 에셋 **70개**(이미지·영상·자막·효과음·출처 기록)와 공유 이미지·아이콘·`sw.js`·`manifest.webmanifest`를 복사하고, `dist/sw.js`에 캐시 버전과 미리 저장할 파일 39개를 기록한다. 2026-10-28에 핵심 개념 그림 13개 약 0.78MB와 CC0 녹음 효과음 6개 약 80KB를 추가하고 개념 영상 5편을 다시 만들었다. preview와 start는 기본 포트가 같으므로 동시에 켜지 않는다. file:// 더블클릭 실행은 지원하지 않는다. 모든 실행 의존성이 Node·브라우저 내장이므로 exFAT의 심볼릭 링크·하드링크·패키지 설치가 필요 없다.
+빌드는 dist/에 실행 파일과 참조 에셋 **103개**(이미지·영상·자막·효과음·출처 기록)와 공유 이미지·아이콘·`sw.js`·`manifest.webmanifest`를 복사하고, `dist/sw.js`에 캐시 버전과 미리 저장할 파일 54개를 기록한다. 2026-10-28에 핵심 개념 그림 13개 약 0.78MB와 CC0 녹음 효과음 6개 약 80KB를 추가하고 개념 영상 5편을 다시 만들었다. preview와 start는 기본 포트가 같으므로 동시에 켜지 않는다. file:// 더블클릭 실행은 지원하지 않는다. 모든 실행 의존성이 Node·브라우저 내장이므로 exFAT의 심볼릭 링크·하드링크·패키지 설치가 필요 없다.
 
 ## 플레이
 
@@ -82,5 +93,5 @@ npm.cmd run preview
 - **지도**: 화면을 꽉 채우는 1.6배 확대. 그림의 모래길을 따라 딴 길 폭 안에서 자유롭게 걷고, 막히면 벽을 타고 미끄러진다. 왼쪽 아래에 방향 패드·`손으로 둘러보기`·`지도 한눈에 보기`, 오른쪽 아래에 다음 장소 버튼(문 앞에서는 `들어가기`)이 있다. 다시 걸으면 탐험가를 따라간다. 시설을 복구할수록 어스름이 걷히고 그 시설 색의 울림새 주민이 나타난다.
 - **교사용 전체 해금**: 활동·최종·결과 화면에서 왼쪽 아래 `← →`(키보드 방향키 포함)로 한 단계씩, 오른쪽 아래 `다음 스테이지`로 다음 시설 첫 활동까지 이동한다. 증거·인증 기록은 채우지 않는다.
 - **용량**: 실행 에셋 47.2MB → 16.9MB. 불투명 배경 10장·마을 지도·캐릭터 시트는 같은 해상도 JPEG(품질 86), 투명 소품 10개는 긴 변 720px PNG. 원본은 `_unused/originals-20261029/`(git 제외, 원본은 이전 커밋에도 있음).
-- **오프라인·공유**: `sw.js`(HTML은 네트워크 우선, 나머지는 캐시 우선, 영상 제외)와 `manifest.webmanifest`, 아이콘 192/512, 공유 미리보기 `image/og/ullim-og.jpg`(1200×630). 서비스워커는 localhost에서는 꺼져 있고 `?sw`를 붙이면 켜진다. 공유 미리보기 주소는 상대 경로라 **배포 주소가 정해지면 `index.html`의 og:image·twitter:image를 절대 주소로 바꿔야** 카카오톡 썸네일이 뜬다.
+- **오프라인·공유**: `sw.js`(HTML은 네트워크 우선, 나머지는 캐시 우선, 영상 제외)와 `manifest.webmanifest`, 아이콘 192/512, 공유 미리보기 `image/og/ullim-og.jpg`(1200×630). 서비스워커는 localhost에서는 꺼져 있고 `?sw`를 붙이면 켜진다. `index.html`의 og:image·twitter:image는 위 운영 사이트의 절대 주소를 사용한다.
 - 아이콘·공유 이미지는 `scripts/compose-share-art.swift`로 기존 배경·로고·삐오를 합성해 만들었다(새 생성 이미지 없음).

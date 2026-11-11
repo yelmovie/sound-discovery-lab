@@ -1,0 +1,69 @@
+{
+  "rows": [
+    {
+      "file": "/image/backgrounds/chatgpt_generated_019_4e1f52e30a.png",
+      "status": 404
+    },
+    {
+      "file": "/image/backgrounds/chatgpt_generated_017_53e4619e94.png",
+      "status": 404
+    },
+    {
+      "file": "/image/backgrounds/chatgpt_generated_020_c5bbc97e3d.png",
+      "status": 404
+    },
+    {
+      "file": "/image/backgrounds/chatgpt_generated_022_13fc18d100.png",
+      "status": 404
+    },
+    {
+      "file": "/image/backgrounds/chatgpt_generated_023_890a4c0418.png",
+      "status": 404
+    },
+    {
+      "file": "/image/backgrounds/chatgpt_generated_024_d5aa1da920.png",
+      "status": 404
+    },
+    {
+      "file": "/image/backgrounds/chatgpt_generated_025_e972cdea3c.png",
+      "status": 404
+    },
+    {
+      "file": "/image/backgrounds/chatgpt_generated_021_3dc9c418f5.png",
+      "status": 404
+    },
+    {
+      "file": "/image/backgrounds/chatgpt_generated_026_f04b11de8f.png",
+      "status": 404
+    },
+    {
+      "file": "/image/characters/chatgpt_generated_028_ee0700142c.png",
+      "status": 404
+    },
+    {
+      "file": "/image/generated/ullim-village.png",
+      "status": 404
+    },
+    {
+      "file": "/media/audio/drop_001.ogg",
+      "status": 404
+    },
+    {
+      "file": "/image/backgrounds/chatgpt_generated_018_99f70fe2eb.png",
+      "status": 404
+    },
+    {
+      "file": "/media/audio/maximize_008.ogg",
+      "status": 404
+    },
+    {
+      "file": "/media/audio/npc-welcome.m4a",
+      "status": 404
+    }
+  ],
+  "pythonProbe": {
+    "status": 403,
+    "count": 15,
+    "note": "urllib transport returned 403; normal fetch checked separately"
+  }
+}
