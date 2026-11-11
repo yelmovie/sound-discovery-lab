@@ -1,0 +1,476 @@
+{
+  "release": {
+    "url": "https://sound-discovery-lab.yelsam.workers.dev",
+    "appVersion": "2.3.0",
+    "sourceCommit": "21a87f80662ae3186ec53ee972a55fbe47d8b1af",
+    "branch": "map-upgrade",
+    "success": true,
+    "deployments": [
+      {
+        "id": "a214a177-79a7-4eeb-ab7a-ca3fa0483461",
+        "created_on": "2026-11-11T16:07:05.599927Z",
+        "versions": [
+          {
+            "version_id": "ce8a8ec8-2d75-4750-b481-f6300f333b39",
+            "percentage": 100
+          }
+        ],
+        "annotations": {
+          "workers/message": "Learning v2.3.0 verified source 21a87f8. Scienc...",
+          "workers/triggered_by": "upload"
+        }
+      },
+      {
+        "id": "1f5b7086-f2d8-4824-80c4-4c8f3cbd3ba0",
+        "created_on": "2026-11-11T15:08:28.02227Z",
+        "versions": [
+          {
+            "version_id": "63a7ee7c-a75f-4e4f-8e12-d0459fc7bc76",
+            "percentage": 100
+          }
+        ],
+        "annotations": {
+          "workers/message": "Verified reconciliation 0ce4792: compact pitch ...",
+          "workers/triggered_by": "upload"
+        }
+      }
+    ]
+  },
+  "unitTests": {
+    "passed": 126,
+    "failed": 0,
+    "log": ".tmp/learning-20261112/unit-release.log"
+  },
+  "build": {
+    "assets": 104,
+    "precache": 54,
+    "files": 139,
+    "bytes": 20564223,
+    "commitComparison": {
+      "exact": 135,
+      "newlineOnly": [
+        "/media/audio/experiments/sources.json",
+        "/media/audio/sources.json",
+        "/src/manipulations.js"
+      ],
+      "generated": [
+        "/sw.js"
+      ]
+    }
+  },
+  "activityLayout": {
+    "run": "final-learning-frozen",
+    "states": 200,
+    "issues": {},
+    "errors": [],
+    "checks": [
+      "product source hashes remained unchanged throughout final-learning-frozen verification"
+    ],
+    "viewports": [
+      {
+        "viewport": [
+          1920,
+          1080
+        ],
+        "states": 20,
+        "issues": 0,
+        "minimumTarget": 48,
+        "minimumFont": 18
+      },
+      {
+        "viewport": [
+          1366,
+          768
+        ],
+        "states": 20,
+        "issues": 0,
+        "minimumTarget": 48,
+        "minimumFont": 16
+      },
+      {
+        "viewport": [
+          1280,
+          800
+        ],
+        "states": 20,
+        "issues": 0,
+        "minimumTarget": 48,
+        "minimumFont": 16
+      },
+      {
+        "viewport": [
+          1280,
+          720
+        ],
+        "states": 20,
+        "issues": 0,
+        "minimumTarget": 48,
+        "minimumFont": 15.6
+      },
+      {
+        "viewport": [
+          1024,
+          768
+        ],
+        "states": 20,
+        "issues": 0,
+        "minimumTarget": 48,
+        "minimumFont": 16
+      },
+      {
+        "viewport": [
+          1024,
+          600
+        ],
+        "states": 20,
+        "issues": 0,
+        "minimumTarget": 48,
+        "minimumFont": 14
+      },
+      {
+        "viewport": [
+          915,
+          412
+        ],
+        "states": 20,
+        "issues": 0,
+        "minimumTarget": 48,
+        "minimumFont": 14
+      },
+      {
+        "viewport": [
+          830,
+          515
+        ],
+        "states": 20,
+        "issues": 0,
+        "minimumTarget": 48,
+        "minimumFont": 14
+      },
+      {
+        "viewport": [
+          768,
+          1024
+        ],
+        "states": 20,
+        "issues": 0,
+        "minimumTarget": 48,
+        "minimumFont": 16
+      },
+      {
+        "viewport": [
+          390,
+          844
+        ],
+        "states": 20,
+        "issues": 0,
+        "minimumTarget": 44,
+        "minimumFont": 14
+      }
+    ]
+  },
+  "completedLayout": {
+    "run": "final-learning-completion-frozen",
+    "states": 80,
+    "issues": {},
+    "errors": [],
+    "checks": [
+      "product source hashes remained unchanged throughout final-learning-completion-frozen verification"
+    ]
+  },
+  "auxiliary": {
+    "states": 112,
+    "errors": [],
+    "checks": [
+      "Chromium synthesized touch drag changes the ruler from 18 to 6 cm",
+      "Touch selection and destination taps complete a sound-parcel round",
+      "Settings traps keyboard focus and Escape restores the invoking control",
+      "Certificate is visible in print media and A4 PDF rendering succeeds"
+    ],
+    "scope": "Exploratory auxiliary screen verification before final ruler and caption refinements"
+  },
+  "publicStudentPlay": {
+    "run": "final-learning-public",
+    "checks": [
+      "lesson-0-auto: automatic observation ended",
+      "lesson 0: earned evidence and visible continue",
+      "lesson-1-auto: automatic observation ended",
+      "lesson 1: earned evidence and visible continue",
+      "lesson-2-round-0-auto: automatic observation ended",
+      "lesson-2-round-1-auto: automatic observation ended",
+      "lesson-2-round-2-auto: automatic observation ended",
+      "lesson-2-round-3-auto: automatic observation ended",
+      "lesson 2: earned evidence and visible continue",
+      "rhythm-reload-autoplay-recovery: automatic observation ended",
+      "manual ring, real reload and autoplay preserve partial input, stop sound, retain restart cue and allow clear",
+      "lesson-3-round-0-auto: automatic observation ended",
+      "lesson-3-round-1-auto: automatic observation ended",
+      "lesson-3-round-2-auto: automatic observation ended",
+      "lesson 3: earned evidence and visible continue",
+      "facility 0: real concept video played to end",
+      "lesson-4-auto: automatic observation ended",
+      "lesson 4: earned evidence and visible continue",
+      "lesson-5-auto: automatic observation ended",
+      "lesson 5: earned evidence and visible continue",
+      "lesson-6-round-0-auto: automatic observation ended",
+      "lesson-6-round-1-auto: automatic observation ended",
+      "lesson-6-round-2-auto: automatic observation ended",
+      "lesson-6-round-3-auto: automatic observation ended",
+      "lesson 6: earned evidence and visible continue",
+      "lesson-7-round-0-auto: automatic observation ended",
+      "lesson-7-round-1-auto: automatic observation ended",
+      "lesson 7: earned evidence and visible continue",
+      "facility 1: real concept video played to end",
+      "lesson-8-auto: automatic observation ended",
+      "lesson8 reload restores actual observation work and route, player remains stopped",
+      "lesson 8: earned evidence and visible continue",
+      "lesson-9-auto: automatic observation ended",
+      "lesson 9: earned evidence and visible continue",
+      "lesson-10-round-0-auto: automatic observation ended",
+      "lesson-10-round-1-auto: automatic observation ended",
+      "lesson-10-round-2-auto: automatic observation ended",
+      "lesson 10: earned evidence and visible continue",
+      "lesson-11-round-0-auto: automatic observation ended",
+      "lesson-11-round-1-auto: automatic observation ended",
+      "lesson-11-round-2-auto: automatic observation ended",
+      "lesson-11-round-3-auto: automatic observation ended",
+      "lesson 11: earned evidence and visible continue",
+      "facility 2: real concept video played to end",
+      "lesson-12-auto: automatic observation ended",
+      "lesson 12: earned evidence and visible continue",
+      "lesson-13-auto: automatic observation ended",
+      "lesson 13: earned evidence and visible continue",
+      "lesson-14-round-0-auto: automatic observation ended",
+      "lesson-14-round-1-auto: automatic observation ended",
+      "lesson-14-round-2-auto: automatic observation ended",
+      "lesson 14: earned evidence and visible continue",
+      "lesson-15-round-0-auto: automatic observation ended",
+      "lesson-15-round-1-auto: automatic observation ended",
+      "lesson-15-round-2-auto: automatic observation ended",
+      "lesson-15-round-3-auto: automatic observation ended",
+      "lesson-15-round-4-auto: automatic observation ended",
+      "lesson-15-round-5-auto: automatic observation ended",
+      "lesson 15: earned evidence and visible continue",
+      "facility 3: real concept video played to end",
+      "lesson-16-auto: automatic observation ended",
+      "lesson 16: earned evidence and visible continue",
+      "lesson-17-auto: automatic observation ended",
+      "lesson 17: earned evidence and visible continue",
+      "lesson-18-round-0-auto: automatic observation ended",
+      "lesson-18-round-1-auto: automatic observation ended",
+      "lesson-18-round-2-auto: automatic observation ended",
+      "lesson-18-round-3-auto: automatic observation ended",
+      "lesson 18: earned evidence and visible continue",
+      "lesson-19-round-0-auto: automatic observation ended",
+      "lesson 19: earned evidence and visible continue",
+      "facility 4: real concept video played to end",
+      "fresh student completed 20 lessons, all rounds, five reward videos, final and genuine certificate",
+      "genuine certificate, completion date, final answers and twenty earned records survive real reload",
+      "student progress came exclusively from browser interactions; storage writes and seeded awards were never used"
+    ],
+    "auditStates": 305,
+    "runtime": [],
+    "issues": [],
+    "repairs": [],
+    "changed": [],
+    "evidence": 20,
+    "restored": true,
+    "finalAnswers": {
+      "0": 0,
+      "1": 1,
+      "2": 0,
+      "3": 0,
+      "4": 1
+    }
+  },
+  "publicTargeted": {
+    "states": 20,
+    "errors": [],
+    "checks": [
+      "1280x800: force target, mix targets, tap parcel sorting, generated art, wrong/right transmission, discovery, reload, next inquiry",
+      "1024x600: force target, mix targets, tap parcel sorting, generated art, wrong/right transmission, discovery, reload, next inquiry",
+      "915x412: force target, mix targets, tap parcel sorting, generated art, wrong/right transmission, discovery, reload, next inquiry",
+      "390x844: force target, mix targets, tap parcel sorting, generated art, wrong/right transmission, discovery, reload, next inquiry"
+    ]
+  },
+  "publicFiles": {
+    "matched": 139,
+    "retries": [],
+    "errors": [],
+    "excludedPaths": [
+      {
+        "file": "/._index.html",
+        "status": 404
+      },
+      {
+        "file": "/.DS_Store",
+        "status": 404
+      },
+      {
+        "file": "/src/._app.js",
+        "status": 404
+      },
+      {
+        "file": "/.git/config",
+        "status": 404
+      },
+      {
+        "file": "/.env",
+        "status": 404
+      },
+      {
+        "file": "/docs/CREDITS.md",
+        "status": 404
+      },
+      {
+        "file": "/image/generated/ullim-village.png",
+        "status": 404
+      },
+      {
+        "file": "/image/backgrounds/chatgpt_generated_018_99f70fe2eb.png",
+        "status": 404
+      },
+      {
+        "file": "/media/audio/npc-welcome.m4a",
+        "status": 404
+      }
+    ],
+    "previouslyRemoved": [
+      {
+        "file": "/image/backgrounds/chatgpt_generated_017_53e4619e94.png",
+        "status": 404
+      },
+      {
+        "file": "/image/backgrounds/chatgpt_generated_018_99f70fe2eb.png",
+        "status": 404
+      },
+      {
+        "file": "/image/backgrounds/chatgpt_generated_019_4e1f52e30a.png",
+        "status": 404
+      },
+      {
+        "file": "/image/backgrounds/chatgpt_generated_020_c5bbc97e3d.png",
+        "status": 404
+      },
+      {
+        "file": "/image/backgrounds/chatgpt_generated_021_3dc9c418f5.png",
+        "status": 404
+      },
+      {
+        "file": "/image/backgrounds/chatgpt_generated_022_13fc18d100.png",
+        "status": 404
+      },
+      {
+        "file": "/image/backgrounds/chatgpt_generated_023_890a4c0418.png",
+        "status": 404
+      },
+      {
+        "file": "/image/backgrounds/chatgpt_generated_024_d5aa1da920.png",
+        "status": 404
+      },
+      {
+        "file": "/image/backgrounds/chatgpt_generated_025_e972cdea3c.png",
+        "status": 404
+      },
+      {
+        "file": "/image/backgrounds/chatgpt_generated_026_f04b11de8f.png",
+        "status": 404
+      },
+      {
+        "file": "/image/characters/chatgpt_generated_028_ee0700142c.png",
+        "status": 404
+      },
+      {
+        "file": "/image/generated/ullim-village.png",
+        "status": 404
+      },
+      {
+        "file": "/media/audio/drop_001.ogg",
+        "status": 404
+      },
+      {
+        "file": "/media/audio/maximize_008.ogg",
+        "status": 404
+      },
+      {
+        "file": "/media/audio/npc-welcome.m4a",
+        "status": 404
+      }
+    ]
+  },
+  "cacheUpgrade": {
+    "baselineVersion": "2.2.0",
+    "baselineCache": [
+      "ullim-city-2.2.0-mwc95j7m"
+    ],
+    "after": [
+      "ullim-city-2.3.0-mwcb6bzu"
+    ],
+    "checks": [
+      "previous observation survived deployment cache update",
+      "2.3.0 UI loaded with scientific emphasis",
+      "updated lesson reloaded and remained interactive offline"
+    ],
+    "errors": [],
+    "firstAttempt": "Version assertion read 2.2.0. Logs retained. Retried after verifying worker activation, 54 cached assets and served 2.3.0 source.",
+    "diagnosticLog": ".tmp/learning-20261112/cache-diagnose.log"
+  },
+  "sourceHashes": {
+    "/index.html": "75174ad283dd50b1b5bf6b97dca873cdee492db282d0e7cb808d6b635b235b6a",
+    "/src/action-missions.css": "db2a4fe61f6a35e4374cf4fa23b14a6f6813cec193ed6d781c099cb4023a93fb",
+    "/src/action-missions.js": "dcff0489a1f53229211dcae2e3b4460baaf2e2e5c1d3dae062baaae82048f6fa",
+    "/src/app.js": "656f058bd848e6f4b5cfb86534b6a84a764133e57e3397c8e5097936f345d693",
+    "/src/audio.js": "6f204350b19e8da27630db44028eb71faf59b47b6bc50073d7b100a79cce6839",
+    "/src/challenge-design.css": "9605dd70e471a5db6d5473c04bcc3a6efa087ebd237e724d476826367e108b1a",
+    "/src/challenges.js": "22d39a5b36a7cde1bf78602c5741fccde8cd343ad0a3d5c4a757ad353b3b267e",
+    "/src/companion.js": "2146e0256e4468a97b57b8dbb1632a77cf688ff9abf3bf3133e22c7458da1503",
+    "/src/concept-focus.css": "3be58181aeb86d1d202a3ccddfac732c4e449ccd978f8b3b643a39ae160f6838",
+    "/src/concepts.js": "ffeaa9152fc6f5c50920f2266def5201adeb2bfcdfe53f773c4d0de5214adf2a",
+    "/src/data.js": "c736484b01ed30ae321279fa1d1ddf86ede6a9b5c2f6ddf9d78996c997273b60",
+    "/src/experience.css": "eb7a666a8256349d9abb4bbe72a2a9ff52ccd8fe4385b08bfd338d47946fbb3e",
+    "/src/experiment-player.js": "83da7845b38353ef57f01b6ddf5a2b795e161d91c3acec9ae4f1ebd014d33000",
+    "/src/illustrations.css": "e853c5715394b5701e381b3ded70e78a12c8b61b685e39dce91df9812bc88180",
+    "/src/illustrations.js": "990c4cca3e471cea0bc292b499cbdc12dd366cb2698afefc86fc5c4d69ea1c3d",
+    "/src/manipulations.js": "2d2a85f631827b53c7eb9af558157a1763c1445c3ebcd3cf6438a11592343042",
+    "/src/map-world.js": "92db33d5aa0ef3d27aff7c098c8ad5283e458e8a18ceae4d635f870cc0720a17",
+    "/src/map.js": "db099d7408c61cbdb727b2dddfa1350e5e36ee8a116ba0f88896ba3175268985",
+    "/src/model.js": "bbcf9d68a042c10bf1f4134b3a7a727f644635a748efec5d0117f684037f3d38",
+    "/src/npc-guide.js": "003f361dbeaf6ef837cb208f076ad6ffd68b88ca7f8616ace6a624594429c9cc",
+    "/src/progress.js": "63e7b7bbcfba8215d2141cc32457fca46c0769a43843e7c712c47969eda4f61d",
+    "/src/samples.js": "df60d40c00e27381e69fbf8c8bddd969894c6cafc20bca2a7abfd8401fc146d6",
+    "/src/scenery-surfaces.css": "40af4440f6a5d2c8f8f4ef71c049aacf703d954c392c6ddf3b18dec9175df8a6",
+    "/src/settings-content.js": "61468b15cf2c6101e28da3b2fd422e66f20f8c609a7f6eb857df2ce91dbcbc3d",
+    "/src/signal-restoration.css": "e8e5b75f2a79dee7f63c2cf8ffa745af00c7791f47e027b44ca353ec4c05d4e2",
+    "/src/signal-restoration.js": "39072903aa8d60b2b1d90e364723d6486658e67649e76a05c964a88953e9c343",
+    "/src/style.css": "49ffce8933152390c017774e61088855429bf5f5a0b0c598c991810bab982b91",
+    "/src/version.js": "bda7cc63ea9d612cd4d9593f4ba4b2809e580f7f8b3f01e4374c7a5a21a8cd45",
+    "/src/voice.js": "aafb17de05772f72d7b72b185e245b07c17118bf4524750146b46279b30c7445",
+    "/src/workbench.css": "bce06115d5c6d779e4f3ebb81787f767ac7a1435a87c73af18e891b39077ced1",
+    "/": "75174ad283dd50b1b5bf6b97dca873cdee492db282d0e7cb808d6b635b235b6a"
+  },
+  "score": {
+    "total": 85,
+    "outOf": 100,
+    "categories": [
+      10,
+      9,
+      10,
+      8,
+      9,
+      8,
+      6,
+      7,
+      8,
+      10
+    ],
+    "rule": "Existing fixed deductions from SCORE-20261111.md. No bonus above category maximum."
+  },
+  "unverified": [
+    "Physical school tablet and Safari",
+    "Classroom loudspeaker listening",
+    "40-minute pupil lesson and real-life noise reduction practice",
+    "Current release under throttled school network",
+    "Complete commercial provenance of previously supplied images"
+  ],
+  "rawEvidenceRoot": "/Volumes/T7 Shield/iscreammedia_sc34/11 sound/.tmp/learning-20261112"
+}
