@@ -10,3 +10,10 @@ dialog {background:rgba(255,253,245,.94);backdrop-filter:blur(12px);-webkit-back
 .single-screen .lesson-heading .lesson-title,.lesson-heading>div:first-child {background:rgba(255,253,244,.84);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 /* Decorative guide must never sit on top of home actions in short landscape. */
 @media(max-height:560px){.title-guide{display:none}}
+
+:root{--card-radius:18px;--card-gap:12px}
+.experiment-content :is(.instrument,.length-card,.medium-card,.sample-card),.request-card,.coach-card{border-radius:var(--card-radius)}
+.experiment-content :is(.instruments,.length-options,.medium-grid,.comparison,.sample-pair){gap:var(--card-gap);align-items:stretch}
+@media(max-width:600px),(max-height:480px){:root{--card-gap:8px}}
+/* Use spare desktop experiment space for the objects being observed. */
+@media(min-width:1000px) and (min-height:600px){.experiment-content .instrument > :is(.prop-assembly,.concept-art,.illustrated-ruler){max-width:320px;height:clamp(80px,34cqh,320px)}}

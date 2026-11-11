@@ -7,3 +7,5 @@ Translucent background fills, restrained borders/shadows, readable foreground te
 Browser QA uses Chromium and seeded states; physical tablets, Safari, and every natural play route were not tested.
 
 Final 135-state sweep exposed the decorative title guide covering voice replay at 915x412. Guide hidden only on short landscape; core actions retained. Twelve actual activity interactions passed.
+
+Follow-up: card family corners unified at 18px, peer-card gaps 12px (8px compact), equal stretch preserved. Existing single-screen observation layouts retained: artwork is not shrunk or hidden to fit controls.

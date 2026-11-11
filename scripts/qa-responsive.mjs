@@ -64,7 +64,7 @@ function audit(){
  const unique=[...new Map(issues.map(i=>[`${i.type}|${i.text}|${i.detail}`,i])).values()];
  return {title:document.querySelector('main h1')?.textContent,challenge:document.querySelector('[data-challenge]')?.dataset.challenge,issues:unique,board:document.querySelector('.experiment-board')?rect(document.querySelector('.experiment-board')):null};
 }
-const vps=modalOnly?[]:process.env.QA_NARROW?[[1024,600],[915,412],[740,360],[390,844],[360,740]]:process.env.QA_QUICK?[[1280,800],[915,412],[390,844]]:[[1920,1080],[1366,768],[1280,800],[1024,600],[915,412],[740,360],[390,844],[360,740]];
+const vps=process.env.QA_SIZES?process.env.QA_SIZES.split(',').map(x=>x.split('x').map(Number)):modalOnly?[]:process.env.QA_NARROW?[[1024,600],[915,412],[740,360],[390,844],[360,740]]:process.env.QA_QUICK?[[1280,800],[915,412],[390,844]]:[[1920,1080],[1366,768],[1280,800],[1024,600],[915,412],[740,360],[390,844],[360,740]];
 const results=[];
 const interactions=[];
 const click=async selector=>{await page.locator(selector).click();await page.waitForTimeout(100);};
@@ -87,6 +87,7 @@ try{
   console.log(`${phase} ${width}x${height}: ${results.slice(-20).reduce((n,r)=>n+r.issues.length+r.bottomIssues.length,0)} issue records`);
   await writeFile(path.join(out,'results.json'),JSON.stringify({phase,results,errors},null,2));
  }
+ if(!process.env.QA_ACTIVITY_ONLY){
  for(const [width,height] of [[1280,800],[915,412],[390,844]]){
   await page.setViewportSize({width,height});const vp=`${width}x${height}`;
   if(!modalOnly)for(const route of ['home','final','result']){const s=seed(20,true);s.lastRoute=route;if(route==='result'){s.finalAnswers=Object.fromEntries(finalTasks.map((t,i)=>[i,t.answer]));s.restored=true;s.completedAt='2026-11-08T03:00:00.000Z';}await open(s);await inspect(route,vp);}
@@ -129,6 +130,7 @@ try{
  for(let i=0;i<20;i++){
   const top=await page.evaluate(audit);results.push({viewport:'1024x600',lesson:i,mode:'teacher',...top});
   if(i<19){if(await page.locator('.admin-arrow[data-action="goto"][aria-label="다음 단계"]').count()===0)await action('activity-tools');await page.locator('.admin-arrow[data-action="goto"][aria-label="다음 단계"]').click();await page.waitForTimeout(80);}
+ }
  }
  }
  const counts={};for(const r of results)for(const i of [...r.issues,...(r.bottomIssues||[])])counts[i.type]=(counts[i.type]||0)+1;
