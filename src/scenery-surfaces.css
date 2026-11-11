@@ -1,0 +1,12 @@
+/* Scenery-first surfaces. Opacity applies to fills, never text or icons. */
+
+.icon-btn,.guide-button,.btn.quiet,.btn.secondary,.map-dpad button {background:rgba(249,255,252,.78);border-color:rgba(255,255,255,.8);box-shadow:0 4px 14px rgba(20,59,65,.14);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.team-card,.coach-card,.request-card,.challenge-shell .request-card,.intro-steps {background:rgba(255,253,244,.83);border-color:rgba(255,255,255,.8);box-shadow:0 8px 24px rgba(20,59,65,.12);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+dialog {background:rgba(255,253,245,.94);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.modal-heading,.modal-footer {background:rgba(248,252,244,.78)}
+@media(prefers-reduced-transparency:reduce){.icon-btn,.guide-button,.btn.quiet,.btn.secondary,.map-dpad button,.team-card,.coach-card,.request-card,.intro-steps,dialog{background:#fffdf5;backdrop-filter:none}}
+
+.lesson-page.single-screen .experiment-board {background:rgba(255,253,247,.78);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.single-screen .lesson-heading .lesson-title,.lesson-heading>div:first-child {background:rgba(255,253,244,.84);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+/* Decorative guide must never sit on top of home actions in short landscape. */
+@media(max-height:560px){.title-guide{display:none}}

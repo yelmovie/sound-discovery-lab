@@ -91,7 +91,7 @@ try{
   await page.setViewportSize({width,height});const vp=`${width}x${height}`;
   if(!modalOnly)for(const route of ['home','final','result']){const s=seed(20,true);s.lastRoute=route;if(route==='result'){s.finalAnswers=Object.fromEntries(finalTasks.map((t,i)=>[i,t.answer]));s.restored=true;s.completedAt='2026-11-08T03:00:00.000Z';}await open(s);await inspect(route,vp);}
   await open(seed(8));
-  for(const modal of ['settings','notebook','concept']){await action(modal);await inspect(`modal-${modal}`,vp);await page.locator('.modal-body').evaluate(e=>e.scrollTop=e.scrollHeight);results.push({name:`modal-${modal}-bottom`,viewport:vp,...await page.evaluate(audit)});await click('.modal-heading [data-action="close"]');}
+  for(const modal of ['settings','notebook','concept']){if(await page.locator(`[data-action="${modal}"]`).count()===0)await action('activity-tools');await action(modal);await inspect(`modal-${modal}`,vp);await page.locator('.modal-body').evaluate(e=>e.scrollTop=e.scrollHeight);results.push({name:`modal-${modal}-bottom`,viewport:vp,...await page.evaluate(audit)});await click('.modal-heading [data-action="close"]');}
  }
  if(!modalOnly){
  // Longest rounds and completed evidence at a narrow viewport.
@@ -128,7 +128,7 @@ try{
  await page.locator('[data-action="admin"]').click();await page.locator('.modal-heading [data-action="close"]').click();
  for(let i=0;i<20;i++){
   const top=await page.evaluate(audit);results.push({viewport:'1024x600',lesson:i,mode:'teacher',...top});
-  if(i<19){await page.locator('.admin-arrow[data-action="goto"][aria-label="다음 단계"]').click();await page.waitForTimeout(80);}
+  if(i<19){if(await page.locator('.admin-arrow[data-action="goto"][aria-label="다음 단계"]').count()===0)await action('activity-tools');await page.locator('.admin-arrow[data-action="goto"][aria-label="다음 단계"]').click();await page.waitForTimeout(80);}
  }
  }
  const counts={};for(const r of results)for(const i of [...r.issues,...(r.bottomIssues||[])])counts[i.type]=(counts[i.type]||0)+1;
