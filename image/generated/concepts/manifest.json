@@ -153,6 +153,20 @@
       "alpha": true,
       "bytes": 73232,
       "sha256": "33d81e627b55cf19676a97171841fb159cd611d6a4d8f34b2ffc73a977946364"
+    },
+    {
+      "id": "string-telephone",
+      "created": "2026-11-12",
+      "tool": "ElevenLabs remote generation / gpt-image-2.5-sunburst",
+      "generationId": "VcgMP1tWyNxOqvXN1ikw",
+      "prompt": "A single continuous wide 3:2 scientific educational illustration for an elementary sound exploration game. Two fictional Korean schoolchildren about age nine use a paper-cup-and-string telephone in a bright school courtyard. Child on left speaks into the OPEN rim of a teal paper cup held close to the mouth, child on right listens with the OPEN rim of another teal paper cup held beside one ear. One clearly visible thin taut straight string connects ONLY the centers of the CLOSED bottoms of the cups, stretching horizontally across the middle with no slack and no hand touching the middle of the string. Cup orientation must be anatomically and physically coherent: open rims toward mouth and ear, closed bottoms face each other across the gap. Three-quarter side view, both children and complete string clearly visible, upper bodies filling frame. Friendly polished 3D cartoon illustration, refined soft edges and hand-painted textures, matching an elementary science adventure with teal, muted green and natural wood palette, neutral white daylight, no yellow cast. Simple softly blurred courtyard background. This is one scene, no panels or collage. No text, no letters, no numerals, no watermarks, no arrows, no drawn sound wave paths. Sound travels along the solid taut string, do not imply that the string carries children or electrical currents.",
+      "path": "image/generated/concepts/string-telephone.webp",
+      "width": 960,
+      "height": 540,
+      "alpha": false,
+      "bytes": 63784,
+      "sha256": "badeb38befc8f1ad47274243e20bd623bef33379cdf6bf0047824d7050496286",
+      "preparation": "Selected from four generated variations. Resized and WebP encoded. Complete original kept on external SSD. Cup orientation, taut string, bottom attachment and absence of printed text checked."
     }
   ]
 }

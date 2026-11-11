@@ -63,6 +63,15 @@ function audit({requirements=[],quick=false,expectedTarget='',debug=false}={}){
   if(targets.length!==1)add('next-action-target-count',null,{expected:1,actual:targets.length});
   if(expectedTarget&&!targets.some(e=>e.matches(expectedTarget)||e.querySelector(expectedTarget)))add('next-target-does-not-advance',null,{expectedTarget,actual:targets.map(e=>label(e))});
   for(const e of main?.querySelectorAll('img')||[])if(visible(e)&&e.complete&&!e.naturalWidth)add('broken-image',e,e.src);
+  for(const ruler of main?.querySelectorAll('.length-card .illustrated-ruler')||[]){
+   const card=ruler.closest('.length-card');
+   const minimum=Math.min(160,card.getBoundingClientRect().width*.65);
+   if(visible(ruler)&&ruler.getBoundingClientRect().width<minimum)add('small-instructional-image',ruler,{actual:ruler.getBoundingClientRect().width,minimum});
+  }
+  for(const image of main?.querySelectorAll('.telephone-scene')||[]){
+   const rect=image.getBoundingClientRect(),drawnHeight=Math.min(rect.height,rect.width*image.naturalHeight/image.naturalWidth);
+   if(visible(image)&&drawnHeight<80)add('small-instructional-image',image,{actual:drawnHeight,minimum:80});
+  }
   const walk=document.createTreeWalker(main||document.body,NodeFilter.SHOW_TEXT),sentences=new Map();let n;
   while(n=walk.nextNode()){
    const text=n.textContent.trim();if(!text||!visible(n.parentElement))continue;const e=n.parentElement,range=document.createRange();range.selectNodeContents(n);const rs=[...range.getClientRects()].filter(r=>r.width>1&&r.height>1),control=e.closest('button'),block=e.closest('button,p,h1,h2,h3,label,legend,.stage-badge,.chapter');

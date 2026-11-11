@@ -1,5 +1,5 @@
 export function emphasize(text,terms){let rest=text,result='';const escape=s=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));while(rest){const hit=terms.map(term=>({term,index:rest.indexOf(term)})).filter(x=>x.index>=0).sort((a,b)=>a.index-b.index||b.term.length-a.term.length)[0];if(!hit){result+=escape(rest);break;}result+=escape(rest.slice(0,hit.index))+`<mark class="concept-keyword">${escape(hit.term)}</mark>`;rest=rest.slice(hit.index+hit.term.length);}return result;}
-export const conceptTerms=[['떨림','소리','멈춰'],['세게','소리 크기','높낮이'],['빠르게','높은 소리','낮은 소리'],['공기','물','고체'],['상황','불편한 소리','필요한 소리']];
+export const conceptTerms=[['떨림','떨려','소리','멈춰'],['세게','세기','소리 크기','소리의 크기','큰 소리','작은 소리','높낮이'],['떨리는 길이','높낮이','크기','빠르게','높은 소리','낮은 소리'],['공기','물질','물속','물','고체','전달'],['상황','소음','불편한 소리','필요한 소리']];
 // volume evens out the five films (integrated loudness -10.4 to -23.9 LUFS) to about -19 LUFS at playback;
 // pitch is the quietest film and stays at full volume.
 export const concepts = [

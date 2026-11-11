@@ -22,7 +22,7 @@ export function experimentPlan(index,work={},evidence={}){
   case 1:return [action('fork-start',{},'소리굽쇠가 떨릴 때 소리를 들어 봐.',1600),action('fork-stop',{},'떨림을 멈추고, 소리가 어떻게 바뀌는지 봐.',1300),end('멈추기 전과 뒤를 비교해 골라 봐.',choices)];
   case 2:{
    const first=[1,2,3].includes(w.a)?w.a:1,second=first===3?1:3;
-   return [range('force',first,'먼저 첫 소리의 세기를 맞출게.'),action('hit',{},'첫 소리와 파형을 관찰해 봐.',1400),range('force',second,'같은 북을 다른 세기로 칠게.'),action('hit',{},'두 소리와 파형의 크기를 비교해 봐.',1400),end('서로 다른 세기의 A와 B를 만들었어.','[data-action="continue"]','complete')];
+   return [range('force',first,'먼저 첫 소리의 세기를 맞출게.'),action('hit',{},'첫 소리와 떨림 그림을 관찰해 봐.',1400),range('force',second,'같은 북을 다른 세기로 칠게.'),action('hit',{},'두 소리와 떨림 그림의 위아래 폭을 비교해 봐.',1400),end('서로 다른 세기의 A와 B를 만들었어.','[data-action="continue"]','complete')];
   }
   case 3:
    if(!records[legacyIndex(2)]?.observation)return [end('먼저 관찰 활동에서 A와 B를 기록해 줘.',`[data-action="goto"][data-route="lesson/${legacyIndex(2)}"]`)];
@@ -33,7 +33,7 @@ export function experimentPlan(index,work={},evidence={}){
   case 7:return [preview('path',null,{},'.case-story','소리가 난 곳과 듣는 곳 사이를 살펴봐.',1800),end('이 상황에서 소리를 전달한 물질을 골라 봐.','[data-action="case-choice"]')];
   case 8:return [action('noise-scene',{},'현장 소리를 듣고 누가 불편한지 살펴봐.',2600),end('위치, 상황, 영향을 받는 사람을 직접 골라 봐.','[data-action="diagnostic"]')];
   case 9:{
-   if(!records[legacyIndex(8)])return [end('먼저 관찰 활동에서 현장 진단을 기록해 줘.',`[data-action="goto"][data-route="lesson/${legacyIndex(8)}"]`)];
+   if(!records[legacyIndex(8)])return [end('먼저 관찰 활동에서 친구의 불편을 살펴봐.',`[data-action="goto"][data-route="lesson/${legacyIndex(8)}"]`)];
    const selected=Array.isArray(w.solutions)&&w.solutions.length>0;
    return [action('noise-before',{},'바꾸기 전 독서 시간의 소리를 들어 봐.',2500),...(selected?[action('noise-after',{},'네가 고른 해결책을 적용한 뒤와 비교해 봐.',2500)]:[]),end(selected?'소리의 영향이 어떻게 바뀌었는지 골라 봐.':'현장에 맞는 해결책을 직접 골라 봐.',selected?choices:'[data-action="solution"]')];
   }

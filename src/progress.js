@@ -28,5 +28,5 @@ export function captureStrike(work, force) {
   if (!work.a) { work.a = force; return 'A에 첫 소리를 담았어. 세기를 바꿔 한 번 더 쳐 봐.'; }
   if (!work.b && force === work.a) return 'A와 같은 세기야. 다른 세기로 쳐서 B와 비교해 봐.';
   work.b = force;
-  return force === work.a ? 'A와 B가 같아졌어. 다른 세기로 다시 쳐 봐.' : 'B에 새 소리를 담았어! 두 파형의 크기를 비교해 봐.';
+  return force === work.a ? 'A와 B가 같아졌어. 다른 세기로 다시 쳐 봐.' : 'B에 새 소리를 담았어! 두 떨림 그림의 위아래 폭을 비교해 봐.';
 }

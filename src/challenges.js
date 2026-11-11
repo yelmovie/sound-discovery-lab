@@ -21,10 +21,10 @@ const situations = [
   {text:'탁자 한쪽을 두드리고, 탁자에 댄 감지기로 들었어.',answer:'solid'},
   {text:'공연장에서 노랫소리가 관객의 귀에 들려.',answer:'air'},
   {text:'수중 마이크로 물속 돌이 부딪치는 소리를 들었어.',answer:'water'},
-  {text:'팽팽한 실로 연결한 종이컵 전화기로 이야기를 나눴어.',answer:'solid'}
+  {text:'종이컵 전화기의 팽팽한 실을 따라 소리가 전해졌어. 실은 어떤 물질일까?',answer:'solid'}
 ];
 const cases = [
-  {title:'의자를 끌 때마다 드르륵!',scene:'책 읽는 친구 옆에서 의자를 옮기고 있어.',answer:'pad',why:'의자 다리에 패드를 붙여 바닥과 마찰하는 소리를 줄였어.'},
+  {title:'의자를 끌 때마다 드르륵!',scene:'책 읽는 친구 옆에서 의자를 옮기고 있어.',answer:'pad',why:'의자 다리에 패드를 붙여 바닥에 긁히며 나는 소리를 줄였어.'},
   {title:'복도 음악이 너무 커!',scene:'옆 교실에서 발표하는 말이 잘 안 들려.',answer:'volume',why:'음악의 음량을 줄여 발표가 잘 들리게 했어.'},
   {title:'독서 시간과 북 연습이 겹쳐!',scene:'연습도 하고 싶고, 조용히 책도 읽고 싶어.',answer:'time',why:'서로의 시간을 맞추면 두 활동을 모두 할 수 있어.'},
   {title:'교실 문 바로 앞에서 응원해!',scene:'응원 장소를 옮길 수 있는 넓은 운동장이 있어.',answer:'place',why:'응원 장소를 교실에서 떨어진 곳으로 옮겼어.'}
@@ -65,6 +65,35 @@ function roundOf(id,c){return Math.min(c.proof?.length||0,challengeRoundCount(id
 function resetRound(c){const proof=c.proof||[];for(const k of Object.keys(c))delete c[k];c.proof=proof;}
 function award(id,c,proof,message){c.proof=[...(c.proof||[]),proof];resetRound(c);c.message=message;c.kind='success';return true;}
 
+// Guidance reads the same request as validation, without changing an answer.
+export function adjustmentCue(id, c = {}) {
+  const round = roundOf(id, c);
+  if (id === 'signal') {
+    return (c.force || 1) === signals[round].target
+      ? { text: '세기를 맞췄다면 북을 눌러 신호를 보내 봐.', target: '[data-action="challenge-strike"]' }
+      : { text: '친구가 요청한 크기를 보고, 치는 세기 손잡이를 움직여 봐.', target: '#signal-force' };
+  }
+  if (id === 'mix') {
+    if ((c.length || 18) !== mixes[round].length) {
+      return { text: '먼저 길이 손잡이로 주문한 높낮이를 맞춰 봐.', target: '#mix-length' };
+    }
+    if ((c.force || 1) !== mixes[round].force) {
+      return { text: '이제 세기 손잡이로 주문한 소리 크기를 맞춰 봐.', target: '#mix-force' };
+    }
+    return { text: '두 손잡이를 맞췄다면 연주하기를 눌러 들어 봐.', target: '[data-action="challenge-check"]' };
+  }
+  if (id === 'sort') {
+    const unheard = [0, 1, 2].find(index => !(c.listened || []).includes(index));
+    if (unheard !== undefined) {
+      return { text: `먼저 상자 ${'ABC'[unheard]}를 눌러 들어 봐. 세 상자의 크기를 비교해.`, target: `[data-action="challenge-parcel"][data-value="${unheard}"]` };
+    }
+    return Number.isInteger(c.selected)
+      ? { text: `상자 ${'ABC'[c.selected]}를 놓을 크기 칸을 눌러 줘.`, target: '[data-action="challenge-slot"]' }
+      : { text: '옮길 상자를 누르고, 작은·중간·큰 소리 칸을 눌러 줘.', target: '[data-action="challenge-parcel"]' };
+  }
+  return null;
+}
+
 /** UI-only content uses the same trial definitions as validation and audio. */
 export function challengeView(id,w,h) {
   const c=w.challenge||{},k=roundOf(id,c),done=checkChallenge(id,c);
@@ -91,9 +120,9 @@ export function challengeView(id,w,h) {
   }else if(id==='mix'){
     const t=mixes[k];body=`<div class="request-card sound-order"><h2><span>높낮이 <b>${pitchName(t.length)}</b></span><span>크기 <b>${forceName(t.force)}</b></span></h2></div><div class="mix-preview"><div class="mix-device">${rulerKey(c.length||18)}</div><div class="live-scope challenge-live-wave">${liveWave((c.force||1)/3,c.length===6?9:c.length===12?6:3)}</div></div><div class="mixer-controls slider-mixer"><section class="mixer-channel pitch-channel" role="group" aria-label="높낮이 조절"><h3 class="mixer-title">길이 <output data-param-output="length">${c.length||18} cm</output></h3><input id="mix-length" type="range" min="6" max="18" step="6" value="${c.length||18}" data-challenge-param="length" aria-label="떨리는 길이"><div class="range-ticks"><span>짧게</span><span>길게</span></div></section><section class="mixer-channel volume-channel" role="group" aria-label="소리 크기 조절"><h3 class="mixer-title">세기 <output data-param-output="force">${['','약하게','보통','세게'][c.force||1]}</output></h3><input id="mix-force" type="range" min="1" max="3" value="${c.force||1}" data-challenge-param="force" aria-label="튕기는 세기"><div class="range-ticks"><span>약하게</span><span>세게</span></div></section></div>${control(`${icon('play')} 연주하기`,'check','','btn primary')}`;
   }else if(id==='sensor'){
-    const m=media[k];body=`<div class="challenge-top"><h2>${m.source} → ${inside(m)} 감지기</h2><small>독립된 세 실험</small></div><div class="sensor-scene"><div><button class="sensor-grip" data-drag-kind="sensor" aria-label="감지기 잡아 옮기기">${prop('receiver','옮길 감지기')}</button></div><div class="sensor-zones">${media.map(x=>control(`${art(`travel-${x.id}`,`${x.label} 전달 실험${x.id==='water'?', 물속에는 방수 감지기 사용':''}`,'concept-scene')}<b>${inside(x)}</b><span class="sensor-indicator">${c.zone===x.id?prop('receiver','놓은 감지기'):'＋'}</span>`,'zone',`data-value="${x.id}" data-drop-kind="sensor" aria-pressed="${c.zone===x.id}"`,`sensor-zone illustrated-zone ${x.id} ${c.zone===x.id?'selected':''}`)).join('')}</div></div>`;
+    const m=media[k];body=`<div class="challenge-top"><h2>${m.source} → ${inside(m)} 감지기</h2><small>물질마다 따로 실험</small></div><div class="sensor-scene"><div><button class="sensor-grip" data-drag-kind="sensor" aria-label="감지기 잡아 옮기기">${prop('receiver','옮길 감지기')}</button></div><div class="sensor-zones">${media.map(x=>control(`${art(`travel-${x.id}`,`${x.label} 전달 실험${x.id==='water'?', 물속에는 방수 감지기 사용':''}`,'concept-scene')}<b>${inside(x)}</b><span class="sensor-indicator">${c.zone===x.id?prop('receiver','놓은 감지기'):'＋'}</span>`,'zone',`data-value="${x.id}" data-drop-kind="sensor" aria-pressed="${c.zone===x.id}"`,`sensor-zone illustrated-zone ${x.id} ${c.zone===x.id?'selected':''}`)).join('')}</div></div>`;
   }else if(id==='classify'){
-    body=`<div class="case-story path-source" data-drag-kind="path" aria-label="이야기를 전달 물질로 이어 보기"><p>${situations[k].text}</p></div><div class="sound-path-model" aria-label="소리가 난 곳에서 전달 물질을 거쳐 듣는 곳으로 이어져"><span>${icon('volume')}<b>소리가 난 곳</b></span><i aria-hidden="true">→</i><span class="path-question"><b>어떤 물질?</b></span><i aria-hidden="true">→</i><span>${icon('ear')}<b>듣는 곳</b></span></div><div class="medium-choices">${media.map(m=>control(`${icon(m.id)}<span>${m.label}</span>`,'zone',`data-value="${m.id}" data-drop-kind="path" aria-pressed="${c.zone===m.id}"`,`choice ${c.zone===m.id?'selected':''}`)).join('')}</div>`;
+    body=`<div class="case-story path-source" data-drag-kind="path" aria-label="이야기를 전달 물질로 이어 보기"><p>${situations[k].text}</p></div>${k===5?`<figure class="sound-path-model transmission-illustration">${art('string-telephone','말하는 친구의 컵 바닥과 듣는 친구의 컵 바닥을 연결한 팽팽한 실','telephone-scene')}<figcaption>말하는 컵 → 어떤 물질? → 듣는 컵</figcaption></figure>`:`<div class="sound-path-model" aria-label="소리가 난 곳에서 전달 물질을 거쳐 듣는 곳으로 이어져"><span>${icon('volume')}<b>소리가 난 곳</b></span><i aria-hidden="true">→</i><span class="path-question"><b>어떤 물질?</b></span><i aria-hidden="true">→</i><span>${icon('ear')}<b>듣는 곳</b></span></div>`}<div class="medium-choices">${media.map(m=>control(`${icon(m.id)}<span>${m.label}</span>`,'zone',`data-value="${m.id}" data-drop-kind="path" aria-pressed="${c.zone===m.id}"`,`choice ${c.zone===m.id?'selected':''}`)).join('')}</div>`;
   }else if(id==='solutions'){
     const t=cases[k];body=`<div class="request-card solution-target" data-drop-kind="solution"><h2>${t.title}</h2><p>${t.scene}</p></div><div class="context-cards">${solutionTools.map(t=>control(`${art(`care-${t.id}`,'','concept-thumb')}<b>${t.name}${c.solution===t.id?' ✓':''}</b>`,'solution',`data-value="${t.id}" data-drag-kind="solution" aria-pressed="${c.solution===t.id}"`,`solution ${c.solution===t.id?'selected':''}`)).join('')}</div><div class="comparison-controls">${control(`${icon('play')} 적용 전 ${c.before?'✓':''}`,'before')}${control(`${icon('play')} 적용 후 ${c.after?'✓':''}`,'after',c.solution?'':'disabled')}</div>`;
   }else if(id==='festival'){
@@ -209,6 +238,6 @@ export function runChallenge(id,w,action,data={},sound) {
     }else if(action==='pads'){c.pads=!c.pads;sound.play({kind:'drum',frequency:140,level:c.pads?.07:.4});}
     else return;
     if((c.music??3)<=1&&(c.announcement??1)>=2&&c.pads===true)return finish('필요한 안내도 들리고, 조용히 읽을 수도 있어!');
-    c.message=(c.music??3)>1?'책 읽는 친구를 위해 음악을 작게 조절해 봐.':(c.announcement??1)<2?'안내 방송은 필요한 소리야. 보통 이상으로 들리게 해 줘.':'의자 다리에 패드를 붙여 마찰 소리를 줄여 줘.';
+    c.message=(c.music??3)>1?'책 읽는 친구를 위해 음악을 작게 조절해 봐.':(c.announcement??1)<2?'안내 방송은 필요한 소리야. 보통 이상으로 들리게 해 줘.':'의자 다리에 패드를 붙여 끌 때 나는 소리를 줄여 줘.';
   }
 }
