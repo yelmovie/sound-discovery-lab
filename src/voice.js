@@ -32,7 +32,7 @@ export const voiceLines=Object.fromEntries([
  ['final-core','다섯 발견이 모이면 축제가 시작돼!'],
  ['ending-1','울림도시가 다시 깨어났어!'],
  ['ending-2','소리의 떨림, 크기, 높낮이, 전달을 탐구하고 함께 사는 친구들을 배려하는 방법을 발견했어.']
-].map(([id,text])=>[id,{text,src:`${dir}${id}.mp3`}]));
+].map(([id,text])=>[id,{text,src:`${dir}${/^(welcome$|story-|guide-|restored-)/.test(id)?'el-':''}${id}.mp3`}]));
 export const voiceAssets=Object.values(voiceLines).map(line=>line.src.slice(1));
 const byText=new Map(Object.entries(voiceLines).map(([id,line])=>[line.text,id]));
 /** The voice line whose words match this on-screen text exactly, if there is one. */
@@ -40,16 +40,19 @@ export function voiceFor(text){return byText.get(String(text||'').trim())||null;
 /** Reads the visible request-completion heading before its next-step cue. */
 export function voiceCue(id,requestComplete=false){return requestComplete&&['lesson-done','stage-done'].includes(id)?['quest-done',id]:[id];}
 
-export function createVoice({enabled,quiet=()=>{}}){
+export function createVoice({enabled,quiet=()=>{},onSpeaking=()=>{}}){
  let audio=null,chain=[],ticket=0,timer=null,current=null;
- function release(){if(audio){audio.onended=null;audio.onerror=null;audio.pause();audio.removeAttribute('src');audio.load();audio=null;}}
+ function release(){onSpeaking(null);if(audio){audio.onended=null;audio.onerror=null;audio.pause();audio.removeAttribute('src');audio.load();audio=null;}}
  function stop(){ticket++;clearTimeout(timer);timer=null;chain=[];current=null;release();quiet(false);}
  function next(id){
   const line=voiceLines[id];if(!line)return finish();
   current=id;release();const mine=ticket,clip=new Audio(line.src);audio=clip;clip.preload='auto';
+  const active=()=>mine===ticket&&audio===clip;
+  clip.addEventListener?.('playing',()=>{if(active())onSpeaking(id);});
+  for(const event of ['waiting','pause'])clip.addEventListener?.(event,()=>{if(active())onSpeaking(null);});
   clip.onended=()=>{if(mine===ticket)finish();};
   clip.onerror=()=>{if(mine===ticket)finish();};
-  clip.play().catch(()=>{if(mine===ticket)stop();});
+  clip.play().then(()=>{if(active())onSpeaking(id);}).catch(()=>{if(mine===ticket)stop();});
  }
  function finish(){const id=chain.shift();if(id)next(id);else{current=null;release();quiet(false);}}
  /** Plays ids in order after an optional delay; anything playing stops first. */

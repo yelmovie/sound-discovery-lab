@@ -82,6 +82,8 @@ export function mountMap(canvas,state,onArrive,options={}){
   const events=new AbortController(),signal=events.signal;
   const loading=document.createElement('div');loading.className='map-load-state';loading.setAttribute('role','status');loading.setAttribute('aria-live','polite');viewport.append(loading);
   const bubble=document.createElement('div');bubble.className='companion-bubble map-bubble';bubble.hidden=true;frameElement.append?.(bubble);
+  const talk=document.createElement('button');talk.type='button';talk.className='map-resident-talk';talk.hidden=true;talk.setAttribute('aria-haspopup','dialog');viewport.parentElement?.querySelector('.map-help')?.append(talk);
+  talk.addEventListener('click',()=>{if(chatting)options.onTalk?.(chatting.stage);},{signal});
   const labels=[...(frameElement.querySelectorAll?.('[data-stage].map-location,[data-stage].core-marker')||[])].flatMap(element=>{
     const door=world.doors.find(d=>d.stage===Number(element.dataset.stage));if(!door)return [];
     element.style.left=`${door.label.x/world.width*100}%`;element.style.top=`${door.label.y/world.height*100}%`;
@@ -215,8 +217,8 @@ export function mountMap(canvas,state,onArrive,options={}){
     if(nextNear!==near){near=nextNear;options.onNear?.(near);}
     const friend=world.doors.find(d=>d.stage<5&&done[d.stage]&&distance(position,d.resident)<105)||null;
     if(friend!==chatting){
-      chatting=friend;bubble.hidden=!friend;
-      if(friend){bubble.textContent=options.residentLine?.(friend.stage)||'';options.onFriend?.(friend.stage);bubble.style.left=`${(friend.resident.x+(position.x<friend.resident.x?90:-90))/world.width*100}%`;bubble.style.top=`${(friend.resident.y-46)/world.height*100}%`;}
+      chatting=friend;bubble.hidden=!friend;talk.hidden=!friend;
+      if(friend){bubble.textContent=options.residentLine?.(friend.stage)||'';talk.textContent=options.residentLabel?.(friend.stage)||'주민과 대화하기';bubble.style.left=`${(friend.resident.x+(position.x<friend.resident.x?90:-90))/world.width*100}%`;bubble.style.top=`${(friend.resident.y-46)/world.height*100}%`;}
     }
   }
   function faceMovement(before,after){const dx=after.x-before.x,dy=after.y-before.y;return Math.abs(dx)>Math.abs(dy)?dx<0?'left':'right':dy<0?'up':'down';}
@@ -317,5 +319,5 @@ export function mountMap(canvas,state,onArrive,options={}){
     clearInput();const road=nearestRoad(target,world);if(road&&road.distance<155){goal=canWalk(target,world)?target:{x:road.x,y:road.y};path=[...findRoute(position,road,world).slice(1),goal];destination=null;}
   },{signal});
   updatePause();measure();load();frame=requestAnimationFrame(tick);
-  return {walk,direction,setView,nudge(dir){if(!ready||paused)return;path=[];destination=null;position=walkStep(position,directionVector(new Set([dir])),12,world);},pause(value=true){manualPause=Boolean(value);updatePause();},destroy(){active=false;loadVersion++;if(!leaving)visits.set(state,{...position});cancelAnimationFrame(frame);events.abort();observer.disconnect();resize?.disconnect();loading.remove();bubble.remove();}};
+  return {walk,direction,setView,nudge(dir){if(!ready||paused)return;path=[];destination=null;position=walkStep(position,directionVector(new Set([dir])),12,world);},pause(value=true){manualPause=Boolean(value);updatePause();},destroy(){active=false;loadVersion++;if(!leaving)visits.set(state,{...position});cancelAnimationFrame(frame);events.abort();observer.disconnect();resize?.disconnect();loading.remove();bubble.remove();talk.remove();}};
 }
