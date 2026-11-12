@@ -139,3 +139,10 @@ body:has(.admin-banner) .save-warning{bottom:52px}
 @media (hover:hover) and (pointer:fine){.primary:hover:not(:disabled){background:#ffd181}.secondary:hover:not(:disabled){background:#c6e8e5}.quiet:hover:not(:disabled){background:#eff6e8}.icon-btn:hover:not(:disabled){background:#ffebba}.instrument:hover:not(:disabled){background:#e2f1dc;border-color:#7abfba}}
 
 @media(prefers-reduced-motion:reduce){.pulse::after{animation:none;opacity:0}}
+
+/* Map controls: clear local feedback without moving the layout. */
+[data-map-pad] { min-width:44px; min-height:44px; touch-action:none; user-select:none; -webkit-user-select:none; }
+[data-map-pad] > * { pointer-events:none; }
+[data-map-pad][data-map-held] { filter:brightness(1.15); outline:3px solid #f4bc45; outline-offset:1px; box-shadow:inset 0 0 0 2px #fff8da; }
+[data-map-pad]:focus-visible { outline:3px solid #165fba; outline-offset:3px; }
+[data-map-pad]:disabled { opacity:.5; }

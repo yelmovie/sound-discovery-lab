@@ -288,7 +288,7 @@ export function mountMap(canvas,state,onArrive,options={}){
   }
   const editable=target=>target instanceof Element&&Boolean(target.closest('input,select,textarea,[contenteditable="true"],dialog'));
   document.addEventListener('keydown',event=>{
-    if(!active||!ready||paused||editable(event.target))return;
+    if(!active||!ready||paused||editable(event.target)||event.ctrlKey||event.altKey||event.metaKey)return;
     if(keys[event.code]){event.preventDefault();pressedKeys.add(event.code);path=[];destination=null;}
     else if((event.code==='Enter'||event.code==='Space')&&event.target===canvas){
       const nearest=world.doors.reduce((best,d)=>distance(position,d)<distance(position,best)?d:best,world.doors[0]);
@@ -317,5 +317,5 @@ export function mountMap(canvas,state,onArrive,options={}){
     clearInput();const road=nearestRoad(target,world);if(road&&road.distance<155){goal=canWalk(target,world)?target:{x:road.x,y:road.y};path=[...findRoute(position,road,world).slice(1),goal];destination=null;}
   },{signal});
   updatePause();measure();load();frame=requestAnimationFrame(tick);
-  return {walk,direction,setView,pause(value=true){manualPause=Boolean(value);updatePause();},destroy(){active=false;loadVersion++;if(!leaving)visits.set(state,{...position});cancelAnimationFrame(frame);events.abort();observer.disconnect();resize?.disconnect();loading.remove();bubble.remove();}};
+  return {walk,direction,setView,nudge(dir){if(!ready||paused)return;path=[];destination=null;position=walkStep(position,directionVector(new Set([dir])),12,world);},pause(value=true){manualPause=Boolean(value);updatePause();},destroy(){active=false;loadVersion++;if(!leaving)visits.set(state,{...position});cancelAnimationFrame(frame);events.abort();observer.disconnect();resize?.disconnect();loading.remove();bubble.remove();}};
 }

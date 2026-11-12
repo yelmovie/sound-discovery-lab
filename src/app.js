@@ -1,3 +1,4 @@
+import {bindDirectionPad} from './map-controls.js';
 import { mountNpcGuide } from './npc-guide.js';
 let disposeNpc;
 import { art, rulerIllustration } from './illustrations.js';
@@ -286,8 +287,7 @@ function showConcept(stage,next=null,reward=false){
 }
 
 modalRoot.addEventListener('input',e=>{if(e.target.id==='bgm-volume'){state.settings.bgmVolume=Number(e.target.value);configureSound();save();modalRoot.querySelector('#bgm-value').textContent=e.target.value;}});
-app.addEventListener('pointerdown',e=>{const b=e.target.closest('[data-direction]');if(!b)return;e.preventDefault();b.setPointerCapture(e.pointerId);map?.direction(b.dataset.direction,true);});
-for(const type of ['pointerup','pointercancel','lostpointercapture'])app.addEventListener(type,e=>{const b=e.target.closest('[data-direction]');if(b)map?.direction(b.dataset.direction,false);});
+bindDirectionPad(app,'.map-dpad [data-direction]',b=>b.dataset.direction,{blocked:()=>document.hidden||!!document.querySelector('dialog[open]'),press:d=>map?.direction(d,true),release:d=>map?.direction(d,false),tap:d=>map?.nudge(d)});
 
 app.addEventListener('input',e=>{
  const param=e.target.dataset.challengeParam;if(!param)return;
