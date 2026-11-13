@@ -6,13 +6,14 @@ export const backgrounds = [
   '022_13fc18d100','023_890a4c0418','024_d5aa1da920','025_e972cdea3c','026_f04b11de8f'
 ].map(id => `image/backgrounds/chatgpt_generated_${id}.jpg`);
 export const characters = 'image/characters/chatgpt_generated_028_ee0700142c.jpg';
-export const titleLogo = 'image/branding/title-logo.png';
+export const titleLogo = 'image/branding/title-logo.webp';
+export const titleBackground = 'image/backgrounds/title-city.webp';
 export const props = Object.fromEntries(['core','ring','tuning-fork','fork-stand','drum','mallet','kalimba','tine','transmitter','receiver'].map(name => [name, `image/generated/${name}.png`]));
 export const mapReactionAssets={hero:'image/generated/map-hero-reaction.webp',ally:'image/generated/map-ally-reaction.webp'};
 export const villageAssets = ['image/generated/ullim-village.webp','image/generated/map-villain-poses-left.webp',...Object.values(mapReactionAssets),...['explorer-walk','bird-walk'].map(name => `image/generated/${name}.webp`)];
 import { conceptAssets } from './concepts.js';
 export const interfaceSounds={tap:'click_003',open:'open_001',drop:'place_wood',hint:'select_003',success:'confirmation_002',badge:'restore_chime'};
-export const assets = [...new Set(['media/fonts/NanumSquareNeoTTF-bRg.woff2','media/fonts/NanumSquareNeoTTF-cBd.woff2','media/fonts/NanumSquareNeoTTF-dEb.woff2','media/fonts/NanumSquareNeo-OFL.txt',...voiceAssets,...recordedAudioAssets, ...conceptArtAssets,...backgrounds, characters, titleLogo, ...Object.values(props), ...villageAssets, 'image/generated/pio-guide.svg','image/generated/dialogue/pio.webp',...conceptAssets,...Object.values(interfaceSounds).map(n=>`media/audio/${n}.ogg`),'media/audio/License.txt','media/audio/sources.json','media/concepts/manifest.json'])];
+export const assets = [...new Set(['media/fonts/NanumSquareNeoTTF-bRg.woff2','media/fonts/NanumSquareNeoTTF-cBd.woff2','media/fonts/NanumSquareNeoTTF-dEb.woff2','media/fonts/NanumSquareNeo-OFL.txt',...voiceAssets,...recordedAudioAssets, ...conceptArtAssets,...backgrounds, characters, titleLogo, titleBackground, ...Object.values(props), ...villageAssets, 'image/generated/pio-guide.svg','image/generated/dialogue/pio.webp',...conceptAssets,...Object.values(interfaceSounds).map(n=>`media/audio/${n}.ogg`),'media/audio/License.txt','media/audio/sources.json','media/concepts/manifest.json'])];
 export { APP_VERSION } from './version.js';
 // Curriculum link per facility. Teacher review is still pending, so needsReview stays true until a reviewer signs off.
 export const CURRICULUM_REVIEW = Object.freeze({needsReview:true, source:'2022 개정 과학과 교육과정 3~4학년군 (7) 소리의 성질', reviewer:null, reviewedAt:null});
