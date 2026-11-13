@@ -19,7 +19,7 @@ for (const file of ['sw.js','manifest.webmanifest','image/og/ullim-og.jpg','imag
 await rm(path.join(root,'dist'),{recursive:true,force:true});
 await mkdir(path.join(root,'dist'),{recursive:true});
 const shareAssets=['image/og/ullim-og.jpg','image/icons/icon-192.png','image/icons/icon-512.png'];
-for (const file of ['index.html','src','sw.js','manifest.webmanifest',...shareAssets,...assets]) {
+for (const file of ['index.html','src','sw.js','manifest.webmanifest',...shareAssets,...assets,'assets/map-encounters/map-finale.mp4']) {
   await mkdir(path.dirname(path.join(root,'dist',file)),{recursive:true});
   await cp(path.join(root,file),path.join(root,'dist',file),{recursive:true,filter:source=>!path.basename(source).startsWith('._')});
 }

@@ -112,7 +112,7 @@ export function mountMap(canvas,state,onArrive,options={}){
       loadImage(mapReactionAssets[role],signal).then(image=>{if(active)reactionAtlases[role]=image;}).catch(()=>{});
     }
   }
-  const encounters=mountMapEncounters({host:viewport,controls:viewport.closest('.map-page')?.querySelector('.map-tools')??viewport,stages:state.settings?.admin?[]:mapVillainStages.filter((_,i)=>done[i]),
+  const encounters=mountMapEncounters({requiredFoes:5,host:viewport,controls:viewport.closest('.map-page')?.querySelector('.map-tools')??viewport,clearStage:()=>options.clearStage,stages:state.settings?.admin?[]:mapVillainStages.filter((_,i)=>done[i]),
    progress:state.mapHits,onSave:options.onMapHit,art:{left:new URL('image/generated/map-villain-poses-left.webp',document.baseURI).href,frames:6},
    palette:'#c9a3ff',reach:122,contact:28,tone:options.encounterTone,
    blocked:()=>!ready||!active||paused||view!=='follow'||destination!==null||dragged,

@@ -15,6 +15,7 @@ import { collectReadyEvidence, evidenceMatches, captureStrike } from './progress
 
 const app=document.querySelector('#app'),modalRoot=document.querySelector('#modal-root');
 let storage;try{storage=window.localStorage;}catch{storage={getItem(){throw Error();},setItem(){throw Error();}};}
+let dialogueStage=null;
 const loaded=readState(storage);let state=loaded.state,route=state.lastRoute,warning=loaded.warning;
 const persistence=createSaveSession(storage,loaded);
 let studentState=null;
@@ -294,7 +295,8 @@ function openMap(){
   if(!current())return;
   status.hidden=true;
   try{
-   map=world.mountMap(canvas,state,enterMapStage,{onMapHit:patch=>{state.mapHits={...state.mapHits,...patch};save();},encounterTone:(kind,hits)=>sound.tone({frequency:kind==='finish'?100:kind==='contact'?145:hits===1?245:175,level:.38,duration:kind==='finish'?.18:.09,kind:'ui'}),onView:syncMapView,onNear:syncMapNext,onTravel:syncMapTravel,onLoad:()=>{if(current()){mapFailed=false;status.hidden=true;}},onError:()=>fail(),onStep:()=>sound.tone({frequency:170,level:.5,duration:.06,kind:'ui'}),residentLine:n=>stages[n].restored,residentLabel:n=>stages[n].name+' 주민과 대화하기',onTalk:residentDialogue});
+   const clearStage=dialogueStage;dialogueStage=null;
+   map=world.mountMap(canvas,state,enterMapStage,{clearStage,onMapHit:patch=>{state.mapHits={...state.mapHits,...patch};save();},encounterTone:(kind,hits)=>sound.tone({frequency:kind==='finish'?100:kind==='contact'?145:hits===1?245:175,level:.38,duration:kind==='finish'?.18:.09,kind:'ui'}),onView:syncMapView,onNear:syncMapNext,onTravel:syncMapTravel,onLoad:()=>{if(current()){mapFailed=false;status.hidden=true;}},onError:()=>fail(),onStep:()=>sound.tone({frequency:170,level:.5,duration:.06,kind:'ui'}),residentLine:n=>stages[n].restored,residentLabel:n=>stages[n].name+' 주민과 대화하기',onTalk:residentDialogue});
    const events=new AbortController(),mounted=map,destroy=map.destroy;
    controls.bindDirectionPad(page,'.map-dpad [data-direction]',b=>b.dataset.direction,{signal:events.signal,blocked:()=>document.hidden||!!document.querySelector('dialog[open]'),press:d=>mounted.direction(d,true),release:d=>mounted.direction(d,false),tap:d=>mounted.nudge(d)});
    map.destroy=()=>{events.abort();destroy();};
@@ -448,7 +450,7 @@ async function handleClick(e){void sound.unlock();const b=e.target.closest('butt
   if(a==='solution'){const id=b.dataset.solution;feedback={kind:'hint',text:solutions.find(s=>s.id===id).detail};w.solutions=arr(w.solutions).includes(id)?w.solutions.filter(x=>x!==id):[...arr(w.solutions),id];w.after=false;sound.stop();void sound.effect('drop');}
   if(a==='noise-before'){w.before=true;sound.sequence([0,1,2].map(()=>({kind:'drum',frequency:150,level:.85})));}
   if(a==='noise-after'){if(!arr(w.solutions).length)return showFeedback('해결책을 하나 이상 적용한 다음 들어 봐.','error');w.after=true;w.afterKey=w.solutions.slice().sort().join(',');if(w.solutions.includes('time')){sound.stop();feedback={kind:'success',text:'지금은 독서 시간이어서 조용해. 북 연습은 독서가 끝난 뒤에 해.'};}else sound.sequence([0,1,2].map(()=>({kind:'drum',frequency:150,level:noiseLevel(w)})));}
-  if(a==='submit'){const result=recordEvidence(state,i);save();if(result.ok){feedback=null;updateView();}else showFeedback(result.message,'hint');return;}
+  if(a==='submit'){const wasDone=stageDone(state,i),result=recordEvidence(state,i);save();if(result.ok){if(!wasDone&&stageDone(state,i)&&!state.settings.admin)dialogueStage=i;feedback=null;updateView();}else showFeedback(result.message,'hint');return;}
   finishInteraction(i);
 }
 
