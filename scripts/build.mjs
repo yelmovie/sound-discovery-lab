@@ -23,9 +23,26 @@ for (const file of ['index.html','src','sw.js','manifest.webmanifest',...shareAs
   await mkdir(path.dirname(path.join(root,'dist',file)),{recursive:true});
   await cp(path.join(root,file),path.join(root,'dist',file),{recursive:true,filter:source=>!path.basename(source).startsWith('._')});
 }
-// Precache the code, title, map and interface sounds; lesson art caches as students reach it.
-const sources=(await readdir(path.join(root,'src'))).filter(file=>!file.startsWith("._")&&/\.(js|css)$/.test(file)).map(file=>`/src/${file}`);
-const shell=['/','/index.html','/manifest.webmanifest',...sources,...assets.filter(file=>/^(image\/(branding|generated\/(ullim-village|explorer-walk|bird-walk|pio-guide))|media\/audio\/.*\.(ogg|m4a)$)/.test(file)||file.startsWith('media/fonts/')).map(file=>`/${file}`),...shareAssets.filter(file=>file.includes('icons')).map(file=>`/${file}`),`/${backgrounds[1]}`];
+// Merge the existing sheets in cascade order; their relative paths still resolve from /src.
+const htmlPath=path.join(root,'dist','index.html'),html=await readFile(htmlPath,'utf8');
+const links=[...html.matchAll(/<link rel="stylesheet" href="\.?\/(src\/[^"]+\.css)">/g)];
+const css=(await Promise.all(links.map(([,file])=>readFile(path.join(root,file),'utf8')))).join('\n');
+await writeFile(path.join(root,'dist','src','app.css'),css);
+let built=html.replace(links[0][0],'<link rel="stylesheet" href="/src/app.css">');
+for(const [link] of links.slice(1))built=built.replace(link,'');
+await writeFile(htmlPath,built);
+// Precache only the static startup graph; route code and map art are cached on first use.
+const sources=new Set();
+async function addModule(file){
+ if(sources.has(file))return;
+ sources.add(file);
+ const source=await readFile(path.join(root,file.slice(1)),'utf8');
+ for(const [,specifier] of source.matchAll(/^\s*(?:(?:import|export)\s+[^'";]*?\bfrom\s*|import\s*)['"](\.\.?\/[^'"]+)['"]/gm)){
+  await addModule(path.posix.join(path.posix.dirname(file),specifier));
+ }
+}
+await addModule('/src/app.js');
+const shell=['/','/index.html','/manifest.webmanifest','/src/app.css',...sources,...assets.filter(file=>/^(image\/(branding|generated\/pio-guide)|media\/audio\/.*\.(ogg|m4a)$)/.test(file)||file.startsWith('media/fonts/')).map(file=>`/${file}`),...shareAssets.filter(file=>file.includes('icons')).map(file=>`/${file}`),`/${backgrounds[1]}`];
 const swPath=path.join(root,'dist','sw.js'),sw=await readFile(swPath,'utf8');
 const stamped=sw.replace("const CACHE_VERSION='dev';",`const CACHE_VERSION='${pkg.version}-${Date.now().toString(36)}';`).replace("const APP_SHELL=['/','/index.html','/manifest.webmanifest'];",`const APP_SHELL=${JSON.stringify(shell)};`);
 if(stamped===sw||!stamped.includes(`'${pkg.version}-`))throw new Error('sw.js CACHE_VERSION/APP_SHELL markers not found.');

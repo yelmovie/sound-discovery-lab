@@ -1,5 +1,5 @@
 import { lessons, instruments, lengths, media, legacyIndex } from './data.js';
-import { checkChallenge } from './challenges.js';
+import { checkChallenge } from './challenge-rules.js';
 import { transferSound } from './samples.js';
 
 export const EXPERIMENT_SPEEDS=Object.freeze([.5,1,1.5,2]);

@@ -1,6 +1,6 @@
 import { lessons, instruments, media } from './data.js';
 import { checkLesson } from './model.js';
-import { adjustmentCue } from './challenges.js';
+import { adjustmentCue } from './challenge-rules.js';
 
 const hints = [
  ['두 물체를 번갈아 울리고 떨리는 곳을 관찰해 봐.','소리가 날 때 움직이는 부분을 눈으로 찾아봐.','관찰한 두 물체의 공통점은 떨림이야.'],

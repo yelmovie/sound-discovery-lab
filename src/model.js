@@ -1,5 +1,5 @@
 import { lessons, legacyLessons, legacyIndex, LESSON_COUNT, stageLessons, finalTasks, transferCases, diagnosisFields } from './data.js';
-import { cleanChallenge, checkChallenge } from './challenges.js';
+import { cleanChallenge, checkChallenge } from './challenge-rules.js';
 export const STORAGE_KEY = 'ullim-city-v1';
 export const freshState = () => ({version:2,work:{},restoration:{},evidence:{},settings:{muted:false,admin:false,bgm:true,sfx:true,bgmVolume:25},lastRoute:'home',finalAnswers:{},restored:false,completedAt:null,previousCompletion:null});
 const object = value => value && typeof value === 'object' && !Array.isArray(value);

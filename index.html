@@ -33,5 +33,12 @@
   <link rel="stylesheet" href="/src/scenery-surfaces.css">
 <link rel="stylesheet" href="/src/action-missions.css">
 </head>
-<body><div id="app"></div><div id="modal-root"></div><script type="module" src="/src/app.js"></script></body>
+<body><div id="app"><main class="route-loading" id="startup"><p role="status">울림도시를 여는 중…</p><button class="btn primary" type="button" onclick="location.reload()" hidden>다시 열기</button></main></div><div id="modal-root"></div><script>
+function startupError(){
+ const box=document.getElementById('startup');if(!box)return;
+ box.querySelector('p').textContent='울림도시를 열지 못했어. 다시 열어 볼까?';
+ box.querySelector('button').hidden=false;
+}
+setTimeout(startupError,12000);
+</script><script type="module" src="/src/app.js" onerror="startupError()"></script></body>
 </html>

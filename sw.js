@@ -9,7 +9,7 @@ self.addEventListener('install',event=>{
 self.addEventListener('activate',event=>{
   event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith('ullim-city-')&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()));
 });
-const remember=(request,response)=>{if(response.ok&&response.type==='basic'){const copy=response.clone();void caches.open(CACHE).then(cache=>cache.put(request,copy));}return response;};
+const remember=(event,response)=>{if(response.ok&&response.type==='basic'){const copy=response.clone();event.waitUntil(caches.open(CACHE).then(cache=>cache.put(event.request,copy)).catch(()=>{}));}return response;};
 self.addEventListener('fetch',event=>{
   const request=event.request;
   if(request.method!=='GET'||new URL(request.url).origin!==self.location.origin)return;
@@ -17,9 +17,9 @@ self.addEventListener('fetch',event=>{
   if(request.headers.has('range')||request.destination==='video')return;
   // HTML: network first so a new deploy shows up, cache when offline.
   if(request.mode==='navigate'||request.destination==='document'){
-    event.respondWith(fetch(request).then(response=>remember(request,response)).catch(()=>caches.match(request).then(hit=>hit||caches.match('/index.html'))));
+    event.respondWith(fetch(request).then(response=>remember(event,response)).catch(()=>caches.match(request).then(hit=>hit||caches.match('/index.html'))));
     return;
   }
   // Everything else: cache first. A new CACHE_VERSION replaces the whole cache.
-  event.respondWith(caches.match(request).then(hit=>hit||fetch(request).then(response=>remember(request,response))));
+  event.respondWith(caches.match(request).then(hit=>hit||fetch(request).then(response=>remember(event,response))));
 });

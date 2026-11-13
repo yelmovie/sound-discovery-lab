@@ -308,10 +308,11 @@ export function mountMap(canvas,state,onArrive,options={}){
         const sheet=document.createElement('canvas');sheet.width=birdImage.naturalWidth;sheet.height=birdImage.naturalHeight;
         const paper=sheet.getContext('2d');paper.filter=`hue-rotate(${hue}deg) saturate(1.15)`;paper.drawImage(birdImage,0,0);return {...birdSprite,image:sheet};
       });
-      ready=true;loadedAt=performance.now();loading.hidden=true;measure();paint(loadedAt);
+      ready=true;loadedAt=performance.now();loading.hidden=true;canvas.dataset.ready='true';measure();paint(loadedAt);options.onLoad?.();
       if(destination!==null)startWalk(destination);
     }catch{
       if(!active||version!==loadVersion)return;
+      if(options.onError){loading.hidden=true;clearInput();options.onError();return;}
       loading.replaceChildren(document.createTextNode('마을 그림을 불러오지 못했어. 탐구 기록은 그대로야. '));
       const retry=document.createElement('button');retry.type='button';retry.textContent='다시 불러오기';retry.addEventListener('click',load,{signal});loading.append(retry);
     }
