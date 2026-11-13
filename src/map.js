@@ -113,7 +113,7 @@ export function mountMap(canvas,state,onArrive,options={}){
     }
   }
   const encounters=mountMapEncounters({host:viewport,controls:viewport.closest('.map-page')?.querySelector('.map-tools')??viewport,stages:state.settings?.admin?[]:mapVillainStages.filter((_,i)=>done[i]),
-   progress:state.mapHits,onSave:options.onMapHit,art:{left:new URL('image/generated/map-villain-left.webp',document.baseURI).href,frames:6},
+   progress:state.mapHits,onSave:options.onMapHit,art:{left:new URL('image/generated/map-villain-poses-left.webp',document.baseURI).href,frames:6},
    palette:'#c9a3ff',reach:122,contact:28,tone:options.encounterTone,
    blocked:()=>!ready||!active||paused||view!=='follow'||destination!==null||dragged,
    reduced:()=>reduced.matches});
