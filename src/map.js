@@ -1,6 +1,6 @@
 import {mountMapEncounters} from './map-encounters.js';
 import {mapVillainStages} from './map-villain-content.js';
-import { stages } from './data.js';
+import { stages,mapReactionAssets } from './data.js';
 import { stageDone } from './model.js';
 import {paintSoundBuilding} from './map-renewal.js';
 import { mapLayout,worldMap,distance,nearestRoad,findRoute,walkStep,canWalk,labelNudge,directionVector,returnPosition,createDoorTracker,buildingAt } from './map-world.js';
@@ -61,6 +61,14 @@ function spriteFrames(image,targetHeight){
   return {image,frames,scale:targetHeight/tallest};
 }
 
+// All frames share a transparent 256px cell and a stable foot pivot.
+function paintMapReaction(context,atlas,point,pose,height){
+  if(!pose||atlas?.naturalWidth!==1024||atlas.naturalHeight!==1024)return false;
+  const row=(pose.kind==='hurt'?2:0)+(pose.direction>0?1:0),scale=height/208,size=256*scale;
+  context.drawImage(atlas,pose.frame*256,row*256,256,256,point.x+(pose.dx||0)-size/2,point.y-240*scale,size,size);
+  return true;
+}
+
 export function mountMap(canvas,state,onArrive,options={}){
   const world=worldMap,context=canvas.getContext('2d');
   canvas.width=world.width;canvas.height=world.height;context.imageSmoothingEnabled=false;
@@ -98,6 +106,12 @@ export function mountMap(canvas,state,onArrive,options={}){
   function setDestination(stage){if(destination!==stage){destination=stage;options.onTravel?.(stage);}}
   function stopRoute(){path=[];goal=null;setDestination(null);}
   function clearInput(){pressedKeys.clear();screenDirections.clear();stopRoute();moving=false;lastTime=0;}
+  const reactionAtlases={};
+  if(!state.settings?.admin&&done.some(Boolean)){
+    for(const role of ['hero','ally'])if(mapReactionAssets[role]){
+      loadImage(mapReactionAssets[role],signal).then(image=>{if(active)reactionAtlases[role]=image;}).catch(()=>{});
+    }
+  }
   const encounters=mountMapEncounters({host:viewport,controls:viewport.closest('.map-page')?.querySelector('.map-tools')??viewport,stages:state.settings?.admin?[]:mapVillainStages.filter((_,i)=>done[i]),
    progress:state.mapHits,onSave:options.onMapHit,art:{left:new URL('image/generated/map-villain-left.webp',document.baseURI).href,frames:6},
    palette:'#c9a3ff',reach:122,contact:28,tone:options.encounterTone,
@@ -256,9 +270,10 @@ export function mountMap(canvas,state,onArrive,options={}){
     if(goal&&path.length){context.strokeStyle='#fff5b1';context.lineWidth=4;context.setLineDash([6,6]);context.beginPath();context.ellipse(goal.x,goal.y,20,9,0,0,Math.PI*2);context.stroke();context.setLineDash([]);}
     const residents=world.doors.flatMap(door=>door.stage<5&&done[door.stage]?[{p:{x:door.resident.x,y:door.resident.y-(reduced.matches?0:Math.abs(Math.sin(t/480+door.stage))*5)},sprite:residentSprites[door.stage],direction:'down',resident:true}]:[]);
     const poses=updateEncounters();
-    const characters=[...residents,{p:position,sprite:explorerSprite,direction:facing,pose:poses.hero},{p:bird,sprite:birdSprite,direction:birdFacing,pose:poses.ally}];
+    const characters=[...residents,{p:position,sprite:explorerSprite,direction:facing,pose:poses.hero,atlas:reactionAtlases.hero,height:83},{p:bird,sprite:birdSprite,direction:birdFacing,pose:poses.ally,atlas:reactionAtlases.ally,height:40}];
     characters.sort((a,b)=>a.p.y-b.p.y).forEach(actor=>{context.save();
-      const pose=actor.pose,p=pose?{x:actor.p.x+pose.dx,y:actor.p.y}:actor.p;
+      const pose=actor.pose;if(paintMapReaction(context,actor.atlas,actor.p,pose,actor.height)){context.restore();return;}
+      const p=pose?{x:actor.p.x+pose.dx,y:actor.p.y}:actor.p;
       if(pose)context.filter=pose.kind==='hurt'?'sepia(.35) saturate(1.6)':'brightness(1.18)';
       paintSprite(actor.sprite,p,pose?(pose.direction<0?'left':'right'):actor.direction,pose?pose.frame*120:actor.resident?t*.5:walkClock,Boolean(pose)||actor.resident||moving,!actor.resident);context.restore();});
     paintDusk(t);paintBeacon(t);

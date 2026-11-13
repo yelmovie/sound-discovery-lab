@@ -8,7 +8,8 @@ export const backgrounds = [
 export const characters = 'image/characters/chatgpt_generated_028_ee0700142c.jpg';
 export const titleLogo = 'image/branding/title-logo.png';
 export const props = Object.fromEntries(['core','ring','tuning-fork','fork-stand','drum','mallet','kalimba','tine','transmitter','receiver'].map(name => [name, `image/generated/${name}.png`]));
-export const villageAssets = ['image/generated/ullim-village.webp','image/generated/map-villain-left.webp',...['explorer-walk','bird-walk'].map(name => `image/generated/${name}.webp`)];
+export const mapReactionAssets={hero:'image/generated/map-hero-reaction.webp',ally:'image/generated/map-ally-reaction.webp'};
+export const villageAssets = ['image/generated/ullim-village.webp','image/generated/map-villain-left.webp',...Object.values(mapReactionAssets),...['explorer-walk','bird-walk'].map(name => `image/generated/${name}.webp`)];
 import { conceptAssets } from './concepts.js';
 export const interfaceSounds={tap:'click_003',open:'open_001',drop:'place_wood',hint:'select_003',success:'confirmation_002',badge:'restore_chime'};
 export const assets = [...new Set(['media/fonts/NanumSquareNeoTTF-bRg.woff2','media/fonts/NanumSquareNeoTTF-cBd.woff2','media/fonts/NanumSquareNeoTTF-dEb.woff2','media/fonts/NanumSquareNeo-OFL.txt',...voiceAssets,...recordedAudioAssets, ...conceptArtAssets,...backgrounds, characters, titleLogo, ...Object.values(props), ...villageAssets, 'image/generated/pio-guide.svg','image/generated/dialogue/pio.webp',...conceptAssets,...Object.values(interfaceSounds).map(n=>`media/audio/${n}.ogg`),'media/audio/License.txt','media/audio/sources.json','media/concepts/manifest.json'])];
