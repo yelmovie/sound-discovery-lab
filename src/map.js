@@ -1,3 +1,5 @@
+import {mountMapEncounters} from './map-encounters.js';
+import {mapVillainStages} from './map-villain-content.js';
 import { stages } from './data.js';
 import { stageDone } from './model.js';
 import {paintSoundBuilding} from './map-renewal.js';
@@ -96,9 +98,18 @@ export function mountMap(canvas,state,onArrive,options={}){
   function setDestination(stage){if(destination!==stage){destination=stage;options.onTravel?.(stage);}}
   function stopRoute(){path=[];goal=null;setDestination(null);}
   function clearInput(){pressedKeys.clear();screenDirections.clear();stopRoute();moving=false;lastTime=0;}
+  const encounters=mountMapEncounters({host:viewport,controls:viewport.closest('.map-page')?.querySelector('.map-tools')??viewport,stages:state.settings?.admin?[]:mapVillainStages.filter((_,i)=>done[i]),
+   progress:state.mapHits,onSave:options.onMapHit,art:{left:new URL('image/generated/map-villain-left.webp',document.baseURI).href,frames:6},
+   palette:'#c9a3ff',reach:122,contact:28,tone:options.encounterTone,
+   blocked:()=>!ready||!active||paused||view!=='follow'||destination!==null||dragged,
+   reduced:()=>reduced.matches});
+  function updateEncounters(){
+   const sx=worldWidth*zoom/world.width,sy=worldHeight*zoom/world.height;
+   return encounters.update({hero:position,ally:bird,scale:sx,project:p=>({x:camera.x+p.x*sx,y:camera.y+p.y*sy})});
+  }
   function updatePause(){
     const next=manualPause||document.hidden||Boolean(canvas.closest('[inert]'))||Boolean(document.querySelector('dialog[open]'));
-    if(next&&!paused){clearInput();cancelGesture();}paused=next;
+    if(next&&!paused){clearInput();cancelGesture();}paused=next;if(next)updateEncounters();
   }
   const observer=new MutationObserver(updatePause);
   observer.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['open','inert']});
@@ -244,8 +255,12 @@ export function mountMap(canvas,state,onArrive,options={}){
     if(path.length){context.strokeStyle='rgba(255,244,182,.8)';context.lineWidth=5;context.setLineDash([8,12]);context.beginPath();context.moveTo(position.x,position.y);path.forEach(p=>context.lineTo(p.x,p.y));context.stroke();context.setLineDash([]);}
     if(goal&&path.length){context.strokeStyle='#fff5b1';context.lineWidth=4;context.setLineDash([6,6]);context.beginPath();context.ellipse(goal.x,goal.y,20,9,0,0,Math.PI*2);context.stroke();context.setLineDash([]);}
     const residents=world.doors.flatMap(door=>door.stage<5&&done[door.stage]?[{p:{x:door.resident.x,y:door.resident.y-(reduced.matches?0:Math.abs(Math.sin(t/480+door.stage))*5)},sprite:residentSprites[door.stage],direction:'down',resident:true}]:[]);
-    const characters=[...residents,{p:position,sprite:explorerSprite,direction:facing},{p:bird,sprite:birdSprite,direction:birdFacing}];
-    characters.sort((a,b)=>a.p.y-b.p.y).forEach(actor=>{context.save();paintSprite(actor.sprite,actor.p,actor.direction,actor.resident?t*.5:walkClock,actor.resident?true:moving);context.restore();});
+    const poses=updateEncounters();
+    const characters=[...residents,{p:position,sprite:explorerSprite,direction:facing,pose:poses.hero},{p:bird,sprite:birdSprite,direction:birdFacing,pose:poses.ally}];
+    characters.sort((a,b)=>a.p.y-b.p.y).forEach(actor=>{context.save();
+      const pose=actor.pose,p=pose?{x:actor.p.x+pose.dx,y:actor.p.y}:actor.p;
+      if(pose)context.filter=pose.kind==='hurt'?'sepia(.35) saturate(1.6)':'brightness(1.18)';
+      paintSprite(actor.sprite,p,pose?(pose.direction<0?'left':'right'):actor.direction,pose?pose.frame*120:actor.resident?t*.5:walkClock,Boolean(pose)||actor.resident||moving,!actor.resident);context.restore();});
     paintDusk(t);paintBeacon(t);
     if(!reduced.matches&&t-loadedAt<4000)for(const {route,lengths,total} of restorationRoutes)for(let spark=0;spark<4;spark++){
       let offset=((t-loadedAt-spark*150)/3000)*total;if(offset<0||offset>total)continue;
@@ -335,7 +350,7 @@ export function mountMap(canvas,state,onArrive,options={}){
   }
   const editable=target=>target instanceof Element&&Boolean(target.closest('input,select,textarea,[contenteditable="true"],dialog'));
   document.addEventListener('keydown',event=>{
-    if(!active||!ready||paused||editable(event.target)||event.ctrlKey||event.altKey||event.metaKey)return;
+    if(event.defaultPrevented||!active||!ready||paused||editable(event.target)||event.ctrlKey||event.altKey||event.metaKey)return;
     if(keys[event.code]){event.preventDefault();resumeFollow();pressedKeys.add(event.code);stopRoute();}
     else if((event.code==='Enter'||event.code==='Space')&&event.target===canvas){
       const nearest=world.doors.reduce((best,d)=>distance(position,d)<distance(position,best)?d:best,world.doors[0]);
@@ -374,5 +389,5 @@ export function mountMap(canvas,state,onArrive,options={}){
     clearInput();const road=nearestRoad(target,world);if(road&&road.distance<155){goal=canWalk(target,world)?target:{x:road.x,y:road.y};path=[...findRoute(position,road,world).slice(1),goal];}
   },{signal});
   updatePause();measure();load();frame=requestAnimationFrame(tick);
-  return {walk,direction,setView,browse(next){clearInput();cancelGesture();setView(next,next==='follow'&&view==='overview');updateNearby();},nudge(dir){if(!ready||paused)return;resumeFollow();stopRoute();position=walkStep(position,directionVector(new Set([dir])),12,world);},pause(value=true){manualPause=Boolean(value);updatePause();},destroy(){active=false;loadVersion++;if(!leaving)visits.set(state,{...position});cancelAnimationFrame(frame);events.abort();observer.disconnect();resize?.disconnect();loading.remove();bubble.remove();talk.remove();}};
+  return {walk,direction,setView,browse(next){clearInput();cancelGesture();setView(next,next==='follow'&&view==='overview');updateNearby();},nudge(dir){if(!ready||paused)return;resumeFollow();stopRoute();position=walkStep(position,directionVector(new Set([dir])),12,world);},pause(value=true){manualPause=Boolean(value);updatePause();},destroy(){active=false;encounters.destroy();loadVersion++;if(!leaving)visits.set(state,{...position});cancelAnimationFrame(frame);events.abort();observer.disconnect();resize?.disconnect();loading.remove();bubble.remove();talk.remove();}};
 }

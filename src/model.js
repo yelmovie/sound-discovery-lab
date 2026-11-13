@@ -1,7 +1,8 @@
+import {normalizeMapHits} from './map-encounters.js';
 import { lessons, legacyLessons, legacyIndex, LESSON_COUNT, stageLessons, finalTasks, transferCases, diagnosisFields } from './data.js';
 import { cleanChallenge, checkChallenge } from './challenge-rules.js';
 export const STORAGE_KEY = 'ullim-city-v1';
-export const freshState = () => ({version:2,work:{},restoration:{},evidence:{},settings:{muted:false,admin:false,bgm:true,sfx:true,bgmVolume:25},lastRoute:'home',finalAnswers:{},restored:false,completedAt:null,previousCompletion:null});
+export const freshState = () => ({version:2,work:{},restoration:{},evidence:{},mapHits:{},settings:{muted:false,admin:false,bgm:true,sfx:true,bgmVolume:25},lastRoute:'home',finalAnswers:{},restored:false,completedAt:null,previousCompletion:null});
 const object = value => value && typeof value === 'object' && !Array.isArray(value);
 function cleanWork(raw) {
   if (!object(raw)) return {};
@@ -43,6 +44,7 @@ export function normalize(raw) {
   base.restored = raw.restored===true && evidenceCount(base)===LESSON_COUNT && checkFinal(base).ok;
   base.completedAt = base.restored && typeof raw.completedAt==='string' && Number.isFinite(Date.parse(raw.completedAt)) ? raw.completedAt : null;
   if(!base.completedAt)base.restored=false;
+  base.mapHits=normalizeMapHits(raw.mapHits,Array.from({length:5},(_,i)=>i).filter(i=>stageDone(base,i)).map(String));
   base.restoration=Object.fromEntries(Array.from({length:5},(_,n)=>[n,stageDone(base,n)&&Array.isArray(raw.restoration?.[n])?[...new Set(raw.restoration[n].filter(i=>[0,1,2].includes(i)))]:[]]));
   base.lastRoute = typeof raw.lastRoute==='string' && canRoute(base,raw.lastRoute) ? raw.lastRoute : 'home';
   return base;
