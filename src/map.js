@@ -1,9 +1,10 @@
 import { stages } from './data.js';
 import { stageDone } from './model.js';
+import {paintSoundBuilding} from './map-renewal.js';
 import { mapLayout,worldMap,distance,nearestRoad,findRoute,walkStep,canWalk,labelNudge,directionVector,returnPosition,createDoorTracker,buildingAt } from './map-world.js';
 
 const visits=new WeakMap();
-let seenDone=null;
+const seenDone=new WeakMap();
 const keys={ArrowUp:'up',KeyW:'up',ArrowDown:'down',KeyS:'down',ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right'};
 const rowFor={down:0,left:1,right:2,up:3};
 const clamp=(v,min,max)=>Math.min(max,Math.max(min,v));
@@ -66,16 +67,19 @@ export function mountMap(canvas,state,onArrive,options={}){
   const companionButton=frameElement.querySelector?.('.map-companion');
   const reduced=matchMedia('(prefers-reduced-motion: reduce)');
   const done=Array.from({length:5},(_,i)=>stageDone(state,i));
-  const newLights=seenDone?done.flatMap((yes,i)=>yes&&!seenDone[i]?[i]:[]):[];seenDone=done;
+  const previous=seenDone.get(state),completion=[...done,Boolean(state.restored)];
+  const newLights=previous?completion.flatMap((yes,i)=>yes&&!previous[i]?[i]:[]):[];
+  seenDone.set(state,completion);
   const nextStage=done.findIndex(yes=>!yes),targetStage=nextStage<0?5:nextStage;
   let position={...(visits.get(state)||world.spawn)},bird={x:position.x-38,y:position.y+12};
   let path=[],destination=null,goal=null,near=null,chatting=null,stepCount=0,frame=0,lastTime=0,active=true,ready=false,paused=false,manualPause=false,leaving=false;
   let facing='down',birdFacing='down',walkClock=0,moving=false,trail=[{...position}],travel=0;
-  let scene,explorerSprite,birdSprite,residentSprites=[],loadedAt=0,loadVersion=0,arrivalBlocked=false;
+  let scene,beforeScene,explorerSprite,birdSprite,residentSprites=[],loadedAt=0,loadVersion=0,arrivalBlocked=false;
   let viewWidth=1,viewHeight=1,worldWidth=1,worldHeight=1,camera={x:0,y:0};
   // follow: the camera stays on the explorer. hand: dragging pans freely. overview: the whole town fits.
   // Walking always returns to follow, so a child can never lose the explorer.
-  let view='follow',zoom=1,fitZoom=1,free=null,grab=null,dragged=false,safe={top:0,bottom:0};
+  let view='follow',zoom=1,handZoom=1,fitZoom=1,free=null,beforeOverview=null,grab=null,pinch=null,dragged=false,safe={top:0,bottom:0};
+  const pointers=new Map();
   const fog=document.createElement('canvas'),fogBase=document.createElement('canvas');fog.width=fogBase.width=Math.ceil(world.width*fogScale);fog.height=fogBase.height=Math.ceil(world.height*fogScale);
   const fogContext=fog.getContext('2d'),fogBaseContext=fogBase.getContext('2d');let fogKey='';
   const pressedKeys=new Set(),screenDirections=new Set(),entered=createDoorTracker(position,world);
@@ -89,18 +93,21 @@ export function mountMap(canvas,state,onArrive,options={}){
     element.style.left=`${door.label.x/world.width*100}%`;element.style.top=`${door.label.y/world.height*100}%`;
     return [{element,x:door.label.x/world.width,y:door.label.y/world.height,width:0,height:0,offset:''}];
   });
-  function clearInput(){pressedKeys.clear();screenDirections.clear();path=[];destination=null;goal=null;moving=false;lastTime=0;}
+  function setDestination(stage){if(destination!==stage){destination=stage;options.onTravel?.(stage);}}
+  function stopRoute(){path=[];goal=null;setDestination(null);}
+  function clearInput(){pressedKeys.clear();screenDirections.clear();stopRoute();moving=false;lastTime=0;}
   function updatePause(){
     const next=manualPause||document.hidden||Boolean(canvas.closest('[inert]'))||Boolean(document.querySelector('dialog[open]'));
-    if(next&&!paused)clearInput();paused=next;
+    if(next&&!paused){clearInput();cancelGesture();}paused=next;
   }
   const observer=new MutationObserver(updatePause);
   observer.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['open','inert']});
-  document.addEventListener('visibilitychange',updatePause,{signal});window.addEventListener('blur',clearInput,{signal});
+  document.addEventListener('visibilitychange',updatePause,{signal});window.addEventListener('blur',()=>{clearInput();cancelGesture();},{signal});
   function measure(){
     viewWidth=viewport.clientWidth||canvas.clientWidth;viewHeight=viewport.clientHeight||canvas.clientHeight;
     worldWidth=frameElement.clientWidth||viewWidth;worldHeight=frameElement.clientHeight||viewHeight;
     fitZoom=Math.min(1,viewWidth/worldWidth,viewHeight/worldHeight);
+    handZoom=clamp(handZoom,fitZoom,1.85);
     const page=viewport.parentElement,help=page?.querySelector?.('.map-help'),controls=page?.querySelector?.('.map-controls'),box=viewport.getBoundingClientRect?.();
     safe={top:help&&box?help.getBoundingClientRect().bottom-box.top+8:8,bottom:controls&&box?controls.getBoundingClientRect().top-box.top-8:viewHeight-8};
     for(const label of labels){label.width=label.element.offsetWidth;label.height=label.element.offsetHeight;}
@@ -118,20 +125,42 @@ export function mountMap(canvas,state,onArrive,options={}){
   }
   function followCamera(immediate=false,dt=.016){
     if(frameElement===canvas)return;
-    const smooth=immediate||reduced.matches?1:1-Math.exp(-dt*(view==='overview'?5:8)),wanted=view==='overview'?fitZoom:1;
+    const smooth=immediate||reduced.matches||view==='hand'?1:1-Math.exp(-dt*(view==='overview'?5:8)),wanted=view==='overview'?fitZoom:view==='hand'?handZoom:1;
     zoom+=(wanted-zoom)*smooth;if(Math.abs(wanted-zoom)<.002)zoom=wanted;
     const width=worldWidth*zoom,height=worldHeight*zoom,axis=(size,span,at)=>span<=size?(size-span)/2:clamp(at,size-span,0);
-    const x=axis(viewWidth,width,free?free.x:viewWidth*.5-position.x/world.width*width),y=axis(viewHeight,height,free?free.y:viewHeight*.55-position.y/world.height*height),blend=free?1:smooth;
+    const focus=view==='overview'?{x:.5,y:.5}:free??{x:position.x/world.width,y:position.y/world.height};
+    const x=axis(viewWidth,width,viewWidth*.5-focus.x*width),y=axis(viewHeight,height,viewHeight*(view==='follow'?.55:.5)-focus.y*height),blend=free?1:smooth;
     camera.x+=(x-camera.x)*blend;camera.y+=(y-camera.y)*blend;
     frameElement.style.transform=`translate3d(${camera.x.toFixed(2)}px,${camera.y.toFixed(2)}px,0) scale(${zoom.toFixed(4)})`;
     frameElement.style.setProperty('--map-unscale',(1/zoom).toFixed(4));
-    if(companionButton){companionButton.style.left=`${bird.x/world.width*100}%`;companionButton.style.top=`${(bird.y+8)/world.height*100}%`;}
+    if(companionButton){const bx=bird.x/world.width,by=(bird.y+8)/world.height,sx=camera.x+bx*width,sy=camera.y+by*height;
+      companionButton.hidden=!ready||view==='overview'||sx<22||sx>viewWidth-22||sy<44||sy>viewHeight;
+      companionButton.style.left=`${bx*100}%`;companionButton.style.top=`${by*100}%`;
+    }
     placeLabels();
   }
-  function setView(next){
+  function screenWorld(x,y){return {x:(x-camera.x)/(worldWidth*zoom),y:(y-camera.y)/(worldHeight*zoom)};}
+  function setView(next,restore=false){
     if(view===next)return;
-    view=next;free=null;grab=null;viewport.classList.toggle('hand-on',view==='hand');viewport.classList.remove('grabbing');options.onView?.(view);
+    const previousView=view,center=screenWorld(viewWidth/2,viewHeight/2),saved=beforeOverview;
+    if(next==='overview')beforeOverview={view,free:free??center,zoom:handZoom};
+    if(previousView==='overview'){
+      if(restore&&saved)next=saved.view;
+      beforeOverview=null;
+    }
+    view=next;free=view==='hand'?(restore&&saved?saved.free:center):null;
+    handZoom=view==='hand'?clamp(restore&&saved?saved.zoom:zoom,fitZoom,1.85):1;
+    grab=null;viewport.classList.toggle('hand-on',view==='hand');viewport.classList.remove('grabbing');options.onView?.(view);
+    if(view==='hand')followCamera(true);
   }
+  function pointerLocal(event){const r=viewport.getBoundingClientRect();return {x:event.clientX-r.left,y:event.clientY-r.top};}
+  function pinched(){const [a,b]=pointers.values();return {x:(a.x+b.x)/2,y:(a.y+b.y)/2,gap:Math.max(1,Math.hypot(a.x-b.x,a.y-b.y))};}
+  function setHandZoom(value,point,at){handZoom=clamp(value,fitZoom,1.85);free={x:point.x-(at.x-viewWidth*.5)/(worldWidth*handZoom),y:point.y-(at.y-viewHeight*.5)/(worldHeight*handZoom)};followCamera(true);}
+  function beginHand(){clearInput();setView('hand');}
+  function cancelGesture(){pointers.clear();grab=null;pinch=null;viewport.classList.remove('grabbing');}
+  function resumeFollow(){cancelGesture();setView('follow');}
+  function capture(pointer){try{viewport.setPointerCapture(pointer);}catch{}}
+
   function glow(ctx,p,radius=29,strength=.8){
     const glow=ctx.createRadialGradient(p.x,p.y,1,p.x,p.y,radius);glow.addColorStop(0,`rgba(255,231,128,${strength})`);glow.addColorStop(1,'rgba(255,212,102,0)');
     ctx.fillStyle=glow;ctx.beginPath();ctx.arc(p.x,p.y,radius,0,Math.PI*2);ctx.fill();
@@ -152,7 +181,16 @@ export function mountMap(canvas,state,onArrive,options={}){
   function buildScene(image){
     scene=document.createElement('canvas');scene.width=world.width;scene.height=world.height;
     const back=scene.getContext('2d');back.imageSmoothingEnabled=false;back.drawImage(image,0,0,world.width,world.height);paintStones(back);
-    world.doors.forEach(door=>{if(door.stage===5?state.restored:done[door.stage])door.lights.forEach(p=>glow(back,p,door.stage===5?105:38,.7));});
+    if(newLights.length&&!reduced.matches){beforeScene=document.createElement('canvas');beforeScene.width=world.width;beforeScene.height=world.height;beforeScene.getContext('2d').drawImage(scene,0,0);}
+    function draw(c,reveal){
+      world.doors.forEach(door=>{
+        const restored=completion[door.stage]&&(reveal||!newLights.includes(door.stage));
+        paintSoundBuilding(c,image,world,door.stage,restored);
+        if(restored)door.lights.forEach(p=>glow(c,p,door.stage===5?105:38,.7));
+      });
+    }
+    draw(back,true);
+    if(beforeScene)draw(beforeScene.getContext('2d'),false);
   }
   function clearAround(target,p,radius){
     const light=target.createRadialGradient(p.x,p.y,radius*.25,p.x,p.y,radius);
@@ -161,7 +199,7 @@ export function mountMap(canvas,state,onArrive,options={}){
   }
   // Each restored facility lifts the dusk a step; the explorer always carries a pool of light.
   function paintDusk(t){
-    const reveal=newLights.length&&!reduced.matches?clamp((t-loadedAt)/2000,0,1):1,level=done.filter(Boolean).length-newLights.length*(1-reveal),darkness=.44*(1-level/5);
+    const reveal=newLights.length&&!reduced.matches?clamp((t-loadedAt)/2000,0,1):1,level=done.filter(Boolean).length-newLights.filter(i=>i<5).length*(1-reveal),darkness=.44*(1-level/5);
     if(darkness<.005)return;
     const key=`${darkness.toFixed(3)}|${reveal.toFixed(2)}`;
     if(key!==fogKey){
@@ -194,12 +232,15 @@ export function mountMap(canvas,state,onArrive,options={}){
     context.fillStyle='rgba(38,53,49,.25)';context.beginPath();context.ellipse(p.x,p.y+2,w*.28,7,0,0,Math.PI*2);context.fill();
     context.drawImage(sprite.image,cell.x,cell.y,cell.width,cell.height,Math.round(p.x-w/2),Math.round(p.y-h),Math.round(w),Math.round(h));
   }
-  const restorationRoutes=newLights.map(stage=>{
+  const restorationRoutes=newLights.filter(stage=>stage<5).map(stage=>{
     const route=findRoute(world.doors[stage],world.doors[5],world),lengths=route.slice(1).map((p,i)=>distance(route[i],p));
     return {route,lengths,total:lengths.reduce((a,b)=>a+b,0)};
   });
   function paint(t){
     if(!scene)return;context.drawImage(scene,0,0);
+    if(beforeScene&&!reduced.matches&&t-loadedAt<1100){
+      context.save();context.globalAlpha=1-clamp((t-loadedAt)/1100,0,1);context.drawImage(beforeScene,0,0);context.restore();
+    }else if(beforeScene)beforeScene=null;
     if(path.length){context.strokeStyle='rgba(255,244,182,.8)';context.lineWidth=5;context.setLineDash([8,12]);context.beginPath();context.moveTo(position.x,position.y);path.forEach(p=>context.lineTo(p.x,p.y));context.stroke();context.setLineDash([]);}
     if(goal&&path.length){context.strokeStyle='#fff5b1';context.lineWidth=4;context.setLineDash([6,6]);context.beginPath();context.ellipse(goal.x,goal.y,20,9,0,0,Math.PI*2);context.stroke();context.setLineDash([]);}
     const residents=world.doors.flatMap(door=>door.stage<5&&done[door.stage]?[{p:{x:door.resident.x,y:door.resident.y-(reduced.matches?0:Math.abs(Math.sin(t/480+door.stage))*5)},sprite:residentSprites[door.stage],direction:'down',resident:true}]:[]);
@@ -211,11 +252,11 @@ export function mountMap(canvas,state,onArrive,options={}){
       for(let i=0;i<lengths.length;i++){if(offset<=lengths[i]){const a=route[i],b=route[i+1],n=offset/lengths[i];glow(context,{x:a.x+(b.x-a.x)*n,y:a.y+(b.y-a.y)*n},18,.9);break;}offset-=lengths[i];}
     }
   }
-  // The action button and resident lines react to whatever the explorer is standing next to.
+  // Offer a resident only when the explorer stops nearby and the facility is restored.
   function updateNearby(){
     const door=world.doors.filter(d=>distance(position,d)<90).sort((a,b)=>distance(position,a)-distance(position,b))[0],nextNear=door?door.stage:null;
     if(nextNear!==near){near=nextNear;options.onNear?.(near);}
-    const friend=world.doors.find(d=>d.stage<5&&done[d.stage]&&distance(position,d.resident)<105)||null;
+    const friend=destination===null&&view!=='overview'&&!moving?world.doors.find(d=>d.stage<5&&done[d.stage]&&distance(position,d.resident)<105)||null:null;
     if(friend!==chatting){
       chatting=friend;bubble.hidden=!friend;talk.hidden=!friend;
       if(friend){bubble.textContent=options.residentLine?.(friend.stage)||'';talk.textContent=options.residentLabel?.(friend.stage)||'주민과 대화하기';bubble.style.left=`${(friend.resident.x+(position.x<friend.resident.x?90:-90))/world.width*100}%`;bubble.style.top=`${(friend.resident.y-46)/world.height*100}%`;}
@@ -241,7 +282,7 @@ export function mountMap(canvas,state,onArrive,options={}){
     if(ready&&!paused){
       const before={...position},directions=new Set([...pressedKeys].map(code=>keys[code]).concat([...screenDirections])),intent=directionVector(directions);
       if(intent.x||intent.y||path.length)setView('follow');
-      if(intent.x||intent.y){path=[];destination=null;position=walkStep(position,intent,dt*205,world);}
+      if(intent.x||intent.y){stopRoute();position=walkStep(position,intent,dt*205,world);}
       else if(path.length){let remaining=dt*205;while(path.length&&remaining>0){const target=path[0],d=distance(position,target);if(d<=remaining){position={...target};path.shift();remaining-=d;}else{position={x:position.x+(target.x-position.x)/d*remaining,y:position.y+(target.y-position.y)/d*remaining};remaining=0;}}}
       moving=distance(before,position)>.01;if(!path.length)goal=null;
       if(moving){
@@ -251,7 +292,7 @@ export function mountMap(canvas,state,onArrive,options={}){
       updateNearby();
       const arrivals=entered(position),requested=destination;
       if(arrivals.length&&(requested===null||arrivals.includes(requested))){arrive(requested??arrivals[0]);if(!active)return;}
-      else if(!path.length&&requested!==null){destination=null;arrive(requested);if(!active)return;}
+      else if(!path.length&&requested!==null){arrive(requested);if(!active)return;}
       followCamera(false,dt);paint(t);
     }
     frame=requestAnimationFrame(tick);
@@ -268,7 +309,7 @@ export function mountMap(canvas,state,onArrive,options={}){
         const paper=sheet.getContext('2d');paper.filter=`hue-rotate(${hue}deg) saturate(1.15)`;paper.drawImage(birdImage,0,0);return {...birdSprite,image:sheet};
       });
       ready=true;loadedAt=performance.now();loading.hidden=true;measure();paint(loadedAt);
-      if(destination!==null)walk(destination);
+      if(destination!==null)startWalk(destination);
     }catch{
       if(!active||version!==loadVersion)return;
       loading.replaceChildren(document.createTextNode('마을 그림을 불러오지 못했어. 탐구 기록은 그대로야. '));
@@ -276,22 +317,25 @@ export function mountMap(canvas,state,onArrive,options={}){
     }
   }
   function walk(stage){
-    if(paused||!Number.isInteger(stage)||stage<0||stage>5)return false;
-    // Keep an early destination click while the map art finishes loading.
-    if(!ready){destination=stage;return true;}
-    clearInput();const door=world.doors[stage];
-    if(distance(position,door)<=door.radius||reduced.matches){position={x:door.x,y:door.y};entered(position);paint(performance.now());followCamera(true);arrive(stage);return true;}
-    path=findRoute(position,door,world).slice(1);destination=stage;goal={x:door.x,y:door.y};return path.length>0;
+    if(paused||!Number.isInteger(stage)||stage<0||stage>5||destination===stage)return false;
+    clearInput();setDestination(stage);
+    if(ready)startWalk(stage);return true;
+  }
+  function startWalk(stage){
+    resumeFollow();
+    const door=world.doors[stage];
+    if(distance(position,door)<=door.radius||reduced.matches){position={x:door.x,y:door.y};entered(position);paint(performance.now());followCamera(true);arrive(stage);return;}
+    path=findRoute(position,door,world).slice(1);goal={x:door.x,y:door.y};
   }
   function direction(dir,isPressed){
     if(!(dir in rowFor))return;
     if(!isPressed){screenDirections.delete(dir);return;}
-    if(!ready||paused)return;screenDirections.add(dir);path=[];destination=null;
+    if(!ready||paused)return;resumeFollow();screenDirections.add(dir);stopRoute();
   }
   const editable=target=>target instanceof Element&&Boolean(target.closest('input,select,textarea,[contenteditable="true"],dialog'));
   document.addEventListener('keydown',event=>{
     if(!active||!ready||paused||editable(event.target)||event.ctrlKey||event.altKey||event.metaKey)return;
-    if(keys[event.code]){event.preventDefault();pressedKeys.add(event.code);path=[];destination=null;}
+    if(keys[event.code]){event.preventDefault();resumeFollow();pressedKeys.add(event.code);stopRoute();}
     else if((event.code==='Enter'||event.code==='Space')&&event.target===canvas){
       const nearest=world.doors.reduce((best,d)=>distance(position,d)<distance(position,best)?d:best,world.doors[0]);
       if(distance(position,nearest)<85){event.preventDefault();walk(nearest.stage);}
@@ -299,25 +343,35 @@ export function mountMap(canvas,state,onArrive,options={}){
   },{signal});
   document.addEventListener('keyup',event=>{if(keys[event.code]){pressedKeys.delete(event.code);event.preventDefault();}},{signal});
   viewport.addEventListener('pointerdown',event=>{
-    if(view!=='hand'||!ready||paused||event.button!==0)return;
-    grab={id:event.pointerId,x:event.clientX,y:event.clientY,ox:camera.x,oy:camera.y};dragged=false;
+    if(!ready||paused||event.button!==0||event.target.closest('button'))return;
+    if(!pointers.size)dragged=false;
+    pointers.set(event.pointerId,pointerLocal(event));
+    if(pointers.size===2){const at=pinched(),point=screenWorld(at.x,at.y);beginHand();grab=null;dragged=true;pinch={gap:at.gap,zoom:handZoom,point};for(const id of pointers.keys())capture(id);}
+    else if(pointers.size===1&&view!=='overview')grab={id:event.pointerId,x:event.clientX,y:event.clientY,center:screenWorld(viewWidth/2,viewHeight/2)};
   },{signal});
   viewport.addEventListener('pointermove',event=>{
+    if(!pointers.has(event.pointerId)||paused)return;
+    pointers.set(event.pointerId,pointerLocal(event));
+    if(pinch&&pointers.size>=2){const at=pinched();setHandZoom(pinch.zoom*at.gap/pinch.gap,pinch.point,at);return;}
     if(grab?.id!==event.pointerId)return;
     const dx=event.clientX-grab.x,dy=event.clientY-grab.y;if(!dragged&&Math.hypot(dx,dy)<6)return;
-    if(!dragged){dragged=true;viewport.setPointerCapture(event.pointerId);viewport.classList.add('grabbing');}
-    free={x:grab.ox+dx,y:grab.oy+dy};followCamera(true);
+    if(!dragged){const start=grab;beginHand();grab=start;dragged=true;capture(event.pointerId);viewport.classList.add('grabbing');}
+    free={x:grab.center.x-dx/(worldWidth*handZoom),y:grab.center.y-dy/(worldHeight*handZoom)};followCamera(true);
   },{signal});
-  const letGo=event=>{if(grab?.id!==event.pointerId)return;grab=null;viewport.classList.remove('grabbing');};
-  viewport.addEventListener('pointerup',letGo,{signal});viewport.addEventListener('pointercancel',letGo,{signal});
+  const letGo=event=>{pointers.delete(event.pointerId);if(pointers.size<2)pinch=null;if(grab?.id===event.pointerId)grab=null;viewport.classList.remove('grabbing');};
+  window.addEventListener('pointerup',letGo,{signal});viewport.addEventListener('pointercancel',letGo,{signal});viewport.addEventListener('lostpointercapture',letGo,{signal});
+  viewport.addEventListener('wheel',event=>{
+    if(!ready||paused||event.target.closest('button'))return;
+    event.preventDefault();const at=pointerLocal(event),point=screenWorld(at.x,at.y);beginHand();setHandZoom(handZoom*Math.exp(-event.deltaY*.0015),point,at);
+  },{passive:false,signal});
   // A drag never ends as a tap on a building label.
   viewport.addEventListener('click',event=>{if(!dragged)return;dragged=false;event.preventDefault();event.stopPropagation();},{signal,capture:true});
-  canvas.addEventListener('pointerdown',event=>{
+  canvas.addEventListener('click',event=>{
     if(view==='hand'||!ready||paused||event.button!==0)return;
     const rect=canvas.getBoundingClientRect(),target={x:(event.clientX-rect.left)/rect.width*world.width,y:(event.clientY-rect.top)/rect.height*world.height},door=buildingAt(target,world);
     canvas.focus({preventScroll:true});if(door){walk(door.stage);return;}
-    clearInput();const road=nearestRoad(target,world);if(road&&road.distance<155){goal=canWalk(target,world)?target:{x:road.x,y:road.y};path=[...findRoute(position,road,world).slice(1),goal];destination=null;}
+    clearInput();const road=nearestRoad(target,world);if(road&&road.distance<155){goal=canWalk(target,world)?target:{x:road.x,y:road.y};path=[...findRoute(position,road,world).slice(1),goal];}
   },{signal});
   updatePause();measure();load();frame=requestAnimationFrame(tick);
-  return {walk,direction,setView,nudge(dir){if(!ready||paused)return;path=[];destination=null;position=walkStep(position,directionVector(new Set([dir])),12,world);},pause(value=true){manualPause=Boolean(value);updatePause();},destroy(){active=false;loadVersion++;if(!leaving)visits.set(state,{...position});cancelAnimationFrame(frame);events.abort();observer.disconnect();resize?.disconnect();loading.remove();bubble.remove();talk.remove();}};
+  return {walk,direction,setView,browse(next){clearInput();cancelGesture();setView(next,next==='follow'&&view==='overview');updateNearby();},nudge(dir){if(!ready||paused)return;resumeFollow();stopRoute();position=walkStep(position,directionVector(new Set([dir])),12,world);},pause(value=true){manualPause=Boolean(value);updatePause();},destroy(){active=false;loadVersion++;if(!leaving)visits.set(state,{...position});cancelAnimationFrame(frame);events.abort();observer.disconnect();resize?.disconnect();loading.remove();bubble.remove();talk.remove();}};
 }
