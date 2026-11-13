@@ -2,7 +2,7 @@ import {normalizeMapHits} from './map-encounters.js';
 import { lessons, legacyLessons, legacyIndex, LESSON_COUNT, stageLessons, finalTasks, transferCases, diagnosisFields } from './data.js';
 import { cleanChallenge, checkChallenge } from './challenge-rules.js';
 export const STORAGE_KEY = 'ullim-city-v1';
-export const freshState = () => ({version:2,work:{},restoration:{},evidence:{},mapHits:{},settings:{muted:false,admin:false,bgm:true,sfx:true,bgmVolume:25},lastRoute:'home',finalAnswers:{},restored:false,completedAt:null,previousCompletion:null});
+export const freshState = () => ({version:2,work:{},restoration:{},evidence:{},mapHits:{},settings:{muted:false,admin:false,bgm:true,sfx:true,bgmVolume:25},lastRoute:'home',resumeLesson:null,finalAnswers:{},restored:false,completedAt:null,previousCompletion:null});
 const object = value => value && typeof value === 'object' && !Array.isArray(value);
 function cleanWork(raw) {
   if (!object(raw)) return {};
@@ -47,6 +47,12 @@ export function normalize(raw) {
   base.mapHits=normalizeMapHits(raw.mapHits,Array.from({length:5},(_,i)=>i).filter(i=>stageDone(base,i)).map(String));
   base.restoration=Object.fromEntries(Array.from({length:5},(_,n)=>[n,stageDone(base,n)&&Array.isArray(raw.restoration?.[n])?[...new Set(raw.restoration[n].filter(i=>[0,1,2].includes(i)))]:[]]));
   base.lastRoute = typeof raw.lastRoute==='string' && canRoute(base,raw.lastRoute) ? raw.lastRoute : 'home';
+  const lastLesson=lessonFromRoute(base,base.lastRoute,false);
+  // Older saves on Home preserved work but lost the activity route.
+  const hasWork=value=>Array.isArray(value)?value.some(hasWork):object(value)?Object.values(value).some(hasWork):typeof value==='number'||Boolean(value);
+  const legacy=Object.keys(base.work).map(Number).reverse().find(i=>!base.evidence[i]&&canLesson(base,i,false)&&hasWork(base.work[i]))??null;
+  const resume=Object.hasOwn(raw,'resumeLesson')?raw.resumeLesson:lastLesson??legacy;
+  base.resumeLesson=Number.isInteger(resume)&&canLesson(base,resume,false)?resume:null;
   return base;
 }
 export function readState(storage) {
@@ -78,13 +84,17 @@ export function createSaveSession(storage,loaded=readState(storage)) {
 }
 export const evidenceCount = s => Object.keys(s.evidence).filter(i=>/^\d+$/.test(i)&&Number(i)>=0 && Number(i)<LESSON_COUNT).length;
 export const stageDone = (s,n) => stageLessons(n).every(i=>Boolean(s.evidence[i]));
-export const canLesson = (s,i) => Number.isInteger(i) && i>=0 && i<LESSON_COUNT && (s.settings.admin || i===0 || Boolean(s.evidence[i] || s.evidence[i-1]));
+export const canLesson = (s,i,admin=s.settings.admin) => Number.isInteger(i) && i>=0 && i<LESSON_COUNT && (admin || i===0 || Boolean(s.evidence[i] || s.evidence[i-1]));
 export function canRoute(s,route) {
   if (['home','map'].includes(route)) return true;
   if (route==='final') return s.settings.admin || evidenceCount(s)===LESSON_COUNT;
   if (route==='result') return s.settings.admin || s.restored;
+  return lessonFromRoute(s,route)!==null;
+}
+export function lessonFromRoute(s,route,admin=s.settings.admin){
   const match=/^lesson\/(\d+)$/.exec(route);
-  return Boolean(match && canLesson(s,Number(match[1])));
+  const index=match?Number(match[1]):-1;
+  return canLesson(s,index,admin)?index:null;
 }
 const fail = message => ({ok:false,message});
 const list = x => Array.isArray(x) ? x : [];
