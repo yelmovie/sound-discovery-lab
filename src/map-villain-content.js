@@ -1,4 +1,4 @@
-import {returnPosition,worldMap} from './map-world.js';
+import {returnPosition,nearestRoad,worldMap} from './map-world.js';
 
 export const mapEncounterIds=['0','1','2','3','4'];
 const dialogue=[
@@ -11,7 +11,9 @@ const dialogue=[
 export const mapVillainStages=mapEncounterIds.map((id,i)=>{
  const door=worldMap.doors[i],start=returnPosition(i),p=worldMap.nodes[worldMap.adjacency[door.node][0].node];
  const d=Math.hypot(p.x-door.x,p.y-door.y)||1;
- return {id,x:start.x+(p.x-door.x)/d*33,y:start.y+(p.y-door.y)/d*33,
+ const along=[45,48,45,48,45][i],road=nearestRoad({x:start.x+(p.x-door.x)/d*along,y:start.y+(p.y-door.y)/d*along},worldMap);
+ const a=road.point??road;
+ return {id,x:a.x,y:a.y,
   name:'방해 스피커',lines:dialogue[i].slice(0,2),prop:['wave','dial','flip','plug','light'][i],
   hit:dialogue[i].slice(2,4),finish:dialogue[i][4]};
 });

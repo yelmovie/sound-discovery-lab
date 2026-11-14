@@ -169,7 +169,7 @@ export function mountMapEncounters({
       const animate=!stop&&!calm&&foe.hits<HITS&&now>=foe.poseUntil;
       const radius=Math.min(34,reach*.40);
       // Slow the movement near the learner, then hold the actual position on a hit.
-      const span=dHome<=reach*.75?radius*.32:radius;
+      const span=dHome<=reach*.75?radius*.25:radius;
       if(calm)foe.point=foe.s;
       else if(animate){
         const alpha=foe.lastPatrolAt==null?.06:Math.min(.22,Math.max(.015,(now-foe.lastPatrolAt)/160));
