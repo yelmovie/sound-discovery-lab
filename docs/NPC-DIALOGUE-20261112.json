@@ -150,7 +150,7 @@
     },
     {
       "id": "guide-4",
-      "text": "각 시설의 네 활동을 마치면 16초 개념 영상과 복구 배지가 기다려!",
+      "text": "각 시설의 활동 네 개를 마치면 16초 개념 영상과 복구 배지가 기다려!",
       "src": "media/audio/voices/el-guide-4.mp3",
       "who": "pio",
       "generationId": "ZnGA9yhN3sc0puzooF0h",
@@ -159,15 +159,22 @@
       "voiceId": "O2KReOFLpoR65nz6C9Se",
       "voiceName": "Aria",
       "flowId": "x2diTiyHge7lfyF9WOmx",
-      "asr": "각 시설의 내 활동을 마치면 16초 개념 영상과 복구 배지가 기다려!",
-      "asrScore": 0.963,
+      "asr": "각 시설의 활동 4개를 마치면 16초 개념 영상과 복구 배지가 기다려.",
+      "asrScore": 1.0,
       "endingScore": 1.0,
-      "lufs": -16.5,
-      "peakDbtp": -3.4,
-      "brightnessHz": 1609,
-      "duration": 5.5,
-      "sha256": "f48cb24ebc4a06fa2b9faf3bd52546a7dd161522542254c7c3335e14382c7f99",
-      "target": "media/audio/voices/el-guide-4.mp3"
+      "lufs": -17.4,
+      "peakDbtp": -3.9,
+      "brightnessHz": 1644,
+      "duration": 6.074,
+      "sha256": "15cd20f6562cbe1c8e5d4a59e7ed2f550bd420a825852fc74245dae0396327ab",
+      "target": "media/audio/voices/el-guide-4.mp3",
+      "edit": {
+        "date": "2026-11-15",
+        "method": "Edited the original Aria line, inserting a new “네 개를” take in the same voice and model.",
+        "fragmentGenerationId": "1zpc53zCyej68dJZZaGe",
+        "fragmentFlowId": "7yAwD2sdJIulhh7Y4xOZ",
+        "asrNormalization": "Punctuation and spacing ignored; 4개 and 네 개 are equivalent."
+      }
     },
     {
       "id": "restored-1",
