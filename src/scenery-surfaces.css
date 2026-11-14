@@ -17,3 +17,154 @@ dialog {background:rgba(255,253,245,.94);backdrop-filter:blur(12px);-webkit-back
 @media(max-width:600px),(max-height:480px){:root{--card-gap:8px}}
 /* Use spare desktop experiment space for the objects being observed. */
 @media(min-width:1000px) and (min-height:600px){.experiment-content .instrument > :is(.prop-assembly,.concept-art,.illustrated-ruler){max-width:320px;height:clamp(80px,34cqh,320px)}}
+
+/* Pulse only the next-destination arrow. The label and tap target stay still. */
+@media (prefers-reduced-motion: no-preference) {
+  .map-next-cue:not(:disabled):not([aria-disabled="true"]) > :is(svg:last-child, .map-direction-cue) {
+    animation: map-direction-pulse 1.45s ease-in-out 4;
+  }
+}
+@keyframes map-direction-pulse {
+  0%, 100% { opacity: 1; translate: 0; }
+  50% { opacity: .55; translate: 4px 0; }
+}
+.map-lock-icon { flex: none; vertical-align: middle; }
+
+.map-help:not(:has(.map-resident-talk:not([hidden]))):has(#map-status:empty){visibility:hidden;pointer-events:none}
+.map-next:disabled{opacity:.85;cursor:wait}
+
+/* Map corner controls shared across the science maps. */
+#app .map-page {
+  --map-edge: 16px;
+  --map-key: 52px;
+  --map-key-gap: 7px;
+  --map-action-height: 60px;
+  --map-action-type: 20px;
+  --map-left: calc(var(--map-edge) + env(safe-area-inset-left, 0px));
+  --map-right: calc(var(--map-edge) + env(safe-area-inset-right, 0px));
+  --map-bottom: calc(var(--map-edge) + env(safe-area-inset-bottom, 0px));
+  --map-pad-width: calc(3 * var(--map-key) + 2 * var(--map-key-gap));
+  --map-pad-height: calc(2 * var(--map-key) + var(--map-key-gap));
+}
+@media (max-width: 760px), (max-height: 560px) {
+  #app .map-page { --map-key: 44px; --map-key-gap: 4px; --map-action-height: 52px; --map-action-type: 17px; }
+}
+@media (min-width: 1500px) and (min-height: 850px) {
+  #app .map-page { --map-key: 64px; --map-key-gap: 10px; --map-action-type: 22px; }
+}
+#app .map-page .map-dpad {
+  grid-template-columns: repeat(3, var(--map-key));
+  grid-template-rows: repeat(2, var(--map-key));
+  gap: var(--map-key-gap);
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  filter: none;
+}
+#app .map-page .map-dpad button {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: var(--map-key);
+  height: var(--map-key);
+  min-width: var(--map-key);
+  min-height: var(--map-key);
+  padding: 0;
+  border: 2px solid #6a5636;
+  border-radius: 14px;
+  background: #fff6dc;
+  color: #233e33;
+  box-shadow: 0 3px 0 #3f4b39, 0 5px 12px #172a2340;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  font: 800 clamp(23px, calc(var(--map-key) / 2), 30px)/1 system-ui, sans-serif;
+  transition: none; /* Preserve contrast at the instant a direction is pressed. */
+}
+#app .map-page .map-dpad button > svg { width: 24px; height: 24px; stroke-width: 2.6; }
+#app .map-page .map-dpad button:is(:active,.is-held,.held,[data-map-held]) {
+  transform: translateY(2px);
+  background: #245b46;
+  color: #fff;
+  border-color: #143f30;
+  box-shadow: inset 0 2px 4px #15382a80;
+  filter: none;
+  outline: none;
+}
+#app .map-page .map-dpad button:focus-visible, #app .map-page .map-next:focus-visible {
+  outline: 3px solid #175b4b;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 3px #fff6dc;
+}
+#app .map-page .map-next {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-height: var(--map-action-height);
+  height: auto;
+  gap: 8px;
+  padding: 8px 18px;
+  border: 2px solid #8c6a24;
+  border-radius: 16px;
+  background: linear-gradient(#ffe391,#f4c95f);
+  color: #463813;
+  box-shadow: 0 4px 0 #8c6a24, 0 8px 20px #39291438;
+  font-size: var(--map-action-type);
+  line-height: 1.25;
+  text-align: center;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+#app .map-page .map-next > svg { flex: none; width: 22px; height: 22px; margin: 0; }
+@media (hover: hover) and (pointer: fine) {
+  #app .map-page .map-next:hover:not(:disabled) { background: linear-gradient(#ffeba9,#f9d473); }
+}
+#app .map-page .map-next:active:not(:disabled) { box-shadow: 0 1px 0 #8c6a24; }
+#app .map-page .map-next:disabled { opacity: .85; background: linear-gradient(#ffe391,#f4c95f); color: #463813; cursor: wait; }
+@media (max-width: 480px) {
+  #app .map-page .map-next { gap: 4px; padding-inline: 8px; font-size: 15px; }
+  #app .map-page .map-next > svg { width: 18px; height: 18px; }
+}
+
+#app .map-page .map-controls {
+  left: var(--map-left); bottom: var(--map-bottom); gap: var(--map-key-gap);
+  background: none; border: 0; box-shadow: none;
+  backdrop-filter: none; -webkit-backdrop-filter: none;
+}
+#app .map-page .map-tools { position: static; display: flex; flex-direction: row; gap: var(--map-key-gap); pointer-events: auto; }
+#app .map-page .map-tool {
+  width: var(--map-key); min-height: var(--map-key); justify-content: center; padding: 0;
+}
+#app .map-page .map-next-stack {
+  position: absolute; z-index: 10; right: var(--map-right); bottom: var(--map-bottom);
+  display: flex; flex-direction: column; align-items: flex-end; gap: 12px;
+  max-width: min(46vw, 480px); pointer-events: none;
+}
+#app .map-page .map-next { position: relative; inset: auto; max-width: 100%; pointer-events: auto; }
+#app .map-page .map-next b { font: inherit; }
+@media (max-width: 640px) {
+  #app .map-page .map-next-stack {
+    max-width: calc(100% - var(--map-left) - var(--map-right) - var(--map-pad-width) - 12px);
+  }
+}
+#app .map-page .map-dpad [data-direction="up"] > svg { rotate: -90deg; }
+#app .map-page .map-dpad [data-direction="left"] > svg { rotate: 180deg; }
+#app .map-page .map-dpad [data-direction="down"] > svg { rotate: 90deg; }
+.map-page .map-viewport { overflow: clip; } /* Camera motion is handled by the map, including when a control takes focus. */
+.map-page .map-companion {
+  display: grid; place-items: center; width: 44px; min-width: 44px; height: 44px; min-height: 44px;
+}
+.map-page .map-companion[hidden] { display: none; }
+.map-page .map-companion-cue {
+  position: relative; display: grid; place-items: center; width: 34px; height: 28px;
+  padding-bottom: 5px; border: 2px solid currentColor; border-radius: 13px;
+  color: #314737; background: #fff6dc; font: 800 18px/1 system-ui,sans-serif;
+}
+.map-page .map-companion-cue::after {
+  content: ''; position: absolute; top: 100%; left: calc(50% - 5px); width: 10px; height: 6px;
+  background: currentColor; clip-path: polygon(0 0,100% 0,50% 100%);
+}
+.map-page .map-companion:active .map-companion-cue { background: #245b46; color: #fff; }

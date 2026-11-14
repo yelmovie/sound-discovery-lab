@@ -75,14 +75,14 @@ export function runChallenge(id,w,action,data={},sound) {
     if(action!=='select'||!Number.isInteger(n)||!p.answers[n])return;
     if(!c.heard)return wrong('먼저 물체를 눌러 울리고, 떨리는 곳을 관찰해 봐.');
     c.selected=n;
-    return n===p.answer?finish(`맞아! ${p.answers[p.answer]}${subject(p.answers[p.answer])} 떨려.`):wrong(p.hint);
+    return n===p.answer?finish(`맞아! ${p.answers[p.answer]}${subject(p.answers[p.answer])} 떨려.`):wrong('다시 울리기를 눌러. 고른 부분과 다른 부분이 어떻게 움직이는지 비교해 봐.');
   }
   if(id==='rhythm'){
     if(!['ring','rest'].includes(action))return;
     if((c.sequence||[]).length>=rhythms[k].length){c.sequence=[];c.sounding=false;}
     if(action==='rest'&&!c.sounding)return wrong('먼저 울려야 떨림을 멈출 수 있어.');
     const attempted=action==='ring'?'울림':'쉼',position=(c.sequence||[]).length;
-    if(attempted!==rhythms[k][position]){return wrong(`이 발판은 ${rhythms[k][position]} 신호가 필요해. 앞서 연결한 길은 그대로야.`);}
+    if(attempted!==rhythms[k][position]){return wrong('목표 신호와 내 신호의 같은 자리를 비교해 봐. 앞서 만든 신호는 그대로야.');}
     c.sounding=action==='ring';c.sequence=[...(c.sequence||[]),attempted];
     if(c.sounding)sound.play({frequency:520,kind:'fork',duration:c.sequence.length===rhythms[k].length?.65:4});else sound.stop();
     if(c.sequence.length<rhythms[k].length)return;
@@ -132,7 +132,7 @@ export function runChallenge(id,w,action,data={},sound) {
   if(id==='sensor'||id==='classify'){
     if(action!=='zone'||!media.some(m=>m.id===v))return;
     c.zone=v;const expected=id==='sensor'?media[k].id:situations[k].answer;
-    if(v!==expected)return wrong(id==='sensor'?`이번에는 ${media[k].label} 전달 실험이야. 감지기를 그 물질에 놓아 줘.`:'소리를 내는 곳과 듣는 곳 사이에 있는 물질을 다시 살펴봐.');
+    if(v!==expected)return wrong(id==='sensor'?'실험 제목과 장소 그림을 비교해. 감지기를 놓았던 곳과 조건이 같은지 봐.':'소리를 내는 곳과 듣는 곳 사이에 있는 물질을 다시 살펴봐.');
     sound.play(transferSound(expected));
     return finish(`${media.find(m=>m.id===expected).label}${expected==='water'?'을':'를'} 통해 소리가 도착했어!`);
   }
@@ -160,6 +160,6 @@ export function runChallenge(id,w,action,data={},sound) {
     }else if(action==='pads'){c.pads=!c.pads;sound.play({kind:'drum',frequency:140,level:c.pads?.07:.4});}
     else return;
     if((c.music??3)<=1&&(c.announcement??1)>=2&&c.pads===true)return finish('필요한 안내도 들리고, 조용히 읽을 수도 있어!');
-    c.message=(c.music??3)>1?'책 읽는 친구를 위해 음악을 작게 조절해 봐.':(c.announcement??1)<2?'안내 방송은 필요한 소리야. 보통 이상으로 들리게 해 줘.':'의자 다리에 패드를 붙여 끌 때 나는 소리를 줄여 줘.';
+    c.message='전체 듣기를 눌러 지금 소리를 확인해. 아직 표시가 안 된 주민 요청과 비교해 봐.';
   }
 }

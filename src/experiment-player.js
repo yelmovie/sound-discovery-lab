@@ -1,6 +1,7 @@
 import { lessons, instruments, lengths, media, legacyIndex } from './data.js';
 import { checkChallenge } from './challenge-rules.js';
 import { transferSound } from './samples.js';
+import { rhythmControls } from './companion.js';
 
 export const EXPERIMENT_SPEEDS=Object.freeze([.5,1,1.5,2]);
 const actionSelector=(action,data={})=>`[data-action="${action}"]${Object.entries(data).filter(([key])=>key!=='round').map(([key,value])=>`[data-${key}="${value}"]`).join('')}`;
@@ -47,7 +48,7 @@ function challengePlan(id,c){
  const observe=(name,data,message,duration)=>action(`challenge-${name}`,{...data,round},message,duration);
  switch(id){
   case 'parts':return [observe('listen',{},'물체를 울리고 떨리는 곳을 관찰해 봐.',1900),end('실제로 떨리는 부분을 직접 골라 봐.','[data-action="challenge-select"]')];
-  case 'rhythm':{const restart=c.sequence?.at(-1)==='울림';return [preview(id,{kind:'fork',frequency:520,level:.5,duration:1.3},{sounding:true},'.rhythm-lab','울릴 때 떨림과 소리를 관찰해 봐.'),preview(id,null,{sounding:false},'.rhythm-lab','멈추면 소리도 쉬는지 비교해 봐.',1300),end(restart?'처음부터를 눌러 신호를 다시 연주해 봐.':'이제 목표의 울림과 쉼을 직접 만들어 봐.',restart?'[data-action="challenge-clear"]':'[data-action="challenge-ring"]')];}
+  case 'rhythm':{const restart=c.sequence?.at(-1)==='울림';return [preview(id,{kind:'fork',frequency:520,level:.5,duration:1.3},{sounding:true},'.rhythm-lab','울릴 때 떨림과 소리를 관찰해 봐.'),preview(id,null,{sounding:false},'.rhythm-lab','멈추면 소리도 쉬는지 비교해 봐.',1300),end(restart?'처음부터를 눌러 신호를 다시 연주해 봐.':'이제 목표의 울림과 쉼을 직접 만들어 봐.',restart?'[data-action="challenge-clear"]':rhythmControls)];}
   case 'signal':return [preview(id,{kind:'drum',frequency:150,level:1/3,duration:.9},{force:1},'.signal-lab','같은 북을 약하게 친 소리를 들어 봐.'),preview(id,{kind:'drum',frequency:150,level:1,duration:.9},{force:3},'.signal-lab','세게 친 소리와 크기를 비교해 봐.'),end('요청을 보고 세기를 맞춘 뒤 직접 북을 쳐 봐.','#signal-force')];
   case 'sort':return [...[0,1,2].map(value=>observe('parcel',{value},`상자 ${'ABC'[value]}를 듣고 크기를 비교해 봐.`,1600)),end('들은 소리를 작은 것부터 직접 놓아 봐.','[data-action="challenge-parcel"]')];
   case 'melody':return [observe('listen',{},'목표 멜로디의 높낮이를 들어 봐.',3000),end('목표와 같은 순서로 직접 자를 눌러 봐.','[data-action="challenge-note"]')];

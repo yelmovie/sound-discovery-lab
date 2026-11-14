@@ -4,7 +4,7 @@ let disposeNpc;
 import { art, rulerIllustration } from './illustrations.js';
 import { transferSound } from './samples.js';
 import { backgrounds, titleLogo, stages, lessons, instruments, lengths, media, transferCases, diagnosisFields, solutions, finalTasks, props, achievements, legacyIndex, LESSON_COUNT, stageLessons } from './data.js';
-import { STORAGE_KEY, freshState, readState, createSaveSession, evidenceCount, stageDone, canLesson, canRoute, recordEvidence, checkLesson, checkFinal, nextDiagnosisField } from './model.js';
+import { STORAGE_KEY, freshState, readState, createSaveSession, evidenceCount, stageDone, canLesson, canRoute, lessonFromRoute, recordEvidence, checkLesson, checkFinal, nextDiagnosisField } from './model.js';
 import { SoundEngine } from './audio.js';
 import { createVoice, voiceFor, voiceCue } from './voice.js';
 import { settingsContent as copy } from './settings-content.js';
@@ -94,16 +94,15 @@ function cancelAdvance(){clearTimeout(advanceTimer);advanceTimer=null;}
 function portrait(who='bird'){return who==='bird'?'<img class="portrait pio" src="/image/generated/pio-guide.svg" alt="안경 쓴 파란 울림새 삐오" draggable="false">':`<div class="portrait ${who}" role="img" aria-label="${who==='girl'?'기록 파트너':'장비 파트너'}"></div>`;}
 function rings(){return `<div class="rings" aria-label="복구한 코어 링 ${stages.filter((_,i)=>stageDone(state,i)).length}개">${stages.map((s,i)=>`<span class="ring ${stageDone(state,i)?'lit':''}" style="--ring:${s.color}" title="${s.name}: ${stageDone(state,i)?'복구 완료':'복구 전'}">${stageDone(state,i)?'✓':i+1}</span>`).join('')}</div>`;}
 function header(){const soundOff=state.settings.muted||!state.settings.bgm&&!state.settings.sfx;return `<header class="topbar game-hud"><nav class="nav-left" aria-label="화면 이동">${button(icon('home'),'home','aria-label="홈"','icon-btn')}${button(icon('back'),'back',`aria-label="이전" ${route==='home'&&!trail.length?'disabled':''}`,'icon-btn')}</nav><nav class="nav-right" aria-label="소리 및 설정">${button(icon(soundOff?'mute':'volume'),'mute',`aria-label="${soundOff?'소리 켜기':'소리 끄기'}" aria-pressed="${soundOff}"`,'icon-btn')}${button(icon('settings'),'settings','aria-label="설정"','icon-btn')}</nav></header>${state.settings.admin&&(route==='home'||route==='map')?'<div class="admin-banner">교사용 시연 · 학생 기록과 따로 진행 중</div>':''}`;}
-function home(){const hasWork=Object.keys(state.work).length>0;return `<main class="title-screen"><div class="title-copy"><span class="title-eyebrow">${icon('wave')} 초등 과학 · 소리의 성질</span><h1 class="title-logo"><img src="/${titleLogo}" fetchpriority="high" alt="울림도시 대작전" draggable="false"></h1><p class="title-tagline">도시의 소리 코어가 멈췄어. 직접 소리를 만들고 증거를 모아<br><b>울림도시를 다시 깨워 줘!</b></p><div class="title-actions">${button(`${hasWork?'탐험 이어 하기':'탐험 시작하기'} ${icon('arrow')}`,'start','','btn primary title-cta')}${button(`${icon('book')} 도시 이야기 보기`,'story','','btn title-story')}</div><span class="title-sub">증거 20개 → 복구 배지 5개 → 소리 탐험가 인증서</span><p class="title-note">${icon('volume')} 소리가 나오는 활동이야. 기기 음량을 편안하게 맞춰 줘.</p></div><div class="title-guide" aria-hidden="true"><span class="title-bubble">같이 도시를 깨우자!</span>${portrait()}</div></main>`;}
+function home(){const hasWork=state.resumeLesson!==null||Object.keys(state.work).length>0;return `<main class="title-screen"><div class="title-copy"><span class="title-eyebrow">${icon('wave')} 초등 과학 · 소리의 성질</span><h1 class="title-logo"><img src="/${titleLogo}" fetchpriority="high" alt="울림도시 대작전" draggable="false"></h1><p class="title-tagline">도시의 소리 코어가 멈췄어. 직접 소리를 만들고 증거를 모아<br><b>울림도시를 다시 깨워 줘!</b></p><div class="title-actions">${button(`${hasWork?'탐험 이어 하기':'탐험 시작하기'} ${icon('arrow')}`,'start','','btn primary title-cta')}${button(`${icon('book')} 도시 이야기 보기`,'story','','btn title-story')}</div><span class="title-sub">증거 20개 → 복구 배지 5개 → 소리 탐험가 인증서</span><p class="title-note">${icon('volume')} 소리가 나오는 활동이야. 기기 음량을 편안하게 맞춰 줘.</p></div><div class="title-guide" aria-hidden="true"><span class="title-bubble">같이 도시를 깨우자!</span>${portrait()}</div></main>`;}
 function topic(name){return (name.charCodeAt(name.length-1)-0xac00)%28?'은':'는';}
 function towardName(name){const code=name.charCodeAt(name.length-1)-0xac00,batchim=code%28;return `${name}${batchim&&batchim!==8?'으로':'로'}`;}
-function mapPlace(s,i,target){const finished=stageDone(state,i),open=canLesson(state,i*4),count=stageLessons(i).filter(n=>state.evidence[n]).length;return `<button class="map-location ${finished?'restored':''} ${open?'':'locked'} ${target===i?'is-next':''}" style="--place:${s.color}" data-action="travel" data-stage="${i}" ${open?'':'aria-disabled="true"'}><span class="place-mark">${finished?icon('check'):open?i+1:icon('lock')}</span><span class="place-text"><b>${s.name}</b><small>${finished?'복구 완료':open?`<span class="place-pips" aria-hidden="true">${[0,1,2,3].map(k=>`<i class="${k<count?'on':''}"></i>`).join('')}</span>${count} / 4 활동`:'잠김'}</small></span></button>`;}
-function mapNextLabel(stage,here){const name=stage===5?'소리 코어':stages[stage].name;return `<small>${here?'바로 앞':'다음 추천 장소'}</small><b>${here?`${name} 들어가기`:`${towardName(name)} 가기`}</b>${icon('arrow')}`;}
+function mapPlace(s,i,target){const finished=stageDone(state,i),open=canLesson(state,i*4);return `<button class="map-location ${finished?'restored':''} ${open?'':'locked'} ${target===i?'is-next':''}" style="--place:${s.color}" data-action="travel" data-stage="${i}" ${open?'':'aria-disabled="true"'}><span class="place-mark">${icon(open?'unlock':'lock')}</span><span class="place-text"><b>${s.name}</b></span></button>`;}
+function mapNextLabel(stage){const name=stage===5?'소리 코어':stages[stage].name;return `<b>${towardName(name)} 가기</b>${icon('arrow')}`;}
 function mapViewLabel(view,mode){return mode==='hand'?(view==='hand'?'둘러보기 끝':'손으로 둘러보기'):(view==='overview'?'이전 지도 보기로 돌아가기':'지도 한눈에 보기');}
-function mapPage(){const next=stages.findIndex((_,i)=>!stageDone(state,i)),target=next<0?5:next;return `<main class="map-page"><div class="map-viewport"><div class="map-world"><canvas id="world"></canvas>${stages.map((s,i)=>mapPlace(s,i,target)).join('')}<button class="core-marker ${target===5?'is-next':''}" data-action="travel" data-stage="5" ${canRoute(state,'final')?'':'aria-disabled="true"'}>${icon(canRoute(state,'final')?'star':'lock')} 소리 코어</button>${button('<span class="sr-only">삐오에게 안내 듣기</span>','guide','aria-label="삐오에게 안내 듣기"','map-companion')}</div></div><div class="map-help"><span class="map-help-place">울림 숲 · 증거 ${evidenceCount(state)} / ${LESSON_COUNT}</span><span id="map-status" role="status">${next<0?'다섯 시설을 복구했어! 소리 코어로 가자.':stages[next].mission}</span>${voiceButton(next<0?'mission-core':`mission-${next+1}`)}</div><div class="map-controls"><div class="map-dpad" role="group" aria-label="이동 방향">${[['up','↑','위쪽'],['left','←','왼쪽'],['down','↓','아래쪽'],['right','→','오른쪽']].map(([dir,label,word])=>`<button data-direction="${dir}" aria-label="${word}으로 이동">${label}</button>`).join('')}</div></div><div class="map-tools">${['overview','hand'].map(mode=>button(`${icon(mode==='hand'?'hand':'map')}`,'map-view',`data-view="${mode}" aria-label="${mapViewLabel(mapView,mode)}" title="${mapViewLabel(mapView,mode)}" aria-pressed="${mapView===mode}"`,'map-tool')).join('')}</div>${button(mapNextLabel(target,false),'travel',`data-stage="${target}" data-target="${target}"`,'btn primary map-next')}</main>`;}
+function mapPage(){const next=stages.findIndex((_,i)=>!stageDone(state,i)),target=next<0?5:next;return `<main class="map-page"><div class="map-viewport"><div class="map-world"><canvas id="world"></canvas>${stages.map((s,i)=>mapPlace(s,i,target)).join('')}<button class="core-marker ${target===5?'is-next':''}" data-action="travel" data-stage="5" ${canRoute(state,'final')?'':'aria-disabled="true"'}>${icon(canRoute(state,'final')?'unlock':'lock')} 소리 코어</button>${button('<span class="map-companion-cue" aria-hidden="true">…</span>','guide','hidden aria-label="삐오에게 안내 듣기"','map-companion')}</div></div><div class="map-help"><span id="map-status" role="status"></span></div><div class="map-controls"><div class="map-dpad" role="group" aria-label="이동 방향">${[['up','위'],['left','왼쪽'],['down','아래'],['right','오른쪽']].map(([dir,word])=>`<button type="button" data-direction="${dir}" aria-label="${word} 방향으로 이동">${icon('arrow')}</button>`).join('')}</div></div><div class="map-next-stack"><div class="map-tools">${['hand','overview'].map(mode=>button(`${icon(mode==='hand'?'hand':'map')}`,'map-view',`data-view="${mode}" aria-label="${mapViewLabel(mapView,mode)}" title="${mapViewLabel(mapView,mode)}" aria-pressed="${mapView===mode}"`,'map-tool')).join('')}</div>${button(mapNextLabel(target),'travel',`data-stage="${target}"`,'btn primary map-next map-next-cue')}</div></main>`;}
 // Only show lock guidance after the learner requests a closed destination.
-function lockedNote(n){const text=document.querySelector('#map-status');if(!text)return;const before=text.dataset.mission??=text.textContent;void sound.effect('hint');text.textContent=n===5?'증거 20개를 모으면 소리 코어가 열려.':`${stages[n].name}${topic(stages[n].name)} 앞 시설을 복구하면 열려.`;clearTimeout(mapNoteTimer);mapNoteTimer=setTimeout(()=>{text.textContent=before;},3500);}
-function syncMapNext(near){const b=document.querySelector('.map-next');if(!b)return;const target=Number(b.dataset.target),here=near!==null&&(near===5?canRoute(state,'final'):canLesson(state,near*4)&&!stageDone(state,near));b.dataset.stage=String(here?near:target);b.innerHTML=mapNextLabel(here?near:target,here);}
+function lockedNote(n){const text=document.querySelector('#map-status');if(!text)return;void sound.effect('hint');text.textContent=n===5?'증거 20개를 모으면 소리 코어가 열려.':`${stages[n].name}${topic(stages[n].name)} 앞 시설을 복구하면 열려.`;clearTimeout(mapNoteTimer);mapNoteTimer=setTimeout(()=>{text.textContent='';},3500);}
 function syncMapView(view){mapView=view;for(const tool of document.querySelectorAll('.map-tool')){const mode=tool.dataset.view;tool.setAttribute('aria-pressed',String(view===mode));tool.setAttribute('aria-label',mapViewLabel(view,mode));tool.title=mapViewLabel(view,mode);}}
 function syncMapTravel(stage){const b=document.querySelector('.map-next');if(!b)return;b.disabled=stage!==null;b.setAttribute('aria-busy',String(stage!==null));}
 // Teacher preview: walk the whole sequence without operating each activity.
@@ -133,16 +132,20 @@ function lessonCue(i,w,saved){
  if(saved)return {text:i%4===3?'네 활동을 모두 마쳤어! 시설 복구를 눌러 봐.':'활동을 마쳤어! 다음 활동으로 가자.',target:'[data-action="continue"]'};
  if(l.challenge){
   const c=w.challenge||{};if(coach.target==='[data-action="challenge-clear"]')return coach;let target=coach.target;
-  if(c.kind==='hint'&&l.challenge==='solutions'&&c.before&&c.after)target='[data-action="challenge-solution"]';
-  if(c.kind==='hint'&&l.challenge==='mix')target='.slider-mixer';
+  if(!hintLevels[i]&&c.kind==='hint'&&l.challenge==='solutions'&&c.before&&c.after)target='[data-action="challenge-solution"]';
+  if(!hintLevels[i]&&c.kind==='hint'&&l.challenge==='mix')target='.slider-mixer';
   return {text:!hintLevels[i]&&c.message&&c.kind!=='success'?c.message:coach.text,target};
  }
- if(l.base===1)return {text:hintLevels[i]?coach.text:playingUntil>Date.now()?'손으로 눌러 떨림을 멈춰 봐.':w.stopped?'누르기 전과 뒤를 비교해 골라 봐.':'소리굽쇠를 눌러 울려 봐.',target:playingUntil>Date.now()?'[data-action="fork-stop"]':coach.target};
- if(l.base===8&&w.heard){const field=nextDiagnosisField(w);if(field)return {text:hintLevels[i]?coach.text:`${field.label}${field.key==='place'?'를':'을'} ${w[field.key]?'다시 살펴보고 ':''}골라 봐.`,target:`[data-action="diagnostic"][data-field="${field.key}"]`};}
+ if(l.base===1){
+  if(playingUntil>Date.now())return {text:'손으로 눌러 멈추기를 눌러. 누르기 전과 뒤를 비교해 봐.',target:'[data-action="fork-stop"]'};
+  if(!w.stopped)return {text:'울리기를 눌러 소리와 그림을 살펴봐.',target:'[data-action="fork-start"]'};
+  return {text:hintLevels[i]?coach.text:'누르기 전과 뒤를 비교해 골라 봐.',target:hintLevels[i]===2?'[data-action="fork-start"]':coach.target};
+ }
+ if(l.base===8&&w.heard){const field=nextDiagnosisField(w);if(field)return {text:hintLevels[i]?coach.text:`${field.label}${field.key==='place'?'를':'을'} ${w[field.key]?'다시 살펴보고 ':''}골라 봐.`,target:hintLevels[i]===2?'[data-action="noise-scene"]':`[data-action="diagnostic"][data-field="${field.key}"]`};}
  if(hintLevels[i])return coach;
  if(l.base===0)return {text:arr(w.seen).length<2?'물체를 눌러 떨림을 관찰해 봐.':'관찰한 물체의 공통점을 골라 봐.',target:coach.target};
  if(l.base===2)return coach;
- if(l.base===3)return {text:!w.heardA||!w.heardB?'A와 B를 번갈아 들어 봐.':'더 큰 소리가 난 실험을 골라 봐.',target:coach.target};
+ if(l.base===3&&!coach.target.includes('data-route'))return {text:!w.heardA||!w.heardB?'A와 B를 번갈아 들어 봐.':'더 큰 소리가 난 실험을 골라 봐.',target:coach.target};
  if(l.base===4)return {text:arr(w.lengths).length<2?'길이 손잡이를 움직여 두 소리를 비교해 봐.':'길이가 짧아졌을 때의 소리를 골라 봐.',target:coach.target};
  return coach;
 }
@@ -196,7 +199,8 @@ function syncLessonCue(){
  if(!selector)return;
  const targets=[...app.querySelectorAll(selector)].filter(e=>!e.disabled);
  if(targets.length>1){
-  let group=targets[0].closest('fieldset,.challenge-tools,.medium-choices,.sort-slots,.sort-cards,.sensor-zones,.context-cards,.length-options,.solution-grid');
+  let group=targets[0].closest('fieldset,.instruments,.medium-grid,.sample-pair,.challenge-tools,.medium-choices,.sort-slots,.sort-cards,.sensor-zones,.context-cards,.length-options,.solution-grid');
+  if(group&&!targets.every(e=>group.contains(e)))group=null;
   if(!group){group=targets[0].parentElement;while(group&&!targets.every(e=>group.contains(e)))group=group.parentElement;}
   group?.classList.add('next-choice-group');
  }
@@ -296,7 +300,7 @@ function openMap(){
   status.hidden=true;
   try{
    const clearStage=dialogueStage;dialogueStage=null;
-   map=world.mountMap(canvas,state,enterMapStage,{clearStage,onMapHit:patch=>{state.mapHits={...state.mapHits,...patch};save();},encounterTone:(kind,hits)=>sound.tone({frequency:kind==='finish'?100:kind==='contact'?145:hits===1?245:175,level:.38,duration:kind==='finish'?.18:.09,kind:'ui'}),onView:syncMapView,onNear:syncMapNext,onTravel:syncMapTravel,onLoad:()=>{if(current()){mapFailed=false;status.hidden=true;}},onError:()=>fail(),onStep:()=>sound.tone({frequency:170,level:.5,duration:.06,kind:'ui'}),residentLine:n=>stages[n].restored,residentLabel:n=>stages[n].name+' 주민과 대화하기',onTalk:residentDialogue});
+   map=world.mountMap(canvas,state,enterMapStage,{clearStage,onMapHit:patch=>{state.mapHits={...state.mapHits,...patch};save();},encounterTone:(kind,hits)=>sound.tone({frequency:kind==='finish'?100:kind==='contact'?145:hits===1?245:175,level:.38,duration:kind==='finish'?.18:.09,kind:'ui'}),onView:syncMapView,onTravel:syncMapTravel,onLoad:()=>{if(current()){mapFailed=false;status.hidden=true;}},onError:()=>fail(),onStep:()=>sound.tone({frequency:170,level:.5,duration:.06,kind:'ui'}),residentLine:n=>stages[n].restored,residentLabel:n=>stages[n].name+' 주민과 대화하기',onTalk:residentDialogue});
    const events=new AbortController(),mounted=map,destroy=map.destroy;
    controls.bindDirectionPad(page,'.map-dpad [data-direction]',b=>b.dataset.direction,{signal:events.signal,blocked:()=>document.hidden||!!document.querySelector('dialog[open]'),press:d=>mounted.direction(d,true),release:d=>mounted.direction(d,false),tap:d=>mounted.nudge(d)});
    map.destroy=()=>{events.abort();destroy();};
@@ -309,7 +313,7 @@ function openMap(){
   }catch{fail();}
  },()=>fail(true));
 }
-function navigate(next){voice.stop();stopExperiment();cancelAdvance();inputLockedUntil=Date.now()+300;if(!canRoute(state,next))next='map';if(next!==route)trail.push(route);route=next;feedback=null;lastObject='';clearTimeout(liveTimer);playingUntil=0;sound.stop();closeModal(false);save();render();void sound.effect('tap');window.scrollTo(0,0);document.querySelector('main h1')?.setAttribute('tabindex','-1');document.querySelector('main h1')?.focus({preventScroll:true});}
+function navigate(next){voice.stop();stopExperiment();cancelAdvance();inputLockedUntil=Date.now()+300;if(!canRoute(state,next))next='map';if(next!==route)trail.push(route);const lesson=lessonFromRoute(state,next);if(lesson!==null)state.resumeLesson=lesson;else if(next==='map'&&state.evidence[state.resumeLesson])state.resumeLesson=null;route=next;feedback=null;lastObject='';clearTimeout(liveTimer);playingUntil=0;sound.stop();closeModal(false);save();render();void sound.effect('tap');window.scrollTo(0,0);document.querySelector('main h1')?.setAttribute('tabindex','-1');document.querySelector('main h1')?.focus({preventScroll:true});}
 sound.onStatus=text=>{soundText=text;const el=document.querySelector('#audio-status');if(el)el.textContent=text;};
 function updateView(){const focus=document.activeElement;const action=focus?.dataset?.action,key=['tool','length','medium','slot','choice','case','solution','field','value','question'].map(k=>focus?.dataset?.[k]?`[data-${k}="${focus.dataset[k]}"]`:'').join('');render();if(action)document.querySelector(`[data-action="${action}"]${key}`)?.focus({preventScroll:true});}
 function showFeedback(text,kind='hint'){feedback={text,kind};updateView();}
@@ -376,7 +380,7 @@ async function handleClick(e){void sound.unlock();const b=e.target.closest('butt
   if(!e.auto){if(b.closest('.experiment-board')&&handOffExperiment(b))return;const hadPreview=Boolean(previewVisual);stopExperiment();if(hadPreview){render();app.querySelector(`[data-action="${a}"]`)?.focus({preventScroll:true});}}
   if(a==='activity-tools')return openModal(`<div class="activity-menu">${button(`${icon('book')} 내 증거 노트`,'notebook','','btn secondary')}${button(`${icon('play')} 개념 영상`,'concept',`data-stage="${lessons[i].stage}"`,'btn secondary')}${button(`${icon('map')} 지도 보기`,'goto','data-route="map"','btn quiet')}${adminDock(true)}</div>`,'노트와 개념 영상');
   if(a==='home')return navigate('home');
-  if(a==='start')return navigate('map');
+  if(a==='start')return navigate(canLesson(state,state.resumeLesson)?`lesson/${state.resumeLesson}`:'map');
   if(a==='goto')return navigate(b.dataset.route);
   if(a==='back'){const target=trail.pop()||(i>0&&i%4>0?`lesson/${i-1}`:route==='home'?'home':'map');const previous=trail;trail=[];navigate(target);trail=previous;return;}
   if(a==='close')return closeModal();
@@ -410,7 +414,7 @@ async function handleClick(e){void sound.unlock();const b=e.target.closest('butt
   if(a==='certificate')return state.restored?navigate('result'):undefined;
   if(a==='guide'){
    void sound.effect('hint');
-   if(i>=0){hintLevels[i]=((hintLevels[i]||0)+1)%3;updateView();return;}
+   if(i>=0){hintLevels[i]=Math.min(2,(hintLevels[i]||0)+1);feedback=null;updateView();return;}
    openModal(`${pioPortrait()}<div class="story-card"><span class="npc-scene-name">울림새 삐오</span><h3>나는 울림새 삐오야!</h3><p>방향키나 화면 화살표로 길 위를 자유롭게 걸어 봐. 길을 누르면 그곳까지 걸어가고, 시설 이름을 누르면 시설로 가. 내가 뒤를 따라갈게.</p><p>지도를 손으로 끌어 둘러보거나 ‘지도 한눈에 보기’로 마을 전체를 볼 수 있어. 다시 걸으면 탐험가에게 돌아와.</p><p>각 시설의 네 활동을 마치면 16초 개념 영상과 복구 배지가 기다려!</p></div>`,'삐오와 함께 탐험해',voiceButton('guide','삐오 목소리 다시 듣기',true)+button('닫기','close','','btn primary'),'npc');modalRoot.querySelector('dialog').dataset.voiceLines=voiceChains.guide.join(',');voice.say(voiceChains.guide,200);return;
   }
   if(a==='print')return window.print();
@@ -426,6 +430,7 @@ async function handleClick(e){void sound.unlock();const b=e.target.closest('butt
   if(i<0)return;
   if(a==='continue')return completion(i);
   if(Date.now()<inputLockedUntil&&!e.auto)return;
+  hintLevels[i]=0;
   feedback=null;
   if(a==='strike')strikeAndCapture(w,Number(b.dataset.value)||1);
   if(a==='pluck'){const length=w.length||18;w.lengths=[...new Set([...arr(w.lengths),length])];sound.play({frequency:lengths.find(l=>l.value===length).frequency,level:.5});}
