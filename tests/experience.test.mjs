@@ -41,12 +41,12 @@ test('every lesson has progressive hints and ready feedback requires actual evid
 });
 test('a restored rhythm guides a fresh performance instead of adding another first beat',()=>{
  const state=freshState();state.work[3]={challenge:{sequence:['울림'],sounding:true}};
- assert.equal(coachFor(state,3).target,'[data-action="challenge-rest"]');
+ assert.match(coachFor(state,3).target,/challenge-ring.*challenge-rest/);
  const restored=normalize(state),cue=coachFor(restored,3);
  assert.equal(cue.target,'[data-action="challenge-clear"]');
  assert.match(cue.text,/다시 연주/);
  restored.work[3].challenge.sequence=['울림','쉼'];
- assert.equal(coachFor(restored,3).target,'[data-action="challenge-ring"]');
+ assert.match(coachFor(restored,3).target,/challenge-ring.*challenge-rest/);
 });
 test('concept player retains native playback controls and text when video is unavailable',()=>{
  const html=conceptView(0);assert.match(html,/playsinline controls/);assert.match(html,/kind="captions"/);assert.match(html,/concept-fallback/);

@@ -82,7 +82,7 @@ export function mountMap(canvas,state,onArrive,options={}){
   seenDone.set(state,completion);
   const nextStage=done.findIndex(yes=>!yes),targetStage=nextStage<0?5:nextStage;
   let position={...(visits.get(state)||world.spawn)},bird={x:position.x-38,y:position.y+12};
-  let path=[],destination=null,goal=null,near=null,chatting=null,stepCount=0,frame=0,lastTime=0,active=true,ready=false,paused=false,manualPause=false,leaving=false;
+  let path=[],destination=null,goal=null,chatting=null,stepCount=0,frame=0,lastTime=0,active=true,ready=false,paused=false,manualPause=false,leaving=false;
   let facing='down',birdFacing='down',walkClock=0,moving=false,trail=[{...position}],travel=0;
   let scene,beforeScene,explorerSprite,birdSprite,residentSprites=[],loadedAt=0,loadVersion=0,arrivalBlocked=false;
   let viewWidth=1,viewHeight=1,worldWidth=1,worldHeight=1,camera={x:0,y:0};
@@ -112,7 +112,7 @@ export function mountMap(canvas,state,onArrive,options={}){
       loadImage(mapReactionAssets[role],signal).then(image=>{if(active)reactionAtlases[role]=image;}).catch(()=>{});
     }
   }
-  const encounters=mountMapEncounters({requiredFoes:5,host:viewport,controls:viewport.closest('.map-page')?.querySelector('.map-tools')??viewport,clearStage:()=>options.clearStage,stages:state.settings?.admin?[]:mapVillainStages.filter((_,i)=>done[i]),
+  const encounters=mountMapEncounters({requiredFoes:5,host:viewport,controls:viewport.closest('.map-page')?.querySelector('.map-next-stack')??viewport,clearStage:()=>options.clearStage,stages:state.settings?.admin?[]:mapVillainStages.filter((_,i)=>done[i]),
    progress:state.mapHits,onSave:options.onMapHit,art:{left:new URL('image/generated/map-villain-poses-left.webp',document.baseURI).href,frames:6},
    palette:'#c9a3ff',reach:122,contact:28,tone:options.encounterTone,
    blocked:()=>!ready||!active||paused||view!=='follow'||destination!==null||dragged,
@@ -158,7 +158,7 @@ export function mountMap(canvas,state,onArrive,options={}){
     camera.x+=(x-camera.x)*blend;camera.y+=(y-camera.y)*blend;
     frameElement.style.transform=`translate3d(${camera.x.toFixed(2)}px,${camera.y.toFixed(2)}px,0) scale(${zoom.toFixed(4)})`;
     frameElement.style.setProperty('--map-unscale',(1/zoom).toFixed(4));
-    if(companionButton){const bx=bird.x/world.width,by=(bird.y+8)/world.height,sx=camera.x+bx*width,sy=camera.y+by*height;
+    if(companionButton){const bx=(bird.x+20)/world.width,by=(bird.y-40)/world.height,sx=camera.x+bx*width,sy=camera.y+by*height;
       companionButton.hidden=!ready||view==='overview'||sx<22||sx>viewWidth-22||sy<44||sy>viewHeight;
       companionButton.style.left=`${bx*100}%`;companionButton.style.top=`${by*100}%`;
     }
@@ -251,11 +251,24 @@ export function mountMap(canvas,state,onArrive,options={}){
     }
     context.globalAlpha=1;
   }
-  function paintSprite(sprite,p,direction,clock,isMoving){
+  function outlinedFrame(sprite,index,w,h){
+    sprite.outlines??=new Map();const cached=sprite.outlines.get(index);if(cached)return cached;
+    const frame=sprite.frames[index],pad=2,canvas=document.createElement('canvas'),mask=document.createElement('canvas');
+    canvas.width=mask.width=w+pad*2;canvas.height=mask.height=h+pad*2;
+    const c=canvas.getContext('2d'),silhouette=mask.getContext('2d');if(!c||!silhouette)return null;
+    c.imageSmoothingEnabled=false;silhouette.imageSmoothingEnabled=false;
+    const paintFrame=ctx=>ctx.drawImage(sprite.image,frame.x,frame.y,frame.width,frame.height,pad,pad,w,h);
+    paintFrame(silhouette);silhouette.globalCompositeOperation='source-in';silhouette.fillStyle='#fff4d2';silhouette.fillRect(0,0,mask.width,mask.height);
+    for(let i=0;i<8;i++){const angle=i*Math.PI/4;c.drawImage(mask,Math.round(Math.cos(angle)),Math.round(Math.sin(angle)));}
+    paintFrame(c);const art={canvas,pad};sprite.outlines.set(index,art);return art;
+  }
+  function paintSprite(sprite,p,direction,clock,isMoving,outline){
     if(!sprite)return;
-    const step=isMoving&&!reduced.matches?Math.floor(clock/125)%4:0,cell=sprite.frames[rowFor[direction]*4+step],w=cell.width*sprite.scale,h=cell.height*sprite.scale;
+    const step=isMoving&&!reduced.matches?Math.floor(clock/125)%4:0,index=rowFor[direction]*4+step,cell=sprite.frames[index],w=Math.round(cell.width*sprite.scale),h=Math.round(cell.height*sprite.scale);
     context.fillStyle='rgba(38,53,49,.25)';context.beginPath();context.ellipse(p.x,p.y+2,w*.28,7,0,0,Math.PI*2);context.fill();
-    context.drawImage(sprite.image,cell.x,cell.y,cell.width,cell.height,Math.round(p.x-w/2),Math.round(p.y-h),Math.round(w),Math.round(h));
+    const art=outline?outlinedFrame(sprite,index,w,h):null,x=Math.round(p.x-w/2),y=Math.round(p.y-h);
+    if(art)context.drawImage(art.canvas,x-art.pad,y-art.pad);
+    else context.drawImage(sprite.image,cell.x,cell.y,cell.width,cell.height,x,y,w,h);
   }
   const restorationRoutes=newLights.filter(stage=>stage<5).map(stage=>{
     const route=findRoute(world.doors[stage],world.doors[5],world),lengths=route.slice(1).map((p,i)=>distance(route[i],p));
@@ -284,8 +297,6 @@ export function mountMap(canvas,state,onArrive,options={}){
   }
   // Offer a resident only when the explorer stops nearby and the facility is restored.
   function updateNearby(){
-    const door=world.doors.filter(d=>distance(position,d)<90).sort((a,b)=>distance(position,a)-distance(position,b))[0],nextNear=door?door.stage:null;
-    if(nextNear!==near){near=nextNear;options.onNear?.(near);}
     const friend=destination===null&&view!=='overview'&&!moving?world.doors.find(d=>d.stage<5&&done[d.stage]&&distance(position,d.resident)<105)||null:null;
     if(friend!==chatting){
       chatting=friend;bubble.hidden=!friend;talk.hidden=!friend;

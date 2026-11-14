@@ -33,7 +33,7 @@ test('wrong answers on pitch and transfer point back to their own evidence', () 
   s.work[legacyIndex(4)]={lengths:[18,6],choice:1};
   assert.match(checkLesson(s,legacyIndex(4)).message,/높낮이/);
   s.work[legacyIndex(6)]={media:['air','water','solid'],choice:0};
-  assert.match(checkLesson(s,legacyIndex(6)).message,/공기·물·고체/);
+  assert.match(checkLesson(s,legacyIndex(6)).message,/세 실험의 듣기.*고른 설명을 비교/);
   s.work[legacyIndex(0)]={seen:['rubber','fork'],choice:1};
   assert.match(checkLesson(s,legacyIndex(0)).message,/떨림과 소리/);
 });

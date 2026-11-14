@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { freshState } from '../src/model.js';
-import { lessons, stages } from '../src/data.js';
+import { freshState, checkLesson } from '../src/model.js';
+import { lessons, stages, legacyIndex } from '../src/data.js';
 import { coachFor } from '../src/companion.js';
 
 test('all twenty activities connect an inquiry and a discovery to a standard', () => {
@@ -46,4 +46,23 @@ test('parcel guidance offers a tap path and follows listen then placement', () =
   state.work[7].challenge.listened = [0, 1, 2];
   assert.equal(coachFor(state, 7).target, '[data-action="challenge-slot"]');
   assert.match(coachFor(state, 7).text, /칸.*눌러/);
+});
+
+test('deep sound and melody hints return to listening without preselecting an answer or playing a sequence', () => {
+  const state = freshState();
+  const melody = lessons.findIndex(lesson => lesson.challenge === 'melody');
+  const pattern = legacyIndex(5);
+  state.work[0] = { seen: ['rubber', 'drum'], choice: 1 };
+  state.work[melody] = { challenge: { heard: true, sequence: [6, 6, 6] } };
+  state.work[pattern] = { targetHeard: true, pattern: [6, 6, 6] };
+  const before = structuredClone(state);
+  assert.match(coachFor(state, 0, 2).target, /instrument/);
+  assert.doesNotMatch(coachFor(state, 0, 2).text, /공통점은 떨림/);
+  assert.match(coachFor(state, melody, 2).target, /challenge-listen/);
+  assert.match(coachFor(state, melody, 2).text, /다시 듣기.*헷갈린 음/);
+  const response = checkLesson(state, pattern);
+  assert.equal(response.ok, false);
+  assert.match(response.message, /목표 신호 듣기.*비교/);
+  assert.doesNotMatch(response.message, /→|긴 자|낮음|높음|중간/);
+  assert.deepEqual(state, before);
 });

@@ -113,7 +113,7 @@ test('automatic rhythm observation retains the restart cue for an interrupted pe
   assert.match(cue.message,/다시 연주/);
   assert.deepEqual(w,before);
  }
- assert.equal(experimentPlan(i,{challenge:{sequence:['울림','쉼'],sounding:false}}).at(-1).nextSelector,'[data-action="challenge-ring"]');
+ assert.match(experimentPlan(i,{challenge:{sequence:['울림','쉼'],sounding:false}}).at(-1).nextSelector,/challenge-ring.*challenge-rest/);
 });
 
 test('running every fresh challenge observation cannot award a proof or choose an answer',()=>{

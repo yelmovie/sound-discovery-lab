@@ -122,13 +122,13 @@ export function checkLesson(s,i) {
   if (i===4 && new Set(list(w.lengths).filter(x=>[6,12,18].includes(x))).size<2) return fail('길이를 바꿔 두 가지 이상 튕겨 봐. 다른 조건은 그대로야.');
   if (i===5) {
     if (!w.targetHeard) return fail('먼저 목표 신호를 들어 봐.');
-    if (JSON.stringify(w.pattern)!==JSON.stringify([18,6,12])) return fail('낮음 → 높음 → 중간 순서야. 긴 자의 소리부터 다시 연주해 봐.');
+    if (JSON.stringify(w.pattern)!==JSON.stringify([18,6,12])) return fail('목표 신호 듣기를 다시 눌러. 헷갈린 자리의 소리를 비교하고 연주해 봐.');
   }
   if (i===6 && !['air','water','solid'].every(x=>list(w.media).includes(x))) return fail('공기·물·고체 실험을 각각 한 번씩 확인해 줘.');
   if (i===7 && !transferCases.every((c,k)=>w.verified?.[k]===c.answer)) return fail('아직 검증하지 않은 상황이 있어. 세 상황 모두 선택한 뒤 실험해 봐.');
   if (i===8) {
     if (!w.heard) return fail('현장 소리를 먼저 들어 봐.');
-    if (nextDiagnosisField(w)) return fail('도서관 옆 복도에서, 독서 중인 친구가 어떤 어려움을 겪는지 다시 살펴봐.');
+    if (nextDiagnosisField(w)) return fail('현장 소리 듣기를 누르고, 그림과 제보에서 장소·시간·사람을 다시 찾아봐.');
   }
   if (i===9) {
     if (!s.evidence[legacyIndex(8)]) return fail('먼저 소음 관리센터에서 현장을 진단해 줘.');
@@ -142,8 +142,8 @@ export function checkLesson(s,i) {
 const wrongChoice={
   1:'누르기 전과 누른 뒤를 다시 비교해 봐. 떨림이 멈췄을 때 소리는 어땠어?',
   4:'길이를 바꾸며 다시 들어 봐. 떨리는 부분이 짧을 때와 길 때 소리의 높낮이를 비교해.',
-  6:'공기·물·고체 세 실험에서 모두 소리가 감지기에 전해졌는지 다시 떠올려 봐.',
-  9:'시간을 바꾸면 독서 중에는 조용해져도 연습할 때의 소리는 남아. 어떤 점이 나아졌을까?'
+  6:'세 실험의 듣기를 번갈아 눌러. 감지기에서 들은 내용과 고른 설명을 비교해 봐.',
+  9:'적용 전과 적용 후를 다시 들어 봐. 주어진 시간에 어떤 소리가 달라졌을까?'
 };
 export function recordEvidence(s,i) {
   if(!Number.isInteger(i)||i<0||i>=LESSON_COUNT)return fail('올바른 실험을 선택해 줘.');
