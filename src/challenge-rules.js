@@ -1,10 +1,10 @@
 import {media} from './data.js';
 
 const parts = [
-  {tool:'drum',name:'작은 북',answers:['북의 막','북의 옆면','북채 손잡이'],answer:0,hint:'북채가 닿은 넓은 막을 살펴봐.'},
-  {tool:'rubber',name:'고무줄 악기',answers:['나무 상자','팽팽한 고무줄','책상 다리'],answer:1,hint:'손가락으로 튕긴 부분을 살펴봐.'},
-  {tool:'ruler',name:'책상에 고정한 자',answers:['고정한 책상','자를 누른 손','책상 밖으로 나온 자'],answer:2,hint:'책상 밖으로 나온 부분이 위아래로 움직여.'},
-  {tool:'fork',name:'소리굽쇠',answers:['나무 받침대','위쪽 두 갈래','아래쪽 손잡이'],answer:1,hint:'U자 위쪽의 두 갈래를 살펴봐.'}
+  {tool:'drum',name:'작은 북',answers:['북의 막','북의 옆면','북채 손잡이'],answer:0},
+  {tool:'rubber',name:'고무줄 악기',answers:['나무 상자','팽팽한 고무줄','책상 다리'],answer:1},
+  {tool:'ruler',name:'책상에 고정한 자',answers:['고정한 책상','자를 누른 손','책상 밖으로 나온 자'],answer:2},
+  {tool:'fork',name:'소리굽쇠',answers:['나무 받침대','위쪽 두 갈래','아래쪽 손잡이'],answer:1}
 ];
 const rhythms = [['울림','쉼','울림'],['울림','쉼','울림','쉼'],['울림','쉼','울림','쉼','울림']];
 const signals = [{name:'가까운 친구',target:1},{name:'멀리 있는 친구',target:3},{name:'가운데 줄 친구',target:2},{name:'조용한 시작 신호',target:1}];
