@@ -615,3 +615,8 @@ h1 .voice-replay,h3 .voice-replay{width:48px;height:48px;min-width:48px}
 @media(max-width:600px){.map-help{padding-right:56px}.map-help .voice-replay{right:4px;width:44px;min-width:44px;height:44px}}
 /* Korean words in the core panel wrap whole (2026-11-10) */
 .final-focus .core-control{word-break:keep-all}
+
+
+.map-page .map-tools{position:absolute;z-index:11;right:24px;bottom:112px;flex-direction:row;align-items:center}
+@media(min-width:1500px){.map-page .map-tools{bottom:142px;right:34px}}
+@media(max-width:900px),(max-height:620px){.map-page .map-tools{bottom:84px;right:12px}}
