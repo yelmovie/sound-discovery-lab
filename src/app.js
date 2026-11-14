@@ -6,7 +6,7 @@ import { transferSound } from './samples.js';
 import { backgrounds, titleLogo, stages, lessons, instruments, lengths, media, transferCases, diagnosisFields, solutions, finalTasks, props, achievements, legacyIndex, LESSON_COUNT, stageLessons } from './data.js';
 import { STORAGE_KEY, freshState, readState, createSaveSession, evidenceCount, stageDone, canLesson, canRoute, lessonFromRoute, recordEvidence, checkLesson, checkFinal, nextDiagnosisField } from './model.js';
 import { SoundEngine } from './audio.js';
-import { createVoice, voiceFor, voiceCue } from './voice.js';
+import { createVoice, voiceFor, voiceCue, voiceLines } from './voice.js';
 import { settingsContent as copy } from './settings-content.js';
 import { APP_VERSION } from './version.js';
 import { concepts, conceptView, conceptTerms, emphasize } from './concepts.js';
@@ -415,7 +415,7 @@ async function handleClick(e){void sound.unlock();const b=e.target.closest('butt
   if(a==='guide'){
    void sound.effect('hint');
    if(i>=0){hintLevels[i]=Math.min(2,(hintLevels[i]||0)+1);feedback=null;updateView();return;}
-   openModal(`${pioPortrait()}<div class="story-card"><span class="npc-scene-name">울림새 삐오</span><h3>나는 울림새 삐오야!</h3><p>방향키나 화면 화살표로 길 위를 자유롭게 걸어 봐. 길을 누르면 그곳까지 걸어가고, 시설 이름을 누르면 시설로 가. 내가 뒤를 따라갈게.</p><p>지도를 손으로 끌어 둘러보거나 ‘지도 한눈에 보기’로 마을 전체를 볼 수 있어. 다시 걸으면 탐험가에게 돌아와.</p><p>각 시설의 네 활동을 마치면 16초 개념 영상과 복구 배지가 기다려!</p></div>`,'삐오와 함께 탐험해',voiceButton('guide','삐오 목소리 다시 듣기',true)+button('닫기','close','','btn primary'),'npc');modalRoot.querySelector('dialog').dataset.voiceLines=voiceChains.guide.join(',');voice.say(voiceChains.guide,200);return;
+   openModal(`${pioPortrait()}<div class="story-card"><span class="npc-scene-name">울림새 삐오</span><h3>${voiceLines[voiceChains.guide[0]].text}</h3>${voiceChains.guide.slice(1).map(id=>`<p>${voiceLines[id].text}</p>`).join('')}</div>`,'삐오와 함께 탐험해',voiceButton('guide','삐오 목소리 다시 듣기',true)+button('닫기','close','','btn primary'),'npc');modalRoot.querySelector('dialog').dataset.voiceLines=voiceChains.guide.join(',');voice.say(voiceChains.guide,200);return;
   }
   if(a==='print')return window.print();
   if(a==='final-choice')void sound.effect('tap');
