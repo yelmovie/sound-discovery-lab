@@ -351,12 +351,12 @@ ${F.tag('t-keep', '필요한 안내 → 들리게', 495, 300)}${F.tag('t-less', 
 
 const builders = { vibration, volume, pitch, travel, care };
 
-const CSS = `@font-face{font-family:"Note Sans";src:local("Apple SD Gothic Neo"),local("AppleSDGothicNeo-Regular");font-weight:400}
-@font-face{font-family:"Note Sans";src:local("Apple SD Gothic Neo Bold"),local("AppleSDGothicNeo-Bold");font-weight:700}
-@font-face{font-family:"Note Sans";src:local("Apple SD Gothic Neo ExtraBold"),local("AppleSDGothicNeo-ExtraBold");font-weight:800}
+const CSS = `@font-face{font-family:"NanumSquareNeo";src:url("assets/fonts/NanumSquareNeoTTF-bRg.woff2") format("woff2");font-weight:400;font-display:block}
+@font-face{font-family:"NanumSquareNeo";src:url("assets/fonts/NanumSquareNeoTTF-cBd.woff2") format("woff2");font-weight:700;font-display:block}
+@font-face{font-family:"NanumSquareNeo";src:url("assets/fonts/NanumSquareNeoTTF-dEb.woff2") format("woff2");font-weight:800;font-display:block}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:${W}px;height:${H}px;overflow:hidden;background:${C.paper}}
-#root{position:relative;width:100%;height:100%;font-family:"Note Sans",sans-serif;color:${C.ink};word-break:keep-all}
+#root{position:relative;width:100%;height:100%;font-family:"NanumSquareNeo",sans-serif;color:${C.ink};word-break:keep-all}
 .full{position:absolute;inset:0}
 .abs{position:absolute}
 .paper{position:absolute;inset:0;background-color:${C.paper};background-image:linear-gradient(${C.grid} 2px,transparent 2px),linear-gradient(90deg,${C.grid} 2px,transparent 2px);background-size:60px 60px}
@@ -401,6 +401,11 @@ async function build(f) {
   await rm(join(dir, 'assets'), { recursive: true, force: true });
   await mkdir(join(dir, 'assets', 'img'), { recursive: true });
   await mkdir(join(dir, 'assets', 'sfx'), { recursive: true });
+  const fonts = join(dir, 'assets', 'fonts');
+  await mkdir(fonts, { recursive: true });
+  for (const font of ['NanumSquareNeoTTF-bRg.woff2', 'NanumSquareNeoTTF-cBd.woff2', 'NanumSquareNeoTTF-dEb.woff2', 'NanumSquareNeo-OFL.txt']) {
+    await copyFile(join(root, 'media', 'fonts', font), join(fonts, font));
+  }
   for (const [name, src] of F.imgs) await copyFile(join(root, src), join(dir, 'assets', 'img', name));
   const lengths = {};
   for (const name of F.sfx) {
