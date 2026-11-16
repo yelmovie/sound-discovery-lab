@@ -12,15 +12,15 @@ const h={button:(label)=>`<button>${label}</button>`,icon:()=>'',prop:()=>'',too
 
 test('parts success messages use the right subject particle', () => {
   const w={},messages=[];
-  for(const answer of [0,1,2,1]){runChallenge('parts',w,'listen',{},sound);runChallenge('parts',w,'select',{value:answer},sound);messages.push(w.challenge.message);}
-  assert.deepEqual(messages,['맞아! 북의 막이 떨려.','맞아! 팽팽한 고무줄이 떨려.','맞아! 책상 밖으로 나온 자가 떨려.','맞아! 위쪽 두 갈래가 떨려.']);
+  for(const answer of [1,1,0]){runChallenge('parts',w,'listen',{},sound);runChallenge('parts',w,'select',{value:answer},sound);messages.push(w.challenge.message);}
+  assert.deepEqual(messages,['맞아! 팽팽한 줄이 떨려.','맞아! 삼각형 쇠막대가 떨려.','맞아! 두드린 음판이 떨려.']);
 });
 
 test('sensor labels write 물속 as one word', () => {
   const w={challenge:{proof:['air']}};
   const html=challengeView('sensor',w,h);
-  assert.match(html,/물속 감지기/);
-  assert.match(html,/<b>물속<\/b>/);
+  assert.match(html,/물속 마이크/);
+  assert.match(html,/<b>물<\/b>/);
   assert.doesNotMatch(html,/물 속/);
 });
 
@@ -39,7 +39,7 @@ test('wrong answers on pitch and transfer point back to their own evidence', () 
 });
 
 test('completed resident requests show the activity summary', () => {
-  const html=challengeView('parts',{challenge:{proof:['0','1','2','1']}},{...h,summary:lessons[2].summary});
+  const html=challengeView('parts',{challenge:{proof:['1','1','0']}},{...h,summary:lessons[2].summary});
   assert.match(html,/class="challenge-summary"/);
   assert.ok(html.includes(lessons[2].summary));
 });

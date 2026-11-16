@@ -1,4 +1,4 @@
-const names=['rubber-instrument','ruler-base','ruler-blade','travel-air','travel-water','travel-solid','library-noise','care-pad','care-volume','care-time','care-place','sound-parcel','drum-pad','string-telephone'];
+const names=['rubber-instrument','ruler-base','ruler-blade','travel-air','travel-water','travel-solid','library-noise','care-pad','care-volume','care-time','care-place','sound-parcel','drum-pad','string-telephone','part-guitar','part-triangle','part-xylophone','case-door','case-underwater','case-table','sensor-whistle','sensor-dolphin','sensor-wall','classify-concert','classify-ironbar','classify-river','care-scene-chair','care-scene-music','care-scene-drum','care-scene-cheer'];
 export const conceptArtwork=Object.fromEntries(names.map(id=>[id,`image/generated/concepts/${id}.webp`]));
 export const conceptArtAssets=[...Object.values(conceptArtwork),'image/generated/concepts/manifest.json'];
 const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

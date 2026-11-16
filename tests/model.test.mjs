@@ -10,17 +10,17 @@ const correctFinal=()=>Object.fromEntries(finalTasks.map((t,i)=>[i,t.answer]));
 function complete(s,i,work){s.work[i]=structuredClone(work);assert.equal(recordEvidence(s,i).ok,true,'activity '+(i+1)+': '+lessons[i].title);}
 function challengeWork(id){
   const w={},act=(action,value)=>runChallenge(id,w,action,{value},sound);
-  if(id==='parts')for(const answer of [0,1,2,1]){act('listen');act('select',answer);}
-  if(id==='rhythm')for(const length of [3,4,5]){for(let n=0;n<length;n++)act(n%2?'rest':'ring');}
-  if(id==='signal')for(const force of [1,3,2,1]){act('force',force);act('strike');}
+  if(id==='parts')for(const answer of [1,1,0]){act('listen');act('select',answer);}
+  if(id==='rhythm')for(const length of [3,5]){for(let n=0;n<length;n++)act(n%2?'rest':'ring');}
+  if(id==='signal')for(const force of [1,3,2]){act('force',force);act('strike');}
   if(id==='sort')for(const order of [[2,1,3],[3,2,1]]){
     for(let n=0;n<3;n++){act('parcel',order.indexOf(n+1));act('slot',n);}
   }
-  if(id==='melody')for(const notes of [[18,12,6],[6,12,18],[12,6,18,12]]){act('listen');for(const note of notes)act('note',note);}
-  if(id==='mix')for(const [length,force] of [[6,1],[18,3],[12,1],[6,3]]){act('length',length);act('force',force);act('check');}
+  if(id==='melody')for(const notes of [[6,12,18],[12,6,18,12]]){act('listen');for(const note of notes)act('note',note);}
+  if(id==='mix')for(const [length,force] of [[6,1],[18,3],[6,3]]){act('length',length);act('force',force);act('check');}
   if(id==='sensor')for(const zone of ['air','water','solid'])act('zone',zone);
-  if(id==='classify')for(const zone of ['air','water','solid','air','water','solid'])act('zone',zone);
-  if(id==='solutions')for(const solution of ['pad','volume','time','place']){act('solution',solution);act('before');act('after');}
+  if(id==='classify')for(const zone of ['air','water','solid','solid'])act('zone',zone);
+  if(id==='solutions')for(const solution of ['pad','volume','time','place'])act('solution',solution);
   if(id==='festival'){act('music',1);act('announcement',2);act('pads');}
   assert.equal(checkChallenge(id,w.challenge),true,id+': live rounds completed');
   assert.equal(w.challenge.proof.length,challengeRoundCount(id));return w;
@@ -124,8 +124,8 @@ test('storage denied or corrupt returns usable state and an honest warning',()=>
 
 test('successful signal, tuning and sensor trials preserve the requested experimental sound',()=>{
   const cases=[
-    {id:'signal',rounds:[1,3,2,1].map(force=>({controls:[['force',force]],commit:['strike'],sound:{kind:'drum',frequency:150,level:force/3,duration:.7}}))},
-    {id:'mix',rounds:[[6,1,650],[18,3,260],[12,1,390],[6,3,650]].map(([length,force,frequency])=>({controls:[['length',length],['force',force]],commit:['check'],sound:{frequency,level:force/3,duration:.8}}))},
+    {id:'signal',rounds:[1,3,2].map(force=>({controls:[['force',force]],commit:['strike'],sound:{kind:'drum',frequency:150,level:force/3,duration:.7}}))},
+    {id:'mix',rounds:[[6,1,650],[18,3,260],[6,3,650]].map(([length,force,frequency])=>({controls:[['length',length],['force',force]],commit:['check'],sound:{frequency,level:force/3,duration:.8}}))},
     {id:'sensor',rounds:['air','water','solid'].map(zone=>({controls:[],commit:['zone',zone],sound:{kind:zone==='air'?'drum':zone==='water'?'fork':'solid',frequency:zone==='air'?150:440,level:.4}}))}
   ];
   for(const scenario of cases){

@@ -53,9 +53,9 @@ function challengePlan(id,c){
   case 'sort':return [...[0,1,2].map(value=>observe('parcel',{value},`상자 ${'ABC'[value]}를 듣고 크기를 비교해 봐.`,1600)),end('들은 소리를 작은 것부터 직접 놓아 봐.','[data-action="challenge-parcel"]')];
   case 'melody':return [observe('listen',{},'목표 멜로디의 높낮이를 들어 봐.',3000),end('목표와 같은 순서로 직접 자를 눌러 봐.','[data-action="challenge-note"]')];
   case 'mix':return [preview(id,{kind:'ruler',frequency:lengths[0].frequency,level:1/3,duration:1},{length:18,force:1},'.mix-preview','먼저 긴 자를 약하게 튕긴 소리야.'),preview(id,{kind:'ruler',frequency:lengths[2].frequency,level:1/3,duration:1},{length:6,force:1},'.mix-preview','같은 세기에서 길이만 바꾼 소리를 비교해 봐.'),preview(id,{kind:'ruler',frequency:lengths[2].frequency,level:1,duration:1},{length:6,force:3},'.mix-preview','길이를 그대로 두고 세기만 바꿨어.'),end('주문을 보고 길이와 세기를 직접 맞춰 봐.','#mix-length')];
-  case 'sensor':return [...media.map(m=>preview(id,{...transferSound(m.id),duration:1.1},{zone:m.id},`.sensor-zone.${m.id}`,`${m.label}에서 소리와 감지기의 위치를 살펴봐.`,1600)),end('요청한 물질의 실험에 감지기를 직접 놓아 봐.','[data-action="challenge-zone"]')];
+  case 'sensor':return [preview(id,null,{},'.scene-question','그림에서 소리가 난 곳과 듣는 곳을 찾아봐.',1800),end('두 곳 사이의 물질에 감지기를 직접 놓아 봐.','[data-action="challenge-zone"]')];
   case 'classify':return [preview('path',null,{},'.path-source','소리가 난 곳에서 듣는 곳까지의 상황을 읽어 봐.',1800),end('두 곳 사이에서 소리를 전달한 물질을 골라 봐.','[data-action="challenge-zone"]')];
-  case 'solutions':return [observe('before',{},'해결책을 적용하기 전 소리를 들어 봐.',2200),...(c.solution?[observe('after',{},'네가 선택한 도구의 적용 후와 비교해 봐.',1800)]:[]),end(c.solution?'상황에 맞는 해결책인지 살펴보고 직접 바꿔 봐.':'주민의 상황에 맞는 해결 도구를 직접 골라 봐.','[data-action="challenge-solution"]')];
+  case 'solutions':return [observe('before',{},'해결책을 적용하기 전 소리를 들어 봐.',2200),end('주민의 상황에 맞는 해결 도구를 직접 골라 봐.','[data-action="challenge-solution"]')];
   case 'festival':return [observe('preview',{},'지금 설정된 축제의 소리를 들어 봐.',2800),end('세 주민의 요청을 보고 조절해 봐.','#festival-music')];
   default:return [];
  }

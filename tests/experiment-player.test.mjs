@@ -95,13 +95,13 @@ test('safe challenge observations retain the current round without replaying com
  const parts=lessons.findIndex(l=>l.challenge==='parts');
  const plan=experimentPlan(parts,{challenge:{proof:['0']}});
  assert.equal(plan[0].action,'challenge-listen');assert.equal(plan[0].data.round,1);
- const completed=experimentPlan(parts,{challenge:{proof:['0','1','2','1']}});
+ const completed=experimentPlan(parts,{challenge:{proof:['1','1','0']}});
  assert.equal(completed.length,1);assert.equal(completed[0].state,'complete');
  const sort=lessons.findIndex(l=>l.challenge==='sort');
  assert.deepEqual(experimentPlan(sort).filter(s=>s.type==='action').map(s=>s.data.value),[0,1,2]);
  const solutions=lessons.findIndex(l=>l.challenge==='solutions');
  assert.deepEqual(experimentPlan(solutions).filter(s=>s.type==='action').map(s=>s.action),['challenge-before']);
- assert.deepEqual(experimentPlan(solutions,{challenge:{solution:'pad'}}).filter(s=>s.type==='action').map(s=>s.action),['challenge-before','challenge-after']);
+ assert.deepEqual(experimentPlan(solutions,{challenge:{solution:'pad'}}).filter(s=>s.type==='action').map(s=>s.action),['challenge-before'],'autoplay listens but never chooses the tool');
 });
 
 test('automatic rhythm observation retains the restart cue for an interrupted performance',()=>{
@@ -130,15 +130,10 @@ test('running every fresh challenge observation cannot award a proof or choose a
  }
 });
 
-test('a learner-selected solution may finish through observation without choosing the next answer',()=>{
+test('automatic solution observation only listens and never awards or replaces a learner choice',()=>{
  const sound={play(){},sequence(){},stop(){}},i=lessons.findIndex(l=>l.challenge==='solutions');
- const selected={challenge:{proof:[],solution:'pad',before:false,after:false}};
- const plan=experimentPlan(i,selected);
+ const plan=experimentPlan(i,{challenge:{proof:[]}});
  assert.equal(plan.some(s=>s.action==='challenge-solution'),false);
- for(const s of plan)if(s.type==='action')runChallenge('solutions',selected,s.action.slice(10),s.data,sound);
- assert.deepEqual(selected.challenge.proof,['pad']);
- assert.equal(selected.challenge.solution,undefined,'the existing validator resets only the completed round');
- assert.equal(selected.challenge.after,undefined,'old-round observation never spills into the next request');
  const wrong={challenge:{proof:[],solution:'volume'}};
  for(const s of experimentPlan(i,wrong))if(s.type==='action')runChallenge('solutions',wrong,s.action.slice(10),s.data,sound);
  assert.equal(wrong.challenge.solution,'volume','automatic observation does not replace a learner choice');

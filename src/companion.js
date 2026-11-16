@@ -19,11 +19,11 @@ const hints = [
  ['요청 카드의 높낮이와 크기를 읽어 봐.','한 손잡이씩 움직여 어느 소리가 달라지는지 들어 봐.','연주하기를 눌러 요청과 비교해. 길이와 세기 중 비교할 손잡이를 골라 봐.'],
  ['세 전달 실험의 듣기 버튼을 한 번씩 눌러 봐.','소리를 내는 곳과 감지기 사이를 그림에서 찾아봐.','세 실험의 듣기를 다시 눌러. 감지기에서 확인한 결과와 아래 설명을 비교해.'],
  ['상황 그림을 읽고 소리가 지난 물질을 골라 봐.','소리가 난 곳과 듣는 곳을 먼저 찾아봐.','상황 탭을 다시 봐. 두 곳 사이가 무엇으로 이어지는지 아래 보기와 비교해.'],
- ['실험 제목을 읽고 감지기를 놓을 곳을 눌러 봐.','소리가 난 곳부터 감지기까지 그림에서 가리켜 봐.','제목의 실험 조건과 세 장소 그림을 비교해. 시험할 곳을 눌러 결과를 들어 봐.'],
+ ['그림을 보고 감지기를 소리가 지나온 물질에 놓아 봐.','소리가 난 곳부터 듣는 곳까지 그림에서 손가락으로 따라가 봐.','두 곳 사이에 공기·물·고체 중 무엇이 있는지 그림에서 찾아 감지기를 놓아 봐.'],
  ['이야기를 읽고 소리가 지난 물질을 골라 봐.','말하는 곳과 듣는 곳 사이를 이어주는 것을 찾아봐.','이야기 속 두 지점을 눈으로 이어 봐. 그 사이에 있는 것과 아래 보기를 비교해.'],
  ['현장 소리 듣기를 누르고 현장 제보를 읽어 봐.','그림에서 소리가 난 곳과 소리를 들은 사람을 찾아봐.','현장 소리 듣기를 다시 눌러 봐. 그림과 제보에서 장소·시간·사람의 단서를 비교해.'],
  ['적용 전과 적용 후의 소리를 비교해 봐.','지금 선택한 방법이 어느 소리를 바꾸는지 들어 봐.','적용 전 듣기와 적용 후 듣기를 번갈아 눌러 봐. 달라진 점과 그대로인 점을 찾아봐.'],
- ['현장 이야기를 읽고 적용 전 소리를 들어 봐.','해결 방법 하나를 시험하고 적용 전과 후를 비교해 봐.','적용 전과 적용 후를 번갈아 들어 봐. 현장의 불편이 줄었는지 보고 다른 방법도 시험해.'],
+ ['현장 그림을 보고 알맞은 도구를 눌러 봐.','누가, 어디에서, 언제 불편한지 그림에서 찾아봐.','도구를 누르면 적용 전과 후 소리가 이어서 나와. 소리가 줄지 않았다면 다른 도구를 골라 봐.'],
  ['주민 요청을 읽고 전체 듣기를 눌러 봐.','두 손잡이와 의자 도구를 한 번에 하나씩 바꿔 봐.','전체 듣기를 다시 눌러 봐. 소리마다 주민 요청과 맞는지 비교하고, 어긋난 곳을 다시 조절해.']
 ];
 // Hints follow lesson IDs, which interleave each facility's two original and two resident activities.
@@ -59,7 +59,7 @@ export function coachFor(state,index,level=0,saved){
    mix:'[data-action="challenge-check"]',
    sensor:'[data-action="challenge-zone"]',
    classify:'[data-action="challenge-zone"]',
-   solutions:!c.before?'[data-action="challenge-before"]':!c.solution?'[data-action="challenge-solution"]':'[data-action="challenge-after"]',
+   solutions:'[data-action="challenge-solution"]',
    festival:'[data-action="challenge-preview"]'
   };
   target=next[l.challenge]||'';
@@ -71,7 +71,7 @@ export function coachFor(state,index,level=0,saved){
   }
   if(l.challenge==='parts'&&!c.heard)text='물체의 울려 보기를 눌러. 소리가 날 때 어느 부분이 움직이는지 살펴봐.';
   if(l.challenge==='melody'&&!c.heard)text='목표 듣기를 눌러. 음마다 높이가 어떻게 바뀌는지 들어 봐.';
-  if(l.challenge==='solutions')text=!c.before?'적용 전을 눌러 현장의 소리를 들어 봐.':!c.solution?'현장 이야기를 읽고 시험해 볼 도구를 눌러 봐.':!c.after?'적용 후를 눌러 처음 들은 소리와 비교해 봐.':text;
+  if(l.challenge==='solutions')text='현장 그림을 보고 알맞은 도구를 눌러 봐. 적용 전과 후 소리가 이어서 나와.';
  }
  if(l.base===0&&(w.seen||[]).length<2&&level>0)text='아직 안 울려 본 물체를 눌러. 먼저 본 물체와 움직임을 비교해 봐.';
  if(level===0&&l.base===0&&(w.seen||[]).length>=2)text='관찰한 물체의 공통점을 아래에서 골라 봐.';

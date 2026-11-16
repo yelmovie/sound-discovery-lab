@@ -13,7 +13,7 @@ test('finding a vibrating part requires observation and awards on the answer its
   const t=trial('parts');
   t.act('select',0);assert.equal(count(t),0);assert.match(t.w.challenge.message,/먼저/);
   t.act('listen');t.act('select',2);assert.equal(count(t),0);
-  t.act('select',0);assert.equal(count(t),1);assert.equal(t.w.challenge.kind,'success');
+  t.act('select',1);assert.equal(count(t),1);assert.equal(t.w.challenge.kind,'success');
   t.act('check');assert.equal(count(t),1);assert.equal(t.w.challenge.kind,'success');
   t.act('select',1);assert.equal(count(t),1,'the next object must be observed too');
 });
@@ -31,13 +31,13 @@ test('rhythm ends on its last beat without cutting off the final experimental no
 test('melody hearing remains required and a new note restarts a failed full melody',()=>{
   const t=trial('melody');
   t.act('note',18);assert.equal(count(t),0);assert.equal(t.w.challenge.sequence,undefined);
-  t.act('listen');for(const n of [6,6,6])t.act('note',n);
+  t.act('listen');for(const n of [18,18,18])t.act('note',n);
   assert.equal(count(t),0);assert.match(t.w.challenge.message,/다른 음/);
   t.w.challenge=cleanChallenge(t.w.challenge);
-  t.act('note',18);assert.deepEqual(t.w.challenge.sequence,[18]);
-  t.act('note',12);t.events.length=0;t.act('note',6);
+  t.act('note',6);assert.deepEqual(t.w.challenge.sequence,[6]);
+  t.act('note',12);t.events.length=0;t.act('note',18);
   assert.equal(count(t),1);
-  assert.deepEqual(t.events,[['play',{frequency:650,level:.5,duration:.8}]]);
+  assert.deepEqual(t.events,[['play',{frequency:260,level:.5,duration:.8}]]);
 });
 
 test('signal and mixer controls prepare silently and the performance submits once',()=>{
@@ -73,15 +73,18 @@ test('a placed sensor or connected story is checked immediately and stale events
   }
 });
 
-test('solution comparison needs both observations and invalidates hearing when the tool changes',()=>{
-  const t=trial('solutions');
-  t.act('solution','pad');t.act('after');assert.equal(count(t),0);
-  t.act('before');assert.equal(count(t),1);
-  t.act('before');t.act('solution','pad');t.act('after');assert.equal(count(t),1);
-  t.act('solution','volume');assert.equal(t.w.challenge.after,false);
-  t.act('before');assert.equal(count(t),1);
-  t.events.length=0;t.act('after');assert.equal(count(t),2);
-  assert.deepEqual(t.events,[['play',{kind:'drum',frequency:160,level:.2}]],'success preserves the improved scene sound');
+test('one tool choice plays the before and after pair, and only the fitting tool is awarded',()=>{
+  const t=trial('solutions'),loud={kind:'drum',frequency:160,level:.7};
+  t.act('before');assert.equal(count(t),0,'listening alone never awards');
+  assert.deepEqual(t.events.at(-1),['sequence',[loud,loud]]);
+  t.events.length=0;t.act('solution','volume');assert.equal(count(t),0);assert.equal(t.w.challenge.kind,'hint');
+  assert.deepEqual(t.events,[['sequence',[loud,loud,loud,loud]]],'a wrong tool keeps the after sound loud');
+  t.events.length=0;t.act('solution','pad');assert.equal(count(t),1);
+  assert.deepEqual(t.events,[['sequence',[loud,loud,{...loud,level:.2},{...loud,level:.2}]]],'the fitting tool makes the after sound quieter');
+  t.act('solution','time');assert.equal(count(t),1,'the next request needs its own tool');
+  t.act('solution','volume');assert.equal(count(t),2);
+  t.events.length=0;t.act('solution','time');assert.equal(count(t),3);
+  assert.equal(t.events[0][1][2].level,0,'moving the time leaves the reading time silent');
 });
 
 test('festival completes on the final satisfied request and never on preview alone',()=>{
@@ -95,10 +98,10 @@ test('stale perform and replay events cannot alter a new round or completed chal
   const t=trial('signal');t.act('strike',1,0);assert.equal(count(t),1);
   t.act('strike',3,0);assert.equal(count(t),1);
   t.act('replay',undefined,0);assert.equal(count(t),1);
-  t.act('strike',3,1);t.act('strike',2,2);t.act('strike',1,3);
+  t.act('strike',3,1);t.act('strike',2,2);
   assert.equal(checkChallenge('signal',t.w.challenge),true);
-  t.act('replay',undefined,3);assert.equal(count(t),4);
-  t.act('replay',undefined,4);assert.equal(count(t),0);
+  t.act('replay',undefined,2);assert.equal(count(t),3);
+  t.act('replay',undefined,3);assert.equal(count(t),0);
 });
 
 test('views carry round tokens on interaction targets and reserve submit for actual mixer playing',()=>{
@@ -114,4 +117,11 @@ test('views carry round tokens on interaction targets and reserve submit for act
   assert.equal((partHtml.match(/data-action="challenge-listen"/g)||[]).length,1,'one direct object button');
   const parcelHtml=challengeView('sort',{},h);
   assert.equal((parcelHtml.match(/data-action="challenge-parcel"/g)||[]).length,3,'one listen-and-move button per parcel');
+});
+
+test('rounds saved under an older request list keep only the still-matching prefix',()=>{
+  const t=trial('parts',{challenge:{proof:['0','1','2','1']}});
+  t.act('listen');assert.equal(count(t),0,'old proofs that no longer match are dropped');
+  const kept=trial('signal',{challenge:{proof:['1','3','2','1']}});
+  kept.act('listen');assert.equal(count(kept),3);assert.equal(checkChallenge('signal',kept.w.challenge),true);
 });

@@ -1,36 +1,39 @@
 import {media} from './data.js';
 
 const parts = [
-  {tool:'drum',name:'작은 북',answers:['북의 막','북의 옆면','북채 손잡이'],answer:0},
-  {tool:'rubber',name:'고무줄 악기',answers:['나무 상자','팽팽한 고무줄','책상 다리'],answer:1},
-  {tool:'ruler',name:'책상에 고정한 자',answers:['고정한 책상','자를 누른 손','책상 밖으로 나온 자'],answer:2},
-  {tool:'fork',name:'소리굽쇠',answers:['나무 받침대','위쪽 두 갈래','아래쪽 손잡이'],answer:1}
+  {tool:'ukulele',art:'part-guitar',sound:'rubber',name:'우쿨렐레',answers:['나무 몸통 바닥','팽팽한 줄','줄감개 손잡이'],answer:1},
+  {tool:'triangle',art:'part-triangle',sound:'fork',name:'트라이앵글',answers:['매단 끈','삼각형 쇠막대','치는 사람의 손'],answer:1},
+  {tool:'xylophone',art:'part-xylophone',sound:'solid',name:'실로폰',answers:['두드린 음판','받침 나무틀','채 손잡이'],answer:0}
 ];
-const rhythms = [['울림','쉼','울림'],['울림','쉼','울림','쉼'],['울림','쉼','울림','쉼','울림']];
-const signals = [{name:'가까운 친구',target:1},{name:'멀리 있는 친구',target:3},{name:'가운데 줄 친구',target:2},{name:'조용한 시작 신호',target:1}];
+const rhythms = [['울림','쉼','울림'],['울림','쉼','울림','쉼','울림']];
+const signals = [{name:'가까운 친구',target:1},{name:'멀리 있는 친구',target:3},{name:'가운데 줄 친구',target:2}];
 const sortOrders = [[2,1,3],[3,2,1]];
-const melodies = [[18,12,6],[6,12,18],[12,6,18,12]];
-const mixes = [{length:6,force:1},{length:18,force:3},{length:12,force:1},{length:6,force:3}];
+const melodies = [[6,12,18],[12,6,18,12]];
+const mixes = [{length:6,force:1},{length:18,force:3},{length:6,force:3}];
+// Sensor scenes are new places, not a replay of the observation activity's three set-ups.
+const sensorScenes = [
+  {id:'air',art:'sensor-whistle',title:'운동장 호루라기',text:'선생님의 호루라기 소리가 멀리 있는 친구들에게 들려.'},
+  {id:'water',art:'sensor-dolphin',title:'수족관 돌고래',text:'돌고래 소리를 수조 안 물속 마이크로 들었어.'},
+  {id:'solid',art:'sensor-wall',title:'벽 너머 망치질',text:'옆방에서 벽에 못을 박자, 벽에 귀를 댄 친구에게 소리가 들려.'}
+];
 const situations = [
-  {text:'운동장에서 친구의 목소리가 귀에 들려.',answer:'air'},
-  {text:'물속에서 울린 종을 물속 감지기로 관찰했어.',answer:'water'},
-  {text:'탁자 한쪽을 두드리고, 탁자에 댄 감지기로 들었어.',answer:'solid'},
-  {text:'공연장에서 노랫소리가 관객의 귀에 들려.',answer:'air'},
-  {text:'수중 마이크로 물속 돌이 부딪치는 소리를 들었어.',answer:'water'},
-  {text:'종이컵 전화기의 팽팽한 실을 따라 소리가 전해졌어. 실은 어떤 물질일까?',answer:'solid'}
+  {text:'작은 음악회에서 친구의 노랫소리가 관객의 귀에 들려.',answer:'air',art:'classify-concert'},
+  {text:'물속 마이크로 강바닥 돌이 부딪치는 소리를 들었어.',answer:'water',art:'classify-river'},
+  {text:'철봉 한쪽을 톡톡 두드리니, 반대쪽 철봉에 귀를 댄 친구가 들었어.',answer:'solid',art:'classify-ironbar'},
+  {text:'종이컵 전화기의 팽팽한 실을 따라 소리가 전해졌어. 실은 어떤 물질일까?',answer:'solid',art:'string-telephone'}
 ];
 const cases = [
-  {title:'의자를 끌 때마다 드르륵!',scene:'책 읽는 친구 옆에서 의자를 옮기고 있어.',answer:'pad',why:'의자 다리에 패드를 붙여 바닥에 긁히며 나는 소리를 줄였어.'},
-  {title:'복도 음악이 너무 커!',scene:'옆 교실에서 발표하는 말이 잘 안 들려.',answer:'volume',why:'음악의 음량을 줄여 발표가 잘 들리게 했어.'},
-  {title:'독서 시간과 북 연습이 겹쳐!',scene:'연습도 하고 싶고, 조용히 책도 읽고 싶어.',answer:'time',why:'서로의 시간을 맞추면 두 활동을 모두 할 수 있어.'},
-  {title:'교실 문 바로 앞에서 응원해!',scene:'응원 장소를 옮길 수 있는 넓은 운동장이 있어.',answer:'place',why:'응원 장소를 교실에서 떨어진 곳으로 옮겼어.'}
+  {title:'의자를 끌 때마다 드르륵!',scene:'책 읽는 친구 옆에서 의자를 옮기고 있어.',art:'care-scene-chair',answer:'pad',why:'의자 다리에 패드를 붙여 바닥에 긁히며 나는 소리를 줄였어.'},
+  {title:'복도 음악이 너무 커!',scene:'옆 교실에서 발표하는 말이 잘 안 들려.',art:'care-scene-music',answer:'volume',why:'음악의 음량을 줄여 발표가 잘 들리게 했어.'},
+  {title:'독서 시간과 북 연습이 겹쳐!',scene:'연습도 하고 싶고, 조용히 책도 읽고 싶어.',art:'care-scene-drum',answer:'time',why:'서로의 시간을 맞추면 두 활동을 모두 할 수 있어.'},
+  {title:'교실 문 바로 앞에서 응원해!',scene:'응원 장소를 옮길 수 있는 넓은 운동장이 있어.',art:'care-scene-cheer',answer:'place',why:'응원 장소를 교실에서 떨어진 곳으로 옮겼어.'}
 ];
 const solutionTools = [{id:'pad',name:'패드 붙이기'},{id:'volume',name:'음량 줄이기'},{id:'time',name:'시간 바꾸기'},{id:'place',name:'장소 옮기기'}];
 const expectedProof = {
   parts:parts.map(p=>String(p.answer)),rhythm:rhythms.map(p=>p.join(',')),
   signal:signals.map(s=>String(s.target)),sort:sortOrders.map(()=> '1,2,3'),
   melody:melodies.map(p=>p.join(',')),mix:mixes.map(p=>`${p.length},${p.force}`),
-  sensor:media.map(m=>m.id),classify:situations.map(s=>s.answer),
+  sensor:sensorScenes.map(m=>m.id),classify:situations.map(s=>s.answer),
   solutions:cases.map(c=>c.answer),festival:['balanced']
 };
 export const challengeRoundCount = id => expectedProof[id]?.length || 0;
@@ -45,6 +48,14 @@ export function cleanChallenge(raw) {
   for(const key of ['sequence','listened'])c[key]=Array.isArray(raw[key])?raw[key].filter(x=>typeof x==='string'||Number.isInteger(x)).slice(0,6):[];
   // Feedback and a live oscillator are transient, never restored as running.
   c.sounding=false;
+  return c;
+}
+// Saved rounds from an older request list keep only the prefix that still matches today's requests.
+export function alignProof(id,c){
+  const proof=expectedProof[id];
+  if(!proof||!c||!Array.isArray(c.proof))return c;
+  let n=0;while(n<c.proof.length&&n<proof.length&&c.proof[n]===proof[n])n++;
+  if(n!==c.proof.length)c.proof=c.proof.slice(0,n);
   return c;
 }
 export function checkChallenge(id,c={}) {
@@ -81,4 +92,4 @@ export function adjustmentCue(id, c = {}) {
   return null;
 }
 
-export {parts,rhythms,signals,sortOrders,melodies,mixes,situations,cases,solutionTools,roundOf,expectedProof};
+export {sensorScenes,parts,rhythms,signals,sortOrders,melodies,mixes,situations,cases,solutionTools,roundOf,expectedProof};

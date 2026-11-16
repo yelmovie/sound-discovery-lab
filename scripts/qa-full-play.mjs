@@ -99,7 +99,7 @@ async function autoplay(i,label){
 async function roundWait(i,n){await page.waitForFunction(({i,n,key})=>JSON.parse(localStorage.getItem(key))?.work?.[i]?.challenge?.proof?.length===n,{i,n,key},{timeout:3000});await page.waitForTimeout(560);}
 async function evidence(i){await page.waitForFunction(({i,key})=>Boolean(JSON.parse(localStorage.getItem(key))?.evidence?.[i]),{i,key},{timeout:3000});assert.equal(await page.locator('[data-action="continue"]').count(),1);await record(`lesson-${i}-complete`,{shot:i%4===3||i===4||i===8});checks.push(`lesson ${i}: earned evidence and visible continue`);}
 const choices=async(i,n)=>{await action('choice',`[data-choice="${n}"]`,`lesson-${i}-choice-${n}`);await record(`lesson-${i}-choice-${n}`);};
-const plans={parts:[0,1,2,1],rhythm:[['ring','rest','ring'],['ring','rest','ring','rest'],['ring','rest','ring','rest','ring']],signal:[1,3,2,1],sort:[[1,0,2],[2,1,0]],melody:[[18,12,6],[6,12,18],[12,6,18,12]],mix:[[6,1],[18,3],[12,1],[6,3]],sensor:['air','water','solid'],classify:['air','water','solid','air','water','solid'],solutions:['pad','volume','time','place'],festival:['balanced']};
+const plans={parts:[1,1,0],rhythm:[['ring','rest','ring'],['ring','rest','ring','rest','ring']],signal:[1,3,2],sort:[[1,0,2],[2,1,0]],melody:[[6,12,18],[12,6,18,12]],mix:[[6,1],[18,3],[6,3]],sensor:['air','water','solid'],classify:['air','water','solid','solid'],solutions:['pad','volume','time','place'],festival:['balanced']};
 let reloadChecked=false,rhythmReloadChecked=false;
 async function playLesson(i){
  assert.equal(await domRoute(),`lesson/${i}`);await page.waitForTimeout(380);await record(`lesson-${i}-entered`,{shot:i%4===0});
@@ -116,7 +116,7 @@ async function playLesson(i){
    if(id==='melody'){await action('challenge-clear');for(const n of plans[id][k]){await action('challenge-note',`[data-value="${n}"]`);await record(`lesson-${i}-round-${k}-note-${n}`);}}
    if(id==='mix'){await range('#mix-length',plans[id][k][0]);await range('#mix-force',plans[id][k][1]);await record(`lesson-${i}-round-${k}-set`);await action('challenge-check');}
    if(id==='sensor'||id==='classify')await action('challenge-zone',`[data-value="${plans[id][k]}"]`);
-   if(id==='solutions'){await action('challenge-solution',`[data-value="${plans[id][k]}"]`);await record(`lesson-${i}-round-${k}-solution`);await action('challenge-after');}
+   if(id==='solutions'){await action('challenge-solution',`[data-value="${plans[id][k]}"]`);await record(`lesson-${i}-round-${k}-solution`);}
    if(id==='festival'){await range('#festival-music',1);await range('#festival-announcement',2);await record(`lesson-${i}-balanced-levels`);await action('challenge-pads');}
    await roundWait(i,k+1);await record(`lesson-${i}-round-${k}-awarded`,{shot:k===plans[id].length-1});
   }
@@ -169,7 +169,7 @@ async function viewportRegressions(viewports=[[915,412],[1024,768],[1920,1080],[
  }
 }
 async function setupDemo(){
- await action('settings');await page.getByText('교사용 가이드',{exact:true}).click();await page.getByText('교사용 도구',{exact:true}).click();await action('admin');await click('.modal-heading [data-action="close"]');await action('start');await page.locator('.map-load-state').waitFor({state:'hidden',timeout:30000});await page.waitForTimeout(800);await click('.map-next');await page.locator('.lesson-page[data-lesson="0"]').waitFor({timeout:20000});
+ await action('settings');await page.getByText('교사용 가이드',{exact:true}).click();await page.getByText('교사용 도구',{exact:true}).click();await action('admin');await click('.modal-heading [data-action="close"]');await action('start');await page.locator('.map-load-state').first().waitFor({state:'hidden',timeout:30000});await page.waitForTimeout(800);await click('.map-next');await page.locator('.lesson-page[data-lesson="0"]').waitFor({timeout:20000});
 }
 async function demoLesson(i){let current=Number((await domRoute()).split('/')[1]);await page.locator('main h1').focus();while(current!==i){await page.keyboard.press(current<i?'ArrowRight':'ArrowLeft');await page.waitForTimeout(110);current=Number((await domRoute()).split('/')[1]);}await page.waitForTimeout(560);await record(`demo-lesson-${i}`);}
 async function boundaryIssue(label,detail){const item={severity:'confirmed',label,detail,lastAction,route:await domRoute()};issues.push(item);await record(label,{shot:true,allowIssues:true});console.log('CONFIRMED '+JSON.stringify(item));await flush();}
@@ -209,13 +209,13 @@ try{
  if(process.argv.includes('--map-early'))await page.route('**/image/generated/ullim-village.webp',async r=>{events.push({type:'network-delay',url:r.request().url(),milliseconds:4500});await new Promise(resolve=>setTimeout(resolve,4500));await r.continue();});
  await page.goto(base,{waitUntil:'domcontentloaded'});await page.bringToFront();await page.waitForTimeout(350);
  if(!process.argv.includes('--resume'))assert.equal(await saved(),null,'fresh student profile has no saved progress');
- if(process.argv.includes('--map-early')){await action('start');await page.locator('.map-load-state').waitFor({state:'visible'});await click('.map-next','single-early-recommended-click');assert.equal(await page.locator('.map-load-state').isVisible(),true);await record('map-early-click-loading',{shot:true});await page.locator('.lesson-page[data-lesson="0"]').waitFor({timeout:25000});await record('map-early-click-arrived',{shot:true});checks.push('one real recommended-map click during delayed loading is queued and enters first lesson after art becomes ready');}
+ if(process.argv.includes('--map-early')){await action('start');await page.locator('.map-load-state').first().waitFor({state:'visible'});await click('.map-next','single-early-recommended-click');assert.equal(await page.locator('.map-load-state').first().isVisible(),true);await record('map-early-click-loading',{shot:true});await page.locator('.lesson-page[data-lesson="0"]').waitFor({timeout:25000});await record('map-early-click-arrived',{shot:true});checks.push('one real recommended-map click during delayed loading is queued and enters first lesson after art becomes ready');}
  else if(process.argv.includes('--small-existing')){assert.equal((await saved()).restored,true);await page.setViewportSize({width:360,height:740});await revisit(4);await range('#force',1);await record('360x740-drum-complete-long-force-label',{shot:true});await viewportRegressions([[830,515]]);}
  else if(process.argv.includes('--font-existing'))await fontProbeExisting();
  else if(process.argv.includes('--trace-existing'))await tracePointer();
  else if(boundaryOnly)await boundaryChecks();
  else{
- if(await domRoute()==='home'){await record('fresh-home',{shot:true});await action('start');await page.locator('.map-next').waitFor();await page.locator('.map-load-state').waitFor({state:'hidden',timeout:30000});await page.waitForTimeout(800);await record('fresh-map',{shot:true});await click('.map-next','recommended-first-facility');await page.locator('.lesson-page[data-lesson="0"]').waitFor({timeout:20000});}
+ if(await domRoute()==='home'){await record('fresh-home',{shot:true});await action('start');await page.locator('.map-next').waitFor();await page.locator('.map-load-state').first().waitFor({state:'hidden',timeout:30000});await page.waitForTimeout(800);await record('fresh-map',{shot:true});await click('.map-next','recommended-first-facility');await page.locator('.lesson-page[data-lesson="0"]').waitFor({timeout:20000});}
  for(let i=Number((await domRoute()).split('/')[1])||0;i<20;i++){if(await domRoute()==='final'||await domRoute()==='result')break;await repairable(`lesson-${i}`,()=>playLesson(i));await repairable(`next-${i}`,()=>advance(i));console.log(`PASS lesson ${i}: ${lessons[i].title}`);await flush();}
  if(await domRoute()==='final')await repairable('final',finalQuestions);
  assert.equal(await domRoute(),'result');

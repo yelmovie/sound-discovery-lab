@@ -4,8 +4,9 @@ import { transferSound } from './samples.js';
 import { lengths, media } from './data.js';
 import { liveWave, rulerKey } from './manipulations.js';
 
-import {parts,rhythms,signals,sortOrders,melodies,mixes,situations,cases,solutionTools,roundOf,expectedProof,challengeRoundCount,checkChallenge} from './challenge-rules.js';
-export {challengeRoundCount,cleanChallenge,checkChallenge,adjustmentCue} from './challenge-rules.js';
+import {sensorScenes,parts,rhythms,signals,sortOrders,melodies,mixes,situations,cases,solutionTools,roundOf,expectedProof,challengeRoundCount,checkChallenge} from './challenge-rules.js';
+export {challengeRoundCount,cleanChallenge,checkChallenge,adjustmentCue,alignProof} from './challenge-rules.js';
+import {alignProof} from './challenge-rules.js';
 
 // 받침이 있으면 '이', 없으면 '가'.
 const subject = word => (word.charCodeAt(word.length-1)-0xac00)%28 ? '이' : '가';
@@ -18,7 +19,7 @@ function award(id,c,proof,message){c.proof=[...(c.proof||[]),proof];resetRound(c
 
 /** UI-only content uses the same trial definitions as validation and audio. */
 export function challengeView(id,w,h) {
-  const c=w.challenge||{},k=roundOf(id,c),done=checkChallenge(id,c);
+  const c=alignProof(id,w.challenge||{}),k=roundOf(id,c),done=checkChallenge(id,c);
   const {button:b,icon,toolGraphic,prop,wave}=h;
   const round=c.proof?.length||0;
   const control=(text,action,attrs='',cls='btn secondary')=>b(text,`challenge-${action}`,`data-round="${round}" ${attrs}`,cls);
@@ -27,10 +28,10 @@ export function challengeView(id,w,h) {
   const object=tool=>`<span class="challenge-object-art">${toolGraphic(tool)}</span>`;
   const beat=(label,n,filled=false,pitch=null)=>`<span class="signal-tile ${filled?'filled':''} ${label==='쉼'?'is-rest':''}" aria-label="${n+1}번째 ${label}${filled?', 연주했어':''}"><svg class="signal-trace" viewBox="0 0 72 30" aria-hidden="true"><path d="${label==='쉼'?'M4 15H68':pitch!==null?`M4 ${pitch===6?6:pitch===12?15:24}H68`:'M4 15H12L18 5L26 25L34 5L42 25L50 5L58 15H68'}"/></svg><b>${label}${filled?' ✓':''}</b></span>`;
   const performance=(label,sequence)=>`<p class="performance-line"><b>${label}</b><span>${sequence||'—'}</span></p>`;
-  if(done)return `<div class="challenge-shell challenge-complete round-success" data-challenge="${id}" data-round="${round}">${scene}<div class="success-emblem">${icon('check')}</div><h2>주민의 의뢰를 모두 해결했어!</h2>${h.summary?`<p class="challenge-summary">${h.summary}</p>`:''}${control('다시 도전','replay','','btn quiet')}</div>`;
+  if(done)return `<div class="challenge-shell challenge-complete round-success" data-challenge="${id}" data-round="${round}">${scene}<div class="success-emblem">${icon('check')}</div><h2>주민의 의뢰를 모두 해결했어!</h2>${h.summary?`<p class="challenge-summary">${h.summary}</p>`:''}<div class="challenge-complete-actions">${h.next?b(`${h.next} ${icon('arrow')}`,'continue','','btn primary lesson-next-inline'):''}${control('다시 도전','replay','','btn quiet')}</div></div>`;
   let body='';
   if(id==='parts'){
-    const p=parts[k];body=`<div class="hotspot-scene"><button class="challenge-object object-touch ${c.heard?'observed':''}" data-action="challenge-listen" aria-label="${p.name} 직접 울려 보기">${object(p.tool)}<span class="object-caption">${p.name} · ${c.heard?'✓ 다시 울리기':'울려 보기'}</span></button></div><div class="challenge-tools labelled-choices" aria-label="떨리는 부분 선택">${p.answers.map((x,n)=>choose(`<span class="answer-marker">${n+1}</span><span>${x}</span>`,n,c.selected)).join('')}</div>`;
+    const p=parts[k];body=`<div class="hotspot-scene"><button class="challenge-object object-touch ${c.heard?'observed':''}" data-action="challenge-listen" aria-label="${p.name} 직접 울려 보기"><span class="challenge-object-art">${art(p.art,p.name,'part-art')}</span><span class="object-caption">${p.name} · ${c.heard?'✓ 다시 울리기':'울려 보기'}</span></button></div><div class="challenge-tools labelled-choices" aria-label="떨리는 부분 선택">${p.answers.map((x,n)=>choose(`<span class="answer-marker">${n+1}</span><span>${x}</span>`,n,c.selected)).join('')}</div>`;
   }else if(id==='rhythm'){
     body=`<div class="rhythm-lab"><div class="challenge-object ${c.sounding?'pulse':''}">${object('fork')}</div><div class="rhythm-scope">${wave(c.sounding?.7:0,5,!c.sounding)}<span>${c.sounding?'울림 · 떨리는 중':'쉼 · 멈춘 상태'}</span></div></div><div class="sequence-console"><div class="pattern-slots signal-score" aria-label="목표 신호">${rhythms[k].map((x,n)=>beat(x,n,c.sequence?.[n]===x)).join('')}</div><div class="challenge-tools rhythm-actions">${control(`${icon('play')} 울리기`,'ring')}${control(`${icon('hand')} 쉼`,'rest')}${control('처음부터','clear','','btn quiet')}</div>${performance('내 신호',(c.sequence||[]).join(' → '))}</div>`;
   }else if(id==='signal'){
@@ -42,14 +43,14 @@ export function challengeView(id,w,h) {
   }else if(id==='mix'){
     const t=mixes[k];body=`<div class="request-card sound-order"><h2><span>높낮이 <b>${pitchName(t.length)}</b></span><span>크기 <b>${forceName(t.force)}</b></span></h2></div><div class="mix-preview"><div class="mix-device">${rulerKey(c.length||18)}</div><div class="live-scope challenge-live-wave">${liveWave((c.force||1)/3,c.length===6?9:c.length===12?6:3)}</div></div><div class="mixer-controls slider-mixer"><section class="mixer-channel pitch-channel" role="group" aria-label="높낮이 조절"><h3 class="mixer-title">길이 <output data-param-output="length">${c.length||18} cm</output></h3><input id="mix-length" type="range" min="6" max="18" step="6" value="${c.length||18}" data-challenge-param="length" aria-label="떨리는 길이"><div class="range-ticks"><span>짧게</span><span>길게</span></div></section><section class="mixer-channel volume-channel" role="group" aria-label="소리 크기 조절"><h3 class="mixer-title">세기 <output data-param-output="force">${['','약하게','보통','세게'][c.force||1]}</output></h3><input id="mix-force" type="range" min="1" max="3" value="${c.force||1}" data-challenge-param="force" aria-label="튕기는 세기"><div class="range-ticks"><span>약하게</span><span>세게</span></div></section></div>${control(`${icon('play')} 연주하기`,'check','','btn primary')}`;
   }else if(id==='sensor'){
-    const m=media[k];body=`<div class="challenge-top"><h2>${m.source} → ${inside(m)} 감지기</h2><small>물질마다 따로 실험</small></div><div class="sensor-scene"><div><button class="sensor-grip" data-drag-kind="sensor" aria-label="감지기 잡아 옮기기">${prop('receiver','옮길 감지기')}</button></div><div class="sensor-zones">${media.map(x=>control(`${art(`travel-${x.id}`,`${x.label} 전달 실험${x.id==='water'?', 물속에는 방수 감지기 사용':''}`,'concept-scene')}<b>${inside(x)}</b><span class="sensor-indicator">${c.zone===x.id?prop('receiver','놓은 감지기'):'＋'}</span>`,'zone',`data-value="${x.id}" data-drop-kind="sensor" aria-pressed="${c.zone===x.id}"`,`sensor-zone illustrated-zone ${x.id} ${c.zone===x.id?'selected':''}`)).join('')}</div></div>`;
+    const m=sensorScenes[k];body=`<div class="scene-question"><figure class="scene-figure">${art(m.art,m.text,'scene-art')}</figure><div class="scene-copy"><h2>${m.title}</h2><p>${m.text}</p><p class="scene-ask">감지기를 끌어서 소리가 지나온 물질에 놓아 줘.</p><button class="sensor-grip" data-drag-kind="sensor" aria-label="감지기 잡아 옮기기">${prop('receiver','옮길 감지기')}</button></div></div><div class="sensor-zones medium-drop">${media.map(x=>control(`${icon(x.id)}<b>${x.label}</b><span class="sensor-indicator">${c.zone===x.id?prop('receiver','놓은 감지기'):'＋'}</span>`,'zone',`data-value="${x.id}" data-drop-kind="sensor" aria-pressed="${c.zone===x.id}"`,`sensor-zone ${x.id} ${c.zone===x.id?'selected':''}`)).join('')}</div>`;
   }else if(id==='classify'){
-    body=`<div class="case-story path-source" data-drag-kind="path" aria-label="이야기를 전달 물질로 이어 보기"><p>${situations[k].text}</p></div>${k===5?`<figure class="sound-path-model transmission-illustration">${art('string-telephone','말하는 친구의 컵 바닥과 듣는 친구의 컵 바닥을 연결한 팽팽한 실','telephone-scene')}<figcaption>말하는 컵 → 어떤 물질? → 듣는 컵</figcaption></figure>`:`<div class="sound-path-model" aria-label="소리가 난 곳에서 전달 물질을 거쳐 듣는 곳으로 이어져"><span>${icon('volume')}<b>소리가 난 곳</b></span><i aria-hidden="true">→</i><span class="path-question"><b>어떤 물질?</b></span><i aria-hidden="true">→</i><span>${icon('ear')}<b>듣는 곳</b></span></div>`}<div class="medium-choices">${media.map(m=>control(`${icon(m.id)}<span>${m.label}</span>`,'zone',`data-value="${m.id}" data-drop-kind="path" aria-pressed="${c.zone===m.id}"`,`choice ${c.zone===m.id?'selected':''}`)).join('')}</div>`;
+    const st=situations[k];body=`<div class="scene-question case-story path-source" data-drag-kind="path" aria-label="이야기를 전달 물질로 이어 보기"><figure class="scene-figure">${art(st.art,st.text,'scene-art')}</figure><div class="scene-copy"><p>${st.text}</p><div class="sound-path-mini" aria-hidden="true"><span>${icon('volume')} 소리</span><i>→</i><b>어떤 물질?</b><i>→</i><span>${icon('ear')} 듣는 곳</span></div></div></div><div class="medium-choices">${media.map(m=>control(`${icon(m.id)}<span>${m.label}</span>`,'zone',`data-value="${m.id}" data-drop-kind="path" aria-pressed="${c.zone===m.id}"`,`choice ${c.zone===m.id?'selected':''}`)).join('')}</div>`;
   }else if(id==='solutions'){
-    const t=cases[k];body=`<div class="request-card solution-target" data-drop-kind="solution"><h2>${t.title}</h2><p>${t.scene}</p></div><div class="context-cards">${solutionTools.map(t=>control(`${art(`care-${t.id}`,'','concept-thumb')}<b>${t.name}${c.solution===t.id?' ✓':''}</b>`,'solution',`data-value="${t.id}" data-drag-kind="solution" aria-pressed="${c.solution===t.id}"`,`solution ${c.solution===t.id?'selected':''}`)).join('')}</div><div class="comparison-controls">${control(`${icon('play')} 적용 전 ${c.before?'✓':''}`,'before')}${control(`${icon('play')} 적용 후 ${c.after?'✓':''}`,'after',c.solution?'':'disabled')}</div>`;
+    const t=cases[k];body=`<div class="scene-question solution-target" data-drop-kind="solution"><figure class="scene-figure">${art(t.art,t.scene,'scene-art')}</figure><div class="scene-copy"><h2>${t.title}</h2><p>${t.scene}</p><p class="scene-ask">알맞은 도구를 누르면 적용 전과 후 소리를 이어서 들려줘.</p>${control(`${icon('play')} 지금 소리 듣기`,'before','','btn quiet')}</div></div><div class="context-cards">${solutionTools.map(t=>control(`${art(`care-${t.id}`,'','concept-thumb')}<b>${t.name}${c.solution===t.id?' ✓':''}</b>`,'solution',`data-value="${t.id}" data-drag-kind="solution" aria-pressed="${c.solution===t.id}"`,`solution ${c.solution===t.id?'selected':''}`)).join('')}</div>`;
   }else if(id==='festival'){
     const music=c.music??3,announcement=c.announcement??1;
-    body=`<div class="mixer-controls festival-controls slider-mixer"><section class="mixer-channel" role="group"><h3 data-resident="music" class="mixer-title resident-request ${music<=1?'satisfied':''}" aria-label="책 읽는 친구의 요청: 음악은 작게"><span>${music<=1?'✓':'…'}</span><b>음악 작게</b><output data-param-output="music">${['끔','작게','보통','크게'][music]}</output></h3>${art('care-volume','음악 스피커','concept-thumb')}<input id="festival-music" type="range" min="0" max="3" value="${music}" data-challenge-param="music" aria-label="음악 크기"><div class="range-ticks"><span>끔</span><span>크게</span></div></section><section class="mixer-channel" role="group"><h3 data-resident="announcement" class="mixer-title resident-request ${announcement>=2?'satisfied':''}" aria-label="축제 안내원의 요청: 안내 방송은 보통 이상"><span>${announcement>=2?'✓':'…'}</span><b>안내 보통 이상</b><output data-param-output="announcement">${['끔','작게','보통','크게'][announcement]}</output></h3>${prop('transmitter','안내 방송 장치')}<input id="festival-announcement" type="range" min="0" max="3" value="${announcement}" data-challenge-param="announcement" aria-label="안내 방송 크기"><div class="range-ticks"><span>끔</span><span>크게</span></div></section><section class="mixer-channel" role="group"><h3 data-resident="pads" class="mixer-title resident-request ${c.pads?'satisfied':''}" aria-label="이웃 교실의 요청: 의자 다리에 패드 붙이기"><span>${c.pads?'✓':'…'}</span><b>의자 패드</b></h3>${art('care-pad','패드를 붙인 의자 다리','concept-thumb')}${control(c.pads?'✓ 붙였어':'붙이기','pads',`aria-pressed="${!!c.pads}" aria-label="의자 다리에 패드 ${c.pads?'떼기':'붙이기'}"`,`choice ${c.pads?'selected':''}`)}${control(`${icon('play')} 전체 듣기`,'preview','','btn secondary')}</section></div>`;
+    body=`<div class="mixer-controls festival-controls slider-mixer"><section class="mixer-channel" role="group"><h3 data-resident="music" class="mixer-title resident-request ${music<=1?'satisfied':''}" aria-label="책 읽는 친구의 요청: 음악은 작게"><span>${music<=1?'✓':'○'}</span><b>음악 작게</b><output data-param-output="music">${['끔','작게','보통','크게'][music]}</output></h3>${art('care-volume','음악 스피커','concept-thumb')}<input id="festival-music" type="range" min="0" max="3" value="${music}" data-challenge-param="music" aria-label="음악 크기"><div class="range-ticks"><span>끔</span><span>크게</span></div></section><section class="mixer-channel" role="group"><h3 data-resident="announcement" class="mixer-title resident-request ${announcement>=2?'satisfied':''}" aria-label="축제 안내원의 요청: 안내 방송은 보통 이상"><span>${announcement>=2?'✓':'○'}</span><b>안내 보통 이상</b><output data-param-output="announcement">${['끔','작게','보통','크게'][announcement]}</output></h3>${prop('transmitter','안내 방송 장치')}<input id="festival-announcement" type="range" min="0" max="3" value="${announcement}" data-challenge-param="announcement" aria-label="안내 방송 크기"><div class="range-ticks"><span>끔</span><span>크게</span></div></section><section class="mixer-channel" role="group"><h3 data-resident="pads" class="mixer-title resident-request ${c.pads?'satisfied':''}" aria-label="이웃 교실의 요청: 의자 다리에 패드 붙이기"><span>${c.pads?'✓':'○'}</span><b>의자 패드</b></h3>${art('care-pad','패드를 붙인 의자 다리','concept-thumb')}${control(c.pads?'✓ 붙였어':'붙이기','pads',`aria-pressed="${!!c.pads}" aria-label="의자 다리에 패드 ${c.pads?'떼기':'붙이기'}"`,`choice ${c.pads?'selected':''}`)}${control(`${icon('play')} 전체 듣기`,'preview','','btn secondary')}</section></div>`;
   }
   // Raw drag sources and sliders carry the same round token as action buttons.
   body=body.replace(/<(button|input|div)\b[^>]*>/g,tag=>/data-(?:action|drag-kind|drop-kind|challenge-param)=/.test(tag)&&!tag.includes('data-round=')?tag.replace(/^<(\w+)/,`<$1 data-round="${round}"`):tag);
@@ -58,7 +59,7 @@ export function challengeView(id,w,h) {
 
 export function runChallenge(id,w,action,data={},sound) {
   if(!expectedProof[id])return;
-  const c=w.challenge??={},k=roundOf(id,c),v=data.value,n=Number(v);
+  const c=alignProof(id,w.challenge??={}),k=roundOf(id,c),v=data.value,n=Number(v);
   // Events from a replaced question cannot change its successor.
   if(data.round!==undefined&&Number(data.round)!==(c.proof?.length||0))return;
   if(action==='replay'){w.challenge={};sound.stop();return;}
@@ -71,7 +72,7 @@ export function runChallenge(id,w,action,data={},sound) {
 
   if(id==='parts'){
     const p=parts[k];
-    if(action==='listen'){c.heard=true;sound.play({frequency:p.tool==='fork'?520:230,kind:p.tool,level:.5});return;}
+    if(action==='listen'){c.heard=true;sound.play({frequency:p.sound==='fork'?520:230,kind:p.sound,level:.5});return;}
     if(action!=='select'||!Number.isInteger(n)||!p.answers[n])return;
     if(!c.heard)return wrong('먼저 물체를 눌러 울리고, 떨리는 곳을 관찰해 봐.');
     c.selected=n;
@@ -131,26 +132,20 @@ export function runChallenge(id,w,action,data={},sound) {
   }
   if(id==='sensor'||id==='classify'){
     if(action!=='zone'||!media.some(m=>m.id===v))return;
-    c.zone=v;const expected=id==='sensor'?media[k].id:situations[k].answer;
-    if(v!==expected)return wrong(id==='sensor'?'실험 제목과 장소 그림을 비교해. 감지기를 놓았던 곳과 조건이 같은지 봐.':'소리를 내는 곳과 듣는 곳 사이에 있는 물질을 다시 살펴봐.');
+    c.zone=v;const expected=id==='sensor'?sensorScenes[k].id:situations[k].answer;
+    if(v!==expected)return wrong(id==='sensor'?'그림에서 소리가 난 곳과 듣는 곳 사이에 무엇이 있는지 찾아봐.':'소리를 내는 곳과 듣는 곳 사이에 있는 물질을 다시 살펴봐.');
     sound.play(transferSound(expected));
     return finish(`${media.find(m=>m.id===expected).label}${expected==='water'?'을':'를'} 통해 소리가 도착했어!`);
   }
   if(id==='solutions'){
-    if(action==='solution'){
-      if(!solutionTools.some(tool=>tool.id===v))return;
-      if(c.solution!==v){c.solution=v;c.after=false;c.afterKey='';}
-      return;
-    }
-    if(action==='before'){c.before=true;sound.sequence([0,1].map(()=>({kind:'drum',frequency:160,level:.7})));}
-    else if(action==='after'){
-      if(!c.solution)return wrong('먼저 적용할 해결책을 골라 줘.');
-      c.after=true;c.afterKey=c.solution;
-      if(c.solution===cases[k].answer&&c.solution==='time'){sound.stop();c.message='지금은 독서 시간이야. 연습은 약속한 다음 시간에 해.';}
-      else sound.play({kind:'drum',frequency:160,level:c.solution===cases[k].answer?.2:.7});
-    }else return;
-    if(!c.before||!c.after||c.afterKey!==c.solution)return;
-    return c.solution===cases[k].answer?finish(cases[k].why):wrong('누가, 언제, 어디에서 불편한지 보고 다른 도구를 적용해 봐.');
+    const loud={kind:'drum',frequency:160,level:.7};
+    if(action==='before'){c.before=true;sound.sequence([loud,loud]);return;}
+    if(action!=='solution'||!solutionTools.some(tool=>tool.id===v))return;
+    // One choice plays the before → after pair, so the comparison stays without three separate presses.
+    c.solution=v;c.before=true;c.after=true;c.afterKey=v;
+    const right=v===cases[k].answer,after={...loud,level:right?(v==='time'?0:.2):.7};
+    sound.sequence([loud,loud,after,after]);
+    return right?finish(v==='time'?'적용 후: 독서 시간에는 조용해! 북 연습은 약속한 다음 시간에 해.':`적용 후 소리가 줄었어! ${cases[k].why}`):wrong('적용 전과 후 소리가 똑같이 커. 누가, 언제, 어디에서 불편한지 보고 다른 도구를 골라 봐.');
   }
   if(id==='festival'){
     if(action==='preview'){sound.sequence([{kind:'music',frequency:220,level:(c.music??3)/5},{kind:'fork',frequency:660,level:(c.announcement??1)/5},{kind:'drum',frequency:140,level:c.pads?.07:.4}]);return;}
