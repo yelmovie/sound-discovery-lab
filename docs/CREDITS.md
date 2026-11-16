@@ -89,3 +89,15 @@ image/backgrounds/의 017~026 JPEG 10개(2026-10-29 PNG 원본에서 같은 해�
 | image/icons/icon-192.png, icon-512.png | 같은 스크립트 합성 | pio-guide.svg |
 
 새로 생성한 이미지는 없다. 원본의 권리 확인 상태(기존 제공 이미지 상업 이용 근거)는 위 항목을 그대로 따른다.
+
+## 2026-11-17 추가 소리 (모두 CC0 1.0)
+
+Openverse에서 CC0만 걸러 찾고, 각 Freesound 원본 페이지에서 CC0(퍼블릭 도메인)을 다시 확인했다. 모노 44.1 kHz Ogg Vorbis로 바꾸고 앞 무음 제거·음량만 맞췄다. 목록과 원본 주소는 `media/audio/sources-20261117.json`.
+
+- 배경 음악 `bgm_ukulele.ogg`: reasanka, [short ukulele loop](https://freesound.org/people/reasanka/sounds/383023/)
+- 정답 반짝 `sparkle_correct.ogg`: ZenithInfinitiveStudios, [Fantasy_ui_Button_4](https://freesound.org/people/ZenithInfinitiveStudios/sounds/376744/)
+- 표시 누르기 `pin_pop.ogg`: MATRIXXX_, [Pop 02](https://freesound.org/people/MATRIXXX_/sounds/506545/)
+- 끌기 시작 `swipe_whoosh.ogg`: qubodup, [Swipe Whoosh](https://freesound.org/people/qubodup/sounds/60007/)
+- 칸에 놓기 `slot_click.ogg`: benzix2, [UI Button Click](https://freesound.org/people/benzix2/sounds/467951/)
+
+그림: 2026-11-17 GPT 이미지(Codex 내장 이미지 도구)로 새 장면·악기·배지 그림을 만들었다. 프롬프트는 `image/generated/concepts/manifest.json`.

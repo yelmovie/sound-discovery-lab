@@ -2,7 +2,7 @@ import { rulerIllustration } from './illustrations.js';
 /** Pointer Events provide the same manipulation on tablets, boards and mice.
  * Every drag also has the existing tap/keyboard path. Only pointerup commits.
  */
-export function bindManipulations(root,{session,commit,unlock}){
+export function bindManipulations(root,{session,commit,unlock,pickup=()=>{},dropped=()=>{}}){
  let drag=null,suppressUntil=0;
  const clear=()=>{drag?.ghost?.remove();root.querySelectorAll('.drop-ready,.drag-source').forEach(e=>e.classList.remove('drop-ready','drag-source'));drag=null;};
  root.addEventListener('pointerdown',e=>{
@@ -15,7 +15,9 @@ export function bindManipulations(root,{session,commit,unlock}){
   if(!drag||drag.id!==e.pointerId)return;
   const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(!drag.moved&&Math.hypot(dx,dy)<9)return;
   e.preventDefault();
-  if(!drag.moved){drag.moved=true;drag.source.classList.add('drag-source');drag.ghost=drag.source.cloneNode(true);drag.ghost.removeAttribute('id');drag.ghost.setAttribute('aria-hidden','true');drag.ghost.className='drag-ghost';drag.ghost.style.width=`${Math.min(190,drag.source.getBoundingClientRect().width)}px`;document.body.append(drag.ghost);}
+  // The drum swipe shows its strength on the meter instead of a floating copy of the drum.
+  if(drag.kind==='strike'){drag.moved=true;drag.source.closest('.swipe-lab')?.setAttribute('data-swipe',String(strength(e.clientY-drag.y)));return;}
+  if(!drag.moved){drag.moved=true;pickup();drag.source.classList.add('drag-source');drag.ghost=drag.source.cloneNode(true);drag.ghost.removeAttribute('id');drag.ghost.setAttribute('aria-hidden','true');drag.ghost.className='drag-ghost';drag.ghost.style.width=`${Math.min(190,drag.source.getBoundingClientRect().width)}px`;document.body.append(drag.ghost);}
   drag.ghost.style.left=`${e.clientX}px`;drag.ghost.style.top=`${e.clientY}px`;
   root.querySelectorAll('[data-drop-kind]').forEach(el=>el.classList.toggle('drop-ready',el.dataset.dropKind===drag.kind&&inside(el,e)));
  });
@@ -26,11 +28,13 @@ export function bindManipulations(root,{session,commit,unlock}){
    e.preventDefault();suppressUntil=Date.now()+500;
    const target=[...root.querySelectorAll('[data-drop-kind]')].find(el=>el.dataset.dropKind===current.kind&&inside(el,e));
    clear();
-   if(current.kind==='strike')commit([{action:current.source.dataset.strikeAction||'strike',value:String(Math.min(3,Math.max(1,Math.round(Math.abs(e.clientY-current.y)/42)+1)))}],current.session);
+   if(current.kind==='strike')commit([{action:current.source.dataset.strikeAction||'strike',value:String(strength(e.clientY-current.y))}],current.session);
    else if(target){
+    if(current.kind!=='solution')dropped();
     if(current.kind==='parcel')commit([{action:'challenge-parcel',value:current.value},{action:'challenge-slot',value:target.dataset.value}],current.session);
     else if(current.kind==='sensor'||current.kind==='path')commit([{action:'challenge-zone',value:target.dataset.value}],current.session);
     else if(current.kind==='solution')commit([{action:'challenge-solution',value:current.value}],current.session);
+    else if(current.kind==='note')commit([{action:'challenge-note',value:current.value,slot:target.dataset.value}],current.session);
    }
   }else clear();
  });
@@ -39,6 +43,8 @@ export function bindManipulations(root,{session,commit,unlock}){
  root.addEventListener('keydown',e=>{if(e.key==='Escape')clear();});
  document.addEventListener('visibilitychange',()=>{if(document.hidden)clear();});
 }
+// Short, medium and long swipes; wide bands so a child's quick flick lands where they meant.
+function strength(dy){const d=Math.abs(dy);return d<55?1:d<120?2:3;}
 function inside(el,e){const r=el.getBoundingClientRect();return e.clientX>=r.left&&e.clientX<=r.right&&e.clientY>=r.top&&e.clientY<=r.bottom;}
 
 export function liveWave(level=1,cycles=5){

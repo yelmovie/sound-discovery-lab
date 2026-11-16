@@ -1,0 +1,13 @@
+{
+  "checked": "2026-11-17",
+  "license": "CC0-1.0 (verified on each Freesound page)",
+  "found_with": "Openverse audio search, license filter cc0",
+  "changes": "Mono 44.1 kHz Ogg Vorbis, leading silence trimmed, loudness levelled with ffmpeg loudnorm/volume/alimiter",
+  "files": [
+    {"file": "bgm_ukulele.ogg", "title": "short ukulele loop by rea.mp3", "author": "reasanka", "source": "https://freesound.org/people/reasanka/sounds/383023/", "use": "Background music on title, map and result"},
+    {"file": "swipe_whoosh.ogg", "title": "Swipe Whoosh", "author": "qubodup", "source": "https://freesound.org/people/qubodup/sounds/60007/", "use": "Picking up a card to drag"},
+    {"file": "sparkle_correct.ogg", "title": "Fantasy_ui_Button_4.wav", "author": "ZenithInfinitiveStudios", "source": "https://freesound.org/people/ZenithInfinitiveStudios/sounds/376744/", "use": "Solved round and recorded evidence, after the experiment sound ends"},
+    {"file": "pin_pop.ogg", "title": "Pop 02.wav", "author": "MATRIXXX_", "source": "https://freesound.org/people/MATRIXXX_/sounds/506545/", "use": "Tapping a marker on the instrument picture"},
+    {"file": "slot_click.ogg", "title": "UI Button Click", "author": "benzix2", "source": "https://freesound.org/people/benzix2/sounds/467951/", "use": "Dropping a card into a slot"}
+  ]
+}

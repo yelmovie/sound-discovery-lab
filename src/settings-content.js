@@ -39,6 +39,7 @@ export const settingsContent = {
     '소리의 성질 성취기준 · 경기도교육청 2022 개정 교육과정 편성 안내(goe.go.kr).',
     '진동·크기·높낮이·전달·배려 실험과 16초 개념 영상 5편 · 자체 구성, CC0 녹음과 비교용 소리 모델.',
     '화면 반응 효과음: Kenney, Interface Sounds 1.0 · CC0 · https://kenney.nl/assets/interface-sounds',
+    '배경 음악·정답 반짝임·표시 톡·끌기 휘익·칸 딸깍: reasanka, ZenithInfinitiveStudios, MATRIXXX_, qubodup, benzix2 / Freesound · 모두 CC0. 전체 출처는 media/audio/sources-20261117.json',
     '북·나무 타격·칼림바: Versilian Studios / Sam Gossner, VCSL · CC0 · github.com/sgossner/VCSL',
     '자: alienistcog / Freesound 124719 · 고무줄: baidonovan / Freesound 187354 · 소리굽쇠: jmuehlhans / Wikimedia Commons · 모두 CC0. 전체 출처는 media/audio/experiments/sources.json에 있어요.',
     '숲 마을·보행 캐릭터·실험 소품 · 프로젝트 자체 AI 생성.',

@@ -27,9 +27,8 @@ test('a changed strike force points back to the drum without inventing evidence'
 test('signal and two-variable mixing guide adjustment before playing', () => {
   const state = freshState();
   state.work[6] = { challenge: { proof: ['1'] } };
-  assert.equal(coachFor(state, 6).target, '#signal-force');
-  state.work[6].challenge.force = 3;
-  assert.equal(coachFor(state, 6).target, '[data-action="challenge-strike"]');
+  assert.equal(coachFor(state, 6).target, '.swipe-pad');
+  assert.doesNotMatch(coachFor(state, 6).text, /길게|짧게|세게|살살/, 'the swipe hint never names the matching strength');
   state.work[11] = { challenge: { length: 18, force: 3 } };
   assert.equal(coachFor(state, 11).target, '#mix-length');
   state.work[11].challenge.length = 6;
@@ -59,7 +58,8 @@ test('deep sound and melody hints return to listening without preselecting an an
   assert.match(coachFor(state, 0, 2).target, /instrument/);
   assert.doesNotMatch(coachFor(state, 0, 2).text, /공통점은 떨림/);
   assert.match(coachFor(state, melody, 2).target, /challenge-listen/);
-  assert.match(coachFor(state, melody, 2).text, /다시 듣기.*헷갈린 음/);
+  assert.match(coachFor(state, melody, 2).text, /다시 듣기.*헷갈린 칸/);
+  assert.doesNotMatch(coachFor(state, melody, 2).text, /짧은 자|긴 자|높은 소리|낮은 소리/);
   const response = checkLesson(state, pattern);
   assert.equal(response.ok, false);
   assert.match(response.message, /목표 신호 듣기.*비교/);

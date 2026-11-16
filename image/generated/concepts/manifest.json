@@ -359,6 +359,78 @@
       "alpha": false,
       "bytes": 123798,
       "sha256": "7ddcf16f41cb230383c514d5afcfd0f16d06a0fd5b901d9b00e3f419d4c9d1cf"
+    },
+    {
+      "id": "badge-vibration",
+      "created": "2026-11-17",
+      "tool": "Codex built-in image generation (GPT image) via gpt-imagegen",
+      "prompt": "A round glossy game achievement badge medallion for children: a silver tuning fork in the center with glowing vibration wave rings around it, cyan teal rim (#22d3df), small sparkles, polished 3D game UI style, centered, isolated on a fully transparent background, no text, no letters, no numbers.",
+      "path": "image/generated/concepts/badge-vibration.webp",
+      "width": 280,
+      "height": 276,
+      "alpha": true,
+      "bytes": 24092,
+      "sha256": "82dd90836ea9f238715a6c853b4fa5706f25b176033e334eec8189bc9e7e437d"
+    },
+    {
+      "id": "badge-volume",
+      "created": "2026-11-17",
+      "tool": "Codex built-in image generation (GPT image) via gpt-imagegen",
+      "prompt": "A round glossy game achievement badge medallion for children: a small red drum with a mallet in the center and bold sound wave arcs growing outward, warm golden orange rim (#ffbf58), small sparkles, polished 3D game UI style, centered, isolated on a fully transparent background, no text, no letters, no numbers.",
+      "path": "image/generated/concepts/badge-volume.webp",
+      "width": 278,
+      "height": 280,
+      "alpha": true,
+      "bytes": 29286,
+      "sha256": "ef64d2aaa7cfa0aeeb273f3c628eae404872bd2f6fd22c67236867de5750125a"
+    },
+    {
+      "id": "badge-pitch",
+      "created": "2026-11-17",
+      "tool": "Codex built-in image generation (GPT image) via gpt-imagegen",
+      "prompt": "A round glossy game achievement badge medallion for children: three wooden rulers of different lengths like xylophone bars with musical sparkle notes above them, soft lavender purple rim (#c1a3ff), polished 3D game UI style, centered, isolated on a fully transparent background, no text, no letters, no numbers, no note symbols with letters.",
+      "path": "image/generated/concepts/badge-pitch.webp",
+      "width": 274,
+      "height": 280,
+      "alpha": true,
+      "bytes": 24756,
+      "sha256": "1820b2759de4467347fb9c960bc6e84f8cc96519089acd8e2be55bffbc925d2b"
+    },
+    {
+      "id": "badge-transfer",
+      "created": "2026-11-17",
+      "tool": "Codex built-in image generation (GPT image) via gpt-imagegen",
+      "prompt": "A round glossy game achievement badge medallion for children: a paper cup string telephone connecting across water waves and a wooden plank, mint green rim (#69dcb4), small sparkles, polished 3D game UI style, centered, isolated on a fully transparent background, no text, no letters, no numbers.",
+      "path": "image/generated/concepts/badge-transfer.webp",
+      "width": 279,
+      "height": 280,
+      "alpha": true,
+      "bytes": 25228,
+      "sha256": "3ecc78aa8d0cad74b47b09fae0183d8511ee706180a94513f92ddd322ee377f2"
+    },
+    {
+      "id": "badge-care",
+      "created": "2026-11-17",
+      "tool": "Codex built-in image generation (GPT image) via gpt-imagegen",
+      "prompt": "A round glossy game achievement badge medallion for children: an open book with a soft felt pad and a gentle heart, quiet calm glow, soft coral pink rim (#ffa0a9), small sparkles, polished 3D game UI style, centered, isolated on a fully transparent background, no text, no letters, no numbers.",
+      "path": "image/generated/concepts/badge-care.webp",
+      "width": 274,
+      "height": 280,
+      "alpha": true,
+      "bytes": 20722,
+      "sha256": "b4ef9849947b9f87366f154de3ec224a41130ea6253df8ae6599715183c1366d"
+    },
+    {
+      "id": "pio-fly",
+      "created": "2026-11-17",
+      "tool": "Codex built-in image generation (GPT image) via gpt-imagegen",
+      "prompt": "The same small round blue bird character with round glasses from the reference, now shown full body in a cheerful flying pose seen from the side, wings spread, facing right, cute game sprite illustration matching the reference character exactly, isolated on a fully transparent background, no text.",
+      "path": "image/generated/concepts/pio-fly.webp",
+      "width": 320,
+      "height": 287,
+      "alpha": true,
+      "bytes": 28214,
+      "sha256": "7bb3b186d7a172d1b874c9032015099ec257558a002d4d711e06801c2758ffe9"
     }
   ]
 }

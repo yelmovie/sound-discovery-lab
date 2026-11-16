@@ -32,12 +32,22 @@ test('melody hearing remains required and a new note restarts a failed full melo
   const t=trial('melody');
   t.act('note',18);assert.equal(count(t),0);assert.equal(t.w.challenge.sequence,undefined);
   t.act('listen');for(const n of [18,18,18])t.act('note',n);
-  assert.equal(count(t),0);assert.match(t.w.challenge.message,/다른 음/);
+  assert.equal(count(t),0);assert.match(t.w.challenge.message,/다른 칸/);
   t.w.challenge=cleanChallenge(t.w.challenge);
   t.act('note',6);assert.deepEqual(t.w.challenge.sequence,[6]);
   t.act('note',12);t.events.length=0;t.act('note',18);
   assert.equal(count(t),1);
   assert.deepEqual(t.events,[['play',{frequency:260,level:.5,duration:.8}]]);
+});
+
+test('melody slots accept a dragged ruler, clear on tap and check when every slot is filled',()=>{
+  const t=trial('melody'),drop=(value,slot)=>runChallenge('melody',t.w,'note',{value,slot},{play(){},sequence(){},stop(){}});
+  t.act('listen');
+  drop(18,2);assert.deepEqual(t.w.challenge.sequence,[0,0,18]);
+  t.act('note',12);assert.deepEqual(t.w.challenge.sequence,[12,0,18],'a tap fills the first empty slot');
+  t.act('note-slot',0);assert.deepEqual(t.w.challenge.sequence,[0,0,18],'tapping a filled slot empties it');
+  drop(6,0);assert.equal(count(t),0,'an empty slot is not a melody yet');
+  drop(12,1);assert.equal(count(t),1,'the filled slots match the target melody');
 });
 
 test('signal and mixer controls prepare silently and the performance submits once',()=>{

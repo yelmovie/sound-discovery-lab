@@ -25,8 +25,10 @@ before(async()=>{
 });
 after(()=>server?.kill());
 
-test('five concept films and six credited sound files ship in the offline asset manifest',async()=>{
- assert.equal(concepts.length,5);assert.equal(Object.keys(interfaceSounds).length,6);
+test('five concept films and nine credited sound files ship in the offline asset manifest',async()=>{
+ assert.equal(concepts.length,5);assert.equal(Object.keys(interfaceSounds).length,9);
+ const added=JSON.parse(await readFile(new URL('../media/audio/sources-20261117.json',import.meta.url),'utf8'));
+ assert.match(added.license,/CC0/);for(const f of added.files)assert.match(f.source,/^https:\/\/freesound\.org\//);
  for(const c of concepts){
   assert.equal(c.duration,16);assert.equal(c.cues.length,4);
   for(const asset of [c.src,c.poster,c.captions]){assert.ok(assets.includes(asset.slice(1)));assert.ok((await stat(new URL(`../${asset.slice(1)}`,import.meta.url))).size>100);}

@@ -1,9 +1,9 @@
 import {media} from './data.js';
 
 const parts = [
-  {tool:'ukulele',art:'part-guitar',sound:'rubber',name:'우쿨렐레',answers:['나무 몸통 바닥','팽팽한 줄','줄감개 손잡이'],answer:1},
-  {tool:'triangle',art:'part-triangle',sound:'fork',name:'트라이앵글',answers:['매단 끈','삼각형 쇠막대','치는 사람의 손'],answer:1},
-  {tool:'xylophone',art:'part-xylophone',sound:'solid',name:'실로폰',answers:['두드린 음판','받침 나무틀','채 손잡이'],answer:0}
+  {tool:'ukulele',art:'part-guitar',sound:'rubber',name:'우쿨렐레',answers:['나무 몸통 바닥','팽팽한 줄','줄감개 손잡이'],pins:[[73,82],[63,51],[13,16]],answer:1},
+  {tool:'triangle',art:'part-triangle',sound:'fork',name:'트라이앵글',answers:['매단 끈','삼각형 쇠막대','두드리는 채'],pins:[[42,10],[25,64],[76,60]],answer:1},
+  {tool:'xylophone',art:'part-xylophone',sound:'solid',name:'실로폰',answers:['두드린 음판','받침 나무틀','채 손잡이'],pins:[[37,40],[14,60],[74,62]],answer:0}
 ];
 const rhythms = [['울림','쉼','울림'],['울림','쉼','울림','쉼','울림']];
 const signals = [{name:'가까운 친구',target:1},{name:'멀리 있는 친구',target:3},{name:'가운데 줄 친구',target:2}];
@@ -67,9 +67,7 @@ function roundOf(id,c){return Math.min(c.proof?.length||0,challengeRoundCount(id
 export function adjustmentCue(id, c = {}) {
   const round = roundOf(id, c);
   if (id === 'signal') {
-    return (c.force || 1) === signals[round].target
-      ? { text: '세기를 맞췄다면 북을 눌러 신호를 보내 봐.', target: '[data-action="challenge-strike"]' }
-      : { text: '친구가 요청한 크기를 보고, 치는 세기 손잡이를 움직여 봐.', target: '#signal-force' };
+    return { text: '요청한 크기를 읽고 북을 아래로 쓸어 쳐 봐. 쓸어내린 길이에 따라 소리가 어떻게 달라지는지 들어 봐.', target: '.swipe-pad' };
   }
   if (id === 'mix') {
     if ((c.length || 18) !== mixes[round].length) {

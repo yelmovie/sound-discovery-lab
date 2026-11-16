@@ -8,6 +8,8 @@ export class SoundEngine {
   constructor(){
     this.context=null;this.nodes=[];this.generation=0;this.muted=false;this.onStatus=()=>{};
     this.bgm=true;this.sfx=true;this.bgmVolume=.35;this.scene='home';
+    // Optional looped music file; the synthesized chime stays as the fallback until it decodes.
+    this.bgmSrc=null;this.bgmLoop=null;this.bgmLoading=false;
     this.quiet=false;this.unlocked=false;this.needsGesture=false;this.destroyed=false;
     this.bgmNodes=[];this.bgmGeneration=0;this.bgmTimer=null;this.bgmBus=null;
     this.buffers=new Map();this.effectClock=0;
@@ -138,6 +140,12 @@ export class SoundEngine {
     if(!this.bgmBus){this.bgmBus=c.createGain();this.bgmBus.connect(c.destination);}
     this.bgmBus.gain.setTargetAtTime(this.bgmVolume,c.currentTime,.08);
     if(this.bgmTimer!==null)return;
+    if(this.bgmLoop){
+      this.bgmGeneration++;const source=c.createBufferSource();source.buffer=this.bgmLoop;source.loop=true;
+      const gain=c.createGain();gain.gain.value=.5;source.connect(gain);gain.connect(this.bgmBus);source.start();
+      this.bgmNodes.push({source,gain});this.bgmTimer='loop';return;
+    }
+    this.loadBgm();
     const generation=++this.bgmGeneration;
     const schedule=()=>{
       if(generation!==this.bgmGeneration||!this.canBgm()||c.state!=='running')return;
@@ -154,8 +162,17 @@ export class SoundEngine {
     };
     schedule();
   }
+  loadBgm(){
+    if(!this.bgmSrc||this.bgmLoading||this.bgmLoop||typeof fetch!=='function'||typeof this.context?.decodeAudioData!=='function')return;
+    this.bgmLoading=true;
+    fetch(this.bgmSrc).then(r=>{if(!r.ok)throw Error('music unavailable');return r.arrayBuffer();}).then(data=>this.context.decodeAudioData(data)).then(buffer=>{
+      this.bgmLoop=buffer;
+      // Swap the fallback chime for the loop only while music is still wanted.
+      if(this.bgmTimer!==null&&this.canBgm()){this.stopBgm();this.syncBgm();}
+    }).catch(()=>{}).finally(()=>{this.bgmLoading=false;});
+  }
   stopBgm(){
-    this.bgmGeneration++;if(this.bgmTimer!==null)clearTimeout(this.bgmTimer);this.bgmTimer=null;
+    this.bgmGeneration++;if(this.bgmTimer!==null&&this.bgmTimer!=='loop')clearTimeout(this.bgmTimer);this.bgmTimer=null;
     for(const entry of this.bgmNodes)this.disconnect(entry);this.bgmNodes=[];
   }
   destroy(){

@@ -111,9 +111,9 @@ async function playLesson(i){
    await autoplay(i,`lesson-${i}-round-${k}-auto`);
    if(id==='parts')await action('challenge-select',`[data-value="${plans[id][k]}"]`);
    if(id==='rhythm'){await action('challenge-clear');for(const a of plans[id][k]){await action(`challenge-${a}`);await record(`lesson-${i}-round-${k}-${a}`);}}
-   if(id==='signal'){await range('#signal-force',plans[id][k]);await record(`lesson-${i}-round-${k}-set`);await action('challenge-strike');}
+   if(id==='signal'){await record(`lesson-${i}-round-${k}-set`);await action('challenge-strike',`[data-value="${plans[id][k]}"]`);}
    if(id==='sort'){for(const [slot,v]of plans[id][k].entries()){await action('challenge-parcel',`[data-value="${v}"]`);await action('challenge-slot',`[data-value="${slot}"]`);await record(`lesson-${i}-round-${k}-slot-${slot}`);}}
-   if(id==='melody'){await action('challenge-clear');for(const n of plans[id][k]){await action('challenge-note',`[data-value="${n}"]`);await record(`lesson-${i}-round-${k}-note-${n}`);}}
+   if(id==='melody'){for(const n of plans[id][k]){await action('challenge-note',`[data-value="${n}"]`);await record(`lesson-${i}-round-${k}-note-${n}`);}}
    if(id==='mix'){await range('#mix-length',plans[id][k][0]);await range('#mix-force',plans[id][k][1]);await record(`lesson-${i}-round-${k}-set`);await action('challenge-check');}
    if(id==='sensor'||id==='classify')await action('challenge-zone',`[data-value="${plans[id][k]}"]`);
    if(id==='solutions'){await action('challenge-solution',`[data-value="${plans[id][k]}"]`);await record(`lesson-${i}-round-${k}-solution`);}

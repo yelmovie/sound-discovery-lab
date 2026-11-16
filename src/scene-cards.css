@@ -73,3 +73,118 @@ button.fork-display:focus-visible{outline:3px solid #0bb8c4;outline-offset:3px}
  .challenge-shell[data-challenge="solutions"] .context-cards>button{flex-direction:row;min-height:48px;padding:4px 8px}
  .challenge-shell[data-challenge="solutions"] .context-cards .concept-thumb{max-height:34px;width:auto}
 }
+
+/* ── Stage-specific interactions (2026-11-17) ── */
+/* Vibration: tap the instrument picture, then the numbered marker on the part that shakes. */
+.challenge-shell[data-challenge="parts"] .challenge-workspace{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr)}
+.part-scene{display:grid;grid-template-rows:minmax(0,1fr) auto;gap:8px;height:100%;min-height:0}
+.part-frame{container-type:size;min-height:0;display:grid;place-items:center}
+.part-stage{position:relative;width:min(100cqw,150cqh);aspect-ratio:3/2;border-radius:22px;background:radial-gradient(ellipse at center,#fffdf2 40%,#e6f1e4);box-shadow:0 8px 22px rgba(20,59,65,.14),inset 0 0 0 1px #fff}
+.part-stage>.part-ring{position:absolute;inset:0;width:100%;height:100%;min-height:0;padding:0;margin:0;border:0;background:none;box-shadow:none;border-radius:22px;cursor:pointer}
+.part-stage .part-art{display:block;width:100%;height:100%;max-height:none;object-fit:contain}
+.part-pin{position:absolute;z-index:2;translate:-50% -50%;display:flex;align-items:center;gap:6px;min-height:48px;padding:5px 14px 5px 5px;border-radius:999px;border:2px solid #fff;background:rgba(23,59,75,.86);color:#fff;font-weight:800;font-size:clamp(16px,1.3vw,20px);line-height:1.2;white-space:nowrap;box-shadow:0 6px 16px rgba(10,30,40,.3);cursor:pointer}
+.part-pin .pin-dot{display:grid;place-items:center;flex:none;width:36px;height:36px;border-radius:50%;background:#ffbf58;color:#173b4b}
+.part-pin:hover,.part-pin:focus-visible{background:#0b6f7a}
+.part-pin.selected{background:#a8433b}
+.part-stage:not(.is-ringing) .part-pin{opacity:.92}
+.part-caption{justify-self:center;margin:0;padding:6px 16px;border-radius:999px;background:rgba(255,253,247,.94);font-size:clamp(16px,1.3vw,21px);line-height:1.4;color:#28474f}
+.part-caption b{color:#0b6f7a;margin-right:4px}
+@media(prefers-reduced-motion:no-preference){.part-stage.is-ringing .part-art{animation:part-shake .09s linear 10}}
+@keyframes part-shake{0%,100%{translate:0 0}25%{translate:-3px 1px}75%{translate:3px -1px}}
+
+/* Loudness: swipe down on the drum; a longer swipe hits harder. */
+.challenge-shell .swipe-lab{grid-template-columns:minmax(0,1.35fr) minmax(0,.85fr);grid-template-rows:minmax(0,1fr) auto}
+.challenge-shell .swipe-lab .swipe-pad{grid-row:1/3;position:relative;touch-action:none;cursor:ns-resize}
+.challenge-shell .swipe-pad>.swipe-hint{position:absolute;width:auto;height:auto;margin:0;right:clamp(10px,2vw,22px);top:12%;display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 10px;border-radius:14px;background:rgba(255,253,247,.9);color:#0b6f7a;font-weight:800;font-size:clamp(16px,1.2vw,19px);pointer-events:none}
+.challenge-shell .swipe-pad>.swipe-hint>i{display:block;flex:none;position:relative;width:8px;height:clamp(44px,18cqh,120px);border-radius:4px;background:linear-gradient(#0bb8c422,#0bb8c4)}
+.challenge-shell .swipe-pad>.swipe-hint>i::after{content:"";position:absolute;left:50%;bottom:-14px;translate:-50% 0;border:9px solid transparent;border-top-color:#0bb8c4}
+@media(prefers-reduced-motion:no-preference){.challenge-shell .swipe-pad>.swipe-hint>i::before{content:"";position:absolute;left:50%;top:0;width:18px;height:18px;border-radius:50%;background:#ffbf58;translate:-50% 0;animation:swipe-dot 1.6s ease-in infinite}}
+@keyframes swipe-dot{0%{top:0;opacity:0}15%{opacity:1}85%{opacity:1}100%{top:calc(100% - 18px);opacity:0}}
+.swipe-meter{display:grid;grid-template-rows:repeat(3,minmax(0,1fr));gap:8px;min-height:0}
+.challenge-shell .swipe-meter>.swipe-step{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;align-items:center;justify-items:start;column-gap:12px;row-gap:0;min-height:48px;padding:6px 14px;text-align:left}
+.swipe-step .swipe-bar{grid-row:1/3;width:12px;height:calc(var(--n) * 12px + 6px);border-radius:6px;background:#9fd7cf}
+.swipe-step b{font-size:clamp(17px,1.4vw,22px)}
+.swipe-step small{font-size:clamp(16px,1.1vw,18px);color:#4d7465}
+.swipe-lab:is([data-swipe="1"],[data-swipe="2"],[data-swipe="3"]) .swipe-step{opacity:.75}
+.swipe-lab[data-swipe="1"] .swipe-step[data-value="1"],.swipe-lab[data-swipe="2"] .swipe-step[data-value="2"],.swipe-lab[data-swipe="3"] .swipe-step[data-value="3"]{opacity:1;border-color:#278379;background:#d9f1e3;box-shadow:inset 0 0 0 1px #278379}
+.swipe-lab[data-swipe="1"] .swipe-step[data-value="1"] .swipe-bar,.swipe-lab[data-swipe="2"] .swipe-step[data-value="2"] .swipe-bar,.swipe-lab[data-swipe="3"] .swipe-step[data-value="3"] .swipe-bar{background:#0b8f8a}
+.challenge-shell .swipe-lab .live-scope{grid-column:2}
+
+/* Pitch: compose by moving rulers into the melody slots under the target lines. */
+.challenge-shell[data-challenge="melody"] .challenge-workspace{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1.3fr) minmax(0,1fr)}
+.challenge-shell .compose-console{grid-template-rows:auto minmax(0,1fr) minmax(64px,1fr)}
+.challenge-shell .compose-console>.btn{justify-self:start}
+.melody-slots{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:8px;min-height:0}
+.challenge-shell .melody-slots>.melody-slot{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:64px;padding:6px;border:2px dashed #8fb6a9;border-radius:16px;background:rgba(255,253,245,.95)}
+.melody-slot b{font-size:clamp(17px,1.4vw,22px)}
+.melody-slot small{font-size:clamp(16px,1.1vw,18px);color:#4d7465}
+.challenge-shell .melody-slots>.melody-slot.filled{border-style:solid;border-color:#47977b;background:#dff2df}
+.slot-ruler{display:block;width:calc(var(--len) * 80%);min-width:24px;height:12px;border-radius:4px;background:linear-gradient(#f1d27a,#d9a93e);box-shadow:inset 0 0 0 1px #a9802a}
+.challenge-shell[data-challenge="melody"] .length-card{cursor:grab;touch-action:none}
+:is(.melody-slot,.solution-target,.medium-choices>button,.sensor-zone).drop-ready{outline:4px solid #0bb8c4;outline-offset:2px}
+.scene-question.path-source{cursor:grab;touch-action:none}
+.challenge-shell[data-challenge="solutions"] .context-cards>button{cursor:grab;touch-action:none}
+
+
+/* Short landscape phones: rulers move to a side column, the swipe meter takes the scope's place. */
+@media(max-height:560px){
+ .challenge-shell[data-challenge="melody"] .challenge-workspace{grid-template-columns:minmax(0,1.5fr) minmax(0,.75fr);grid-template-rows:minmax(0,1fr)}
+ .challenge-shell .compose-console{grid-template-rows:auto minmax(0,1fr) minmax(0,1fr);gap:5px}
+ .challenge-shell .compose-console>.btn{min-height:40px;padding:4px 12px}
+ .challenge-shell .compose-console .signal-tile{min-height:0;padding:2px 4px}
+ .challenge-shell .compose-console .signal-trace{height:16px}
+ .challenge-shell .melody-slots>.melody-slot{min-height:0;padding:2px 4px;gap:0}
+ .challenge-shell .melody-slots>.melody-slot small{display:none}
+ .challenge-shell[data-challenge="melody"] .length-options{grid-template-columns:minmax(0,1fr);grid-template-rows:repeat(3,minmax(0,1fr));gap:5px}
+ .challenge-shell[data-challenge="melody"] .length-card{grid-template-rows:minmax(0,1fr) auto;grid-template-columns:minmax(0,1fr) auto;align-items:center;padding:2px 8px}
+ .challenge-shell[data-challenge="melody"] .length-card>.illustrated-ruler{grid-row:1/3}
+ .challenge-shell[data-challenge="melody"] .length-card small{display:none}
+ .challenge-shell .swipe-lab .live-scope{display:none}
+ .challenge-shell .swipe-lab .swipe-meter{grid-row:1/3;grid-template-rows:minmax(0,1fr);grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+ .challenge-shell .swipe-meter>.swipe-step{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;justify-items:center;align-items:end;min-height:44px;height:auto;padding:6px 4px}
+ .challenge-shell .swipe-meter>.swipe-step .swipe-bar{grid-row:auto}
+ .challenge-shell .swipe-meter>.swipe-step small{display:none}
+ .challenge-shell .swipe-pad>.swipe-hint{top:6%;padding:4px 6px}
+}
+
+/* Facility badges (GPT images) replace the numbered CSS rings. */
+.rings.badge-rings{gap:clamp(6px,1vw,12px)}
+.ring.badge-ring{display:grid;place-items:center;width:clamp(48px,5vw,68px);height:clamp(48px,5vw,68px);padding:0;border:0;border-radius:50%;background:none;box-shadow:none}
+.ring.badge-ring .badge-art{width:100%;height:100%;object-fit:contain;filter:grayscale(1) opacity(.42);transition:filter .3s,transform .3s}
+.ring.badge-ring.lit .badge-art{filter:drop-shadow(0 4px 8px rgba(20,59,65,.3))}
+.concept-reward{display:flex;align-items:center;gap:12px}
+.concept-reward .reward-badge{flex:none;width:clamp(56px,6vw,84px);height:auto}
+@media(prefers-reduced-motion:no-preference){.concept-reward .reward-badge{animation:badge-pop .6s cubic-bezier(.2,1.6,.4,1) both}}
+@keyframes badge-pop{from{transform:scale(.3) rotate(-20deg);opacity:0}to{transform:none;opacity:1}}
+
+/* ── Design pass (yelsam-design, game-screen warm-tone exception): popups, stage colour, type ── */
+/* Popups: one short scale-in on open; results and dialogue only. */
+@media(prefers-reduced-motion:no-preference){
+ dialog[open]{animation:modal-in .4s cubic-bezier(.16,1,.3,1) both}
+ dialog[open]::backdrop{animation:backdrop-in .25s ease-out both}
+}
+@keyframes modal-in{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:none}}
+@keyframes backdrop-in{from{opacity:0}to{opacity:1}}
+dialog{border-radius:28px;border:1px solid rgba(255,255,255,.9)}
+dialog .modal-heading{border-bottom:1px solid rgba(23,59,75,.08)}
+dialog .modal-heading :is(h1,h2){letter-spacing:-.01em}
+dialog .modal-footer{border-top:1px solid rgba(23,59,75,.08)}
+
+/* Each facility tints its own board, mission bar and selected states, so the five stages feel different. */
+.lesson-page[data-stage="0"]{--tint:#22b8c4}
+.lesson-page[data-stage="1"]{--tint:#e9a23b}
+.lesson-page[data-stage="2"]{--tint:#9b7fe6}
+.lesson-page[data-stage="3"]{--tint:#3fbf93}
+.lesson-page[data-stage="4"]{--tint:#e98593}
+.lesson-page.single-screen .experiment-board{border-color:color-mix(in srgb,var(--tint,#3aa6a6) 35%,white);box-shadow:0 10px 30px rgba(20,59,65,.12),inset 0 4px 0 color-mix(in srgb,var(--tint,#3aa6a6) 55%,white)}
+.lesson-page .challenge-shell .action-mission{border-left:6px solid var(--tint,#3aa6a6)}
+.lesson-page .action-mission .mission-copy b{color:color-mix(in srgb,var(--tint,#3aa6a6) 70%,#173b4b)}
+.lesson-page .part-pin .pin-dot{background:color-mix(in srgb,var(--tint,#ffbf58) 55%,#ffd27a)}
+.lesson-page .melody-slots>.melody-slot.filled,.lesson-page .swipe-lab .swipe-step.selected{border-color:var(--tint);background:color-mix(in srgb,var(--tint) 16%,white)}
+.lesson-page .scene-question{border-top:4px solid color-mix(in srgb,var(--tint,#3aa6a6) 60%,white)}
+.certificate-medal{width:clamp(56px,6vw,76px);height:clamp(56px,6vw,76px);background:none;box-shadow:none;border:0}
+.certificate-medal img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 6px 10px rgba(20,59,65,.25))}
+.finding-replay .badge-thumb{width:52px;height:52px;object-fit:contain;flex:none}
+/* The picture stays under the markers in every state (ringing, focused, observed). */
+.part-stage>.part-ring,.part-stage>.part-ring.observed,.part-stage>.part-ring:focus-visible{z-index:0}
+.part-stage>.part-pin{z-index:5}

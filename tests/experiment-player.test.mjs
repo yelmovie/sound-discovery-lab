@@ -100,8 +100,8 @@ test('safe challenge observations retain the current round without replaying com
  const sort=lessons.findIndex(l=>l.challenge==='sort');
  assert.deepEqual(experimentPlan(sort).filter(s=>s.type==='action').map(s=>s.data.value),[0,1,2]);
  const solutions=lessons.findIndex(l=>l.challenge==='solutions');
- assert.deepEqual(experimentPlan(solutions).filter(s=>s.type==='action').map(s=>s.action),['challenge-before']);
- assert.deepEqual(experimentPlan(solutions,{challenge:{solution:'pad'}}).filter(s=>s.type==='action').map(s=>s.action),['challenge-before'],'autoplay listens but never chooses the tool');
+ assert.deepEqual(experimentPlan(solutions).filter(s=>s.type==='action').map(s=>s.action),[],'autoplay only previews the scene sound');
+ assert.deepEqual(experimentPlan(solutions,{challenge:{solution:'pad'}}).filter(s=>s.type==='action').map(s=>s.action),[],'autoplay never chooses the tool');
 });
 
 test('automatic rhythm observation retains the restart cue for an interrupted performance',()=>{

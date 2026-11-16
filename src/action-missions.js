@@ -9,8 +9,8 @@ export function missionScene(id, challenge, total) {
     `<span class="mission-gate ${index < status.done ? 'open' : ''}"><svg viewBox="0 0 24 24"><path d="${index < status.done ? 'M5 12l4 4L19 6' : 'M12 5l7 7-7 7-7-7z'}"/></svg></span>`
   ).join('');
   return `<section class="action-mission ${status.complete ? 'mission-open' : ''}" aria-label="${mission[0]}">
-    <div class="mission-copy"><b>${mission[0]}</b><span>${status.complete ? '길이 열렸어! 다음 탐험으로 가자.' : mission[1]}</span></div>
-    <div class="mission-route" aria-hidden="true"><i class="mission-traveller" style="--travel:${status.ratio}"><img src="/image/generated/pio-guide.svg" alt=""></i>${gates}</div>
+    <div class="mission-copy"><b>${mission[0]}</b>${status.complete ? '<span>길이 열렸어!</span>' : ''}</div>
+    <div class="mission-route" aria-hidden="true"><i class="mission-traveller" style="--travel:${status.ratio}"><img src="/image/generated/concepts/pio-fly.webp" alt=""></i>${gates}</div>
     <div class="mission-status" role="status">${status.done} / ${total} 통과</div>
   </section>`;
 }
