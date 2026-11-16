@@ -20,6 +20,12 @@ self.addEventListener('fetch',event=>{
     event.respondWith(fetch(request).then(response=>remember(event,response)).catch(()=>caches.match(request).then(hit=>hit||caches.match('/index.html'))));
     return;
   }
-  // Everything else: cache first. A new CACHE_VERSION replaces the whole cache.
+  // App code (scripts, styles, data files): network first, so a reload always picks up a new deploy even if
+  // an edge briefly served an older copy while the cache was filled. The cache is only the offline fallback.
+  if(request.destination==='script'||request.destination==='style'||/\.(js|mjs|css|json)$/.test(new URL(request.url).pathname)){
+    event.respondWith(fetch(request,{cache:'no-cache'}).then(response=>remember(event,response)).catch(()=>caches.match(request)));
+    return;
+  }
+  // Pictures, sounds and fonts: cache first. A new CACHE_VERSION replaces the whole cache.
   event.respondWith(caches.match(request).then(hit=>hit||fetch(request).then(response=>remember(event,response))));
 });
