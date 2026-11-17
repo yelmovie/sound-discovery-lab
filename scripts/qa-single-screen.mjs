@@ -24,13 +24,13 @@ const required=[
  [A('instrument',4),A('choice',2)],[A('fork-start'),A('fork-stop'),A('choice',2)],
  [A('challenge-listen'),A('challenge-select',3)],[A('challenge-ring'),A('challenge-rest'),A('challenge-clear')],
  [A('hit'),['#force',1]],[A('sample-play',2),A('choice',2)],
- [A('challenge-strike'),['#signal-force',1]],[A('challenge-parcel',3),A('challenge-slot',3)],
+ [A('challenge-strike',4)],[A('challenge-parcel',3),A('challenge-slot',3)],
  [['#ruler-length',1],A('pluck'),A('choice',2)],[A('target'),A('note',3),A('pattern-reset')],
- [A('challenge-listen'),A('challenge-note',3),A('challenge-clear')],[['#mix-length',1],['#mix-force',1],A('challenge-check')],
+ [A('challenge-listen'),A('challenge-note',3),A('challenge-note-slot',3)],[['#mix-length',1],['#mix-force',1],A('challenge-check')],
  [A('medium',3),A('choice',2)],[A('case',3),A('case-choice',3)],
  [A('challenge-zone',3)],[A('challenge-zone',3)],
  [A('noise-scene'),A('diagnostic',6)],[A('solution',3),A('noise-before'),A('noise-after'),A('choice',2)],
- [A('challenge-solution',4),A('challenge-before'),A('challenge-after')],
+ [A('challenge-solution',4)],
  [['#festival-music',1],['#festival-announcement',1],A('challenge-pads'),A('challenge-preview')]
 ];
 const browser=await chromium.launchPersistentContext(path.join(out,'profile'),{executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',headless:true,viewport:{width:1280,height:800},deviceScaleFactor:1,reducedMotion:'reduce',args:['--disable-crash-reporter','--disable-breakpad','--noerrdialogs','--use-mock-keychain',`--disk-cache-dir=${path.join(out,'cache')}`,`--crash-dumps-dir=${path.join(out,'crashes')}`]});
@@ -127,7 +127,7 @@ async function auxiliaryChecks(){
  await action('activity-tools');await action('concept');assert.equal(await page.locator('dialog video').count(),1);assert.equal(await page.locator('dialog track[kind="captions"]').count(),1);await page.locator('.modal-heading [data-action="close"]').click();assert.equal(await page.evaluate(()=>document.activeElement?.dataset.action),'activity-tools');checks.push('auxiliary concept video retains captions and returns focus to tools');
  const final=seed(0,true);final.lastRoute='final';await open(final);assert.equal(await page.locator('.final-focus').count(),1);await action('final-choice','[data-question="0"][data-choice="0"]');await page.waitForTimeout(700);assert.ok(await page.locator('[data-question="1"]').count());const value=await saved();assert.equal(value.finalAnswers[0],0);assert.equal(value.restored,false);checks.push('final question selection advances while restoration still requires completion');
 }
-async function cueChecks(){for(const [width,height]of [[1280,800],[915,412],[740,360],[390,844],[360,740]]){await page.setViewportSize({width,height});await open(seed(11));await action('challenge-check');await measure('error-mix',11,required[11],'#mix-length,#mix-force');await open(seed(18));await action('challenge-solution','[data-value="volume"]');await action('challenge-before');await action('challenge-after');await measure('error-solution',18,required[18],'[data-action="challenge-solution"]');}checks.push('wrong mix redirects to adjustment controls without choosing a value');checks.push('wrong solution redirects to tool choices without choosing a tool');for(const [width,height]of [[1920,1080],[1280,800],[390,844]]){await page.setViewportSize({width,height});await open(seed(0));await measure('lesson-0',0);}checks.push('ruler card layout remains visible at board, tablet and portrait sizes');}
+async function cueChecks(){for(const [width,height]of [[1280,800],[915,412],[740,360],[390,844],[360,740]]){await page.setViewportSize({width,height});await open(seed(11));await action('challenge-check');await measure('error-mix',11,required[11],'#mix-length,#mix-force');await open(seed(18));await action('challenge-solution','[data-value="volume"]');await measure('error-solution',18,required[18],'[data-action="challenge-solution"]');}checks.push('wrong mix redirects to adjustment controls without choosing a value');checks.push('wrong solution redirects to tool choices without choosing a tool');for(const [width,height]of [[1920,1080],[1280,800],[390,844]]){await page.setViewportSize({width,height});await open(seed(0));await measure('lesson-0',0);}checks.push('ruler card layout remains visible at board, tablet and portrait sizes');}
 const probe=phase.startsWith('probe'),autoOnly=phase==='auto',cueOnly=phase==='cue',focused=phase.includes('focused'),worst=phase.includes('worst'),debug=phase.includes('debug'),ids=process.env.QA_LESSONS?process.env.QA_LESSONS.split(',').map(Number):debug?[2,11,14,19]:focused?[8,12,16]:probe&&!worst?[0,8,12,16,19]:Array.from({length:20},(_,i)=>i);
 const vps=process.env.QA_SIZES?process.env.QA_SIZES.split(',').map(size=>size.split('x').map(Number)):autoOnly||cueOnly?[]:focused?[[1024,600],[390,844]]:worst||debug?[[740,360],[360,740]]:phase==='baseline'||probe?[[1280,800],[915,412],[390,844]]:[[1920,1080],[1366,768],[1280,800],[1024,768],[1024,600],[915,412],[740,360],[390,844],[360,740]];
 try{
@@ -138,7 +138,7 @@ try{
   if(!autoOnly)for(const [width,height]of [[1280,800],[915,412],[740,360],[390,844],[360,740]]){await page.setViewportSize({width,height});for(const [i,work]of [[2,{challenge:{proof:proofs.parts.slice(0,2)}}],[2,{challenge:{proof:proofs.parts.slice(0,3)}}],[3,{challenge:{proof:proofs.rhythm.slice(0,2),sequence:['울림','쉼','울림','쉼']}}],[10,{challenge:{proof:proofs.melody.slice(0,2)}}],[15,{challenge:{proof:proofs.classify.slice(0,5)}}],[18,{challenge:{proof:proofs.solutions.slice(0,2)}}]]){const s=seed(i);s.work[i]=work;await open(s);await measure(`long-${i}-${work.challenge.proof.length}`,i);}
    for(const i of [0,4,8,12,16,19]){const s=seed(i,true);await open(s);await measure(`complete-${i}`,i,lessons[i].challenge?[A('challenge-replay')]:required[i]);}
    await open(seed(11));await action('challenge-check');await measure('error-mix',11);
-   await open(seed(18));await action('challenge-solution','[data-value="volume"]');await action('challenge-before');await action('challenge-after');await measure('error-solution',18);
+   await open(seed(18));await action('challenge-solution','[data-value="volume"]');await measure('error-solution',18);
    const diagnosis=seed(16);diagnosis.work[16]={heard:true,place:'library'};await open(diagnosis);await measure('diagnosis-next-situation',16,required[16],'[data-action="diagnostic"][data-field="situation"]');
    const care=seed(17);care.work[17]={before:true};await open(care);await measure('care-next-solutions',17,required[17],'.solution-grid');
    await open(seed(0));await action('auto-play');await measure('playing-0',0);await action('auto-play');await measure('paused-0',0);await action('auto-stop');
