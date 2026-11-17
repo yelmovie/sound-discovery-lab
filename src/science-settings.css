@@ -55,3 +55,6 @@ html .science-settings-body>*{flex:none}
 html [data-science-settings] .science-settings-label{grid-column:1/-1;margin:0 0 4px}
 html [data-science-settings] .science-settings-body > .science-settings-guides{display:flex;flex-direction:column;gap:9px}
 html [data-science-settings] :is(h2,.settings-title,.settings-header){color:var(--settings-ink)}
+
+/* 3-second rule (2026-11-17): the settings card covers at most half the screen; its body already scrolls. */
+html dialog[open]:has([data-science-settings]){width:min(760px,calc(100vw - 28px));max-height:min(94dvh,max(66dvh,420px))}
