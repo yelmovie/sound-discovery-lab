@@ -12,7 +12,8 @@ export const concepts = [
 
 export const conceptAssets=concepts.flatMap(c=>[c.src,c.poster,c.captions].map(p=>p.slice(1)));
 
-export function conceptView(stage){
+// compact (facility reward): the popup title already names the concept, so the word box and summary are left out.
+export function conceptView(stage,{compact=false}={}){
   const c=concepts[stage];
-  return `<div class="concept-player"><video id="concept-video" playsinline controls preload="metadata" poster="${c.poster}" aria-label="${c.title} · 16초 개념 영상"><source src="${c.src}" type="video/mp4"><track kind="captions" src="${c.captions}" srclang="ko" label="한국어"></video><div class="concept-focus"><small>기억할 낱말</small>${conceptTerms[stage].map(term=>`<strong>${term}</strong>`).join('')}</div><details class="concept-transcript" open><summary>네 장면으로 기억하기 · 16초</summary><div class="concept-cues" aria-label="영상 속 네 가지 발견">${c.cues.map((text,n)=>`<span data-cue="${n}" class="${n===0?'active':''}"><b>${n+1}</b><span>${emphasize(text,conceptTerms[stage])}</span></span>`).join('')}</div></details><p class="concept-recall-summary">${emphasize(c.summary,conceptTerms[stage])}</p><p class="concept-fallback" role="status" hidden>영상을 불러오지 못했어. 네 가지 발견을 글로 확인해 줘.</p></div>`;
+  return `<div class="concept-player"><video id="concept-video" playsinline controls preload="metadata" poster="${c.poster}" aria-label="${c.title} · 16초 개념 영상"><source src="${c.src}" type="video/mp4"><track kind="captions" src="${c.captions}" srclang="ko" label="한국어"></video>${compact?'':`<div class="concept-focus"><small>기억할 낱말</small>${conceptTerms[stage].map(term=>`<strong>${term}</strong>`).join('')}</div>`}<details class="concept-transcript" open><summary>네 장면으로 기억하기 · 16초</summary><div class="concept-cues" aria-label="영상 속 네 가지 발견">${c.cues.map((text,n)=>`<span data-cue="${n}" class="${n===0?'active':''}"><b>${n+1}</b><span>${emphasize(text,conceptTerms[stage])}</span></span>`).join('')}</div></details>${compact?'':`<p class="concept-recall-summary">${emphasize(c.summary,conceptTerms[stage])}</p>`}<p class="concept-fallback" role="status" hidden>영상을 불러오지 못했어. 네 가지 발견을 글로 확인해 줘.</p></div>`;
 }

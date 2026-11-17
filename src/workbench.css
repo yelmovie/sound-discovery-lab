@@ -10,10 +10,10 @@ body:has(.single-screen) #app{height:100dvh;padding:0;overflow:hidden}
 .lesson-page.single-screen::before{position:absolute;inset:0;background:linear-gradient(#173b4b18,#173b4b08 40%,#173b4b35);pointer-events:none}
 .lesson-page.single-screen .lesson-heading{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:16px;padding:0 132px;min-width:0;min-height:64px;text-align:left}
 .single-screen .lesson-heading .lesson-title{min-width:0;max-width:none;padding:8px 16px;border:0;border-left:4px solid var(--lab-accent);border-radius:16px;background:#fffdf4f5;box-shadow:0 4px 16px #1b444020;flex:1}
-.lesson-heading .stage-badge{display:flex;align-items:center;justify-content:flex-start;gap:6px;font-size:clamp(16px,1.05vw,20px);line-height:1.25;color:var(--lab-accent)}
+.lesson-heading .stage-badge{display:flex;align-items:center;justify-content:flex-start;gap:6px;font-size:var(--read-small);line-height:1.25;color:var(--lab-accent)}
 .lesson-heading .stage-badge .icon{width:20px;height:20px;flex:none}
 .lesson-heading h1{font-size:clamp(22px,1.8vw,34px);line-height:1.3;letter-spacing:-.8px;margin:3px 0 0}
-.lesson-heading .learning-focus{font-size:clamp(16px,1.15vw,20px);line-height:1.4;margin:5px 0 0;color:#285357}
+.lesson-heading .learning-focus{font-size:var(--read-small);line-height:1.4;margin:5px 0 0;color:#285357}
 .learning-focus>span:first-child{font-weight:800;color:var(--lab-accent);margin-right:5px}
 .learning-focus .concept-keyword,#coach-hint .concept-keyword{padding:0;margin:0;background:#f9e7a5;color:#244b50;box-decoration-break:clone;-webkit-box-decoration-break:clone;font-weight:800}
 .lesson-saved .learning-focus{color:#185d50}
@@ -21,15 +21,15 @@ body:has(.single-screen) #app{height:100dvh;padding:0;overflow:hidden}
 @media(min-width:601px) and (max-height:650px){
  .lesson-heading .stage-badge{display:none}
  .lesson-page.single-screen .lesson-heading .lesson-title{padding:6px 12px}
- .lesson-heading .learning-focus{font-size:clamp(14px,1.25vw,18px);line-height:1.3;margin-top:3px}
+ .lesson-heading .learning-focus{font-size:var(--read-small);line-height:1.3;margin-top:3px}
 }
 .lesson-heading .chapter-switch{display:flex;flex:none;flex-wrap:nowrap;width:auto;max-width:none;padding:4px;gap:4px;margin:0;border:0;border-radius:14px;box-shadow:none}
-.lesson-heading .chapter{display:flex;align-items:center;justify-content:center;gap:5px;flex:1;min-width:60px;min-height:48px;padding:8px;font-size:clamp(17px,1.2vw,23px);line-height:1.25}
+.lesson-heading .chapter{display:flex;align-items:center;justify-content:center;gap:5px;flex:1;min-width:60px;min-height:48px;padding:8px;font-size:var(--read-small);line-height:1.25}
 .chapter-step{display:grid;place-items:center;flex:none;width:24px;height:24px;border-radius:50%;background:#e2ecdf;color:#416c5e;font-size:18px}
 .chapter.current{background:var(--lab-accent,#1a6b75);color:#fff}
 .chapter.current .chapter-step{background:#ffffff25;color:#fff}
 .lesson-page.single-screen .lesson-scene{display:block;flex:none;width:100%;height:100%;min-width:0;min-height:0;max-width:none;margin:0;padding:0;overflow:hidden}
-.lesson-page.single-screen .experiment-board{--read:clamp(18px,1.55vw,28px);--read-small:clamp(16px,1.2vw,23px);container:experiment / size;position:relative;width:100%;height:100%;min-height:0;max-height:none;min-width:0;margin:0;padding:clamp(10px,1.2vw,24px);overflow:hidden;scrollbar-gutter:auto;border:2px solid #fff9e9;border-radius:24px;background:#fffdf7f7;box-shadow:0 5px 0 #1b4e4520,0 12px 30px #153a4226}
+.lesson-page.single-screen .experiment-board{--read:clamp(18px,1.55vw,28px);--read-small:clamp(18px,1.2vw,23px);container:experiment / size;position:relative;width:100%;height:100%;min-height:0;max-height:none;min-width:0;margin:0;padding:clamp(10px,1.2vw,24px);overflow:hidden;scrollbar-gutter:auto;border:2px solid #fff9e9;border-radius:24px;background:#fffdf7f7;box-shadow:0 5px 0 #1b4e4520,0 12px 30px #153a4226}
 .experiment-content{--content-fit:1;position:relative;width:100%;height:100%;min-width:0;min-height:0;display:grid;align-content:center;gap:clamp(6px,1.4cqh,16px);zoom:var(--content-fit)}
 .experiment-content>*,.experiment-content :is(fieldset,section,button,label,legend){min-width:0}
 .experiment-content :is(p,span,b,small,legend,label){word-break:keep-all;overflow-wrap:break-word}
@@ -419,3 +419,12 @@ body:has(.single-screen) .admin-arrow{width:48px;min-height:48px;height:48px;fon
 
 /* Fitting must not shrink these short action labels below the compact reading floor. */
 @media(min-width:601px),(orientation:landscape){.experiment-content .noise-story .btn,.experiment-content .diagnostic .choice,.experiment-content .challenge-complete .btn{font-size:max(var(--read-small),calc(14px / var(--content-fit)))}}
+
+/* Finished activity (3-second rule, 2026-11-17): the discovery sits large on the board,
+   the footer keeps its hint for screen readers and shows only the check mark beside the main button. */
+.experiment-content .saved-discovery{align-self:start;height:auto;min-height:0;display:flex;align-items:center;gap:12px;margin:0;padding:12px 18px;border:2px solid #8bbfa1;border-radius:16px;background:#f0f8ecf2;color:#185d50;font-size:var(--read);font-weight:800;line-height:1.4;word-break:keep-all}
+.saved-discovery-mark{display:inline-flex;align-items:center;gap:6px;flex:none;padding:4px 12px;border-radius:999px;background:#1c7958;color:#fff;font-size:max(18px,var(--read-small))}
+.saved-discovery-mark .icon{width:22px;height:22px}
+.lesson-saved #coach-hint{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.lesson-saved .next-marker{width:44px;height:44px;background:#1c7958;color:#fff;font-size:26px}
+.experiment-content.activity-base-challenge:has(> .saved-discovery){grid-template-rows:auto minmax(0,1fr)}

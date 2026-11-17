@@ -7,6 +7,7 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import {freshState,normalize,recordEvidence,STORAGE_KEY} from '../src/model.js';
 import {lessons} from '../src/data.js';
+import {expectedProof} from '../src/challenge-rules.js';
 
 const root=fileURLToPath(new URL('../',import.meta.url)),phase=process.argv[2]||'baseline';
 const out=path.join(root,'.tmp/single-screen-20261108',phase),temp=path.join(root,'.tmp/single-screen-20261108/tmp');
@@ -14,6 +15,8 @@ await mkdir(out,{recursive:true});await mkdir(temp,{recursive:true});
 for(const name of ['TMPDIR','TMP','TEMP'])process.env[name]=temp;
 const base=process.env.QA_BASE||'http://127.0.0.1:4186';
 const proofs={parts:['0','1','2','1'],rhythm:['울림,쉼,울림','울림,쉼,울림,쉼','울림,쉼,울림,쉼,울림'],signal:['1','3','2','1'],sort:['1,2,3','1,2,3'],melody:['18,12,6','6,12,18','12,6,18,12'],mix:['6,1','18,3','12,1','6,3'],sensor:['air','water','solid'],classify:['air','water','solid','air','water','solid'],solutions:['pad','volume','time','place'],festival:['balanced']};
+// Seed with the current challenge answers so the QA states stay valid when a challenge changes.
+Object.assign(proofs,structuredClone(expectedProof));
 const sourceWork=[{seen:['rubber','drum'],choice:0},{started:true,stopped:true,choice:1},{a:1,b:3,force:1},{heardA:true,heardB:true,pairKey:'1,3',choice:1},{lengths:[18,6],length:18,choice:0},{targetHeard:true,pattern:[18,6,12]},{media:['air','water','solid'],choice:1},{verified:{0:'air',1:'water',2:'solid'}},{heard:true,place:'library',situation:'reading',person:'reader'},{solutions:['pad'],before:true,after:true,afterKey:'pad',choice:0}];
 function seed(n,finished=false){const s=freshState();s.settings={...s.settings,muted:true,bgm:false,sfx:false};for(let i=0;i<(finished?20:n);i++){const l=lessons[i];s.work[i]=l.challenge?{challenge:{proof:proofs[l.challenge]}}:structuredClone(sourceWork[l.base]);assert.ok(recordEvidence(s,i).ok,`seed ${i}`);}if(!finished)s.work[n]=lessons[n].challenge?{challenge:{}}:{};s.lastRoute=`lesson/${n}`;return s;}
 const A=(name,count=1)=>[`[data-action="${name}"]`,count];
@@ -59,7 +62,8 @@ function audit({requirements=[],quick=false,expectedTarget='',debug=false}={}){
  const footer=document.querySelector('.activity-footer'),hint=document.querySelector('#coach-hint'),targets=[...document.querySelectorAll('.next-target,.next-choice-group')].filter(visible);
  if(!quick){
   if(!visible(footer))add('missing-single-guidance-footer',footer,'expected .activity-footer');
-  if(!visible(hint)||document.querySelectorAll('#coach-hint').length!==1)add('missing-single-guidance',hint,'expected one visible #coach-hint');
+  // A finished activity shows its discovery on the board and keeps #coach-hint for screen readers only (2026-11-17).
+  if(document.querySelectorAll('#coach-hint').length!==1||!main?.classList.contains('lesson-saved')&&!visible(hint))add('missing-single-guidance',hint,'expected one visible #coach-hint');
   if(targets.length!==1)add('next-action-target-count',null,{expected:1,actual:targets.length});
   if(expectedTarget&&!targets.some(e=>e.matches(expectedTarget)||e.querySelector(expectedTarget)))add('next-target-does-not-advance',null,{expectedTarget,actual:targets.map(e=>label(e))});
   for(const e of main?.querySelectorAll('img')||[])if(visible(e)&&e.complete&&!e.naturalWidth)add('broken-image',e,e.src);
