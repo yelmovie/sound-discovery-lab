@@ -101,3 +101,8 @@ Openverse에서 CC0만 걸러 찾고, 각 Freesound 원본 페이지에서 CC0(�
 - 칸에 놓기 `slot_click.ogg`: benzix2, [UI Button Click](https://freesound.org/people/benzix2/sounds/467951/)
 
 그림: 2026-11-17 GPT 이미지(Codex 내장 이미지 도구)로 새 장면·악기·배지 그림을 만들었다. 프롬프트는 `image/generated/concepts/manifest.json`.
+
+## 2026-11-17 3D 달리기 스테이지
+
+- three.js r170 (MIT, Copyright 2010-2024 Three.js Authors): `src/vendor/three/three.module.min.js`. 라이선스 전문은 같은 폴더의 `THREE-LICENSE.txt`. 구조는 threejs.org `games_fps` 예제를 참고해 새로 썼고 예제의 모델·그림은 쓰지 않았다.
+- 그림: GPT 이미지(Codex 내장 이미지 도구)로 만든 무대 그림. 프롬프트와 파일은 `docs/RUN-STAGE-3D-PLAN-20261117.md`의 「구현 결과」에 있다. 탐험가 걷기 그림과 삐오 그림은 기존 생성 그림을 다시 썼다.

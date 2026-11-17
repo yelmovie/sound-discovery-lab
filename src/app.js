@@ -45,6 +45,40 @@ let experimentPointer=null,pointerReleaseTimer=null;
 let experimentPlayer,experimentPlan,EXPERIMENT_SPEEDS,activity,noiseLevel,liveWave,rulerKey,challengeView,runChallenge,challengeDone;
 let experimentLoad,challengeLoad,mapLoad,mapRevision=0,renderRevision=0,mapFailed=false,mapModuleFailed=false,pendingMapTravel=null;
 const idlePlayer={state:'idle',playing:false,speed:1,message:''};
+// 3D run stage for two requests. The 2D request stays underneath as the fallback (no WebGL, reduced motion,
+// teacher's choice) and is the only screen the automatic experiment uses. The choice is not saved.
+const runStageIds=['rhythm','melody'];
+let runStage=null,runStageLoad=null,runStageFailed=false,classicRun=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches||false;
+function closeRunStage(){
+ if(!runStage)return;
+ const entry=runStage;runStage=null;entry.closed=true;entry.stage?.destroy();entry.host.remove();
+ app.querySelector('main[inert]')?.removeAttribute('inert');
+}
+function leaveRunStage(text){
+ closeRunStage();if(text)feedback={kind:'hint',text};
+ if(route.startsWith('lesson/'))render();
+}
+function syncRunStage(){
+ const i=route.startsWith('lesson/')?Number(route.split('/')[1]):-1,id=lessons[i]?.challenge;
+ if(!runStageIds.includes(id)||classicRun||runStageFailed||!challengeDone){closeRunStage();return;}
+ if(runStage?.lesson!==i){
+  closeRunStage();
+  if(challengeDone(id,work(i).challenge))return;
+  const host=document.createElement('section'),entry={lesson:i,host,stage:null,closed:false};
+  host.className='run-stage';host.setAttribute('aria-label',`${lessons[i].title} 3D 달리기`);document.body.append(host);runStage=entry;
+  host.innerHTML='<p class="run-loading" role="status">달리기 무대를 준비하고 있어…</p>';
+  within(runStageLoad??=import('./run-stage.js')).then(module=>{
+   if(entry.closed)return;
+   entry.stage=module.openRunStage(host,{id,sound,unlock:()=>void sound.unlock(),challenge:()=>work(i).challenge??={},
+    // Same path as a button of the 2D request: runTrial judges, finishInteraction records the evidence.
+    act:(action,value)=>{if(route!==`lesson/${i}`)return;hintLevels[i]=0;feedback=null;runTrial(i,action,{value,round:work(i).challenge?.proof?.length||0});finishInteraction(i);},
+    onClassic:()=>{classicRun=true;leaveRunStage();app.querySelector('[data-action="run-stage-open"]')?.focus({preventScroll:true});},
+    onDone:()=>{closeRunStage();app.querySelector('.challenge-complete [data-action="continue"]')?.focus({preventScroll:true});},
+    onFail:()=>{runStageFailed=true;leaveRunStage('3D 달리기를 열지 못해 기존 방식으로 진행해.');}});
+  },()=>{runStageLoad=null;if(!entry.closed){runStageFailed=true;leaveRunStage('3D 달리기를 열지 못해 기존 방식으로 진행해.');}});
+ }
+ app.querySelector('main.lesson-page')?.toggleAttribute('inert',Boolean(runStage));
+}
 function within(load){
  let timer;
  return Promise.race([load,new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('Screen load timed out')),10000);})]).finally(()=>clearTimeout(timer));
@@ -160,7 +194,7 @@ function playerLabel(ps){const compact=innerWidth<=600;return ps.playing?(compac
 function lessonPage(i){
  const l=lessons[i],s=stages[l.stage],w=work(i),saved=evidenceMatches(state,i),cue=lessonCue(i,w,saved),ps=(experimentPlayer?.status()||idlePlayer);
  const display=previewVisual?{...w,...previewVisual,challenge:{...w.challenge,...previewVisual.challenge}}:w;
- return `<main data-stage="${l.stage}" data-lesson="${i}" class="lesson-page single-screen ${saved?'lesson-saved':''}" style="--scene:url('/${backgrounds[l.base??l.stage*2+1]}')"><header class="lesson-heading"><div class="lesson-title"><span class="stage-badge">${icon(s.icon)} ${s.name}</span><h1>${l.title}</h1><p class="learning-focus"><span>${saved?'발견':'생각해 봐'}</span> ${emphasize(saved?l.discovery:l.inquiry,conceptTerms[l.stage])}</p></div><nav class="chapter-switch" aria-label="장소 안의 활동">${stageLessons(l.stage).map(n=>button(`<span class="chapter-step" aria-hidden="true">${state.evidence[n]?'✓':n%4+1}</span><span>${lessons[n].phase}</span>`,'goto',`data-route="lesson/${n}" ${!canLesson(state,n)?'disabled':''} ${i===n?'aria-current="step"':''}`,`chapter ${i===n?'current':''}`)).join('')}</nav></header><section class="lesson-scene"><div class="experiment-board" role="region" aria-label="${esc(s.name)} · ${esc(l.phase)} 실험대"><div class="experiment-content activity-base-${l.base??'challenge'}">${activity(i,display,{state,playingUntil,lastObject,button,icon,prop,toolGraphic,wave,voiceButton,challengeView})}</div></div></section><footer class="activity-footer"><div class="next-instruction"><span class="next-marker" aria-hidden="true">${saved?'✓':'→'}</span><p id="coach-hint" role="status">${esc(ps.state!=='idle'&&ps.message?ps.message:feedback?.text||cue.text)}</p>${voiceButton('lesson-done')}</div><div class="activity-controls"><div class="autoplay-controls" data-player-state="${ps.state}">${button(`${icon(ps.playing?'pause':'play')} <span class="autoplay-state">${playerLabel(ps)}</span>`,'auto-play',`aria-pressed="${ps.playing}"`,'btn secondary auto-play')}${button(icon('stop'),'auto-stop',`aria-label="자동실험 정지" title="정지" ${ps.state==='idle'?'hidden':''}`,'icon-btn auto-stop')}<label class="sr-only" for="experiment-speed">자동실험 속도</label><select id="experiment-speed" aria-label="자동실험 속도">${EXPERIMENT_SPEEDS.map(n=>`<option value="${n}" ${ps.speed===n?'selected':''}>${n}배</option>`).join('')}</select></div><div class="activity-tools">${button(icon('star'),'guide','aria-label="힌트 더 보기" title="힌트" aria-describedby="coach-hint"','icon-btn')}${button(icon('book'),'activity-tools','aria-label="노트와 개념 영상" title="노트·영상"','icon-btn')}</div>${saved&&!(l.challenge&&challengeDone?.(l.challenge,state.work[i]?.challenge))?button(`${i%4===3?'시설 복구':'다음 활동'} ${icon('arrow')}`,'continue','','btn primary lesson-next'):''}</div></footer></main>`;
+ return `<main data-stage="${l.stage}" data-lesson="${i}" class="lesson-page single-screen ${saved?'lesson-saved':''}" style="--scene:url('/${backgrounds[l.base??l.stage*2+1]}')"><header class="lesson-heading"><div class="lesson-title"><span class="stage-badge">${icon(s.icon)} ${s.name}</span><h1>${l.title}</h1><p class="learning-focus"><span>${saved?'발견':'생각해 봐'}</span> ${emphasize(saved?l.discovery:l.inquiry,conceptTerms[l.stage])}</p></div><nav class="chapter-switch" aria-label="장소 안의 활동">${stageLessons(l.stage).map(n=>button(`<span class="chapter-step" aria-hidden="true">${state.evidence[n]?'✓':n%4+1}</span><span>${lessons[n].phase}</span>`,'goto',`data-route="lesson/${n}" ${!canLesson(state,n)?'disabled':''} ${i===n?'aria-current="step"':''}`,`chapter ${i===n?'current':''}`)).join('')}</nav></header><section class="lesson-scene"><div class="experiment-board" role="region" aria-label="${esc(s.name)} · ${esc(l.phase)} 실험대"><div class="experiment-content activity-base-${l.base??'challenge'}">${activity(i,display,{state,playingUntil,lastObject,button,icon,prop,toolGraphic,wave,voiceButton,challengeView})}</div></div></section><footer class="activity-footer"><div class="next-instruction"><span class="next-marker" aria-hidden="true">${saved?'✓':'→'}</span><p id="coach-hint" role="status">${esc(ps.state!=='idle'&&ps.message?ps.message:feedback?.text||cue.text)}</p>${voiceButton('lesson-done')}</div><div class="activity-controls"><div class="autoplay-controls" data-player-state="${ps.state}">${button(`${icon(ps.playing?'pause':'play')} <span class="autoplay-state">${playerLabel(ps)}</span>`,'auto-play',`aria-pressed="${ps.playing}"`,'btn secondary auto-play')}${button(icon('stop'),'auto-stop',`aria-label="자동실험 정지" title="정지" ${ps.state==='idle'?'hidden':''}`,'icon-btn auto-stop')}<label class="sr-only" for="experiment-speed">자동실험 속도</label><select id="experiment-speed" aria-label="자동실험 속도">${EXPERIMENT_SPEEDS.map(n=>`<option value="${n}" ${ps.speed===n?'selected':''}>${n}배</option>`).join('')}</select></div><div class="activity-tools">${button(icon('star'),'guide','aria-label="힌트 더 보기" title="힌트" aria-describedby="coach-hint"','icon-btn')}${button(icon('book'),'activity-tools','aria-label="노트와 개념 영상" title="노트·영상"','icon-btn')}${runStageIds.includes(l.challenge)&&classicRun&&!runStageFailed&&!challengeDone?.(l.challenge,w.challenge)?button('3D 달리기','run-stage-open','aria-label="3D 달리기로 하기"','btn secondary run-stage-open'):''}</div>${saved&&!(l.challenge&&challengeDone?.(l.challenge,state.work[i]?.challenge))?button(`${i%4===3?'시설 복구':'다음 활동'} ${icon('arrow')}`,'continue','','btn primary lesson-next'):''}</div></footer></main>`;
 }
 function stopExperiment(){
  const active=(experimentPlayer?.status()||idlePlayer).state!=='idle'||previewVisual;
@@ -273,6 +307,7 @@ function render(){
  disposeNpc?.();disposeNpc=null;map?.destroy();map=null;mapFailed=false;mapModuleFailed=false;pendingMapTravel=null;
  const requested=route,n=route.startsWith('lesson/')?Number(route.split('/')[1]):-1;
  if(n>=0&&(!experimentPlayer||lessons[n].challenge&&!challengeView)){
+  closeRunStage();
   app.innerHTML=header()+`<main class="route-loading"><p role="status">소리 실험을 준비하고 있어…</p>${button('지도 보기','goto','data-route="map"','btn secondary')}</main>`;
   within(Promise.all([prepareExperiment(),lessons[n].challenge?prepareChallenge():null])).then(()=>{
    if(revision===renderRevision&&route===requested){render();if(!modalRoot.querySelector('dialog')){const title=app.querySelector('main h1');title?.setAttribute('tabindex','-1');title?.focus({preventScroll:true});}}
@@ -284,6 +319,7 @@ function render(){
  }
  const entering=voiceSeen.route!==route;sound.setScene(route.startsWith('lesson/')?'lesson':route);app.innerHTML=header()+(route==='home'?home():route==='map'?mapPage():route==='final'?finalPage():route==='result'?resultPage():lessonPage(Number(route.split('/')[1])))+adminDock()+`<footer class="statusbar"><span id="audio-status" role="status">${esc(soundText||'소리 준비됨')}</span><span id="save-status" role="status">${esc(studentState?'교사용 시연 · 학생 기록에 저장하지 않음':warning||'이 브라우저에 자동 저장 중')}</span></footer>${warning?`<div class="save-warning" role="alert">${esc(warning)}</div>`:''}`;if(route.startsWith('lesson/')){syncLessonCue();const n=Number(route.split('/')[1]);if(entering&&lessons[n].base===8&&!state.evidence[n])voice.say('reader-complaint',700);fitExperiment();fitObserver??=new ResizeObserver(fitExperiment);fitObserver.disconnect();fitObserver.observe(app.querySelector('.experiment-board'));}if(route==='home')disposeNpc=mountNpcGuide(app.querySelector('.title-actions'),{name:'울림새 삐오',portrait:'/image/generated/dialogue/pio.webp',src:'./media/audio/voices/el-welcome.mp3',text:'소리 탐험을 시작해 볼까? 소리가 날 때 물체가 어떻게 떨리는지 관찰하고, 소리의 크기와 높낮이를 직접 비교해 보자.',enabled:()=>!state.settings.muted&&state.settings.sfx,quiet:value=>{if(value)voice.stop();sound.setQuiet(value)}});if(route==='map')openMap();
  if(entering&&!route.startsWith('lesson/')){voiceSeen={route,text:''};if(route==='home')voice.say('title-bubble',400);if(route==='final')voice.say(voiceChains.final,500);if(route==='result'&&state.restored&&evidenceCount(state)===LESSON_COUNT)voice.say(voiceChains.ending,1600);}
+ syncRunStage();
 }
 function enterMapStage(n){
  if(n===5?!canRoute(state,'final'):!canLesson(state,n*4))return lockedNote(n);
@@ -385,6 +421,7 @@ async function handleClick(e){void sound.unlock();const b=e.target.closest('butt
   }
   if(a==='auto-stop'){stopExperiment();clearTimeout(liveTimer);playingUntil=0;updateView();return;}
   if(!e.auto){if(b.closest('.experiment-board')&&handOffExperiment(b))return;const hadPreview=Boolean(previewVisual);stopExperiment();if(hadPreview){render();app.querySelector(`[data-action="${a}"]`)?.focus({preventScroll:true});}}
+  if(a==='run-stage-open'){classicRun=false;render();return;}
   if(a==='activity-tools')return openModal(`<div class="activity-menu">${button(`${icon('book')} 내 증거 노트`,'notebook','','btn secondary')}${button(`${icon('play')} 개념 영상`,'concept',`data-stage="${lessons[i].stage}"`,'btn secondary')}${button(`${icon('map')} 지도 보기`,'goto','data-route="map"','btn quiet')}${adminDock(true)}</div>`,'노트와 개념 영상');
   if(a==='home')return navigate('home');
   if(a==='start')return navigate(canLesson(state,state.resumeLesson)?`lesson/${state.resumeLesson}`:'map');
@@ -485,7 +522,7 @@ const manipulationOptions={
 app.addEventListener('click',handleClick);modalRoot.addEventListener('click',handleClick);
 document.addEventListener('visibilitychange',()=>{if(document.hidden){const hadPreview=Boolean(previewVisual);stopExperiment();cancelAdvance();modalRoot.querySelector('video')?.pause();for(const w of Object.values(state.work))if(w.challenge)w.challenge.sounding=false;sound.stop();playingUntil=0;clearTimeout(liveTimer);if(hadPreview||route.startsWith('lesson/'))render();}});
 document.addEventListener('keydown',e=>{
- if(!['ArrowLeft','ArrowRight'].includes(e.key)||e.altKey||e.ctrlKey||e.metaKey||modalRoot.querySelector('dialog'))return;
+ if(!['ArrowLeft','ArrowRight'].includes(e.key)||e.altKey||e.ctrlKey||e.metaKey||modalRoot.querySelector('dialog')||runStage)return;
  if(e.target instanceof Element&&e.target.closest('input,select,textarea,[contenteditable="true"]'))return;
  const t=state.settings.admin&&adminTargets(),next=t&&(e.key==='ArrowLeft'?t.prev:t.next);
  if(next){e.preventDefault();navigate(next);}

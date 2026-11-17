@@ -27,6 +27,7 @@ export const settingsContent = {
     '[4과07-03] 여러 가지 물질을 통하여 소리가 전달되는 것을 관찰하고, 소음을 줄이는 방법을 찾아 일상생활에서 실천할 수 있다.'
   ],
   credits:[
+    '3D 달리기 화면은 three.js(MIT 라이선스)로 그려요.',
     '캐릭터·배경·장식은 프로젝트 제공 이미지와 자체 AI 생성 이미지예요.',
     '실험에는 실제 북·자·고무줄·소리굽쇠의 CC0 녹음을 사용해요. 나무 배치음과 복구 멜로디도 CC0 샘플로 구성했어요.',
     '화면 효과음은 Kenney Interface Sounds, 악기 샘플은 Versilian Studios VCSL, 자·고무줄은 Freesound, 소리굽쇠는 Wikimedia Commons의 CC0 공개 자료예요.',

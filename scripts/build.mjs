@@ -2,7 +2,7 @@ import { cp, mkdir, stat, readFile, writeFile, readdir, rm } from 'node:fs/promi
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
-import { assets, backgrounds, titleBackground } from '../src/data.js';
+import { assets, backgrounds, titleBackground, runStageAssets } from '../src/data.js';
 // Windows (D: SSD) keeps temp files off the internal drive; other systems keep their own TMPDIR.
 if (process.platform === 'win32') process.env.TEMP = process.env.TMP = 'D:\\DevTemp';
 const root = fileURLToPath(new URL('../', import.meta.url));
@@ -42,7 +42,9 @@ async function addModule(file){
  }
 }
 await addModule('/src/app.js');
-const shell=['/','/index.html','/manifest.webmanifest','/src/app.css',...sources,...assets.filter(file=>/^(image\/(branding|generated\/pio-guide)|media\/audio\/.*\.(ogg|m4a)$)/.test(file)||file.startsWith('media/fonts/')).map(file=>`/${file}`),...shareAssets.filter(file=>file.includes('icons')).map(file=>`/${file}`),`/${backgrounds[1]}`,`/${titleBackground}`];
+// The 3D run stage is imported on demand, so the walk above never reaches it. Precache it for offline classrooms.
+const runStage=['/src/run-stage.js','/src/run-stage-rules.js','/src/run-input.js','/src/run-character.js','/src/run-stage-hud.js','/src/map-controls.js','/src/vendor/three/three.module.min.js','/image/generated/explorer-walk.webp','/image/generated/concepts/pio-fly.webp',...runStageAssets.map(file=>`/${file}`)];
+const shell=['/','/index.html','/manifest.webmanifest','/src/app.css',...new Set([...sources,...runStage]),...assets.filter(file=>/^(image\/(branding|generated\/pio-guide)|media\/audio\/.*\.(ogg|m4a)$)/.test(file)||file.startsWith('media/fonts/')).map(file=>`/${file}`),...shareAssets.filter(file=>file.includes('icons')).map(file=>`/${file}`),`/${backgrounds[1]}`,`/${titleBackground}`];
 const swPath=path.join(root,'dist','sw.js'),sw=await readFile(swPath,'utf8');
 const stamped=sw.replace("const CACHE_VERSION='dev';",`const CACHE_VERSION='${pkg.version}-${Date.now().toString(36)}';`).replace("const APP_SHELL=['/','/index.html','/manifest.webmanifest'];",`const APP_SHELL=${JSON.stringify(shell)};`);
 if(stamped===sw||!stamped.includes(`'${pkg.version}-`))throw new Error('sw.js CACHE_VERSION/APP_SHELL markers not found.');

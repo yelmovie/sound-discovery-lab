@@ -1,4 +1,5 @@
 // End-to-end student play. No localStorage writes, seeded progress, admin mode or app-function awards.
+// Runs with reduced motion, so the two run-stage requests open as their 2D screens; scripts/qa-run-stage.mjs plays the 3D stages.
 import {chromium} from '/Volumes/T7 Shield/DevCaches/playwright-runner/node_modules/playwright/index.mjs';
 import {mkdir,readFile,readdir,writeFile,stat} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
@@ -20,7 +21,7 @@ const profile=process.env.QA_PROFILE||path.join(out,'profile');
 const existed=await stat(path.join(profile,'Default','Preferences')).then(()=>true).catch(()=>false);
 if(existed&&!process.argv.includes('--resume'))throw Error('This run already has a profile. Use a new run name or explicit --resume.');
 const io=readline.createInterface({input:process.stdin,output:process.stdout,terminal:false});
-const browser=await chromium.launchPersistentContext(profile,{executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',headless:process.env.QA_HEADFUL!=='1',viewport:{width:1280,height:800},deviceScaleFactor:1,reducedMotion:'no-preference',args:['--disable-crash-reporter','--disable-breakpad','--noerrdialogs','--use-mock-keychain','--mute-audio',`--disk-cache-dir=${path.join(out,'cache')}`,`--crash-dumps-dir=${path.join(out,'crashes')}`]});
+const browser=await chromium.launchPersistentContext(profile,{executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',headless:process.env.QA_HEADFUL!=='1',viewport:{width:1280,height:800},deviceScaleFactor:1,reducedMotion:'reduce',args:['--disable-crash-reporter','--disable-breakpad','--noerrdialogs','--use-mock-keychain','--mute-audio',`--disk-cache-dir=${path.join(out,'cache')}`,`--crash-dumps-dir=${path.join(out,'crashes')}`]});
 const page=browser.pages()[0]||await browser.newPage();page.setDefaultTimeout(12000);
 const key='ullim-city-v1';
 const events=[],audits=[],runtime=[],issues=[],checks=[],repairs=[];
