@@ -49,7 +49,7 @@ button.fork-display:focus-visible{outline:3px solid #0bb8c4;outline-offset:3px}
 
 /* A finished request offers its next step in the middle, where the eyes already are. */
 .challenge-complete-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
-.challenge-complete-actions .lesson-next-inline{min-height:52px;padding-inline:26px;font-size:clamp(17px,1.4vw,21px)}
+.challenge-complete-actions .lesson-next-inline{min-height:52px;padding-inline:26px;font-size:clamp(18px,1.4vw,21px)}
 
 /* Scene-based requests: the picture row grows, the answer row keeps its height. */
 .challenge-shell:is([data-challenge="sensor"],[data-challenge="classify"],[data-challenge="solutions"]) .challenge-workspace{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;min-height:0}

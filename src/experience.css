@@ -465,7 +465,7 @@ dialog[open]{display:flex;flex-direction:column}
  .title-actions>button{min-height:52px}
  .title-cta,.title-story{font-size:22px}
  .title-sub{font-size:18px;margin-top:8px}
- .title-note{font-size:16px;margin-top:8px;padding:4px 12px}
+ .title-note{font-size:18px;margin-top:8px;padding:4px 12px}
 }
 
 /* Map 2026-10-29: closer zoom, compact mission chip. Controls and labels live in the block at the end of this file. */
