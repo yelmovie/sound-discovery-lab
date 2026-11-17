@@ -1,0 +1,291 @@
+{
+ "checked": "2026-11-17",
+ "license": "CC0-1.0 / public domain, rechecked on each source page (shared library _shared/sfx-library-20261117)",
+ "files": [
+  {
+   "file": "su-battle-exit-01.mp3",
+   "use": "map villain leaves",
+   "library_file": "sound-unit/su-battle-exit-01.mp3",
+   "license": "CC0",
+   "derivative": true,
+   "processing": "효과 필터: apad=pad_dur=1.2,aecho=0.8:0.6:150|300|450:0.45|0.3|0.2,lowpass=f=1800,afade=t=out:st=0.1:d=1.9; 앞뒤 무음 제거; 최대 2.0 s; 짧은 페이드; 게인 -2.7 dB(목표 -18 LUFS, 참피크 -2 dBTP 이하); 모노 44.1 kHz MP3 112 kbps; 피치·속도 변경 없음",
+   "duration_s": 1.358,
+   "sha256": "2230b489b1b536497364d9646a40be7b570acd4fe81127273113a4888a18c083",
+   "sources": [
+    {
+     "title": "Thin bell ding 2",
+     "creator": "Khrinx",
+     "license": "CC0",
+     "source_page": "https://freesound.org/people/Khrinx/sounds/333695",
+     "recheck": "https://freesound.org/people/Khrinx/sounds/333695 에서 CC0 확인(2026-11-17)"
+    }
+   ]
+  },
+  {
+   "file": "su-battle-hit-01.mp3",
+   "use": "map hit 3",
+   "library_file": "sound-unit/su-battle-hit-01.mp3",
+   "license": "CC0",
+   "derivative": false,
+   "processing": "앞뒤 무음 제거; 최대 2.0 s; 짧은 페이드; 게인 -2.7 dB(목표 -18 LUFS, 참피크 -2 dBTP 이하); 모노 44.1 kHz MP3 112 kbps; 피치·속도 변경 없음",
+   "duration_s": 0.914,
+   "sha256": "965ead7b65db6dfa6fd2c092c883b9f26e975023f1984f4537f8824bd92b0fa0",
+   "sources": [
+    {
+     "title": "Metallic Clank 1.wav",
+     "creator": "HenKonen",
+     "license": "CC0",
+     "source_page": "https://freesound.org/people/HenKonen/sounds/682148",
+     "recheck": "https://freesound.org/people/HenKonen/sounds/682148 에서 CC0 확인(2026-11-17)"
+    }
+   ]
+  },
+  {
+   "file": "su-battle-hit-02.mp3",
+   "use": "map hit 1 and 2 (2nd hit played 1.19x faster)",
+   "library_file": "sound-unit/su-battle-hit-02.mp3",
+   "license": "CC0",
+   "derivative": false,
+   "processing": "앞뒤 무음 제거; 최대 2.0 s; 짧은 페이드; 게인 -2.9 dB(목표 -18 LUFS, 참피크 -2 dBTP 이하); 모노 44.1 kHz MP3 112 kbps; 피치·속도 변경 없음",
+   "duration_s": 1.358,
+   "sha256": "bdb875af4446cb547aab16d627b04aebd6b6b7d533f532c5228c0b5489323a87",
+   "sources": [
+    {
+     "title": "Thin bell ding 2",
+     "creator": "Khrinx",
+     "license": "CC0",
+     "source_page": "https://freesound.org/people/Khrinx/sounds/333695",
+     "recheck": "https://freesound.org/people/Khrinx/sounds/333695 에서 CC0 확인(2026-11-17)"
+    }
+   ]
+  },
+  {
+   "file": "su-drum-small-01.mp3",
+   "use": "map attack launch",
+   "library_file": "sound-unit/su-drum-small-01.mp3",
+   "license": "CC0",
+   "derivative": false,
+   "processing": "앞뒤 무음 제거; 최대 2.0 s; 짧은 페이드; 게인 -3.1 dB(목표 -18 LUFS, 참피크 -2 dBTP 이하); 모노 44.1 kHz MP3 112 kbps; 피치·속도 변경 없음",
+   "duration_s": 0.287,
+   "sha256": "c8a4cf9a6247c747c3e1b4d48cd4eaaaa7388c193c5af75eeeb18584712d9b19",
+   "sources": [
+    {
+     "title": "Flat & Fat Snare Drum Hit",
+     "creator": "TheEndOfACycle",
+     "license": "CC0",
+     "source_page": "https://freesound.org/people/TheEndOfACycle/sounds/673516",
+     "recheck": "https://freesound.org/people/TheEndOfACycle/sounds/673516 에서 CC0 확인(2026-11-17)"
+    }
+   ]
+  },
+  {
+   "file": "su-glockenspiel-01.mp3",
+   "use": "success (solved round, evidence recorded)",
+   "library_file": "sound-unit/su-glockenspiel-01.mp3",
+   "license": "CC0",
+   "derivative": false,
+   "processing": "앞뒤 무음 제거; 최대 3.0 s; 짧은 페이드; 게인 -4.4 dB(목표 -18 LUFS, 참피크 -2 dBTP 이하); 모노 44.1 kHz MP3 112 kbps; 피치·속도 변경 없음",
+   "duration_s": 1.176,
+   "sha256": "616ece11ec6802197a89a4ed255ed4ece520134c50004b847229ced3c69ac265",
+   "sources": [
+    {
+     "title": "Glockenspiel - C7 (glock_medium_C7.wav)",
+     "creator": "sgossner",
+     "license": "CC0",
+     "source_page": "https://freesound.org/people/sgossner/sounds/373366",
+     "recheck": "https://freesound.org/people/sgossner/sounds/373366 에서 CC0 확인(2026-11-17)"
+    }
+   ]
+  },
+  {
+   "file": "su-kalimba-01.mp3",
+   "use": "hint",
+   "library_file": "sound-unit/su-kalimba-01.mp3",
+   "license": "CC0",
+   "derivative": false,
+   "processing": "앞뒤 무음 제거; 최대 2.0 s; 짧은 페이드; 게인 -1.7 dB(목표 -18 LUFS, 참피크 -2 dBTP 이하); 모노 44.1 kHz MP3 112 kbps; 피치·속도 변경 없음",
+   "duration_s": 0.705,
+   "sha256": "275af73c192efb08727e5291aed8b068ff6b33da699992db8731309a45bab9be",
+   "sources": [
+    {
+     "title": "Kalimba C3",
+     "creator": "dvdfu",
+     "license": "CC0",
+     "source_page": "https://freesound.org/people/dvdfu/sounds/536549",
+     "recheck": "https://freesound.org/people/dvdfu/sounds/536549 에서 CC0 확인(2026-11-17)"
+    }
+   ]
+  },
+  {
+   "file": "su-muffled-01.mp3",
+   "use": "map contact bump, run stage fall",
+   "library_file": "sound-unit/su-muffled-01.mp3",
+   "license": "CC0",
+   "derivative": true,
+   "processing": "효과 필터: lowpass=f=350,lowpass=f=350; 앞뒤 무음 제거; 최대 2.0 s; 짧은 페이드; 게인 -2.6 dB(목표 -18 LUFS, 참피크 -2 dBTP 이하); 모노 44.1 kHz MP3 112 kbps; 피치·속도 변경 없음",
+   "duration_s": 0.287,
+   "sha256": "eb9d04179fbb791b18d1819362a6b62090e01e78090bcff854a3f466326de07c",
+   "sources": [
+    {
+     "title": "Flat & Fat Snare Drum Hit",
+     "creator": "TheEndOfACycle",
+     "license": "CC0",
+     "source_page": "https://freesound.org/people/TheEndOfACycle/sounds/673516",
+     "recheck": "https://freesound.org/people/TheEndOfACycle/sounds/673516 에서 CC0 확인(2026-11-17)"
+    }
+   ]
+  },
+  {
+   "file": "su-muffled-02.mp3",
+   "use": "retry (wrong choice)",
+   "library_file": "sound-unit/su-muffled-02.mp3",
+   "license": "CC0",
+   "derivative": true,
+   "processing": "효과 필터: lowpass=f=600,lowpass=f=600; 앞뒤 무음 제거; 최대 2.0 s; 짧은 페이드; 게인 -2.7 dB(목표 -18 LUFS, 참피크 -2 dBTP 이하); 모노 44.1 kHz MP3 112 kbps; 피치·속도 변경 없음",
+   "duration_s": 1.411,
+   "sha256": "cbaa92353844a70a64773379c22c86b3865be8f3f54a06ea682723943846e12b",
+   "sources": [
+    {
+     "title": "Thin bell ding 2",
+     "creator": "Khrinx",
+     "license": "CC0",
+     "source_page": "https://freesound.org/people/Khrinx/sounds/333695",
+     "recheck": "https://freesound.org/people/Khrinx/sounds/333695 에서 CC0 확인(2026-11-17)"
+    }
+   ]
+  },
+  {
+   "file": "su-speaker-on-01.mp3",
+   "use": "map villain appears",
+   "library_file": "sound-unit/su-speaker-on-01.mp3",
+   "license": "CC0",
+   "derivative": false,
+   "processing": "효과 필터: atrim=0:0.9; 앞뒤 무음 제거; 최대 2.0 s; 짧은 페이드; 게인 -1.6 dB(목표 -18 LUFS, 참피크 -2 dBTP 이하); 모노 44.1 kHz MP3 112 kbps; 피치·속도 변경 없음",
+   "duration_s": 0.731,
+   "sha256": "adaf728508b9995f26b3d7f12067c44baac23b550f93d10b97008bd009c9acf0",
+   "sources": [
+    {
+     "title": "Megaphone OnOff From Mic 2",
+     "creator": "cookies+policy",
+     "license": "CC0",
+     "source_page": "https://freesound.org/people/cookies+policy/sounds/556362",
+     "recheck": "https://freesound.org/people/cookies+policy/sounds/556362 에서 CC0 확인(2026-11-17)"
+    }
+   ]
+  },
+  {
+   "file": "su-triangle-01.mp3",
+   "use": "open (panel or dialog)",
+   "library_file": "sound-unit/su-triangle-01.mp3",
+   "license": "CC0",
+   "derivative": false,
+   "processing": "앞뒤 무음 제거; 최대 2.0 s; 짧은 페이드; 게인 -2.4 dB(목표 -18 LUFS, 참피크 -2 dBTP 이하); 모노 44.1 kHz MP3 112 kbps; 피치·속도 변경 없음",
+   "duration_s": 0.496,
+   "sha256": "a358ed83acfbe909a1062274b217205a49da940141ce19a67440b3cb30206b4a",
+   "sources": [
+    {
+     "title": "ding.wav",
+     "creator": "mark205",
+     "license": "CC0",
+     "source_page": "https://freesound.org/people/mark205/sounds/580649",
+     "recheck": "https://freesound.org/people/mark205/sounds/580649 에서 CC0 확인(2026-11-17)"
+    }
+   ]
+  },
+  {
+   "file": "su-xylophone-01.mp3",
+   "use": "pin (marker on the instrument picture)",
+   "library_file": "sound-unit/su-xylophone-01.mp3",
+   "license": "CC0",
+   "derivative": false,
+   "processing": "앞뒤 무음 제거; 최대 2.0 s; 짧은 페이드; 게인 -1.6 dB(목표 -18 LUFS, 참피크 -2 dBTP 이하); 모노 44.1 kHz MP3 112 kbps; 피치·속도 변경 없음",
+   "duration_s": 0.313,
+   "sha256": "c599589cede2cf8cf7ff73a2f70b054bb2d53f6b1951c0bbc1975fc5eecf581d",
+   "sources": [
+    {
+     "title": "Xylophone A3.wav",
+     "creator": "juancamiloorjuela",
+     "license": "CC0",
+     "source_page": "https://freesound.org/people/juancamiloorjuela/sounds/204647",
+     "recheck": "https://freesound.org/people/juancamiloorjuela/sounds/204647 에서 CC0 확인(2026-11-17)"
+    }
+   ]
+  },
+  {
+   "file": "su-xylophone-02.mp3",
+   "use": "tap (move between screens)",
+   "library_file": "sound-unit/su-xylophone-02.mp3",
+   "license": "CC0",
+   "derivative": false,
+   "processing": "앞뒤 무음 제거; 최대 2.0 s; 짧은 페이드; 게인 -1.6 dB(목표 -18 LUFS, 참피크 -2 dBTP 이하); 모노 44.1 kHz MP3 112 kbps; 피치·속도 변경 없음",
+   "duration_s": 0.313,
+   "sha256": "1ac2cc982e47067f9506d22b557215c6a1d45c05eaf120275c05fba685e6345d",
+   "sources": [
+    {
+     "title": "XYLOPHONE E4.wav",
+     "creator": "juancamiloorjuela",
+     "license": "CC0",
+     "source_page": "https://freesound.org/people/juancamiloorjuela/sounds/204644",
+     "recheck": "https://freesound.org/people/juancamiloorjuela/sounds/204644 에서 CC0 확인(2026-11-17)"
+    }
+   ]
+  },
+  {
+   "file": "su-xylophone-03.mp3",
+   "use": "slot (drop a card in a slot)",
+   "library_file": "sound-unit/su-xylophone-03.mp3",
+   "license": "CC0",
+   "derivative": false,
+   "processing": "앞뒤 무음 제거; 최대 2.0 s; 짧은 페이드; 게인 -1.7 dB(목표 -18 LUFS, 참피크 -2 dBTP 이하); 모노 44.1 kHz MP3 112 kbps; 피치·속도 변경 없음",
+   "duration_s": 0.679,
+   "sha256": "84dd61fd9755c09231f7516d5f8dc4ec4fb3162d13db67cbcda51a510e2ad8b8",
+   "sources": [
+    {
+     "title": "XYLOPHONE G4.wav",
+     "creator": "juancamiloorjuela",
+     "license": "CC0",
+     "source_page": "https://freesound.org/people/juancamiloorjuela/sounds/204648",
+     "recheck": "https://freesound.org/people/juancamiloorjuela/sounds/204648 에서 CC0 확인(2026-11-17)"
+    }
+   ]
+  },
+  {
+   "file": "su-xylophone-04.mp3",
+   "use": "swipe (pick up a card to drag)",
+   "library_file": "sound-unit/su-xylophone-04.mp3",
+   "license": "CC0",
+   "derivative": false,
+   "processing": "앞뒤 무음 제거; 최대 2.0 s; 짧은 페이드; 게인 -3.5 dB(목표 -18 LUFS, 참피크 -2 dBTP 이하); 모노 44.1 kHz MP3 112 kbps; 피치·속도 변경 없음",
+   "duration_s": 0.47,
+   "sha256": "372975942b91aff2866ae22debfb1bf97fe47270ece5db99de7244ac57f4dac4",
+   "sources": [
+    {
+     "title": "Xylophone - F#6 (Xylo_Medium_G6_ff_01_far.wav)",
+     "creator": "sgossner",
+     "license": "CC0",
+     "source_page": "https://freesound.org/people/sgossner/sounds/374706",
+     "recheck": "https://freesound.org/people/sgossner/sounds/374706 에서 CC0 확인(2026-11-17)"
+    }
+   ]
+  },
+  {
+   "file": "victory-jingle-02.mp3",
+   "use": "last map villain cleared, before the finale",
+   "library_file": "sfx/victory-jingle-02.mp3",
+   "license": "CC0",
+   "derivative": false,
+   "processing": "앞뒤 무음 제거; 최대 4.0 s; 짧은 페이드; 게인 -4.4 dB(목표 -18 LUFS, 참피크 -2 dBTP 이하); 모노 44.1 kHz MP3 112 kbps; 피치·속도 변경 없음",
+   "duration_s": 2.22,
+   "sha256": "5369083b4d35d4c31ede6747afbd8493c6e121d4370aac90129cdfbd32a8d23c",
+   "sources": [
+    {
+     "title": "WinBrass.wav",
+     "creator": "Fupicat",
+     "license": "CC0",
+     "source_page": "https://freesound.org/people/Fupicat/sounds/521639",
+     "recheck": "https://freesound.org/people/Fupicat/sounds/521639 에서 CC0 확인(2026-11-17)"
+    }
+   ]
+  }
+ ]
+}

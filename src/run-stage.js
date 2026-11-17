@@ -290,7 +290,7 @@ export function openRunStage(host, o) {
       if (floor && pos.y <= floor.top) {
         pos.y = floor.top; vel.y = 0; grounded = true;
         const how = jumped ? 'jump' : 'walk'; if (jumped) landedUntil = now + 130; jumped = false; ground = floor; arrive(floor, how);
-      } else if (pos.y < -2.2) { fails++; say(guide.fall); stand(safe); }
+      } else if (pos.y < -2.2) { fails++; say(guide.fall); stand(safe); void o.sound.effect?.('bump', { polite: true }); }
     }
   }
 

@@ -13,12 +13,24 @@ export const mapReactionAssets={hero:'image/generated/map-hero-reaction.webp',al
 export const villageAssets = ['image/generated/ullim-village.webp','image/generated/map-villain-poses-left.webp',...Object.values(mapReactionAssets),...['explorer-walk','bird-walk'].map(name => `image/generated/${name}.webp`)];
 import { conceptAssets } from './concepts.js';
 // 2026-11-17: round/evidence success, pin taps, drag pick-up and slot drops use CC0 Freesound clips (media/audio/sources-20261117.json).
-export const interfaceSounds={tap:'click_003',open:'open_001',drop:'place_wood',hint:'select_003',success:'sparkle_correct',badge:'restore_chime',pin:'pin_pop',swipe:'swipe_whoosh',slot:'slot_click'};
+// Effects sound like instruments so the whole city plays like one (CC0, media/audio/sfx/sources.json).
+// gain is the playback level, rate the playback speed, max a fade-out length in seconds.
+const sfx=name=>`media/audio/sfx/${name}.mp3`;
+export const interfaceSounds={
+ tap:{src:sfx('su-xylophone-02'),gain:.13},open:{src:sfx('su-triangle-01'),gain:.25},drop:{src:'media/audio/place_wood.ogg',gain:.16},
+ hint:{src:sfx('su-kalimba-01'),gain:.15},success:{src:sfx('su-glockenspiel-01'),gain:.5},badge:{src:'media/audio/restore_chime.ogg',gain:.22},
+ pin:{src:sfx('su-xylophone-01'),gain:.15},swipe:{src:sfx('su-xylophone-04'),gain:.09},slot:{src:sfx('su-xylophone-03'),gain:.12},
+ retry:{src:sfx('su-muffled-02'),gain:.16,max:.7},
+ // Map villains (noise speakers): a drum launches a sound wave, bells take the hits, the gong-like clank ends the fight.
+ swing:{src:sfx('su-drum-small-01'),gain:.22},hit1:{src:sfx('su-battle-hit-02'),gain:.34,max:.75},hit2:{src:sfx('su-battle-hit-02'),gain:.34,rate:1.19,max:.75},
+ finish:{src:sfx('su-battle-hit-01'),gain:.3},exit:{src:sfx('su-battle-exit-01'),gain:.2},appear:{src:sfx('su-speaker-on-01'),gain:.35},
+ bump:{src:sfx('su-muffled-01'),gain:.2},victory:{src:sfx('victory-jingle-02'),gain:.2}
+};
 // Suno background music supplied by the user on 2026-11-17 (originals in references/suno).
 export const backgroundMusic={main:'media/audio/bgm/main-theme.mp3',finale:'media/audio/bgm/final-theme.mp3'};
 // Pictures of the 3D run stage (docs/RUN-STAGE-3D-PLAN-20261117.md). Words and marks on them are drawn by code.
 export const runStageAssets=['paving', 'drum-top', 'water', 'skyline', 'explorer-jump', 'lily', 'island', 'balloon', 'gate-arch', 'gate-door', 'workshop-floor', 'wood', 'drum-side'].map(name=>`image/generated/run-stage/${name}.webp`);
-export const assets = [...new Set(['media/fonts/NanumSquareNeoTTF-bRg.woff2','media/fonts/NanumSquareNeoTTF-cBd.woff2','media/fonts/NanumSquareNeoTTF-dEb.woff2','media/fonts/NanumSquareNeo-OFL.txt',...voiceAssets,...recordedAudioAssets, ...conceptArtAssets,...backgrounds, characters, titleLogo, titleBackground, ...Object.values(props), ...villageAssets, ...runStageAssets, 'image/generated/pio-guide.svg','image/generated/dialogue/pio.webp',...conceptAssets,...Object.values(interfaceSounds).map(n=>`media/audio/${n}.ogg`),...Object.values(backgroundMusic),'media/audio/sources-20261117.json','media/audio/License.txt','media/audio/sources.json','media/concepts/manifest.json'])];
+export const assets = [...new Set(['media/fonts/NanumSquareNeoTTF-bRg.woff2','media/fonts/NanumSquareNeoTTF-cBd.woff2','media/fonts/NanumSquareNeoTTF-dEb.woff2','media/fonts/NanumSquareNeo-OFL.txt',...voiceAssets,...recordedAudioAssets, ...conceptArtAssets,...backgrounds, characters, titleLogo, titleBackground, ...Object.values(props), ...villageAssets, ...runStageAssets, 'image/generated/pio-guide.svg','image/generated/dialogue/pio.webp',...conceptAssets,...Object.values(interfaceSounds).map(c=>c.src),'media/audio/sfx/sources.json',...Object.values(backgroundMusic),'media/audio/sources-20261117.json','media/audio/License.txt','media/audio/sources.json','media/concepts/manifest.json'])];
 export { APP_VERSION } from './version.js';
 // Curriculum link per facility. Teacher review is still pending, so needsReview stays true until a reviewer signs off.
 export const CURRICULUM_REVIEW = Object.freeze({needsReview:true, source:'2022 개정 과학과 교육과정 3~4학년군 (7) 소리의 성질', reviewer:null, reviewedAt:null});

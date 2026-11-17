@@ -40,6 +40,10 @@ function layoutSpeech(host, entries){
 }
 
 const REPEAT=380;
+// Sound timing: the drum launches at the press, the bell lands as the strike reaches the villain.
+const IMPACT=110,LEAVE=560,APPEAR_GAP=1500;
+// A villain announces itself once per visit to the page, not on every return to the map.
+const announced=new Set();
 const CUES={
   cap:'M9 10h14v12H9zm3-4h8v4h-8z', pane:'M6 7h20v18H6zm4 4v10h12V11z',
   file:'M7 5h12l6 6v16H7zm12 2v6h5M11 17h10m-10 4h8', label:'M5 10h15l7 6-7 6H5zm5 4h5m-5 4h7',
@@ -111,7 +115,9 @@ export function mountMapEncounters({
   const distance=(p,q)=>p?Math.hypot(p.x-q.x,p.y-q.y):Infinity;
   const paused=()=>doc.hidden||blocked()||Boolean(host.closest('[inert]'))||Boolean(doc.querySelector('dialog[open]'));
   const pose={hero:null,ally:null};
-  let current=null,lastNear=null,lastHit=-Infinity,lastTone=-Infinity,saved={},last=null,closed=false;
+  let current=null,lastNear=null,lastHit=-Infinity,lastTone=-Infinity,lastAppear=-Infinity,saved={},last=null,closed=false;
+  const timers=new Set();
+  const later=(fn,ms)=>{const id=(view??globalThis).setTimeout(()=>{timers.delete(id);if(!closed)fn();},ms);timers.add(id);};
 
   function speak(foe,text,time){
     for(const other of foes)if(other!==foe){other.saidUntil=0;other.bubble.hidden=true;}
@@ -131,10 +137,13 @@ export function mountMapEncounters({
     const calm=still(),duration=calm?170:n===HITS?660:360;
     foe.poseUntil=time+duration;foe.hitAt=time;foe.hurtAt=undefined;
     pose.hero={kind:'attack',direction:-foe.facing,start:time,end:time+(calm?140:320)};
-    saved={...saved,[foe.s.id]:n};onSave({...saved});tone(n===HITS?'finish':'hit',n);
+    saved={...saved,[foe.s.id]:n};onSave({...saved});
+    tone('swing',n);later(()=>tone(n===HITS?'finish':'hit',n),IMPACT);
     speak(foe, n===HITS?foe.s.finish??'앗, 물러날게!':foe.s.hit?.[n-1]??(n===1?'앗, 들켰네!':'이번 건 제법인데!'),time+(n===HITS?2750:1800));
     live.textContent+=n===HITS?' 세 번 명중! 악당이 물러나요.':` ${n}번 명중. ${HITS-n}번 남았어요.`;
     if(n===HITS&&requiredFoes>0&&stages.length===requiredFoes&&stages.every(s=>(saved[s.id]??record[s.id])===HITS))finaleAt=time+2920;
+    // The last villain leaves with the victory jingle; it ends before the finale music starts.
+    if(n===HITS){const cue=finaleAt?'victory':'exit';later(()=>tone(cue,n),LEAVE);}
     update({...last,now:time});
   }
   attack.addEventListener('click',hit,{signal});
@@ -182,6 +191,7 @@ export function mountMapEncounters({
       const off=point.x<-size||point.x>width+size||point.y<-size||point.y>height+size;
       foe.el.hidden=off;
       if(off)continue;
+      if(!stop&&!announced.has(foe.s.id)){announced.add(foe.s.id);if(now-lastAppear>APPEAR_GAP){lastAppear=now;tone('appear',foe.hits);}}
       const {el,actor}=foe;
       el.style.transform=`translate(${point.x.toFixed(1)}px,${point.y.toFixed(1)}px)`;
       el.style.setProperty('--encounter-size',size.toFixed(1)+'px');
@@ -262,7 +272,7 @@ export function mountMapEncounters({
     }
     return {hero:output('hero',now),ally:output('ally',now)};
   }
-  return {update,destroy(){closed=true;handles.abort();attack.remove();layer.remove();}};
+  return {update,destroy(){closed=true;for(const id of timers)(view??globalThis).clearTimeout(id);timers.clear();handles.abort();attack.remove();layer.remove();}};
 }
 
 const STYLES=`

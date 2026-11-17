@@ -12,7 +12,7 @@ export class SoundEngine {
     this.bgm=true;this.sfx=true;this.bgmVolume=.35;this.scene='home';
     this.music=new Map();this.track='main';this.mapFinale=false;this.finaleDone=false;this.holdUntil=0;this.holdTimer=null;
     this.quiet=false;this.unlocked=false;this.needsGesture=false;this.destroyed=false;this.bgmBus=null;
-    this.buffers=new Map();this.effectClock=0;
+    this.buffers=new Map();this.effectClock=0;this.effectClocks=new Map();this.effectRequest=0;this.effectNode=null;
     this.visibilityHandler=()=>{
       if(typeof document!=='undefined'&&document.hidden){
         this.needsGesture=true;this.stop();this.stopBgm();
@@ -31,7 +31,8 @@ export class SoundEngine {
   setQuiet(value){this.quiet=Boolean(value);if(this.quiet)this.stop();this.syncBgm();}
   setMuted(value){this.configure({muted:Boolean(value)});}
   setScene(scene){this.scene=scene;this.syncBgm();}
-  setMapFinale(open){this.mapFinale=Boolean(open);this.syncBgm();}
+  // The map finale music never plays over a victory jingle.
+  setMapFinale(open){this.mapFinale=Boolean(open);if(this.mapFinale)this.fadeEffect();this.syncBgm();}
   async unlock(){
     if(this.destroyed||typeof document!=='undefined'&&document.hidden)return false;
     this.unlocked=true;this.needsGesture=false;
@@ -42,7 +43,7 @@ export class SoundEngine {
     this.generation++;
     if(this.holdUntil){this.holdUntil=0;clearTimeout(this.holdTimer);this.holdTimer=null;this.syncBgm();}
     for(const entry of this.nodes)this.disconnect(entry);
-    this.nodes=[];
+    this.nodes=[];this.effectNode=null;
     this.onStatus(this.muted||!this.sfx?'소리 꺼짐 · 떨림을 눈으로 관찰해 봐':'소리 준비됨');
   }
   disconnect({source,gain}){
@@ -121,19 +122,30 @@ export class SoundEngine {
     source.onended=()=>{source.disconnect();gain.disconnect();this.nodes=this.nodes.filter(n=>n!==entry);if(!this.nodes.length)this.onStatus('재생 끝');};
     return true;
   }
-  async effect(name='tap'){
-    if(!this.sfx||!interfaceSounds[name]||(name!=='badge'&&Date.now()-this.effectClock<90))return;
-    this.effectClock=Date.now();const generation=this.generation;
+  // One effect voice at a time: a new cue fades the previous one out. The same cue waits 90 ms before repeating.
+  // polite cues skip while an experiment sound is playing so they never mix into a comparison.
+  async effect(name='tap',{polite=false}={}){
+    const cue=interfaceSounds[name],now=Date.now();
+    if(!this.sfx||!cue||polite&&now<this.holdUntil||name!=='badge'&&(now-(this.effectClocks.get(name)??-Infinity)<90||now-this.effectClock<40))return;
+    this.effectClock=now;this.effectClocks.set(name,now);const generation=this.generation,request=++this.effectRequest;
     if(!await this.ready()||generation!==this.generation)return;
     try{
-      const file=interfaceSounds[name];
-      if(!this.buffers.has(file))this.buffers.set(file,fetch(`/media/audio/${file}.ogg`).then(r=>{if(!r.ok)throw Error('Sound unavailable');return r.arrayBuffer();}).then(b=>this.context.decodeAudioData(b)));
-      const buffer=await this.buffers.get(file);
-      if(generation!==this.generation||this.quiet||!this.sfx||this.muted||this.needsGesture||this.destroyed)return;
-      const source=this.context.createBufferSource(),gain=this.context.createGain();
-      source.buffer=buffer;gain.gain.value=name==='badge'?.22:.16;source.connect(gain);gain.connect(this.context.destination);
-      const entry={source,gain};this.nodes.push(entry);source.onended=()=>{source.disconnect();gain.disconnect();this.nodes=this.nodes.filter(n=>n!==entry);};source.start();
+      if(!this.buffers.has(cue.src))this.buffers.set(cue.src,fetch(`/${cue.src}`).then(r=>{if(!r.ok)throw Error('Sound unavailable');return r.arrayBuffer();}).then(b=>this.context.decodeAudioData(b)));
+      const buffer=await this.buffers.get(cue.src);
+      if(generation!==this.generation||request!==this.effectRequest||this.quiet||!this.sfx||this.muted||this.needsGesture||this.destroyed)return;
+      this.fadeEffect();
+      const c=this.context,source=c.createBufferSource(),gain=c.createGain(),rate=cue.rate??1,start=c.currentTime;
+      source.buffer=buffer;source.playbackRate.value=rate;source.playbackRate.setValueAtTime(rate,start);gain.gain.setValueAtTime(cue.gain??.16,start);
+      source.connect(gain);gain.connect(c.destination);
+      const entry={source,gain,effect:name};this.nodes.push(entry);this.effectNode=entry;
+      source.onended=()=>{source.disconnect();gain.disconnect();this.nodes=this.nodes.filter(n=>n!==entry);if(this.effectNode===entry)this.effectNode=null;};source.start(start);
+      // A stop can only be scheduled after start, so the fade for long cues comes last.
+      if(cue.max&&Number.isFinite(buffer?.duration)&&buffer.duration/rate>cue.max){gain.gain.setValueAtTime(cue.gain??.16,start+cue.max-.12);gain.gain.linearRampToValueAtTime(0,start+cue.max);source.stop(start+cue.max+.02);}
     }catch{if(generation===this.generation)this.tone({frequency:name==='success'?660:480,kind:'ui',level:.4,duration:.12});}
+  }
+  fadeEffect(){
+    const entry=this.effectNode;if(!entry)return;this.effectNode=null;
+    try{const t=this.context.currentTime;entry.gain.gain.setValueAtTime(entry.gain.gain.value,t);entry.gain.gain.linearRampToValueAtTime(0,t+.025);entry.source.stop(t+.03);}catch{this.disconnect(entry);}
   }
   canBgm(){
     return !this.destroyed&&this.unlocked&&!this.needsGesture&&!this.muted&&this.bgm&&this.bgmVolume>0&&!(typeof document!=='undefined'&&document.hidden);

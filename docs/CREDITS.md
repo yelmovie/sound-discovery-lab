@@ -2,6 +2,29 @@
 
 갱신일: 2026-11-10. 아래 2026-10-28 기록은 당시 상태를 보존한 것이다. 현재는 로컬 나눔스퀘어 네오와 AI 캐릭터 음성도 배포한다.
 
+## 악기 효과음·지도 전투음 · 2026-11-17
+
+화면 효과음을 악기 음색으로 바꾸고 지도 악당(방해 스피커) 전투음을 연결했다. 파일은 과학34 공용 효과음 라이브러리(`_shared/sfx-library-20261117`, 출처 페이지에서 CC0 재확인)에서 골라 `media/audio/sfx/`에 그대로 복사했다. 파일별 제작자·원본 페이지·가공·SHA256은 `media/audio/sfx/sources.json`. 모두 Freesound의 CC0 녹음이며 일부는 라이브러리에서 저역 통과·메아리를 더한 가공본이다. 재생 음량·속도는 `src/data.js`의 `interfaceSounds`에서 정한다.
+
+| 쓰는 곳 | 파일 | 원본 (모두 CC0) |
+|---|---|---|
+| 화면 이동 | su-xylophone-02 (실로폰 E4) | juancamiloorjuela, XYLOPHONE E4.wav (freesound 204644) |
+| 패널 열기 | su-triangle-01 (트라이앵글) | mark205, ding.wav (580649) |
+| 힌트 | su-kalimba-01 (칼림바 C3) | dvdfu, Kalimba C3 (536549) |
+| 정답·증거 수집 | su-glockenspiel-01 (글로켄슈필 C7) | sgossner, glock_medium_C7.wav (373366) |
+| 그림 표시 누르기 | su-xylophone-01 (실로폰 A3) | juancamiloorjuela, Xylophone A3.wav (204647) |
+| 카드 집기 / 칸에 놓기 | su-xylophone-04 (F#6) / su-xylophone-03 (G4) | sgossner (374706) / juancamiloorjuela (204648) |
+| 틀린 선택 | su-muffled-02 (막힌 종, 가공) | Khrinx, Thin bell ding 2 (333695) |
+| 지도 공격 시작 | su-drum-small-01 (작은북) | TheEndOfACycle, Flat & Fat Snare Drum Hit (673516) |
+| 지도 1·2타 명중 | su-battle-hit-02 (종, 2타는 1.19배 속도) | Khrinx, Thin bell ding 2 (333695) |
+| 지도 3타 명중 | su-battle-hit-01 (울리는 금속 챙) | HenKonen, Metallic Clank 1.wav (682148) |
+| 악당 퇴장 | su-battle-exit-01 (멀어지는 종 메아리, 가공) | Khrinx, Thin bell ding 2 (333695) |
+| 악당 등장 | su-speaker-on-01 (스피커 켜짐 딸깍) | cookies+policy, Megaphone OnOff From Mic 2 (556362) |
+| 악당에 닿음·3D 달리기 낙하 | su-muffled-01 (막힌 북, 가공) | TheEndOfACycle (673516) |
+| 마지막 악당 격퇴 | victory-jingle-02 | Fupicat, WinBrass.wav (521639) |
+
+나무 놓기(`place_wood.ogg`)와 복구 멜로디(`restore_chime.ogg`, VCSL)는 그대로 쓴다. 이전 화면 효과음 `click_003`·`open_001`·`select_003`(Kenney), `sparkle_correct`·`pin_pop`·`swipe_whoosh`·`slot_click`(Freesound)은 지금 재생하지 않지만 출처 기록과 함께 저장소에 남겨 두었다. 실험 소리(북·자·고무줄·소리굽쇠)는 바꾸지 않았다.
+
 ## 최신 추가 자료 · 2026-11-10
 
 - 화면 글꼴: NAVER NanumSquareNeo Regular/Bold/ExtraBold WOFF2. 공식 캠페인에서 받은 파일을 이름 변경 없이 배포한다. `media/fonts/NanumSquareNeo-OFL.txt`에 SIL OFL 1.1 전문, `media/fonts/SOURCE.md`에 원본과 공식 도움말 출처를 보존했다.

@@ -12,7 +12,8 @@ class Param {
 class Node {
   constructor(){this.frequency=new Param();this.playbackRate=new Param();this.gain=new Param();this.starts=[];this.stops=[];this.connected=false;}
   connect(){this.connected=true;}disconnect(){this.connected=false;}
-  start(time){this.starts.push(time);}stop(time){this.stops.push(time);}
+  // Like the Web Audio API, a scheduled stop before start is an error.
+  start(time){this.starts.push(time);}stop(time){if(!this.starts.length&&time!==undefined)throw Error('InvalidStateError');this.stops.push(time);}
 }
 class Context {
   constructor(){this.state='running';this.currentTime=10;this.sampleRate=8000;this.destination={};this.oscillators=[];this.gains=[];this.noises=[];}
@@ -162,4 +163,28 @@ test('NPC narration quiet mode stops experiment sound and ducks the background t
   assert.equal(sound.context.oscillators.length,count);sound.setQuiet(false);
   assert.ok(Math.abs(level(sound)-.35*.6)<1e-9);
  }finally{sound.destroy();}
+});
+
+test('instrument effects play one at a time with their own level, speed and fade',async()=>{
+ const previousFetch=globalThis.fetch,sound=new SoundEngine();sound.configure({bgm:false});const urls=[];
+ globalThis.fetch=async url=>{urls.push(url);return {ok:true,arrayBuffer:async()=>new ArrayBuffer(8)};};
+ try{await sound.ready();sound.context.decodeAudioData=async()=>({duration:1.3});
+  await sound.effect('swing');const swing=sound.nodes[0];
+  sound.effectClock=0;await sound.effect('hit2');const hit=sound.nodes.at(-1);
+  assert.deepEqual(urls,['/media/audio/sfx/su-drum-small-01.mp3','/media/audio/sfx/su-battle-hit-02.mp3']);
+  assert.equal(swing.gain.gain.events.at(-1).kind,'linear');assert.equal(swing.gain.gain.events.at(-1).value,0);
+  assert.equal(hit.source.playbackRate.events[0].value,1.19);assert.equal(hit.gain.gain.events[0].value,.34);
+  assert.ok(hit.source.stops[0]<10.8,'long bell fades out at its max length');
+  sound.effectClock=0;await sound.effect('hit2');assert.equal(sound.nodes.at(-1),hit,'the same cue does not repeat within 90 ms');
+ }finally{sound.destroy();globalThis.fetch=previousFetch;}
+});
+test('polite cues wait out experiment sounds and the map finale fades a victory jingle',async()=>{
+ const previousFetch=globalThis.fetch,sound=new SoundEngine();sound.configure({bgm:false});
+ globalThis.fetch=async()=>({ok:true,arrayBuffer:async()=>new ArrayBuffer(8)});
+ try{await sound.ready();sound.context.decodeAudioData=async()=>({duration:2.2});
+  await sound.play({duration:.6});const count=sound.nodes.length;
+  await sound.effect('retry',{polite:true});assert.equal(sound.nodes.length,count);
+  sound.stop();await sound.effect('victory');const jingle=sound.nodes[0];
+  sound.setMapFinale(true);assert.equal(jingle.gain.gain.events.at(-1).value,0);assert.equal(sound.effectNode,null);
+ }finally{sound.destroy();globalThis.fetch=previousFetch;}
 });

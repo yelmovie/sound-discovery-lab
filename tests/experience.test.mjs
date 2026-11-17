@@ -25,8 +25,11 @@ before(async()=>{
 });
 after(()=>server?.kill());
 
-test('five concept films and nine credited sound files ship in the offline asset manifest',async()=>{
- assert.equal(concepts.length,5);assert.equal(Object.keys(interfaceSounds).length,9);
+test('five concept films and credited instrument effects ship in the offline asset manifest',async()=>{
+ assert.equal(concepts.length,5);assert.equal(Object.keys(interfaceSounds).length,18);
+ const sfx=JSON.parse(await readFile(new URL('../media/audio/sfx/sources.json',import.meta.url),'utf8'));
+ for(const f of sfx.files){assert.match(f.license,/^(CC0|PD)/);assert.ok(f.sources.every(s=>/^https:\/\/freesound\.org\//.test(s.source_page)&&/^CC0/.test(s.license)));}
+ for(const cue of Object.values(interfaceSounds))if(cue.src.startsWith('media/audio/sfx/'))assert.ok(sfx.files.some(f=>`media/audio/sfx/${f.file}`===cue.src),cue.src);
  const added=JSON.parse(await readFile(new URL('../media/audio/sources-20261117.json',import.meta.url),'utf8'));
  assert.match(added.license,/CC0/);for(const f of added.files)assert.match(f.source,/^https:\/\/freesound\.org\//);
  for(const c of concepts){
@@ -34,7 +37,7 @@ test('five concept films and nine credited sound files ship in the offline asset
   for(const asset of [c.src,c.poster,c.captions]){assert.ok(assets.includes(asset.slice(1)));assert.ok((await stat(new URL(`../${asset.slice(1)}`,import.meta.url))).size>100);}
  }
  const credits=await readFile(new URL('../media/audio/License.txt',import.meta.url),'utf8');assert.match(credits,/CC0/);
- for(const name of Object.values(interfaceSounds))assert.ok((await stat(new URL(`../media/audio/${name}.ogg`,import.meta.url))).size>100);
+ for(const cue of Object.values(interfaceSounds)){assert.ok(assets.includes(cue.src));assert.ok((await stat(new URL(`../${cue.src}`,import.meta.url))).size>100);}
 });
 test('every lesson has progressive hints and ready feedback requires actual evidence work',()=>{
  const state=freshState();
