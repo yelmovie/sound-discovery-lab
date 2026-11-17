@@ -270,3 +270,14 @@
 - 학교 태블릿·전자칠판 실기기의 터치감과 프레임 속도(30fps 목표)는 재지 못했다. 확인은 맥의 Chrome에서만 했다.
 - 실제 스피커로 소리를 듣고 확인하지 못했다(QA는 음소거 상태).
 - 생성한 타일 그림(바닥·물·나무결)의 이음매는 화면에서 눈에 띄지 않았지만 픽셀 단위로 검사하지는 않았다.
+
+### 커밋과 배포
+
+- 커밋 `1011e97ad1d9` (`main`, https://github.com/yelmovie/sound-discovery-lab 에 푸시). 이 배포 기록을 더한 뒤 커밋은 문서만 바꾼다.
+- 운영: https://sound-discovery-lab.yelsam.workers.dev (Cloudflare Worker `sound-discovery-lab`, 설정은 `.tmp/release-run-stage-20261117/wrangler.json`, 고정 Wrangler 4.154.0으로 dry-run 뒤 배포)
+- 활성 버전 `e99554a1-7e69-401c-b0a5-bfa3049c1542` (100%, 메시지 "3D run stage 1011e97"). 직전 버전은 `a74efa36-2b77-4097-bf9d-28a9fe33757e`(82d727f)다.
+- 운영 파일 207개를 curl로 내려받아 `dist`와 SHA-256을 대조했다. 207개 모두 일치(`/index.html`은 `/`로 넘어가므로 `/`로 대조). `/._index.html`, `/src/._app.js`, `/.DS_Store`는 404.
+- 운영 `sw.js`의 캐시 버전은 `2.3.0-mwk5wduk`이고 미리 저장 목록에 3D 파일 5개, three.js, 그림 13장이 들어 있다.
+- 운영 주소에서 `node scripts/qa-run-stage.mjs production`을 돌려 16개 항목이 모두 통과했다(두 스테이지를 키보드와 화면 버튼으로 끝까지, 기록 저장, 새로고침, 대체 화면, 교사 시연). 확인용 Chrome 프로필은 따로 만든 것이라 실제 학생 기록은 건드리지 않았다.
+- 그림 13장의 내장 임시 원본은 화면 적용을 확인한 뒤 `gpt-image.sh -c`로 지웠다.
+
