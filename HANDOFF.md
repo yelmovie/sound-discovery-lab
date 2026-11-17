@@ -1,3 +1,6 @@
+# Suno 배경음 2곡 적용 (2026-11-17 밤)
+우쿨렐레 루프(`bgm_ukulele.ogg`)와 합성 차임 대체음을 빼고 사용자가 Suno로 만든 곡으로 교체. 실행본 `media/audio/bgm/main-theme.mp3`·`final-theme.mp3`, 원본 `references/suno/`(git 제외). 재생: 메인은 첫 탭부터 홈·지도·활동·최종 미션 반복, 파이널은 결과·인증서에서 1회와 지도 파이널 영상 창이 열린 동안(`map-finale.js`가 `map-finale` 이벤트를 보냄, 영상은 무음 유지). 목소리·개념 영상 중 1/4, 실험 소리(`play`·`sequence`) 동안 0. 음악은 Web Audio 버스(MediaElementSource)로 보내 iPad에서도 음량·덕킹이 먹는다. mp3는 오프라인 미리 저장에서 제외(기존 규칙: ogg·m4a만).
+---
 # 3D 달리기 스테이지 (2026-11-17 낮)
 의뢰 「울림 징검다리」(lesson 3)와 「높낮이 잠금문」(lesson 10)이 3D 달리기로 먼저 열린다. 북에 뛰어 오르면 울림·살며시 걸어 오르면 쉼, 길이 6·12·18 cm 자 발판을 골라 밟기. 판정·저장은 기존 `runChallenge`와 저장 필드 그대로이고 3D는 착지를 기존 동작으로 바꿔 보낼 뿐이다(src/run-stage-rules.js). 2D 화면은 대체 화면(「기존 방식으로 하기」, WebGL 없음, 움직임 줄이기)이고 자동재생은 2D에서만 돈다.
 구성: three.js r170 로컬 파일(src/vendor/three), 무대 run-stage.js·캐릭터 run-character.js·입력 run-input.js·화면 겹침 run-stage-hud.js. 그림 13장은 GPT 이미지(image/generated/run-stage, 원본 .work/run-stage-20261117). 새 그림을 넣을 때는 src/data.js의 runStageAssets에 이름을 넣어야 빌드 복사·오프라인 저장·무대가 함께 본다.

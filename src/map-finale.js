@@ -11,8 +11,10 @@ export function openMapFinale(host, source) {
  const status=doc.createElement('p');status.hidden=true;status.role='status';
  const close=doc.createElement('button');close.type='button';close.textContent='지도로 돌아가기';Object.assign(close.style,{marginTop:'10px',minHeight:'44px',padding:'6px 18px',borderRadius:'8px',cursor:'pointer'});
  dialog.append(title,video,status,close);doc.body.append(dialog);dialog.showModal();
+ // The video stays silent; the app plays the finale music while this dialog is open.
+ doc.dispatchEvent(new CustomEvent('map-finale',{detail:true}));
  close.addEventListener('click',()=>dialog.close());
  video.addEventListener('error',()=>{status.hidden=false;status.textContent='지금은 영상을 열 수 없어. 지도 퇴치 기록은 저장됐어.';});
- dialog.addEventListener('close',()=>{video.pause();dialog.remove();},{once:true});
+ dialog.addEventListener('close',()=>{video.pause();dialog.remove();doc.dispatchEvent(new CustomEvent('map-finale',{detail:false}));},{once:true});
  video.play().catch(()=>{});
 }

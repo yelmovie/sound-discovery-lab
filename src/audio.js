@@ -1,6 +1,8 @@
-import { interfaceSounds } from './data.js';
+import { interfaceSounds, backgroundMusic } from './data.js';
 import { instrumentSamples } from './samples.js';
-const bgmScenes=new Set(['home','map','result']);
+// Suno tracks (references/suno): the main theme loops everywhere; the finale plays once on the ending/certificate
+// and while the map finale dialog is open.
+const finaleScenes=new Set(['result']);
 const effectKinds=new Set(['ui','success','feedback']);
 const bounded=(value,min,max,fallback)=>Number.isFinite(value)?Math.min(max,Math.max(min,value)):fallback;
 
@@ -8,10 +10,8 @@ export class SoundEngine {
   constructor(){
     this.context=null;this.nodes=[];this.generation=0;this.muted=false;this.onStatus=()=>{};
     this.bgm=true;this.sfx=true;this.bgmVolume=.35;this.scene='home';
-    // Optional looped music file; the synthesized chime stays as the fallback until it decodes.
-    this.bgmSrc=null;this.bgmLoop=null;this.bgmLoading=false;
-    this.quiet=false;this.unlocked=false;this.needsGesture=false;this.destroyed=false;
-    this.bgmNodes=[];this.bgmGeneration=0;this.bgmTimer=null;this.bgmBus=null;
+    this.music=new Map();this.track='main';this.mapFinale=false;this.finaleDone=false;this.holdUntil=0;this.holdTimer=null;
+    this.quiet=false;this.unlocked=false;this.needsGesture=false;this.destroyed=false;this.bgmBus=null;
     this.buffers=new Map();this.effectClock=0;
     this.visibilityHandler=()=>{
       if(typeof document!=='undefined'&&document.hidden){
@@ -31,6 +31,7 @@ export class SoundEngine {
   setQuiet(value){this.quiet=Boolean(value);if(this.quiet)this.stop();this.syncBgm();}
   setMuted(value){this.configure({muted:Boolean(value)});}
   setScene(scene){this.scene=scene;this.syncBgm();}
+  setMapFinale(open){this.mapFinale=Boolean(open);this.syncBgm();}
   async unlock(){
     if(this.destroyed||typeof document!=='undefined'&&document.hidden)return false;
     this.unlocked=true;this.needsGesture=false;
@@ -39,6 +40,7 @@ export class SoundEngine {
   }
   stop(){
     this.generation++;
+    if(this.holdUntil){this.holdUntil=0;clearTimeout(this.holdTimer);this.holdTimer=null;this.syncBgm();}
     for(const entry of this.nodes)this.disconnect(entry);
     this.nodes=[];
     this.onStatus(this.muted||!this.sfx?'소리 꺼짐 · 떨림을 눈으로 관찰해 봐':'소리 준비됨');
@@ -85,6 +87,7 @@ export class SoundEngine {
     if(!this.sfx||!await this.ready()||generation!==this.generation)return;
     const sample=await this.loadInstrument(options.kind||'ruler');
     if(generation!==this.generation||this.quiet||this.muted||!this.sfx||this.needsGesture||this.destroyed)return;
+    this.holdBgm((options.duration??1.1)+.3);
     this.onStatus('소리 재생 중');if(!this.recordedTone(options,sample))this.tone(options);
   }
   async sequence(notes){
@@ -92,6 +95,7 @@ export class SoundEngine {
     if(!this.sfx||!await this.ready()||generation!==this.generation)return;
     const sequence=notes.slice(0,32),samples=await Promise.all(sequence.map(note=>this.loadInstrument(note.kind||'ruler')));
     if(generation!==this.generation||this.quiet||this.muted||!this.sfx||this.needsGesture||this.destroyed)return;
+    this.holdBgm(Math.max(0,sequence.length-1)*.62+.8);
     this.onStatus('신호 재생 중');sequence.forEach((note,i)=>{const options={...note,delay:i*.62,duration:.5};if(!this.recordedTone(options,samples[i]))this.tone(options);});
   }
   async loadInstrument(kind){
@@ -132,51 +136,43 @@ export class SoundEngine {
     }catch{if(generation===this.generation)this.tone({frequency:name==='success'?660:480,kind:'ui',level:.4,duration:.12});}
   }
   canBgm(){
-    return !this.destroyed&&!this.quiet&&this.unlocked&&!this.needsGesture&&!this.muted&&this.bgm&&this.bgmVolume>0&&bgmScenes.has(this.scene)&&!(typeof document!=='undefined'&&document.hidden);
+    return !this.destroyed&&this.unlocked&&!this.needsGesture&&!this.muted&&this.bgm&&this.bgmVolume>0&&!(typeof document!=='undefined'&&document.hidden);
+  }
+  // Experiment sounds are compared without music, so the theme falls silent while they play.
+  holdBgm(seconds){
+    this.holdUntil=Math.max(this.holdUntil,Date.now()+seconds*1000);
+    clearTimeout(this.holdTimer);this.holdTimer=setTimeout(()=>{this.holdTimer=null;this.holdUntil=0;this.syncBgm();},this.holdUntil-Date.now());
+    this.syncBgm();
   }
   syncBgm(){
-    if(!this.canBgm()||this.context?.state!=='running'){this.stopBgm();return;}
+    const track=this.mapFinale||finaleScenes.has(this.scene)?'finale':'main';
+    if(track!==this.track){this.music.get(this.track)?.element.pause();this.track=track;if(track==='finale'){this.finaleDone=false;const finale=this.music.get('finale');if(finale)finale.element.currentTime=0;}}
+    if(!this.canBgm()||this.context?.state!=='running'||track==='finale'&&this.finaleDone){this.stopBgm();return;}
     const c=this.context;
     if(!this.bgmBus){this.bgmBus=c.createGain();this.bgmBus.connect(c.destination);}
-    this.bgmBus.gain.setTargetAtTime(this.bgmVolume,c.currentTime,.08);
-    if(this.bgmTimer!==null)return;
-    if(this.bgmLoop){
-      this.bgmGeneration++;const source=c.createBufferSource();source.buffer=this.bgmLoop;source.loop=true;
-      const gain=c.createGain();gain.gain.value=.5;source.connect(gain);gain.connect(this.bgmBus);source.start();
-      this.bgmNodes.push({source,gain});this.bgmTimer='loop';return;
-    }
-    this.loadBgm();
-    const generation=++this.bgmGeneration;
-    const schedule=()=>{
-      if(generation!==this.bgmGeneration||!this.canBgm()||c.state!=='running')return;
-      const start=c.currentTime+.04;
-      [261.63,329.63,392,329.63,293.66].forEach((frequency,index)=>{
-        const source=c.createOscillator(),gain=c.createGain(),time=start+index*2.4;
-        source.type='sine';source.frequency.setValueAtTime(frequency,time);
-        gain.gain.setValueAtTime(0,time);gain.gain.linearRampToValueAtTime(.018,time+.28);gain.gain.exponentialRampToValueAtTime(.0001,time+2.25);
-        source.connect(gain);gain.connect(this.bgmBus);source.start(time);source.stop(time+2.3);
-        const entry={source,gain};this.bgmNodes.push(entry);
-        source.onended=()=>{source.disconnect();gain.disconnect();this.bgmNodes=this.bgmNodes.filter(n=>n!==entry);};
-      });
-      this.bgmTimer=setTimeout(()=>{this.bgmTimer=null;schedule();},12000);
-    };
-    schedule();
+    // Voices and concept films keep the music at a quarter instead of stopping it.
+    const level=Date.now()<this.holdUntil?0:this.bgmVolume*.6*(this.quiet||this.scene==='concept'?.25:1);
+    this.bgmBus.gain.setTargetAtTime(level,c.currentTime,.08);
+    const player=this.player(track);
+    if(!player.routed)player.element.volume=Math.min(1,level);
+    if(player.element.paused)player.element.play()?.catch?.(()=>{});
   }
-  loadBgm(){
-    if(!this.bgmSrc||this.bgmLoading||this.bgmLoop||typeof fetch!=='function'||typeof this.context?.decodeAudioData!=='function')return;
-    this.bgmLoading=true;
-    fetch(this.bgmSrc).then(r=>{if(!r.ok)throw Error('music unavailable');return r.arrayBuffer();}).then(data=>this.context.decodeAudioData(data)).then(buffer=>{
-      this.bgmLoop=buffer;
-      // Swap the fallback chime for the loop only while music is still wanted.
-      if(this.bgmTimer!==null&&this.canBgm()){this.stopBgm();this.syncBgm();}
-    }).catch(()=>{}).finally(()=>{this.bgmLoading=false;});
+  player(track){
+    let player=this.music.get(track);
+    if(player)return player;
+    const element=new Audio(`/${backgroundMusic[track]}`);element.preload='auto';element.loop=track==='main';
+    if(element.dataset)element.dataset.track=track;
+    element.addEventListener?.('ended',()=>{if(track==='finale')this.finaleDone=true;});
+    let routed=false;
+    // Routing through the Web Audio bus lets volume and ducking work on iPad, where element.volume is fixed.
+    try{if(typeof this.context?.createMediaElementSource==='function'){this.context.createMediaElementSource(element).connect(this.bgmBus);routed=true;}}catch{}
+    player={element,routed};this.music.set(track,player);return player;
   }
   stopBgm(){
-    this.bgmGeneration++;if(this.bgmTimer!==null&&this.bgmTimer!=='loop')clearTimeout(this.bgmTimer);this.bgmTimer=null;
-    for(const entry of this.bgmNodes)this.disconnect(entry);this.bgmNodes=[];
+    for(const {element} of this.music.values())element.pause();
   }
   destroy(){
-    this.destroyed=true;this.stop();this.stopBgm();
+    this.destroyed=true;this.stop();this.stopBgm();clearTimeout(this.holdTimer);
     if(typeof document!=='undefined')document.removeEventListener('visibilitychange',this.visibilityHandler);
     try{this.bgmBus?.disconnect();}catch{}
     this.context?.close?.().catch(()=>{});

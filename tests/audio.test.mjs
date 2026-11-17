@@ -23,8 +23,18 @@ class Context {
   async resume(){this.state='running';}
   async suspend(){this.state='suspended';}
   async close(){this.state='closed';}
+  createMediaElementSource(element){const n=new Node();n.element=element;return n;}
 }
 globalThis.AudioContext=Context;
+class FakeAudio {
+  constructor(src){this.src=src;this.paused=true;this.currentTime=0;this.volume=1;this.loop=false;this.dataset={};this.listeners=new Map();}
+  play(){this.paused=false;return Promise.resolve();}pause(){this.paused=true;}
+  addEventListener(key,fn){this.listeners.set(key,fn);}
+}
+globalThis.Audio=FakeAudio;
+const music=(sound,track)=>sound.music.get(track)?.element;
+const playing=(sound,track)=>Boolean(music(sound,track)&&!music(sound,track).paused);
+const level=sound=>sound.bgmBus.gain.events.at(-1).value;
 
 test('downloaded UI effects honor mute and clean up their buffer sources',async()=>{
  const previousFetch=globalThis.fetch,sound=new SoundEngine();sound.configure({bgm:false});
@@ -43,26 +53,48 @@ test('patterns schedule three distinct notes and stop cancels even future notes'
 test('a pending audio resume cannot resurrect sound after navigating or muting',async()=>{const sound=new SoundEngine();sound.context=new Context();sound.context.state='suspended';let resume;sound.context.resume=()=>new Promise(resolve=>{resume=()=>{sound.context.state='running';resolve();};});const pending=sound.play();sound.stop();resume();await pending;assert.equal(sound.context.oscillators.length,0);});
 test('unavailable audio reports a helpful status instead of an unhandled rejection',async()=>{const sound=new SoundEngine();sound.context=new Context();sound.context.state='suspended';sound.context.resume=async()=>{throw Error('blocked');};let status;sound.onStatus=s=>{status=s;};await sound.play();assert.match(status,/기기의 소리 설정/);assert.equal(sound.nodes.length,0);});
 
-test('BGM and effects have independent switches; experiments pause background music',async()=>{
+test('the Suno main theme loops after the first gesture; BGM and effects keep independent switches',async()=>{
   const sound=new SoundEngine();
   try{
-    sound.configure({bgm:true,sfx:false,bgmVolume:.25});await sound.unlock();
-    assert.equal(sound.bgmNodes.length,5);assert.equal(sound.bgmBus.gain.events.at(-1).value,.25);
+    sound.configure({bgm:true,sfx:false,bgmVolume:.25});assert.equal(sound.music.size,0);await sound.unlock();
+    assert.ok(playing(sound,'main'));assert.equal(music(sound,'main').src,'/media/audio/bgm/main-theme.mp3');assert.equal(music(sound,'main').loop,true);
+    assert.equal(sound.music.get('main').routed,true);assert.ok(Math.abs(level(sound)-.15)<1e-9);
     const before=sound.context.oscillators.length;await sound.play();assert.equal(sound.context.oscillators.length,before);
-    sound.configure({sfx:true});await sound.play();assert.equal(sound.nodes.length,1);assert.equal(sound.bgmNodes.length,5);
-    sound.setScene('lesson');assert.equal(sound.bgmNodes.length,0);assert.equal(sound.bgmTimer,null);
-    await sound.play();assert.equal(sound.nodes.length,1);sound.setScene('map');assert.equal(sound.bgmNodes.length,5);
-    sound.configure({bgm:false});assert.equal(sound.bgmNodes.length,0);assert.equal(sound.nodes.length,1);
+    sound.setScene('lesson');assert.ok(playing(sound,'main'));sound.setScene('map');assert.ok(playing(sound,'main'));
+    sound.configure({bgm:false});assert.ok(!playing(sound,'main'));
+    sound.configure({bgm:true,bgmVolume:0});assert.ok(!playing(sound,'main'));
   }finally{sound.destroy();}
 });
-test('master mute cancels both channels including scheduled background notes',async()=>{
+test('experiment sounds silence the theme while they play; voices and concept films duck it to a quarter',async()=>{
   const sound=new SoundEngine();
   try{
-    await sound.unlock();await sound.play();const bgm=[...sound.bgmNodes];sound.setMuted(true);
-    assert.equal(sound.nodes.length,0);assert.equal(sound.bgmNodes.length,0);assert.equal(sound.bgmTimer,null);
-    assert.ok(bgm.every(n=>n.source.stops.includes(undefined)&&!n.source.connected));
+    sound.configure({bgmVolume:.5});await sound.unlock();sound.setScene('lesson');assert.ok(Math.abs(level(sound)-.3)<1e-9);
+    await sound.play({duration:.4});assert.equal(level(sound),0);assert.ok(playing(sound,'main'));
+    sound.stop();assert.ok(Math.abs(level(sound)-.3)<1e-9);
+    await sound.sequence([{frequency:260},{frequency:650}]);assert.equal(level(sound),0);sound.stop();
+    sound.setQuiet(true);assert.ok(Math.abs(level(sound)-.075)<1e-9);assert.ok(playing(sound,'main'));sound.setQuiet(false);
+    sound.setScene('concept');assert.ok(Math.abs(level(sound)-.075)<1e-9);
+  }finally{sound.destroy();}
+});
+test('the finale plays once on the certificate and while the map finale is open, then the main theme returns',async()=>{
+  const sound=new SoundEngine();
+  try{
+    await sound.unlock();sound.setScene('map');assert.ok(playing(sound,'main'));
+    sound.setMapFinale(true);assert.ok(playing(sound,'finale'));assert.ok(!playing(sound,'main'));
+    assert.equal(music(sound,'finale').src,'/media/audio/bgm/final-theme.mp3');assert.equal(music(sound,'finale').loop,false);
+    music(sound,'finale').currentTime=40;sound.setMapFinale(false);assert.ok(playing(sound,'main'));assert.ok(!playing(sound,'finale'));
+    sound.setScene('result');assert.ok(playing(sound,'finale'));assert.equal(music(sound,'finale').currentTime,0);
+    music(sound,'finale').pause();music(sound,'finale').listeners.get('ended')();sound.setScene('result');assert.ok(!playing(sound,'finale'));assert.ok(!playing(sound,'main'));
+    sound.setScene('home');assert.ok(playing(sound,'main'));
+  }finally{sound.destroy();}
+});
+test('master mute pauses the theme and cancels effects',async()=>{
+  const sound=new SoundEngine();
+  try{
+    await sound.unlock();await sound.play();sound.setMuted(true);
+    assert.equal(sound.nodes.length,0);assert.ok(!playing(sound,'main'));
     const count=sound.context.oscillators.length;await sound.play();assert.equal(sound.context.oscillators.length,count);
-    sound.setMuted(false);assert.equal(sound.bgmNodes.length,5);
+    sound.setMuted(false);assert.ok(playing(sound,'main'));
   }finally{sound.destroy();}
 });
 test('hidden tab stops both channels and requires a fresh gesture before playback',async()=>{
@@ -70,9 +102,9 @@ test('hidden tab stops both channels and requires a fresh gesture before playbac
   globalThis.document=doc;const sound=new SoundEngine();
   try{
     await sound.unlock();await sound.play();doc.hidden=true;listeners.get('visibilitychange')();
-    assert.equal(sound.nodes.length,0);assert.equal(sound.bgmNodes.length,0);assert.equal(sound.context.state,'suspended');
+    assert.equal(sound.nodes.length,0);assert.ok(!playing(sound,'main'));assert.equal(sound.context.state,'suspended');
     doc.hidden=false;const count=sound.context.oscillators.length;await sound.play();assert.equal(sound.context.oscillators.length,count);
-    assert.equal(sound.needsGesture,true);await sound.unlock();assert.equal(sound.needsGesture,false);assert.equal(sound.bgmNodes.length,5);
+    assert.equal(sound.needsGesture,true);await sound.unlock();assert.equal(sound.needsGesture,false);assert.ok(playing(sound,'main'));
   }finally{sound.destroy();delete globalThis.document;}
   assert.equal(listeners.size,0);
 });
@@ -122,12 +154,12 @@ test('missing recorded file falls back to an audible synthesized experiment',asy
  }finally{sound.destroy();globalThis.fetch=previousFetch;}
 });
 
-test('NPC narration quiet mode stops and gates experiment and background sound',async()=>{
+test('NPC narration quiet mode stops experiment sound and ducks the background theme',async()=>{
  const sound=new SoundEngine();try{
   await sound.unlock();await sound.play();sound.setQuiet(true);
-  assert.equal(sound.nodes.length,0);assert.equal(sound.bgmNodes.length,0);
+  assert.equal(sound.nodes.length,0);assert.ok(playing(sound,'main'));assert.ok(Math.abs(level(sound)-.35*.6*.25)<1e-9);
   const count=sound.context.oscillators.length;await sound.play();sound.tone();
   assert.equal(sound.context.oscillators.length,count);sound.setQuiet(false);
-  assert.equal(sound.bgmNodes.length,5);
+  assert.ok(Math.abs(level(sound)-.35*.6)<1e-9);
  }finally{sound.destroy();}
 });

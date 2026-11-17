@@ -3,7 +3,7 @@ import { portraitMarkup } from './npc-scene.js';
 let disposeNpc;
 import { art, rulerIllustration, badgeArt } from './illustrations.js';
 import { transferSound } from './samples.js';
-import { backgroundMusic, backgrounds, titleLogo, stages, lessons, instruments, lengths, media, transferCases, diagnosisFields, solutions, finalTasks, props, achievements, legacyIndex, LESSON_COUNT, stageLessons } from './data.js';
+import { backgrounds, titleLogo, stages, lessons, instruments, lengths, media, transferCases, diagnosisFields, solutions, finalTasks, props, achievements, legacyIndex, LESSON_COUNT, stageLessons } from './data.js';
 import { STORAGE_KEY, freshState, readState, createSaveSession, evidenceCount, stageDone, canLesson, canRoute, lessonFromRoute, recordEvidence, checkLesson, checkFinal, nextDiagnosisField } from './model.js';
 import { SoundEngine } from './audio.js';
 import { createVoice, voiceFor, voiceCue, voiceLines } from './voice.js';
@@ -25,7 +25,8 @@ let map=null,feedback=null,liveTimer=null,playingUntil=0,returnFocus=null,trail=
 let finalStep=0,notebookStage=0,mapView='follow',mapNoteTimer=null;
 let advanceTimer=null,inputLockedUntil=0;
 const hintLevels={};
-const sound=new SoundEngine();sound.bgmSrc='/'+backgroundMusic;configureSound();
+const sound=new SoundEngine();configureSound();
+document.addEventListener('map-finale',e=>sound.setMapFinale(e.detail));
 const voice=createVoice({enabled:()=>!state.settings.muted&&state.settings.sfx,quiet:value=>sound.setQuiet(value),onSpeaking:id=>{
  const dialog=modalRoot.querySelector('dialog.modal-npc');
  if(dialog)dialog.dataset.speaking=String(Boolean(id&&dialog.dataset.voiceLines?.split(',').includes(id)));
