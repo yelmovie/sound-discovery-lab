@@ -344,7 +344,7 @@ function openMap(){
   status.hidden=true;
   try{
    const clearStage=dialogueStage;dialogueStage=null;
-   map=world.mountMap(canvas,state,enterMapStage,{clearStage,onMapHit:patch=>{state.mapHits={...state.mapHits,...patch};save();},encounterTone:(kind,hits)=>void sound.effect(kind==='hit'?`hit${hits}`:kind==='contact'?'bump':kind),onView:syncMapView,onTravel:syncMapTravel,onLoad:()=>{if(current()){mapFailed=false;status.hidden=true;}},onError:()=>fail(),onStep:()=>sound.tone({frequency:170,level:.5,duration:.06,kind:'ui'}),residentLine:n=>stages[n].restored,residentLabel:n=>stages[n].name+' 주민과 대화하기',onTalk:residentDialogue});
+   map=world.mountMap(canvas,state,enterMapStage,{clearStage,onMapHit:patch=>{state.mapHits={...state.mapHits,...patch};save();},encounterTone:(kind,hits)=>void sound.effect(kind==='hit'?`hit${hits}`:kind==='contact'?'bump':kind),onView:syncMapView,onTravel:syncMapTravel,onLoad:()=>{if(current()){mapFailed=false;status.hidden=true;}},onError:()=>fail(),onStep:()=>sound.tone({frequency:170,level:.5,duration:.06,kind:'ui'}),residentLine:n=>stages[n].restored,onResidentNear:n=>voice.say(`restored-${n+1}`,300),villainVoice:text=>{const id=voiceFor(text);if(id)voice.say(id);},residentLabel:n=>stages[n].name+' 주민과 대화하기',onTalk:residentDialogue});
    const events=new AbortController(),mounted=map,destroy=map.destroy;
    controls.bindDirectionPad(page,'.map-dpad [data-direction]',b=>b.dataset.direction,{signal:events.signal,blocked:()=>document.hidden||!!document.querySelector('dialog[open]'),press:d=>mounted.direction(d,true),release:d=>mounted.direction(d,false),tap:d=>mounted.nudge(d)});
    map.destroy=()=>{events.abort();destroy();};
@@ -381,11 +381,14 @@ function showConcept(stage,next=null,reward=false){
  const footer=next?button(`${next==='final'?'마지막 코어 복구로':next.startsWith('lesson/')?'다음 시설로':'복구한 마을로'} ${icon('arrow')}`,'goto',`data-route="${next}"`,'btn primary'):button(route==='result'?'인증서로 돌아가기':'활동으로 돌아가기','close','','btn primary');
  openModal(`${reward?`<div class="concept-reward">${art(badgeArt[stage],'','badge-art reward-badge')}<span>${achievements[stage].name} 배지 획득!</span><b>${stages[stage].restored}</b></div>`:''}${conceptView(stage,{compact:reward})}${reward?`<p class="learning-bridge">${emphasize(stages[stage].nextInquiry,conceptTerms[stage])}</p>`:''}`,`${reward?'시설 복구! · ':''}${c.title}`,`${button('처음부터 보기','replay-concept','','btn quiet')}${footer}`,'concept');
  const video=modalRoot.querySelector('video');video.muted=state.settings.muted||!state.settings.sfx;video.volume=c.volume??1;
- video.addEventListener('timeupdate',()=>{const active=Math.min(3,Math.floor(video.currentTime/4));modalRoot.querySelectorAll('[data-cue]').forEach(el=>el.classList.toggle('active',Number(el.dataset.cue)===active));});
- video.addEventListener('ended',()=>{void sound.effect('badge');modalRoot.querySelector('.modal-footer .primary')?.classList.add('ready-action');});
+ // Pio reads each caption cue as it appears; the film itself keeps its own sound track.
+ let spokenCue=-1;const bridge=()=>{if(reward)voice.say(`bridge-${stage+1}`,300);};
+ video.addEventListener('timeupdate',()=>{const active=Math.min(3,Math.floor(video.currentTime/4));modalRoot.querySelectorAll('[data-cue]').forEach(el=>el.classList.toggle('active',Number(el.dataset.cue)===active));if(!video.paused&&active!==spokenCue){spokenCue=active;voice.say(`concept-${c.id}-${active+1}`);}});
+ video.addEventListener('pause',()=>{spokenCue=-1;if(!video.ended)voice.stop();});
+ video.addEventListener('ended',()=>{void sound.effect('badge');modalRoot.querySelector('.modal-footer .primary')?.classList.add('ready-action');bridge();});
  const failed=()=>{modalRoot.querySelector('.concept-fallback').hidden=false;modalRoot.querySelector('.concept-transcript').open=true;};
  video.addEventListener('error',failed);video.querySelector('source').addEventListener('error',failed);
- if(reward&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches)void video.play().catch(()=>{});
+ if(reward&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches)void video.play().catch(bridge);else bridge();
 }
 
 modalRoot.addEventListener('input',e=>{if(e.target.id==='bgm-volume'){state.settings.bgmVolume=Number(e.target.value);configureSound();save();modalRoot.querySelector('#bgm-value').textContent=e.target.value;}});

@@ -114,7 +114,7 @@ export function mountMap(canvas,state,onArrive,options={}){
   }
   const encounters=mountMapEncounters({requiredFoes:5,host:viewport,controls:viewport.closest('.map-page')?.querySelector('.map-next-stack')??viewport,clearStage:()=>options.clearStage,stages:state.settings?.admin?[]:mapVillainStages.filter((_,i)=>done[i]),
    progress:state.mapHits,onSave:options.onMapHit,art:{left:new URL('image/generated/map-villain-poses-left.webp',document.baseURI).href,frames:6},
-   palette:'#c9a3ff',reach:122,contact:28,tone:options.encounterTone,
+   palette:'#c9a3ff',reach:122,contact:28,tone:options.encounterTone,voice:options.villainVoice,
    blocked:()=>!ready||!active||paused||view!=='follow'||destination!==null||dragged,
    reduced:()=>reduced.matches});
   function updateEncounters(){
@@ -300,7 +300,7 @@ export function mountMap(canvas,state,onArrive,options={}){
     const friend=destination===null&&view!=='overview'&&!moving?world.doors.find(d=>d.stage<5&&done[d.stage]&&distance(position,d.resident)<105)||null:null;
     if(friend!==chatting){
       chatting=friend;bubble.hidden=!friend;talk.hidden=!friend;
-      if(friend){bubble.textContent=options.residentLine?.(friend.stage)||'';talk.textContent=options.residentLabel?.(friend.stage)||'주민과 대화하기';bubble.style.left=`${(friend.resident.x+(position.x<friend.resident.x?90:-90))/world.width*100}%`;bubble.style.top=`${(friend.resident.y-46)/world.height*100}%`;}
+      if(friend){bubble.textContent=options.residentLine?.(friend.stage)||'';options.onResidentNear?.(friend.stage);talk.textContent=options.residentLabel?.(friend.stage)||'주민과 대화하기';bubble.style.left=`${(friend.resident.x+(position.x<friend.resident.x?90:-90))/world.width*100}%`;bubble.style.top=`${(friend.resident.y-46)/world.height*100}%`;}
     }
   }
   function faceMovement(before,after){const dx=after.x-before.x,dy=after.y-before.y;return Math.abs(dx)>Math.abs(dy)?dx<0?'left':'right':dy<0?'up':'down';}

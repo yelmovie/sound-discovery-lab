@@ -25,6 +25,11 @@
 
 나무 놓기(`place_wood.ogg`)와 복구 멜로디(`restore_chime.ogg`, VCSL)는 그대로 쓴다. 이전 화면 효과음 `click_003`·`open_001`·`select_003`(Kenney), `sparkle_correct`·`pin_pop`·`swipe_whoosh`·`slot_click`(Freesound)은 지금 재생하지 않지만 출처 기록과 함께 저장소에 남겨 두었다. 실험 소리(북·자·고무줄·소리굽쇠)는 바꾸지 않았다.
 
+## 캐릭터 음성 통일 · 2026-11-18
+
+- 캐릭터 대사·개념 영상 해설은 모두 ElevenLabs `eleven_v4`(유료 Creator 요금제, 상업 이용 가능)로 만든 MP3를 쓴다. 캐릭터 한 명에 목소리 하나: 울림새 삐오 = Aria, 책 읽는 친구 = sena, 방해 스피커 = Harry, 주민 5명 = 기존 ElevenLabs 목소리. 실제 사람 음성 복제가 아니다.
+- 아래 2026-11-10의 Qwen3-TTS 29줄은 더 이상 재생하지 않는다(파일은 보존). 줄별 voiceId·generationId·ASR·음량·SHA256은 `docs/VOICE-FILL-20261118.json`.
+
 ## 최신 추가 자료 · 2026-11-10
 
 - 화면 글꼴: NAVER NanumSquareNeo Regular/Bold/ExtraBold WOFF2. 공식 캠페인에서 받은 파일을 이름 변경 없이 배포한다. `media/fonts/NanumSquareNeo-OFL.txt`에 SIL OFL 1.1 전문, `media/fonts/SOURCE.md`에 원본과 공식 도움말 출처를 보존했다.

@@ -71,7 +71,7 @@ export function normalizeMapHits(value,ids) {
  */
 export function mountMapEncounters({
   host,controls=host,stages,progress={},onSave=()=>{},blocked=()=>false,reduced=()=>false,
-  clearStage=()=>null,requiredFoes=0,art,tone=()=>{},palette='#a855f7',reach=90,contact=22,
+  clearStage=()=>null,requiredFoes=0,art,tone=()=>{},voice=()=>{},palette='#a855f7',reach=90,contact=22,
 }) {
   const handles=new AbortController(),{signal}=handles;
   const doc=host.ownerDocument,view=doc.defaultView;
@@ -126,6 +126,7 @@ export function mountMapEncounters({
     lastSpeechLayout=-Infinity;
     foe.saidUntil=time;
     live.textContent=text;
+    voice(text);
   }
   function hit(){
     if(closed||!current||!last||paused())return;
@@ -246,7 +247,7 @@ export function mountMapEncounters({
       if(id!=null&&id!==clearId&&now-clearReady>=1250){
         const stage=stages.find(s=>String(s.id)===String(id));
         if(stage?.lines?.[0]){
-          clearId=id;clearUntil=now+4200;lastSpeechLayout=-Infinity;callback.textContent=`${stage.speaker??stage.name} · “${stage.lines[0]}”`;
+          clearId=id;clearUntil=now+4200;lastSpeechLayout=-Infinity;callback.textContent=`${stage.speaker??stage.name} · “${stage.lines[0]}”`;voice(stage.lines[0]);
         }
       }
       callback.hidden=now>=clearUntil;
