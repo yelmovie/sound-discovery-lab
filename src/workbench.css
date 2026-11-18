@@ -428,3 +428,12 @@ body:has(.single-screen) .admin-arrow{width:48px;min-height:48px;height:48px;fon
 .lesson-saved #coach-hint{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 .lesson-saved .next-marker{width:44px;height:44px;background:#1c7958;color:#fff;font-size:26px}
 .experiment-content.activity-base-challenge:has(> .saved-discovery){grid-template-rows:auto minmax(0,1fr)}
+/* Short landscape screens: the heading hint matches the 16px board text so the board keeps its height. */
+@media(orientation:landscape) and (max-height:450px){.lesson-heading .learning-focus{font-size:16px}}
+/* Short landscape screens keep the board's full height: the finished-activity discovery shows in the heading instead of on the board. */
+.lesson-heading .saved-focus{display:none}
+@media(orientation:landscape) and (max-height:450px){
+ .lesson-heading .saved-focus{display:block}
+ .experiment-content>.saved-discovery{display:none}
+ .experiment-content.activity-base-challenge:has(>.saved-discovery){grid-template-rows:minmax(0,1fr)}
+}

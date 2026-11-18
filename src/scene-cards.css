@@ -70,8 +70,9 @@ button.fork-display:focus-visible{outline:3px solid #0bb8c4;outline-offset:3px}
  .challenge-shell .scene-copy .btn{display:none}
  .challenge-shell .scene-copy .sensor-grip{width:52px;height:52px}
  .challenge-shell .sensor-zones.medium-drop>button{min-height:48px}
- .challenge-shell[data-challenge="solutions"] .context-cards>button{flex-direction:row;min-height:48px;padding:4px 8px}
+ .challenge-shell[data-challenge="solutions"] .context-cards>button{grid-template-columns:auto minmax(0,1fr);grid-template-rows:auto;flex-direction:row;min-height:48px;padding:4px 8px}
  .challenge-shell[data-challenge="solutions"] .context-cards .concept-thumb{max-height:34px;width:auto}
+ .challenge-shell .scene-question{padding:4px 8px}
 }
 
 /* ── Stage-specific interactions (2026-11-17) ── */
