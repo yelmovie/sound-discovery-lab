@@ -23,3 +23,36 @@ body .modal-concept:has(.concept-reward){width:min(860px,70vw,calc(100vw - 40px)
 .modal-concept:has(.concept-reward) .concept-player video{max-height:32dvh}
 .modal-concept:has(.concept-reward) .learning-bridge{margin:10px 0 0;padding:8px 14px;font-size:var(--read-small)}
 @media(min-width:760px){.modal-concept:has(.concept-reward) .concept-player{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);align-items:center}.modal-concept:has(.concept-reward) .concept-player video{grid-row:1;max-height:34dvh}.modal-concept:has(.concept-reward) .concept-transcript{align-self:center}}
+
+/* Full-screen concept film (2026-11-18): the film fills the screen on black (contain, never cover) and its burned-in
+   caption band owns the bottom of the picture. Buttons sit on a slim top bar; the recall panel (badge, words, four
+   scenes, summary, next inquiry) shows on the right only while the film is paused, not started or finished. */
+body dialog.modal-concept{position:fixed;inset:0;width:100dvw!important;height:100dvh;max-width:none;max-height:none!important;margin:0;padding:0;border:0;border-radius:0;background:#000;color:#fff;overflow:hidden;display:block;box-shadow:none}
+body dialog.modal-concept::backdrop{background:#000}
+body dialog.modal-concept .modal-body{position:static;padding:0!important;overflow:visible}
+body dialog.modal-concept .concept-player{display:block!important}
+body dialog.modal-concept .concept-player video{position:absolute;inset:0;z-index:1;width:100%!important;height:100%;max-width:none;max-height:none!important;margin:0;aspect-ratio:auto;border-radius:0!important;background:#000;object-fit:contain}
+body dialog.modal-concept .modal-heading{position:absolute;top:0;left:0;right:0;z-index:3;min-height:68px;padding:8px 14px 8px 18px!important;border:0;background:linear-gradient(#000000c4,#0000);color:#fff;pointer-events:none}
+body dialog.modal-concept .modal-heading h2{color:#fff;font-size:clamp(20px,2vw,28px);text-shadow:0 2px 6px #000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;max-width:calc(100% - 470px)}
+body dialog.modal-concept .modal-heading .icon-btn,body dialog.modal-concept .modal-footer{pointer-events:auto}
+body dialog.modal-concept .modal-heading .icon-btn{margin-left:auto}
+body dialog.modal-concept .modal-footer{position:absolute;top:8px;right:80px;z-index:4;padding:0!important;border:0;background:none;gap:8px;flex-wrap:nowrap}
+body dialog.modal-concept .modal-footer .btn{flex:none;min-height:52px;font-size:clamp(18px,1.5vw,22px)}
+body dialog.modal-concept .concept-panel{position:absolute;z-index:2;top:76px;right:12px;width:min(460px,44vw);max-height:calc(100% - 76px - 84px);overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:10px;padding:14px;border-radius:18px;background:#fffdf3f2;color:var(--ink);box-shadow:0 10px 40px #0008}
+body dialog.modal-concept .concept-panel>*{margin:0!important}
+body dialog.modal-concept .concept-panel .concept-cues{grid-template-columns:1fr;gap:5px}
+body dialog.modal-concept .concept-panel .concept-cues>span{font-size:18px}
+/* While the film really plays: titles and panel step aside (panel text stays for screen readers). */
+body dialog.modal-concept.concept-playing .modal-heading{background:none}
+body dialog.modal-concept.concept-playing .modal-heading h2{position:absolute!important;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+body dialog.modal-concept.concept-playing .concept-panel{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0;box-shadow:none}
+body dialog.modal-concept.concept-playing .modal-footer .btn,body dialog.modal-concept.concept-playing .modal-heading .icon-btn{opacity:.82}
+@media(max-width:900px),(max-height:560px){
+ body dialog.modal-concept .modal-heading{min-height:60px;padding:6px 8px 6px 12px!important}
+ body dialog.modal-concept .modal-heading h2{font-size:20px;max-width:calc(100% - 400px)}
+ body dialog.modal-concept .modal-footer{top:6px;right:68px;gap:6px}
+ body dialog.modal-concept .modal-footer .btn{min-height:48px;padding:6px 12px;font-size:18px}
+ body dialog.modal-concept .modal-heading .icon-btn{width:48px;height:48px;min-width:48px}
+ body dialog.modal-concept .concept-panel{top:62px;right:8px;width:min(400px,46vw);max-height:calc(100% - 62px - 66px);padding:10px;gap:8px}
+ body dialog.modal-concept .concept-panel .concept-reward{padding:0}
+}

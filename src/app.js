@@ -385,6 +385,14 @@ function showConcept(stage,next=null,reward=false){
  const footer=next?button(`${next==='final'?'마지막 코어 복구로':next.startsWith('lesson/')?'다음 시설로':'복구한 마을로'} ${icon('arrow')}`,'goto',`data-route="${next}"`,'btn primary'):button(route==='result'?'인증서로 돌아가기':'활동으로 돌아가기','close','','btn primary');
  openModal(`${reward?`<div class="concept-reward">${art(badgeArt[stage],'','badge-art reward-badge')}<span>${achievements[stage].name} 배지 획득!</span><b>${stages[stage].restored}</b></div>`:''}${conceptView(stage,{compact:reward})}${reward?`<p class="learning-bridge">${emphasize(stages[stage].nextInquiry,conceptTerms[stage])}</p>`:''}`,`${reward?'시설 복구! · ':''}${c.title}`,`${button('처음부터 보기','replay-concept','','btn quiet')}${footer}`,'concept');
  const video=modalRoot.querySelector('video');video.muted=state.settings.muted||!state.settings.sfx;video.volume=c.volume??1;
+ // Full-screen film (2026-11-18): the sentences are burned into the picture, so while it really plays the side panel
+ // and native controls step aside (panel text stays for screen readers); a tap pauses and brings them back.
+ const dialog=modalRoot.querySelector('dialog'),panel=modalRoot.querySelector('.concept-panel');
+ panel.prepend(...modalRoot.querySelectorAll('.concept-reward'));panel.append(...modalRoot.querySelectorAll('.learning-bridge'));
+ const playing=on=>{dialog.classList.toggle('concept-playing',on);video.controls=!on;};
+ video.addEventListener('playing',()=>playing(true));['pause','ended','error'].forEach(t=>video.addEventListener(t,()=>playing(false)));
+ video.addEventListener('click',()=>{if(!video.controls&&!video.paused)video.pause();});
+ video.addEventListener('keydown',e=>{if(!video.controls&&!video.paused&&(e.key===' '||e.key==='Enter')){e.preventDefault();video.pause();}});
  // Pio reads each caption cue as it appears; the film itself keeps its own sound track.
  let spokenCue=-1;const bridge=()=>{if(reward)voice.say(`bridge-${stage+1}`,300);};
  video.addEventListener('timeupdate',()=>{const active=Math.min(3,Math.floor(video.currentTime/4));modalRoot.querySelectorAll('[data-cue]').forEach(el=>el.classList.toggle('active',Number(el.dataset.cue)===active));if(!video.paused&&active!==spokenCue){spokenCue=active;voice.say(`concept-${c.id}-${active+1}`);}});
