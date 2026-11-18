@@ -4,6 +4,7 @@
 순서: 카드가 열리면 `#app`이 inert → 지도·악당·방향키·공격 키가 멈추고 파이널(3타+2.92초)은 기다린다. 카드가 음성을 기다리는 동안에도 파이널이 먼저 열리지 않도록, 5장째 카드가 대기 중이면 말풍선이 사라지는 2.75초부터 악당 모듈의 `blocked()`가 참이 된다(`map.js`의 `encounterHold` 옵션, `map-encounters.js`는 그대로).
 파일: `src/map-reward-cards.js`(연결), `src/reward-cards.js`·`reward-cards.css`(공통 모듈 `_shared/reward-cards` 그대로 복사, 고치지 않는다), 그림 `image/generated/reward-cards/`(원본 PNG는 `_scratch/reward-cards-20261118/gen/11`), 효과음 `media/audio/sfx/`. 빌드 복사·오프라인 미리 저장에 포함(자산 280개, 미리 저장 94개).
 검증: check·테스트 146·build, 헤드리스 Chrome으로 빌드본에서 83항목(`.tmp/reward-cards/verify.mjs`: 실제 공격 단추로 1·2·3타 → 음성 뒤 카드 → 칸, 새로고침 유지, 5/5 완성 → 파이널, 팝업 중 대기, 지도 이탈, 소리 끔, 움직임 줄이기, 1024×768 헤더). 로컬 서버(`scripts/server.mjs`)는 `/assets/`를 막아 파이널 영상이 로컬에서는 열리지 않는다(운영에서는 열림).
+배포: 커밋 `bcd8464`를 2026-11-18 22:14에 Cloudflare Worker `sound-discovery-lab`(버전 e62830b6-597f-4d85-85d1-beef1d1d43ec)로 올렸다(`_scratch/deploy-20261118/deploy.sh 11 "11 sound" worker-cfg sound-discovery-lab`). 운영 주소 https://sound-discovery-lab.yelsam.workers.dev 에서 카드 그림·썸네일·효과음 2개·`src/app.js`·`map-reward-cards.js`·`reward-cards.js`·`app.css`·첫 화면의 SHA-256이 빌드와 같고, 같은 검사 스크립트의 격퇴→카드→칸·5/5→파이널 영상 56항목이 운영 주소에서도 통과했다.
 남은 확인: 실제 스피커로 카드 효과음 크기(게인 0.2~0.3) 청취, 실물 태블릿 터치.
 ---
 # Suno 배경음 2곡 적용 (2026-11-17 밤)
