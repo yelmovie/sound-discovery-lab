@@ -55,7 +55,7 @@ Pixabay 음원은 포함하지 않았다. CC0 공개 녹음과 가공 음원에�
 | 기존 ChatGPT 생성 이미지 11개 | 장소 배경·캐릭터 참고 | 사용자가 제공한 프로젝트 이미지, 원본 이동 기록은 ASSET_INDEX·asset-move-manifest 참조 | 제공 자료의 생성 당시 계정·요금제·상업 이용 근거는 별도 문서 미제공 |
 | 내장 image_gen 생성 PNG 13개 | 지도·보행·실험 소품 | 2026-10-22 생성. 두 manifest에 서비스·프롬프트·원본 경로 기록, 소품은 파일 검증 값 포함 | 생성 당시 서비스 계정·요금제에 대한 별도 계약 증빙은 이 저장소에 없음 |
 | Web Audio·CC0 녹음 | 실험음·효과음 | 대체음은 합성, 실험음과 일부 효과음은 위 CC0 녹음 | 파일별 출처·가공 및 라이선스 보존 |
-| 배경음 2곡 (Suno 생성) | media/audio/bgm/main-theme.mp3 (첫 탭부터 홈·지도·활동 반복, 실험 소리 중엔 멈춤), media/audio/bgm/final-theme.mp3 (결과·인증서 1회, 지도 파이널 영상 대화상자 동안) | 2026-11-17 사용자가 Suno로 생성해 제공. 프롬프트는 _shared/music-prompts-10-16.html | 원본은 references/suno 보관(git 제외). 상업 이용 근거(생성 당시 Suno 유료 요금제) 확인 필요 |
+| 배경음 2곡 (Suno 생성) | media/audio/bgm/main-theme.mp3 (첫 탭부터 홈·지도·활동 반복, 실험 소리 중엔 멈춤), media/audio/bgm/final-theme.mp3 (결과·인증서 1회, 지도 파이널 영상 대화상자 동안) | 2026-11-17 사용자가 Suno로 생성해 제공. 프롬프트는 _shared/music-prompts-10-16.html | 원본은 references/suno 보관(git 제외). 상업 이용 근거: 생성 당시 Suno Premier 유료 요금제(2026-11-18 사용자 확인) |
 | SVG·Canvas·CSS | 기능 아이콘·파형·지도 효과 | 프로젝트 코드로 작성, 외부 아이콘 팩 없음 | 외부 아이콘 라이선스 대상 없음 |
 | 시스템 한글 글꼴 | 화면 텍스트 | 기기의 설치 글꼴을 사용, 폰트 파일 배포 없음 | 외부 폰트 파일 라이선스 대상 없음 |
 
