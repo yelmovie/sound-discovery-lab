@@ -120,6 +120,7 @@ export const voiceLines=Object.fromEntries([
  ["hint-20-3","전체 듣기를 다시 눌러 봐. 소리마다 주민 요청과 맞는지 비교하고, 어긋난 곳을 다시 조절해."],
  ["villain-1-1","떨림을 멈추면 소리도 멈추는 걸 알아냈어? 내 우퍼가 조용해지잖아!"],
  ["villain-1-2","둥둥! 그래도 내 배는 아직 떨린다!"],
+ ["villain-1-3","둥! 우퍼 막이 떨려!"],
  ["villain-1-4","쉿! 떨림을 잡으니 조용해지잖아!"],
  ["villain-1-5","쳇, 우퍼 전원은 꺼 줄게!"],
  ["villain-2-1","같은 북으로 큰 소리와 작은 소리를 만들었어? 내 볼륨 눈금은 숨겼는데!"],
@@ -139,6 +140,8 @@ export const voiceLines=Object.fromEntries([
  ["villain-4-5","흥, 전달 네트워크는 돌려줄게!"],
  ["villain-5-1","독서 시간에 북소리를 줄였어? 내 소음 공연은 어디서 하라고!"],
  ["villain-5-2","좋아, 앙코르는 아무도 없는 연습실이다!"],
+ ["villain-5-3","앗, 북 아래 패드가 떨림을 잡았어!"],
+ ["villain-5-4","소리 대신 책 넘기는 소리만 나잖아!"],
  ["villain-5-5","쉿! 여긴 도서관이니까 조용히 퇴장할게!"]
 ].map(([id,text])=>[id,{text,src:`${dir}el-${id}.mp3`}]));
 export const voiceAssets=Object.values(voiceLines).map(line=>line.src.slice(1));
