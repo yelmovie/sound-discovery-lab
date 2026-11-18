@@ -24,13 +24,18 @@ export const interfaceSounds={
  // Map villains (noise speakers): a drum launches a sound wave, bells take the hits, the gong-like clank ends the fight.
  swing:{src:sfx('su-drum-small-01'),gain:.22},hit1:{src:sfx('su-battle-hit-02'),gain:.34,max:.75},hit2:{src:sfx('su-battle-hit-02'),gain:.34,rate:1.19,max:.75},
  finish:{src:sfx('su-battle-hit-01'),gain:.3},exit:{src:sfx('su-battle-exit-01'),gain:.2},appear:{src:sfx('su-speaker-on-01'),gain:.35},
- bump:{src:sfx('su-muffled-01'),gain:.2},victory:{src:sfx('victory-jingle-02'),gain:.2}
+ bump:{src:sfx('su-muffled-01'),gain:.2},victory:{src:sfx('victory-jingle-02'),gain:.2},
+ // Achievement cards (map-reward-cards.js): fly in and out, reveal (the two rarest use the longer jingle), land in a slot, full set.
+ 'card-whoosh':{src:sfx('wind-whoosh-03'),gain:.3},'card-reveal':{src:sfx('reward-01'),gain:.24},'card-epic':{src:sfx('reward-03'),gain:.22},
+ 'card-slot':{src:sfx('pickup-01'),gain:.3},'card-complete':{src:sfx('victory-jingle-01'),gain:.2}
 };
 // Suno background music supplied by the user on 2026-11-17 (originals in references/suno).
 export const backgroundMusic={main:'media/audio/bgm/main-theme.mp3',finale:'media/audio/bgm/final-theme.mp3'};
 // Pictures of the 3D run stage (docs/RUN-STAGE-3D-PLAN-20261117.md). Words and marks on them are drawn by code.
 export const runStageAssets=['paving', 'drum-top', 'water', 'skyline', 'explorer-jump', 'lily', 'island', 'balloon', 'gate-arch', 'gate-door', 'workshop-floor', 'wood', 'drum-side'].map(name=>`image/generated/run-stage/${name}.webp`);
-export const assets = [...new Set(['media/fonts/NanumSquareNeoTTF-bRg.woff2','media/fonts/NanumSquareNeoTTF-cBd.woff2','media/fonts/NanumSquareNeoTTF-dEb.woff2','media/fonts/NanumSquareNeo-OFL.txt',...voiceAssets,...recordedAudioAssets, ...conceptArtAssets,...backgrounds, characters, titleLogo, titleBackground, ...Object.values(props), ...villageAssets, ...runStageAssets, 'image/generated/pio-guide.svg','image/generated/dialogue/pio.webp',...conceptAssets,...Object.values(interfaceSounds).map(c=>c.src),'media/audio/sfx/sources.json',...Object.values(backgroundMusic),'media/audio/sources-20261117.json','media/audio/License.txt','media/audio/sources.json','media/concepts/manifest.json'])];
+// Achievement cards of the five map villains, in map order: card art (640×960) then its slot thumbnail (96×144).
+export const rewardCardAssets=[0,1,2,3,4].flatMap(n=>['card','thumb'].map(kind=>`image/generated/reward-cards/${kind}-${n+1}-${n}.webp`));
+export const assets = [...new Set(['media/fonts/NanumSquareNeoTTF-bRg.woff2','media/fonts/NanumSquareNeoTTF-cBd.woff2','media/fonts/NanumSquareNeoTTF-dEb.woff2','media/fonts/NanumSquareNeo-OFL.txt',...voiceAssets,...recordedAudioAssets, ...conceptArtAssets,...backgrounds, characters, titleLogo, titleBackground, ...Object.values(props), ...villageAssets, ...runStageAssets, ...rewardCardAssets, 'image/generated/pio-guide.svg','image/generated/dialogue/pio.webp',...conceptAssets,...Object.values(interfaceSounds).map(c=>c.src),'media/audio/sfx/sources.json',...Object.values(backgroundMusic),'media/audio/sources-20261117.json','media/audio/License.txt','media/audio/sources.json','media/concepts/manifest.json'])];
 export { APP_VERSION } from './version.js';
 // Curriculum link per facility. Teacher review is still pending, so needsReview stays true until a reviewer signs off.
 export const CURRICULUM_REVIEW = Object.freeze({needsReview:true, source:'2022 개정 과학과 교육과정 3~4학년군 (7) 소리의 성질', reviewer:null, reviewedAt:null});

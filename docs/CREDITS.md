@@ -25,6 +25,22 @@
 
 나무 놓기(`place_wood.ogg`)와 복구 멜로디(`restore_chime.ogg`, VCSL)는 그대로 쓴다. 이전 화면 효과음 `click_003`·`open_001`·`select_003`(Kenney), `sparkle_correct`·`pin_pop`·`swipe_whoosh`·`slot_click`(Freesound)은 지금 재생하지 않지만 출처 기록과 함께 저장소에 남겨 두었다. 실험 소리(북·자·고무줄·소리굽쇠)는 바꾸지 않았다.
 
+## 성취 카드 (지도 악당 격퇴 보상) · 2026-11-18
+
+카드 그림 5장(`image/generated/reward-cards/card-*.webp` 640×960, `thumb-*.webp` 96×144)은 기존 탐험가·삐오 캐릭터 시트와 시설 배경을 참고로 GPT 이미지(Codex 내장 이미지 도구)로 생성해 WebP로 줄였다. 효과음 5개는 과학34 공용 효과음 라이브러리(`_shared/sfx-library-20261117`, 출처 페이지에서 CC0 재확인)에서 `media/audio/sfx/`에 그대로 복사했다(앞뒤 무음 제거·음량 정규화·모노 MP3, 피치·속도 변경 없음). 파일별 가공·SHA256은 `media/audio/sfx/sources.json`. 다른 화면 효과음과 같은 경로로 재생해 전체 음소거·효과음 끄기·탭 숨김을 따르고, 캐릭터 음성이나 실험 소리가 나는 동안에는 울리지 않는다(카드는 악당의 마지막 말이 끝난 뒤에 나온다).
+
+| 쓰는 곳 | 파일 | 원본 (모두 CC0) |
+|---|---|---|
+| 카드가 날아올 때·보관함으로 들어갈 때 | wind-whoosh-03 | qubodup, Slow Swosh 40 (freesound 60027) |
+| 카드 공개(별 1~3개) | reward-01 | ZenithInfinitiveStudios, Fantasy_ui_Button_3.wav (376745) |
+| 카드 공개(별 4~5개) | reward-03 | CogFireStudios, Achievement Happy Beeps Jingle (619838) |
+| 카드가 보관함 칸에 들어갈 때 | pickup-01 | DeltaCode, item-pickup-v1.wav (678384) |
+| 카드 5장 완성 축하 | victory-jingle-01 | el_boss, Game Success Fanfare Short (677858) |
+
+마지막 악당 격퇴 때 울리던 `victory-jingle-02`는 바로 뒤에 오는 카드 소리와 겹치지 않도록 퇴장음(`su-battle-exit-01`)으로 바꿨다. 축하는 카드 5장 완성 징글이 맡고, `victory-jingle-02` 파일과 출처 기록은 그대로 둔다.
+
+카드 연출 코드 `src/reward-cards.js`·`reward-cards.css`는 과학34 공통 모듈(`_shared/reward-cards`)을 그대로 복사한 것이다.
+
 ## 캐릭터 음성 통일 · 2026-11-18
 
 - 캐릭터 대사·개념 영상 해설은 모두 ElevenLabs `eleven_v4`(유료 Creator 요금제, 상업 이용 가능)로 만든 MP3를 쓴다. 캐릭터 한 명에 목소리 하나: 울림새 삐오 = Aria, 책 읽는 친구 = sena, 방해 스피커 = Harry, 주민 5명 = 기존 ElevenLabs 목소리. 실제 사람 음성 복제가 아니다.

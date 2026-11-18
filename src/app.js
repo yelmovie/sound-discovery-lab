@@ -6,6 +6,7 @@ import { transferSound } from './samples.js';
 import { backgrounds, titleLogo, stages, lessons, instruments, lengths, media, transferCases, diagnosisFields, solutions, finalTasks, props, achievements, legacyIndex, LESSON_COUNT, stageLessons } from './data.js';
 import { STORAGE_KEY, freshState, readState, createSaveSession, evidenceCount, stageDone, canLesson, canRoute, lessonFromRoute, recordEvidence, checkLesson, checkFinal, nextDiagnosisField } from './model.js';
 import { SoundEngine } from './audio.js';
+import { connectRewardCards, rewardSlotsHtml, awardRewardCards, rewardCardHold } from './map-reward-cards.js';
 import { createVoice, voiceFor, voiceCue, voiceLines } from './voice.js';
 import { settingsContent as copy } from './settings-content.js';
 import { APP_VERSION } from './version.js';
@@ -27,6 +28,9 @@ let advanceTimer=null,inputLockedUntil=0;
 const hintLevels={};
 const sound=new SoundEngine();configureSound();
 document.addEventListener('map-finale',e=>sound.setMapFinale(e.detail));
+// Achievement cards use the effect voice (mute, effects switch, one cue at a time) and wait for voices and experiment sounds.
+// The last villain's hit always earns a card whose full-set jingle is the celebration, so the map plays its plain exit cue there.
+connectRewardCards({sound:name=>void sound.effect(`card-${name}`),masked:()=>sound.masked,onMap:()=>route==='map',hits:()=>state.mapHits});
 const voice=createVoice({enabled:()=>!state.settings.muted&&state.settings.sfx,quiet:value=>sound.setQuiet(value),onSpeaking:id=>{
  const dialog=modalRoot.querySelector('dialog.modal-npc');
  if(dialog)dialog.dataset.speaking=String(Boolean(id&&dialog.dataset.voiceLines?.split(',').includes(id)));
@@ -134,7 +138,7 @@ function strikeAndCapture(w,force){
 function cancelAdvance(){clearTimeout(advanceTimer);advanceTimer=null;}
 function portrait(who='bird'){return who==='bird'?'<img class="portrait pio" src="/image/generated/concepts/pio-fly.webp" alt="안경 쓴 파란 울림새 삐오" draggable="false">':`<div class="portrait ${who}" role="img" aria-label="${who==='girl'?'기록 파트너':'장비 파트너'}"></div>`;}
 function rings(){return `<div class="rings badge-rings" aria-label="복구 배지 ${stages.filter((_,i)=>stageDone(state,i)).length}개">${stages.map((s,i)=>`<span class="ring badge-ring ${stageDone(state,i)?'lit':''}" style="--ring:${s.color}" title="${s.name}: ${stageDone(state,i)?'복구 완료':'복구 전'}">${art(badgeArt[i],`${achievements[i].name} 배지${stageDone(state,i)?'':', 아직 잠김'}`,'badge-art')}</span>`).join('')}</div>`;}
-function header(){const soundOff=state.settings.muted||!state.settings.bgm&&!state.settings.sfx;return `<header class="topbar game-hud"><nav class="nav-left" aria-label="화면 이동">${button(icon('home'),'home','aria-label="홈"','icon-btn')}${button(icon('back'),'back',`aria-label="이전" ${route==='home'&&!trail.length?'disabled':''}`,'icon-btn')}</nav><nav class="nav-right" aria-label="소리 및 설정">${button(icon(soundOff?'mute':'volume'),'mute',`aria-label="${soundOff?'소리 켜기':'소리 끄기'}" aria-pressed="${soundOff}"`,'icon-btn')}${button(icon('settings'),'settings','aria-label="설정"','icon-btn')}</nav></header>${state.settings.admin&&(route==='home'||route==='map')?'<div class="admin-banner">교사용 시연 · 학생 기록과 따로 진행 중</div>':''}`;}
+function header(){const soundOff=state.settings.muted||!state.settings.bgm&&!state.settings.sfx;return `<header class="topbar game-hud"><nav class="nav-left" aria-label="화면 이동">${button(icon('home'),'home','aria-label="홈"','icon-btn')}${button(icon('back'),'back',`aria-label="이전" ${route==='home'&&!trail.length?'disabled':''}`,'icon-btn')}</nav><nav class="nav-right" aria-label="소리 및 설정">${route==='map'?rewardSlotsHtml(state.mapHits):''}${button(icon(soundOff?'mute':'volume'),'mute',`aria-label="${soundOff?'소리 켜기':'소리 끄기'}" aria-pressed="${soundOff}"`,'icon-btn')}${button(icon('settings'),'settings','aria-label="설정"','icon-btn')}</nav></header>${state.settings.admin&&(route==='home'||route==='map')?'<div class="admin-banner">교사용 시연 · 학생 기록과 따로 진행 중</div>':''}`;}
 function home(){const hasWork=state.resumeLesson!==null||Object.keys(state.work).length>0;return `<main class="title-screen"><div class="title-copy"><span class="title-eyebrow">${icon('wave')} 초등 과학 · 소리의 성질</span><h1 class="title-logo"><img src="/${titleLogo}" fetchpriority="high" alt="울림도시 대작전" draggable="false"></h1><p class="title-tagline">도시의 소리 코어가 멈췄어. 직접 소리를 만들고 증거를 모아<br><b>울림도시를 다시 깨워 줘!</b></p><div class="title-actions">${button(`${hasWork?'탐험 이어 하기':'탐험 시작하기'} ${icon('arrow')}`,'start','','btn primary title-cta')}${button(`${icon('book')} 도시 이야기 보기`,'story','','btn title-story')}</div><span class="title-sub">증거 20개 → 복구 배지 5개 → 소리 탐험가 인증서</span><p class="title-note">${icon('volume')} 소리가 나오는 활동이야. 기기 음량을 편안하게 맞춰 줘.</p></div><div class="title-guide" aria-hidden="true"><span class="title-bubble">같이 도시를 깨우자!</span>${portrait()}</div></main>`;}
 function topic(name){return (name.charCodeAt(name.length-1)-0xac00)%28?'은':'는';}
 function towardName(name){const code=name.charCodeAt(name.length-1)-0xac00,batchim=code%28;return `${name}${batchim&&batchim!==8?'으로':'로'}`;}
@@ -344,7 +348,7 @@ function openMap(){
   status.hidden=true;
   try{
    const clearStage=dialogueStage;dialogueStage=null;
-   map=world.mountMap(canvas,state,enterMapStage,{clearStage,onMapHit:patch=>{state.mapHits={...state.mapHits,...patch};save();},encounterTone:(kind,hits)=>void sound.effect(kind==='hit'?`hit${hits}`:kind==='contact'?'bump':kind),onView:syncMapView,onTravel:syncMapTravel,onLoad:()=>{if(current()){mapFailed=false;status.hidden=true;}},onError:()=>fail(),onStep:()=>sound.tone({frequency:170,level:.5,duration:.06,kind:'ui'}),residentLine:n=>stages[n].restored,onResidentNear:n=>voice.say(`restored-${n+1}`,300),villainVoice:text=>{const id=voiceFor(text);if(id)voice.say(id);},residentLabel:n=>stages[n].name+' 주민과 대화하기',onTalk:residentDialogue});
+   map=world.mountMap(canvas,state,enterMapStage,{clearStage,onMapHit:patch=>{const before=state.mapHits;state.mapHits={...before,...patch};save();awardRewardCards(before,state.mapHits);},encounterHold:rewardCardHold,encounterTone:(kind,hits)=>void sound.effect(kind==='hit'?`hit${hits}`:kind==='contact'?'bump':kind==='victory'?'exit':kind),onView:syncMapView,onTravel:syncMapTravel,onLoad:()=>{if(current()){mapFailed=false;status.hidden=true;}},onError:()=>fail(),onStep:()=>sound.tone({frequency:170,level:.5,duration:.06,kind:'ui'}),residentLine:n=>stages[n].restored,onResidentNear:n=>voice.say(`restored-${n+1}`,300),villainVoice:text=>{const id=voiceFor(text);if(id)voice.say(id);},residentLabel:n=>stages[n].name+' 주민과 대화하기',onTalk:residentDialogue});
    const events=new AbortController(),mounted=map,destroy=map.destroy;
    controls.bindDirectionPad(page,'.map-dpad [data-direction]',b=>b.dataset.direction,{signal:events.signal,blocked:()=>document.hidden||!!document.querySelector('dialog[open]'),press:d=>mounted.direction(d,true),release:d=>mounted.direction(d,false),tap:d=>mounted.nudge(d)});
    map.destroy=()=>{events.abort();destroy();};

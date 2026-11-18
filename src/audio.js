@@ -143,6 +143,8 @@ export class SoundEngine {
       if(cue.max&&Number.isFinite(buffer?.duration)&&buffer.duration/rate>cue.max){gain.gain.setValueAtTime(cue.gain??.16,start+cue.max-.12);gain.gain.linearRampToValueAtTime(0,start+cue.max);source.stop(start+cue.max+.02);}
     }catch{if(generation===this.generation)this.tone({frequency:name==='success'?660:480,kind:'ui',level:.4,duration:.12});}
   }
+  // A voice line or an experiment sound is playing: effects stay out of it (dropped, or skipped when polite).
+  get masked(){return this.quiet||Date.now()<this.holdUntil;}
   fadeEffect(){
     const entry=this.effectNode;if(!entry)return;this.effectNode=null;
     try{const t=this.context.currentTime;entry.gain.gain.setValueAtTime(entry.gain.gain.value,t);entry.gain.gain.linearRampToValueAtTime(0,t+.025);entry.source.stop(t+.03);}catch{this.disconnect(entry);}

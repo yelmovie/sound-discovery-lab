@@ -115,7 +115,7 @@ export function mountMap(canvas,state,onArrive,options={}){
   const encounters=mountMapEncounters({requiredFoes:5,host:viewport,controls:viewport.closest('.map-page')?.querySelector('.map-next-stack')??viewport,clearStage:()=>options.clearStage,stages:state.settings?.admin?[]:mapVillainStages.filter((_,i)=>done[i]),
    progress:state.mapHits,onSave:options.onMapHit,art:{left:new URL('image/generated/map-villain-poses-left.webp',document.baseURI).href,frames:6},
    palette:'#c9a3ff',reach:122,contact:28,tone:options.encounterTone,voice:options.villainVoice,
-   blocked:()=>!ready||!active||paused||view!=='follow'||destination!==null||dragged,
+   blocked:()=>!ready||!active||paused||view!=='follow'||destination!==null||dragged||Boolean(options.encounterHold?.()),
    reduced:()=>reduced.matches});
   function updateEncounters(){
    const sx=worldWidth*zoom/world.width,sy=worldHeight*zoom/world.height;
