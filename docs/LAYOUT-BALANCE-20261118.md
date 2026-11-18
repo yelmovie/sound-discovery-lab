@@ -52,7 +52,8 @@
 
 ## 검증
 
-- `npm run check` 통과, `npm test` 148/148 통과, `npm run build` (아래 배포 기록).
+- `npm run check` 통과, `npm test` 148/148 통과, `npm run build` 통과(`dist · 284 assets · 94 precached`).
+- 배포: 커밋 `9cc27aa` → `deploy.sh 11 … worker-cfg sound-discovery-lab` → Workers 버전 `9defa269`. 루트·`app.css`·`layout-balance.css`·`sw.js` 해시 MATCH, 운영 주소에서 마지막 미션 면적을 다시 재 로컬과 같은 값(73.6·72.9·77.3%) 확인.
 - 세 크기 재측정 수치는 위 표. iframe 콘솔 오류 0.
 - 스크린샷: `.tmp/layout-balance-20261118/before|after/final-1920x1080.png`, `result-1920x1080.png`.
 - Playwright 기반 `scripts/qa-*.mjs`는 헤드리스 Chrome 실행 불가로 NOT TESTED.

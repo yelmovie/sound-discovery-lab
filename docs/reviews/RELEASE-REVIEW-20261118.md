@@ -152,7 +152,14 @@ D1 FAIL은 11-11 제한망 실측(11.37~19.57초) 인용이다. 이번 변경은
 
 ## G. 배포
 
-배포 후 채운다 — 아래 「배포 기록」.
+| # | 판정 | 근거 |
+|---|---|---|
+| G 배포 경로 | PASS (확인됨) | `_scratch/deploy-20261118/deploy.sh 11 "11 sound" worker-cfg sound-discovery-lab`, `cfg/11.json`이 직전 배포 기록(`11-worker.json`)과 같음 |
+| G 커밋·push | PASS (확인됨) | `9cc27aa`를 origin/main에 push(이번 파일 4개만), 강제 push 없음 |
+| G 운영 반영 | PASS (확인됨) | Workers 버전 `9defa269-e413-42e4-beea-3fb3d56f9a78`, 새 자산 4개(index·app.css·layout-balance.css·sw.js) |
+| G 파일 대조 | PASS (확인됨) | 루트 `/`·`src/app.css`·`src/layout-balance.css`·`sw.js` 해시 MATCH. `/index.html`은 307로 `/`에 넘어가 빈 응답이 나오는 것이 정상(`cmp.sh` index MATCH) |
+| G smoke | PASS (확인됨) | 운영 주소에서 마지막 미션을 1280·1024·1920으로 다시 재서 73.6·72.9·77.3%, 스크롤 없음, 「이전 원리」 숨김. 운영 첫 화면 load 2.31초(이 맥 회선, 서비스워커 재방문), 요청 28개, 전송 약 1.55MB |
+| G 그 밖 | PASS/N/A (인용) | OG·favicon·SPA·롤백 대상은 11-11과 같음 |
 
 ## 오탐·제외
 
