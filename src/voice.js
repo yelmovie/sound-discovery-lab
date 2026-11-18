@@ -35,6 +35,7 @@ export const voiceLines=Object.fromEntries([
  ['ending-2','소리의 떨림, 크기, 높낮이, 전달을 탐구하고 함께 사는 친구들을 배려하는 방법을 발견했어.'],
  // 2026-11-18 ElevenLabs fill (docs/VOICE-FILL-20261118.json): concept-film cues, learning bridges, coach hints, map villain.
  ["concept-vibration-1","물체를 울리면 떨림이 시작돼."],
+ ["concept-vibration-2","떨리는 동안 소리가 나."],
  ["concept-vibration-3","손으로 잡으면 떨림이 멈춰."],
  ["concept-vibration-4","떨림이 멈추면 소리도 멈춰."],
  ["concept-volume-1","같은 북을 약하게 쳐 봐."],

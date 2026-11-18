@@ -357,6 +357,27 @@
    "file": "media/audio/voices/el-concept-vibration-1.mp3"
   },
   {
+   "key": "concept-vibration-2",
+   "speaker": "울림새 삐오",
+   "voiceId": "O2KReOFLpoR65nz6C9Se",
+   "voiceName": "Aria – Bright & Youthful Korean",
+   "model": "eleven_v4",
+   "flowId": "WkoC0iB8y3mrX1kUCg5F",
+   "generationId": "6OBEvpCq6RVKcA8dOQ8N",
+   "text": "떨리는 동안 소리가 나.",
+   "prompt": "[bright] 떨리는 동안 소리가 나.",
+   "asr": "널리는 동안 소리가 나.",
+   "match": 0.889,
+   "end": 0.889,
+   "lufs": -16.45,
+   "peakDbtp": -2.59,
+   "duration": 2.48,
+   "sha256": "ab9b1194516d451c13d54c7fb02be078a1acde980cd6cd7a59a6ce14b0355357",
+   "file": "media/audio/voices/el-concept-vibration-2.mp3",
+   "userCheck": "사용자 청취 확인(2026-11-18)",
+   "note": "받아쓰기가 \"떨리는\"을 \"널리는\"으로 적어 처음엔 미적용(공식 API 테이크 requestId w0I3AStf6PVqzKeIC60q). 사용자가 직접 듣고 괜찮다고 해서 재생성 없이 vf.py norm으로 정리해 연결함."
+  },
+  {
    "key": "concept-vibration-3",
    "speaker": "울림새 삐오",
    "voiceId": "O2KReOFLpoR65nz6C9Se",
@@ -944,7 +965,8 @@
    "duration": 3.84,
    "sha256": "edb12ae4fdb59c9e792cc0e9e5e725e0d7a61a4d6094d2007f99fb8640eb1c0b",
    "file": "media/audio/voices/el-hint-3-2.mp3",
-   "note": "ASR가 \"세기\"를 동음 \"색이\"로 받아씀(ㅔ/ㅐ 동일 발음) — 통과로 판단"
+   "note": "ASR가 \"세기\"를 동음 \"색이\"로 받아씀(ㅔ/ㅐ 동일 발음) — 통과로 판단",
+   "userCheck": "사용자 청취 확인(2026-11-18)"
   },
   {
    "key": "hint-3-3",
@@ -1005,7 +1027,8 @@
    "sha256": "4cad5798ba996b02bd73c2516167c06cd404c14e80747cd5d030346868a8880e",
    "file": "media/audio/voices/el-hint-4-2.mp3",
    "note": "ASR가 \"세기\"를 동음 \"색이\"로 받아씀(ㅔ/ㅐ 동일 발음) — 통과로 판단",
-   "spokenAs": "에이와 비의 친 세기와 소리 그림도 나란히 봐."
+   "spokenAs": "에이와 비의 친 세기와 소리 그림도 나란히 봐.",
+   "userCheck": "사용자 청취 확인(2026-11-18)"
   },
   {
    "key": "hint-4-3",
@@ -2419,21 +2442,5 @@
    "note": "첫 테이크(Creative Flow) 받아쓰기 탈락 → 공식 API로 1회 재생성해 통과"
   }
  ],
- "notApplied": [
-  {
-   "key": "concept-vibration-2",
-   "speaker": "울림새 삐오",
-   "voiceId": "O2KReOFLpoR65nz6C9Se",
-   "voiceName": "Aria – Bright & Youthful Korean",
-   "model": "eleven_v4",
-   "flowId": "WkoC0iB8y3mrX1kUCg5F",
-   "generationId": "6OBEvpCq6RVKcA8dOQ8N",
-   "text": "떨리는 동안 소리가 나.",
-   "prompt": "[bright] 떨리는 동안 소리가 나.",
-   "asr": "널리는 동안 소리가 나.",
-   "match": 0.889,
-   "end": 0.889,
-   "status": "미적용 — 두 번(Flow 1회, 공식 API 1회 requestId w0I3AStf6PVqzKeIC60q) 모두 받아쓰기가 \"떨리는\"을 \"널리는\"으로 적음. 재생성 1회 규칙에 따라 무음 유지."
-  }
- ]
+ "notApplied": []
 }

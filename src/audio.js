@@ -4,11 +4,14 @@ import { instrumentSamples } from './samples.js';
 // and while the map finale dialog is open.
 const finaleScenes=new Set(['result']);
 const effectKinds=new Set(['ui','success','feedback']);
+// Map villain fight cues keep playing under a voice line (villain, Pio or a reader): a voice never mutes or drops them.
+// Achievement-card cues are not in this list.
+export const combatCues=new Set(['swing','hit1','hit2','finish','exit','victory','appear','bump']);
 const bounded=(value,min,max,fallback)=>Number.isFinite(value)?Math.min(max,Math.max(min,value)):fallback;
 
 export class SoundEngine {
   constructor(){
-    this.context=null;this.nodes=[];this.generation=0;this.muted=false;this.onStatus=()=>{};
+    this.context=null;this.nodes=[];this.generation=0;this.combatGeneration=0;this.muted=false;this.onStatus=()=>{};
     this.bgm=true;this.sfx=true;this.bgmVolume=.35;this.scene='home';
     this.music=new Map();this.track='main';this.mapFinale=false;this.finaleDone=false;this.holdUntil=0;this.holdTimer=null;
     this.quiet=false;this.unlocked=false;this.needsGesture=false;this.destroyed=false;this.bgmBus=null;
@@ -28,7 +31,7 @@ export class SoundEngine {
     if(this.muted!==wasMuted||wasSfx&&!this.sfx)this.stop();
     this.syncBgm();
   }
-  setQuiet(value){this.quiet=Boolean(value);if(this.quiet)this.stop();this.syncBgm();}
+  setQuiet(value){this.quiet=Boolean(value);if(this.quiet)this.stop({keepCombat:true});this.syncBgm();}
   setMuted(value){this.configure({muted:Boolean(value)});}
   setScene(scene){this.scene=scene;this.syncBgm();}
   // The map finale music never plays over a victory jingle.
@@ -39,11 +42,13 @@ export class SoundEngine {
     if(this.muted)return false;
     const ready=await this.ready();if(ready)this.syncBgm();return ready;
   }
-  stop(){
-    this.generation++;
+  // keepCombat: a voice starting stops experiment and interface sounds but lets map fight cues ring on.
+  stop({keepCombat=false}={}){
+    this.generation++;if(!keepCombat)this.combatGeneration++;
     if(this.holdUntil){this.holdUntil=0;clearTimeout(this.holdTimer);this.holdTimer=null;this.syncBgm();}
-    for(const entry of this.nodes)this.disconnect(entry);
-    this.nodes=[];this.effectNode=null;
+    const kept=keepCombat?this.nodes.filter(entry=>combatCues.has(entry.effect)):[];
+    for(const entry of this.nodes)if(!kept.includes(entry))this.disconnect(entry);
+    this.nodes=kept;if(!kept.includes(this.effectNode))this.effectNode=null;
     this.onStatus(this.muted||!this.sfx?'소리 꺼짐 · 떨림을 눈으로 관찰해 봐':'소리 준비됨');
   }
   disconnect({source,gain}){
@@ -51,12 +56,12 @@ export class SoundEngine {
     try{source.stop();}catch{}
     try{source.disconnect();gain.disconnect();}catch{}
   }
-  async ready(){
-    if(this.destroyed||this.quiet||this.muted||this.needsGesture||typeof document!=='undefined'&&document.hidden)return false;
+  async ready(combat=false){
+    if(this.destroyed||this.quiet&&!combat||this.muted||this.needsGesture||typeof document!=='undefined'&&document.hidden)return false;
     try{
       if(!this.context){const Audio=globalThis.AudioContext||globalThis.webkitAudioContext;this.context=new Audio();}
       if(this.context.state==='suspended')await this.context.resume();
-      if(this.destroyed||this.quiet||this.muted||this.needsGesture||typeof document!=='undefined'&&document.hidden)return false;
+      if(this.destroyed||this.quiet&&!combat||this.muted||this.needsGesture||typeof document!=='undefined'&&document.hidden)return false;
       if(this.context.state!=='running')throw Error('Audio unavailable');
       return true;
     }catch{this.onStatus('소리를 시작하지 못했어 · 기기의 소리 설정을 확인해 줘');return false;}
@@ -127,12 +132,13 @@ export class SoundEngine {
   async effect(name='tap',{polite=false}={}){
     const cue=interfaceSounds[name],now=Date.now();
     if(!this.sfx||!cue||polite&&now<this.holdUntil||name!=='badge'&&(now-(this.effectClocks.get(name)??-Infinity)<90||now-this.effectClock<40))return;
-    this.effectClock=now;this.effectClocks.set(name,now);const generation=this.generation,request=++this.effectRequest;
-    if(!await this.ready()||generation!==this.generation)return;
+    this.effectClock=now;this.effectClocks.set(name,now);const combat=combatCues.has(name),clock=()=>combat?this.combatGeneration:this.generation;
+    const generation=clock(),request=++this.effectRequest;
+    if(!await this.ready(combat)||generation!==clock())return;
     try{
       if(!this.buffers.has(cue.src))this.buffers.set(cue.src,fetch(`/${cue.src}`).then(r=>{if(!r.ok)throw Error('Sound unavailable');return r.arrayBuffer();}).then(b=>this.context.decodeAudioData(b)));
       const buffer=await this.buffers.get(cue.src);
-      if(generation!==this.generation||request!==this.effectRequest||this.quiet||!this.sfx||this.muted||this.needsGesture||this.destroyed)return;
+      if(generation!==clock()||request!==this.effectRequest||this.quiet&&!combat||!this.sfx||this.muted||this.needsGesture||this.destroyed)return;
       this.fadeEffect();
       const c=this.context,source=c.createBufferSource(),gain=c.createGain(),rate=cue.rate??1,start=c.currentTime;
       source.buffer=buffer;source.playbackRate.value=rate;source.playbackRate.setValueAtTime(rate,start);gain.gain.setValueAtTime(cue.gain??.16,start);
@@ -141,7 +147,7 @@ export class SoundEngine {
       source.onended=()=>{source.disconnect();gain.disconnect();this.nodes=this.nodes.filter(n=>n!==entry);if(this.effectNode===entry)this.effectNode=null;};source.start(start);
       // A stop can only be scheduled after start, so the fade for long cues comes last.
       if(cue.max&&Number.isFinite(buffer?.duration)&&buffer.duration/rate>cue.max){gain.gain.setValueAtTime(cue.gain??.16,start+cue.max-.12);gain.gain.linearRampToValueAtTime(0,start+cue.max);source.stop(start+cue.max+.02);}
-    }catch{if(generation===this.generation)this.tone({frequency:name==='success'?660:480,kind:'ui',level:.4,duration:.12});}
+    }catch{if(generation===clock())this.tone({frequency:name==='success'?660:480,kind:'ui',level:.4,duration:.12});}
   }
   // A voice line or an experiment sound is playing: effects stay out of it (dropped, or skipped when polite).
   get masked(){return this.quiet||Date.now()<this.holdUntil;}

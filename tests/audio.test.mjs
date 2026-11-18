@@ -188,3 +188,23 @@ test('polite cues wait out experiment sounds and the map finale fades a victory 
   sound.setMapFinale(true);assert.equal(jingle.gain.gain.events.at(-1).value,0);assert.equal(sound.effectNode,null);
  }finally{sound.destroy();globalThis.fetch=previousFetch;}
 });
+
+test('map fight cues keep playing under a voice line while other effects stay out',async()=>{
+ const previousFetch=globalThis.fetch,sound=new SoundEngine();sound.configure({bgm:false});
+ globalThis.fetch=async()=>({ok:true,arrayBuffer:async()=>new ArrayBuffer(8)});
+ try{
+  await sound.ready();sound.context.decodeAudioData=async()=>({duration:.5});
+  await sound.effect('swing');const swing=sound.nodes[0];assert.equal(swing.effect,'swing');
+  sound.setQuiet(true);
+  assert.ok(sound.nodes.includes(swing),'a voice starting does not cut the swing');assert.equal(swing.source.connected,true);
+  await new Promise(resolve=>setTimeout(resolve,100));
+  await sound.effect('hit1');const hit=sound.nodes.find(n=>n.effect==='hit1');
+  assert.ok(hit,'the hit cue plays during the voice');assert.ok(hit.source.starts.length===1);
+  assert.ok(hit.gain.gain.events[0].value>=.34*.7,'at least 70% of its level');
+  await new Promise(resolve=>setTimeout(resolve,100));
+  await sound.effect('tap');assert.equal(sound.nodes.some(n=>n.effect==='tap'),false,'interface taps still wait for the voice');
+  await new Promise(resolve=>setTimeout(resolve,100));
+  await sound.effect('card-reveal');assert.equal(sound.nodes.some(n=>n.effect==='card-reveal'),false,'card cues are not fight cues');
+  sound.setMuted(true);assert.equal(sound.nodes.length,0,'mute still silences fight cues');
+ }finally{sound.destroy();globalThis.fetch=previousFetch;}
+});

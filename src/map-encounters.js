@@ -42,6 +42,8 @@ function layoutSpeech(host, entries){
 const REPEAT=380;
 // Sound timing: the drum launches at the press, the bell lands as the strike reaches the villain.
 const IMPACT=110,LEAVE=560,APPEAR_GAP=1500;
+// A hit or exit line starts this long after the swing so the fight cue is heard first.
+const VOICE_AFTER_SFX=300;
 // A villain announces itself once per visit to the page, not on every return to the map.
 const announced=new Set();
 const CUES={
@@ -119,14 +121,16 @@ export function mountMapEncounters({
   const timers=new Set();
   const later=(fn,ms)=>{const id=(view??globalThis).setTimeout(()=>{timers.delete(id);if(!closed)fn();},ms);timers.add(id);};
 
-  function speak(foe,text,time){
+  let speech=0;
+  function speak(foe,text,time,voiceDelay=0){
     for(const other of foes)if(other!==foe){other.saidUntil=0;other.bubble.hidden=true;}
     foe.bubble.textContent=text;
     foe.bubble.hidden=false;
     lastSpeechLayout=-Infinity;
     foe.saidUntil=time;
     live.textContent=text;
-    voice(text);
+    const mine=++speech;
+    if(voiceDelay>0)later(()=>{if(mine===speech)voice(text);},voiceDelay);else voice(text);
   }
   function hit(){
     if(closed||!current||!last||paused())return;
@@ -140,7 +144,7 @@ export function mountMapEncounters({
     pose.hero={kind:'attack',direction:-foe.facing,start:time,end:time+(calm?140:320)};
     saved={...saved,[foe.s.id]:n};onSave({...saved});
     tone('swing',n);later(()=>tone(n===HITS?'finish':'hit',n),IMPACT);
-    speak(foe, n===HITS?foe.s.finish??'앗, 물러날게!':foe.s.hit?.[n-1]??(n===1?'앗, 들켰네!':'이번 건 제법인데!'),time+(n===HITS?2750:1800));
+    speak(foe, n===HITS?foe.s.finish??'앗, 물러날게!':foe.s.hit?.[n-1]??(n===1?'앗, 들켰네!':'이번 건 제법인데!'),time+(n===HITS?2750:1800),VOICE_AFTER_SFX);
     live.textContent+=n===HITS?' 세 번 명중! 악당이 물러나요.':` ${n}번 명중. ${HITS-n}번 남았어요.`;
     if(n===HITS&&requiredFoes>0&&stages.length===requiredFoes&&stages.every(s=>(saved[s.id]??record[s.id])===HITS))finaleAt=time+2920;
     // The last villain leaves with the victory jingle; it ends before the finale music starts.
