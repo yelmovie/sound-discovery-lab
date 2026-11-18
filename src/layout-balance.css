@@ -1,0 +1,46 @@
+/* 2026-11-18 놀이 화면 비율·중복 조작 정리 (docs/LAYOUT-BALANCE-20261118.md).
+   화면 배치와 버튼 노출만 바꾼다. 판정·저장·진행 로직은 그대로다. */
+
+/* 중복 1: 안내 팝업의 위 X와 아래 「닫기」가 같은 일을 한다. 위 X(첫 포커스·Esc와 같은 자리)만 남긴다.
+   설정(확인 버튼과 함께 쓰는 창)과 개념 영상 창은 그대로 둔다. */
+dialog:is(.modal-standard,.modal-npc,.modal-notebook,.modal-discovery) .modal-footer>.btn.primary[data-action="close"]{display:none}
+dialog:is(.modal-standard,.modal-npc,.modal-notebook,.modal-discovery) .modal-footer:not(:has(>:not([hidden],[data-action="close"]))){display:none}
+
+/* 중복 2: 인증 전 결과 화면에서 「증거 모으러 가기」와 「지도 둘러보기」가 둘 다 지도로 간다. */
+.certificate.preview .result-actions .btn.quiet[data-action="goto"][data-route="map"]{display:none}
+
+/* 중복 3: 마지막 미션의 「이전 원리」는 위 원리 단계 알약(바로 앞 원리 포함)과 같은 일을 한다. */
+.final-navigation>[data-action="final-step"]{display:none}
+.final-navigation{justify-content:flex-start}
+
+/* 비율 1: 마지막 미션은 제목 띠와 원리 알약이 화면 위 40%를 차지하고, 문제 판이 1250px에 묶여 넓은 화면에서 작게 떠 있었다.
+   제목을 홈·소리 버튼 사이 위 띠로 올리고, 문제 판이 남은 높이와 폭을 모두 쓰게 한다(1열 쌓임이 필요한 좁은 화면은 그대로). */
+@media (min-width:1000px) and (min-height:700px){
+ main.final-page.final-focus{height:100dvh;min-height:0;display:grid;grid-template-rows:auto auto minmax(0,1fr);gap:clamp(10px,1.4vh,18px);padding:13px clamp(20px,2.2vw,44px) clamp(14px,2.2vh,28px);overflow:hidden}
+ main.final-focus .page-title{max-width:none;margin:0;padding:0 128px;min-height:52px;align-items:center}
+ main.final-focus .page-title h1{font-size:clamp(28px,2.2vw,42px);line-height:1.2;margin:0}
+ main.final-focus .preview-notice{margin:0}
+ main.final-focus:has(.preview-notice){grid-template-rows:auto auto auto minmax(0,1fr)}
+ main.final-focus .final-steps{margin:0}
+ main.final-focus .final-grid{grid-template-columns:minmax(0,1fr) clamp(280px,22vw,400px);align-items:stretch;gap:clamp(14px,1.4vw,26px);max-width:none;width:100%;height:100%;min-height:0;margin:0}
+ main.final-focus .final-task,main.final-focus .core-control{display:flex;flex-direction:column;justify-content:safe center;min-height:0;overflow:auto;padding:clamp(18px,2vw,36px)}
+ main.final-focus .core-control{align-items:center;text-align:center;gap:12px}
+ main.final-focus .final-task{gap:clamp(10px,2.2vh,28px)}
+ main.final-focus .final-task>*{margin-top:0;margin-bottom:0}
+ main.final-focus .final-stage{font-size:clamp(20px,2.2vh,28px)}
+ main.final-focus .evidence-quote{font-size:clamp(20px,2.3vh,28px)}
+ main.final-focus .final-task h2{font-size:clamp(25px,3.6vh,46px);line-height:1.35}
+ main.final-focus .final-task .choice{width:100%;font-size:clamp(20px,2.6vh,32px);min-height:clamp(52px,8.5vh,104px)}
+ main.final-focus .core-control h2{font-size:clamp(24px,2.8vh,34px)}
+ main.final-focus .mini-core{width:clamp(110px,10vw,180px);height:clamp(110px,10vw,180px)}
+ main.final-focus .mini-core .prop-img{width:100%;height:100%}
+}
+
+/* 비율 2: 결과 화면의 「내가 발견한 다섯 원리」 판이 인증서 옆 가운데에 작게 떠 있었다. 인증서와 같은 높이로 세우고 원리 버튼을 고르게 나눈다.
+   인증서는 읽고 인쇄하는 종이 카드라 크기·재질은 그대로 둔다. */
+@media (min-width:1000px) and (min-height:700px){
+ main.result-page{align-items:stretch}
+ main.result-page .result-findings{display:flex;flex-direction:column;justify-content:safe center;gap:clamp(8px,1.4vh,16px)}
+ main.result-page .result-findings h2{margin:0 0 4px}
+ main.result-page .finding-replay{margin:0;flex:1 1 0;max-height:132px}
+}
