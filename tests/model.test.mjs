@@ -139,3 +139,11 @@ test('successful signal, tuning and sensor trials preserve the requested experim
     assert.equal(checkChallenge(scenario.id,w.challenge),true);
   }
 });
+
+test('recording the same activity again never counts a second piece of evidence (B17 repeated taps)',()=>{
+  const s=freshState();completeAll(s);
+  assert.equal(evidenceCount(s),LESSON_COUNT);
+  for(let n=0;n<5;n++)for(let i=0;i<LESSON_COUNT;i++)recordEvidence(s,i);
+  assert.equal(evidenceCount(s),LESSON_COUNT);
+  assert.equal(Object.keys(s.evidence).length,LESSON_COUNT);
+});

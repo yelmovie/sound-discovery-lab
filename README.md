@@ -12,6 +12,7 @@
 - 커밋 `9cc27aa`, 운영 Workers 버전 `9defa269`, 해시 MATCH. 자세한 표: [docs/LAYOUT-BALANCE-20261118.md](docs/LAYOUT-BALANCE-20261118.md), 판정 [RELEASE-REVIEW-20261118](docs/reviews/RELEASE-REVIEW-20261118.md)(조건부 배포 가능), 점수 [SCORE-20261118](docs/reviews/SCORE-20261118.md)(78/100).
 - 추가(11-19 오후): 활동 2 소리굽쇠 그림과 같은 일 하던 버튼 줄 삭제·지시문 수정(`app.js`·`lesson-activity.js`), 설정 창은 아래 오른쪽 「닫기」 하나(16개 공통 기준), 교실 화면 크기에서 18px 미만 글자 0(지도 체력 점 기호 제외), 결과 1024×768 세로 스크롤 없앰. 커밋 `d8da048`, 운영 Workers `f128ec64`, 루트·`app.js`·`layout-balance.css`·`lesson-activity.js`·`app.css`·`sw.js` 해시 MATCH.
 - Playwright QA(11-19 저녁): `qa-run-stage` 16/16, `qa-full-play` 98개 확인·문제 0, `qa-single-screen` 기준선과 같음, `qa-responsive`는 옛 의뢰 조작이라 중단(NOT TESTED). QA에서 찾은 활동 9 완료 화면 0.83배 축소를 고침. 커밋 `6d74cb9`, 운영 Workers `6591e02a`, 해시 MATCH. 자세한 건 `docs/LAYOUT-BALANCE-20261118.md`.
+- 추가(11-19 밤): 남은 18px 미만 글자 정리. 활동 13이 교실 화면에서 0.92~0.97배로 줄던 것을 없애고(전달 그림이 남는 높이만 차지), 폰 가로 활동 9 「관찰 n / 3」을 14px로. 커밋 `fd14e89`, 운영 Workers `476f52d6`, MATCH.
 
 ## 소리 1차 수정 (2026-11-19 밤)
 
