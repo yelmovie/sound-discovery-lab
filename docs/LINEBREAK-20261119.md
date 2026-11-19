@@ -47,3 +47,4 @@
 
 - 커밋 `8b57856` → `run-lock.sh lbk-deploy-2 deploy.sh 11 "11 sound" worker-cfg sound-discovery-lab` → Workers 버전 `35d08f3c-5f10-4666-b863-562a3e89fb58`.
 - `cmp.sh`: `src/korean-linebreak.css`·루트 해시 MATCH, `src/app.css`·`sw.js` 해시도 빌드와 같음(MATCH). 운영 1280×800 재측정: `<br>` 오탐 2건만 남음.
+- 추가(2026-11-20, 지침 8절): `src/reward-cards.css` `.rc-locked` 보정 네 줄 → 커밋 `93fc1d7` → Workers `e8adb688`. 운영 보관함: 1280·1920 한 줄, 1024×768 「악당을 / 물리치면 / 열려요」 세 줄(전에는 이 크기에서도 한 줄로 들어갔음), 카드 넘침 없음. `app.css`·`sw.js`·루트 MATCH(`reward-cards.css` 단독 주소는 엣지 캐시로 잠시 DIFF, 캐시 우회 요청은 빌드와 같음).
