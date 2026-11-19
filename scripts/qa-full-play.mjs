@@ -160,7 +160,7 @@ async function finalQuestions(){
  await page.reload({waitUntil:'domcontentloaded'});await page.waitForTimeout(450);assert.equal(await domRoute(),'result');await page.locator('.certificate:not(.preview)').waitFor();const restored=await saved();assert.equal(restored.restored,true);assert.equal(Object.keys(restored.evidence).length,20);assert.equal(restored.completedAt,s.completedAt);assert.deepEqual(restored.finalAnswers,s.finalAnswers);await record('genuine-certificate-after-reload',{shot:true});checks.push('genuine certificate, completion date, final answers and twenty earned records survive real reload');
 }
 async function revisit(i){
- if(await page.locator('dialog[open]').count())await click('.modal-heading [data-action="close"]');
+ if(await page.locator('dialog[open]').count())await click('dialog[open] [data-action="close"]:visible >> nth=0');
  if(await page.locator('.lesson-page').count()){await action('activity-tools');await action('notebook');}else await action('notebook');
  await action('notebook-stage',`[data-stage="${Math.floor(i/4)}"]`);await click(`dialog [data-action="goto"][data-route="lesson/${i}"]`,`notebook-revisit-${i}`);await page.waitForTimeout(380);assert.equal(await domRoute(),`lesson/${i}`);
 }
@@ -170,7 +170,7 @@ async function viewportRegressions(viewports=[[915,412],[1024,768],[1920,1080],[
  }
 }
 async function setupDemo(){
- await action('settings');await page.getByText('교사용 가이드',{exact:true}).click();await page.getByText('교사용 도구',{exact:true}).click();await action('admin');await click('.modal-heading [data-action="close"]');await action('start');await page.locator('.map-load-state').first().waitFor({state:'hidden',timeout:30000});await page.waitForTimeout(800);await click('.map-next');await page.locator('.lesson-page[data-lesson="0"]').waitFor({timeout:20000});
+ await action('settings');await page.getByText('교사용 가이드',{exact:true}).click();await page.getByText('교사용 도구',{exact:true}).click();await action('admin');await click('dialog[open] [data-action="close"]:visible >> nth=0');await action('start');await page.locator('.map-load-state').first().waitFor({state:'hidden',timeout:30000});await page.waitForTimeout(800);await click('.map-next');await page.locator('.lesson-page[data-lesson="0"]').waitFor({timeout:20000});
 }
 async function demoLesson(i){let current=Number((await domRoute()).split('/')[1]);await page.locator('main h1').focus();while(current!==i){await page.keyboard.press(current<i?'ArrowRight':'ArrowLeft');await page.waitForTimeout(110);current=Number((await domRoute()).split('/')[1]);}await page.waitForTimeout(560);await record(`demo-lesson-${i}`);}
 async function boundaryIssue(label,detail){const item={severity:'confirmed',label,detail,lastAction,route:await domRoute()};issues.push(item);await record(label,{shot:true,allowIssues:true});console.log('CONFIRMED '+JSON.stringify(item));await flush();}
