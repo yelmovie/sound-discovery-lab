@@ -27,3 +27,14 @@ test('a line waits for an experiment sound to end instead of cutting it',async()
   left=0;await new Promise(resolve=>setTimeout(resolve,140));assert.equal(voice.playing,'hint-2-1');assert.equal(quiet.at(-1),true);
  }finally{voice.stop();Object.assign(globalThis,old);}
 });
+test('a villain line never cuts another character: it waits for the line to end, or is skipped after 2 s',async()=>{
+ const h=harness();
+ try{h.voice.say('mission-1');await wait();const pio=h.instances[0];
+  h.voice.say('villain-1-2');await wait();assert.equal(h.voice.playing,'mission-1');assert.equal(pio.paused,false);
+  pio.finish();await new Promise(resolve=>setTimeout(resolve,150));assert.equal(h.voice.playing,'villain-1-2','starts after the line ends');
+  const villain=h.instances.at(-1);
+  h.voice.say('mission-2');await wait();assert.equal(villain.paused,false,'a guide line does not cut the villain line');assert.notEqual(h.voice.playing,'mission-2');
+  villain.finish();await new Promise(resolve=>setTimeout(resolve,150));assert.equal(h.voice.playing,'mission-2','then the guide line plays');
+  h.voice.say('villain-1-3');await new Promise(resolve=>setTimeout(resolve,2300));assert.equal(h.voice.playing,'mission-2','skipped after 2 s');
+ }finally{h.restore();}
+});

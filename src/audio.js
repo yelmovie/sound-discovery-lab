@@ -6,6 +6,8 @@ const finaleScenes=new Set(['result']);
 const effectKinds=new Set(['ui','success','feedback']);
 // Map villain fight cues keep playing under a voice line (villain, Pio or a reader): a voice never mutes or drops them.
 // Achievement-card cues are not in this list.
+// Completion chimes that a following voice line waits out instead of cutting.
+const ringOut=new Set(['success','badge']);
 export const combatCues=new Set(['swing','hit1','hit2','finish','exit','victory','appear','bump']);
 const bounded=(value,min,max,fallback)=>Number.isFinite(value)?Math.min(max,Math.max(min,value)):fallback;
 
@@ -34,8 +36,15 @@ export class SoundEngine {
   setQuiet(value){this.quiet=Boolean(value);if(this.quiet)this.stop({keepCombat:true});this.syncBgm();}
   setMuted(value){this.configure({muted:Boolean(value)});}
   setScene(scene){this.scene=scene;this.syncBgm();}
-  // The map finale music never plays over a victory jingle.
-  setMapFinale(open){this.mapFinale=Boolean(open);if(this.mapFinale)this.fadeEffect();this.syncBgm();}
+  // The map finale music never plays over a victory jingle. The card set's full-set jingle is the celebration of the
+  // last villain: it rings on to its end and the finale music rises from silence over about 1.2 s under it.
+  setMapFinale(open){
+    this.mapFinale=Boolean(open);
+    const jingle=this.mapFinale&&this.effectNode?.effect==='card-complete';
+    if(this.mapFinale&&!jingle)this.fadeEffect();
+    if(jingle&&this.bgmBus&&this.context){const t=this.context.currentTime;this.bgmBus.gain.cancelScheduledValues?.(t);this.bgmBus.gain.setValueAtTime(0,t);}
+    this.syncBgm(jingle?.4:.08);
+  }
   async unlock(){
     if(this.destroyed||typeof document!=='undefined'&&document.hidden)return false;
     this.unlocked=true;this.needsGesture=false;
@@ -144,6 +153,8 @@ export class SoundEngine {
       source.buffer=buffer;source.playbackRate.value=rate;source.playbackRate.setValueAtTime(rate,start);gain.gain.setValueAtTime(cue.gain??.16,start);
       source.connect(gain);gain.connect(c.destination);
       const entry={source,gain,effect:name};this.nodes.push(entry);this.effectNode=entry;
+      // Completion chimes ring to their end: a voice line that follows waits for them (voiceWait).
+      if(ringOut.has(name))this.chimeUntil=Math.max(this.chimeUntil,Date.now()+Math.min(2000,(Number.isFinite(buffer?.duration)?buffer.duration/rate:1)*1000));
       source.onended=()=>{source.disconnect();gain.disconnect();this.nodes=this.nodes.filter(n=>n!==entry);if(this.effectNode===entry)this.effectNode=null;};source.start(start);
       // A stop can only be scheduled after start, so the fade for long cues comes last.
       if(cue.max&&Number.isFinite(buffer?.duration)&&buffer.duration/rate>cue.max){gain.gain.setValueAtTime(cue.gain??.16,start+cue.max-.12);gain.gain.linearRampToValueAtTime(0,start+cue.max);source.stop(start+cue.max+.02);}
@@ -187,7 +198,7 @@ export class SoundEngine {
   // A newly opened facility: the unlock click, then the ding-dong 0.12 s later.
   unlockCue(){void this.layer('unlock-open');void this.layer('unlock-ding',{delay:.12});}
   // Milliseconds a voice line should still wait: an experiment sound is playing, or an answer chime is about to
-  // ring or is still ringing (its first 1.0 s), so the line never cuts it.
+  // ring or is still ringing (1.2 s, the length of the success chime), so the line never cuts it.
   get voiceWait(){return this.chimes.size?100:Math.max(0,this.holdUntil-Date.now(),this.chimeUntil-Date.now());}
   // Answer chime after wait ms, or after the experiment sound that is still playing then has ended, so it never
   // masks the end of the sound being compared. ok() is checked when it rings (still on the same screen).
@@ -195,7 +206,7 @@ export class SoundEngine {
     const ticket={};this.chimes.add(ticket);
     const tick=()=>{
       const left=this.holdUntil-Date.now();if(left>0){setTimeout(tick,left+60);return;}
-      this.chimes.delete(ticket);if(!ok())return;this.chimeUntil=Date.now()+1000;void this.effect(name);
+      this.chimes.delete(ticket);if(!ok())return;this.chimeUntil=Date.now()+1200;void this.effect(name);
     };
     setTimeout(tick,wait);
   }
@@ -214,16 +225,19 @@ export class SoundEngine {
     clearTimeout(this.holdTimer);this.holdTimer=setTimeout(()=>{this.holdTimer=null;this.holdUntil=0;this.syncBgm();},this.holdUntil-Date.now());
     this.syncBgm();
   }
-  syncBgm(){
-    const track=this.mapFinale||finaleScenes.has(this.scene)?'finale':'main';
-    if(track!==this.track){this.music.get(this.track)?.element.pause();this.track=track;if(track==='finale'){this.finaleDone=false;const finale=this.music.get('finale');if(finale)finale.element.currentTime=0;}}
-    if(!this.canBgm()||this.context?.state!=='running'||track==='finale'&&this.finaleDone){this.stopBgm();return;}
+  syncBgm(constant=.08){
+    // Once the finale has played through on the finale dialog, ending or certificate, the main theme carries on
+    // at 0.45 of its level instead of leaving silence; leaving those screens restores it.
+    const finaleWanted=this.mapFinale||finaleScenes.has(this.scene);if(!finaleWanted)this.finaleDone=false;
+    const afterFinale=finaleWanted&&this.finaleDone,track=finaleWanted&&!afterFinale?'finale':'main';
+    if(track!==this.track){this.music.get(this.track)?.element.pause();this.track=track;if(track==='finale'){const finale=this.music.get('finale');if(finale)finale.element.currentTime=0;}}
+    if(!this.canBgm()||this.context?.state!=='running'){this.stopBgm();return;}
     const c=this.context;
     // A new bus starts silent so the theme fades in instead of starting at full gain for the first 0.3 s.
     if(!this.bgmBus){this.bgmBus=c.createGain();this.bgmBus.gain.value=0;this.bgmBus.gain.setValueAtTime(0,c.currentTime);this.bgmBus.connect(c.destination);}
     // Voices and concept films keep the music at a quarter instead of stopping it.
-    const level=Date.now()<this.holdUntil?0:this.bgmVolume*.6*(this.quiet||this.scene==='concept'?.25:1);
-    this.bgmBus.gain.setTargetAtTime(level,c.currentTime,.08);
+    const level=Date.now()<this.holdUntil?0:this.bgmVolume*.6*(this.quiet||this.scene==='concept'?.25:1)*(afterFinale?.45:1);
+    this.bgmBus.gain.setTargetAtTime(level,c.currentTime,constant);
     const player=this.player(track);
     if(!player.routed)player.element.volume=Math.min(1,level);
     if(player.element.paused)player.element.play()?.catch?.(()=>{});
@@ -233,7 +247,7 @@ export class SoundEngine {
     if(player)return player;
     const element=new Audio(`/${backgroundMusic[track]}`);element.preload='auto';element.loop=track==='main';
     if(element.dataset)element.dataset.track=track;
-    element.addEventListener?.('ended',()=>{if(track==='finale')this.finaleDone=true;});
+    element.addEventListener?.('ended',()=>{if(track==='finale'){this.finaleDone=true;this.syncBgm();}});
     let routed=false;
     // Routing through the Web Audio bus lets volume and ducking work on iPad, where element.volume is fixed.
     try{if(typeof this.context?.createMediaElementSource==='function'){this.context.createMediaElementSource(element).connect(this.bgmBus);routed=true;}}catch{}

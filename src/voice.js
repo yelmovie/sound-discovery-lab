@@ -152,12 +152,17 @@ export function voiceFor(text){return byText.get(String(text||'').trim())||null;
 /** Reads the visible request-completion heading before its next-step cue. */
 export function voiceCue(id,requestComplete=false){return requestComplete&&['lesson-done','stage-done'].includes(id)?['quest-done',id]:[id];}
 
-// wait(): milliseconds until the line may start (an experiment sound still playing). A voice never cuts it;
-// the line starts once it has ended.
+// wait(): milliseconds until the line may start (an experiment sound or an answer chime still playing). A voice
+// never cuts them; the line starts once they have ended.
+// Villain lines (map noise speakers) never cut another character: while one speaks the villain line waits up to
+// 2 s for it, or is skipped. A guide line that arrives while a villain line plays waits up to 2 s for it to end.
+const PATIENCE=2000;
+const isVillain=id=>String(id).startsWith('villain-');
 export function createVoice({enabled,quiet=()=>{},onSpeaking=()=>{},wait=()=>0}){
- let audio=null,chain=[],ticket=0,timer=null,current=null;
+ let audio=null,chain=[],ticket=0,timer=null,current=null,held=null;
  function release(){onSpeaking(null);if(audio){audio.onended=null;audio.onerror=null;audio.pause();audio.removeAttribute('src');audio.load();audio=null;}}
- function stop(){ticket++;clearTimeout(timer);timer=null;chain=[];current=null;release();quiet(false);}
+ function drop(){if(held){const clip=held;held=null;clip.onended=null;clip.onerror=null;clip.pause();}}
+ function stop(){ticket++;clearTimeout(timer);timer=null;chain=[];current=null;drop();release();quiet(false);}
  function next(id){
   const line=voiceLines[id];if(!line)return finish();
   current=id;release();const mine=ticket,clip=new Audio(line.src);audio=clip;clip.preload='auto';
@@ -169,12 +174,28 @@ export function createVoice({enabled,quiet=()=>{},onSpeaking=()=>{},wait=()=>0})
   clip.play().then(()=>{if(active())onSpeaking(id);}).catch(()=>{if(mine===ticket)stop();});
  }
  function finish(){const id=chain.shift();if(id)next(id);else{current=null;release();quiet(false);}}
- /** Plays ids in order after an optional delay; anything playing stops first. */
+ const speaking=()=>Boolean(audio&&current&&!audio.paused&&!audio.ended);
+ /** Plays ids in order after an optional delay; anything playing stops first (villain lines: see above). */
  function say(ids,delay=0){
-  stop();const list=(Array.isArray(ids)?ids:[ids]).filter(id=>voiceLines[id]);
-  if(!list.length||!enabled()||typeof document!=='undefined'&&document.hidden)return;
-  const mine=ticket;
-  const start=()=>{if(mine!==ticket||!enabled())return;const left=wait();if(left>0){timer=setTimeout(start,left+60);return;}quiet(true);chain=list.slice(1);next(list[0]);};
+  const list=(Array.isArray(ids)?ids:[ids]).filter(id=>voiceLines[id]),villain=list.length>0&&list.every(isVillain);
+  if(villain&&speaking()&&!isVillain(current)){
+   if(!enabled())return;
+   const asked=Date.now(),mine=ticket;
+   const retry=()=>{if(mine!==ticket)return;if(!speaking()||isVillain(current))return say(list,0);if(Date.now()-asked<PATIENCE)setTimeout(retry,100);};
+   setTimeout(retry,100);return;
+  }
+  // A villain line already playing is handed over, not cut: the new line waits for it (at most 2 s).
+  const handOver=!villain&&list.length&&enabled()&&speaking()&&isVillain(current);
+  if(handOver){drop();held=audio;audio=null;held.onerror=held.onended=()=>{held=null;};ticket++;clearTimeout(timer);timer=null;chain=[];current=null;onSpeaking(null);}
+  else stop();
+  if(!list.length||!enabled()||typeof document!=='undefined'&&document.hidden){if(handOver)stop();return;}
+  const mine=ticket,asked=Date.now();
+  const start=()=>{
+   if(mine!==ticket||!enabled())return;
+   if(held&&!held.paused&&!held.ended&&Date.now()-asked<PATIENCE){timer=setTimeout(start,100);return;}
+   drop();const left=wait();if(left>0){timer=setTimeout(start,left+60);return;}
+   quiet(true);chain=list.slice(1);next(list[0]);
+  };
   timer=setTimeout(start,delay);
  }
  if(typeof document!=='undefined')document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});

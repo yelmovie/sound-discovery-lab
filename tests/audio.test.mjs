@@ -78,7 +78,7 @@ test('experiment sounds silence the theme while they play; voices and concept fi
     sound.setScene('concept');assert.ok(Math.abs(level(sound)-.075)<1e-9);
   }finally{sound.destroy();}
 });
-test('the finale plays once on the certificate and while the map finale is open, then the main theme returns',async()=>{
+test('the finale plays once on the certificate and while the map finale is open, then the main theme carries on at 0.45 and returns',async()=>{
   const sound=new SoundEngine();
   try{
     await sound.unlock();sound.setScene('map');assert.ok(playing(sound,'main'));
@@ -86,8 +86,11 @@ test('the finale plays once on the certificate and while the map finale is open,
     assert.equal(music(sound,'finale').src,'/media/audio/bgm/final-theme.mp3');assert.equal(music(sound,'finale').loop,false);
     music(sound,'finale').currentTime=40;sound.setMapFinale(false);assert.ok(playing(sound,'main'));assert.ok(!playing(sound,'finale'));
     sound.setScene('result');assert.ok(playing(sound,'finale'));assert.equal(music(sound,'finale').currentTime,0);
-    music(sound,'finale').pause();music(sound,'finale').listeners.get('ended')();sound.setScene('result');assert.ok(!playing(sound,'finale'));assert.ok(!playing(sound,'main'));
-    sound.setScene('home');assert.ok(playing(sound,'main'));
+    music(sound,'finale').pause();music(sound,'finale').listeners.get('ended')();assert.ok(!playing(sound,'finale'));
+    assert.ok(playing(sound,'main'),'after the finale the main theme carries on instead of silence');assert.equal(level(sound),.35*.6*.45);
+    sound.setScene('result');assert.ok(!playing(sound,'finale'),'the finale does not restart on the same screen');
+    sound.setScene('home');assert.ok(playing(sound,'main'));assert.equal(level(sound),.35*.6);
+    sound.setScene('result');assert.ok(playing(sound,'finale'),'a new visit plays the finale again');
   }finally{sound.destroy();}
 });
 test('master mute pauses the theme and cancels effects',async()=>{
@@ -273,8 +276,20 @@ test('the theme bus starts silent and fades in; answer chimes wait for the exper
    await new Promise(resolve=>setTimeout(resolve,60));assert.equal(sound.nodes.some(n=>n.effect==='success'),false,'still waiting for the experiment sound');
    assert.ok(sound.voiceWait>0,'a voice line waits for the pending chime');
    await new Promise(resolve=>setTimeout(resolve,200));const chime=sound.nodes.find(n=>n.effect==='success');assert.ok(chime&&Date.now()-asked>=120);
-   assert.ok(sound.voiceWait>700&&sound.voiceWait<=1000,'and for the first 1.0 s of the chime');
+   assert.ok(sound.voiceWait>900&&sound.voiceWait<=1200,'and until the 1.2 s chime has rung');
    sound.chime('success',0,()=>false);await new Promise(resolve=>setTimeout(resolve,20));assert.equal(sound.chimes.size,0,'a chime for a screen left behind is dropped');
   }finally{globalThis.fetch=previousFetch;}
  }finally{sound.destroy();}
+});
+
+test('the map finale lets the card set jingle ring and raises its music from silence; other jingles still fade',async()=>{
+ const previousFetch=globalThis.fetch,sound=new SoundEngine();
+ globalThis.fetch=async()=>({ok:true,arrayBuffer:async()=>new ArrayBuffer(8)});
+ try{await sound.unlock();sound.setScene('map');sound.context.decodeAudioData=async()=>({duration:2.4});
+  await sound.effect('card-complete');const jingle=sound.effectNode;sound.setMapFinale(true);
+  assert.equal(jingle.source.connected,true);assert.equal(jingle.gain.gain.events.some(e=>e.value===0),false,'the jingle is not faded');
+  const bus=sound.bgmBus.gain.events.slice(-2);assert.deepEqual(bus.map(e=>[e.kind,e.value]),[['set',0],['target',.35*.6]]);assert.equal(bus[1].constant,.4);
+  assert.ok(playing(sound,'finale'));sound.setMapFinale(false);
+  sound.effectClock=0;await sound.effect('victory');const victory=sound.effectNode;sound.setMapFinale(true);assert.equal(victory.gain.gain.events.at(-1).value,0);
+ }finally{sound.destroy();globalThis.fetch=previousFetch;}
 });
