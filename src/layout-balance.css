@@ -85,3 +85,19 @@ main .experiment-content .stop-lab{grid-template-columns:minmax(0,1fr)}
 @media (min-width:1000px) and (min-height:700px){
  .activity-base-4:has(>.saved-discovery)>.ruler-demonstration{grid-column:2;grid-row:1/3}
 }
+/* 활동 13(소리가 지나가는 세 가지 길): 높이 768~800 교실 화면에서 판이 0.92~0.97배로 줄어 글자가 16.6~17.5px가 됐다.
+   판 높이가 낮을 때만 전달 그림이 남는 높이만큼만 차지하게 하고 ↓ 화살표를 글줄 옆에 붙여 판이 줄지 않게 한다. */
+@media (min-width:1000px) and (min-height:700px){
+ @container experiment (max-height:660px){
+  .experiment-content.activity-base-6>.medium-grid{flex:1 1 0;min-height:0}
+  .experiment-content.activity-base-6 .medium-card.illustrated-medium{min-height:0}
+  .experiment-content.activity-base-6 .medium-card .concept-scene{flex:1 1 0;height:auto;min-height:64px;max-height:240px}
+  .activity-base-6 .transmission-path>b::before,.activity-base-6 .transmission-path>b::after{display:inline;margin:0 4px}
+ }
+}
+/* 활동 9 폰 가로(915×412): 「관찰 n / 3」이 14px에서 판 축소로 12.5px가 됐다. 축소를 되돌려 화면에서 14px로 보이게 한다. */
+@media (orientation:landscape){
+ @container experiment (max-height:370px){
+  .activity-base-4 .ruler-play-row>span{font-size:max(14px,calc(14px / var(--content-fit)))}
+ }
+}
