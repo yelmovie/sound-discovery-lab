@@ -228,3 +228,53 @@ test('map fight cues keep playing under a voice line while other effects stay ou
   sound.setMuted(true);assert.equal(sound.nodes.length,0,'mute still silences fight cues');
  }finally{sound.destroy();globalThis.fetch=previousFetch;}
 });
+
+test('map footsteps alternate beside the effect voice, survive voices and taps, and halve under a voice',async()=>{
+ const previousFetch=globalThis.fetch,sound=new SoundEngine();sound.configure({bgm:false});const urls=[];
+ globalThis.fetch=async url=>{urls.push(url);return {ok:true,arrayBuffer:async()=>new ArrayBuffer(8)};};
+ try{await sound.ready();sound.context.decodeAudioData=async()=>({duration:.44});
+  await sound.step();const first=sound.stepNode;
+  assert.equal(first.effect,'step-1');assert.equal(first.gain.gain.events[0].value,.18);
+  const rate=first.source.playbackRate.value;assert.ok(rate>=.95&&rate<=1.05,'speed varies within ±5 %');
+  assert.ok(first.source.stops[0]<=10+.3+.03,'a step ends before the next one (max 0.3 s)');
+  await sound.effect('hit1');const hit=sound.effectNode;
+  await sound.step();const second=sound.stepNode;assert.equal(second.effect,'step-2');
+  assert.equal(hit.source.connected,true,'a step never fades the effect voice');assert.equal(sound.effectNode,hit);
+  assert.equal(first.gain.gain.events.at(-1).value,0,'a step replaces only the previous step');
+  sound.setQuiet(true);assert.ok(sound.layers.has(second),'a voice starting does not cut the step');
+  await sound.step();assert.equal(sound.stepNode.gain.gain.events[0].value,.09,'half level under a voice');
+  sound.effectClock=0;await sound.effect('tap');sound.stop();assert.ok(sound.layers.has(sound.stepNode),'stop() and taps leave steps alone');
+  sound.configure({sfx:false});assert.equal(sound.layers.size,0,'the effects switch stops steps');
+  await sound.step();assert.equal(sound.layers.size,0,'and keeps them off');
+  assert.deepEqual([...new Set(urls)],['/media/audio/sfx/step-01.mp3','/media/audio/sfx/su-battle-hit-02.mp3','/media/audio/sfx/step-02.mp3']);
+ }finally{sound.destroy();globalThis.fetch=previousFetch;}
+});
+test('the unlock sound layers its click and ding-dong 0.12 s apart without touching the effect voice',async()=>{
+ const previousFetch=globalThis.fetch,sound=new SoundEngine();sound.configure({bgm:false});
+ globalThis.fetch=async()=>({ok:true,arrayBuffer:async()=>new ArrayBuffer(8)});
+ try{await sound.ready();sound.context.decodeAudioData=async()=>({duration:.8});
+  await sound.effect('tap');const tap=sound.effectNode;
+  sound.unlockCue();await new Promise(resolve=>setTimeout(resolve,20));
+  const cues=[...sound.layers];assert.deepEqual(cues.map(c=>c.effect).sort(),['unlock-ding','unlock-open']);
+  const ding=cues.find(c=>c.effect==='unlock-ding'),open=cues.find(c=>c.effect==='unlock-open');
+  assert.equal(Math.round((ding.source.starts[0]-open.source.starts[0])*100)/100,.12);
+  assert.equal(sound.effectNode,tap);assert.equal(tap.source.connected,true);
+  sound.effectClock=0;sound.effectClocks.clear();await sound.effect('open');assert.ok(sound.layers.has(ding),'a later UI cue does not cut it');
+  sound.setMuted(true);assert.equal(sound.layers.size,0);
+ }finally{sound.destroy();globalThis.fetch=previousFetch;}
+});
+test('the theme bus starts silent and fades in; answer chimes wait for the experiment sound, and voices for the chime',async()=>{
+ const sound=new SoundEngine();
+ try{sound.configure({bgm:true,bgmVolume:.25});await sound.unlock();
+  assert.deepEqual(sound.bgmBus.gain.events.slice(0,2).map(e=>[e.kind,e.value]),[['set',0],['target',.25*.6]]);
+  const previousFetch=globalThis.fetch;globalThis.fetch=async()=>({ok:true,arrayBuffer:async()=>new ArrayBuffer(8)});sound.context.decodeAudioData=async()=>({duration:1.2});
+  try{
+   sound.holdUntil=Date.now()+120;const asked=Date.now();sound.chime('success',10);
+   await new Promise(resolve=>setTimeout(resolve,60));assert.equal(sound.nodes.some(n=>n.effect==='success'),false,'still waiting for the experiment sound');
+   assert.ok(sound.voiceWait>0,'a voice line waits for the pending chime');
+   await new Promise(resolve=>setTimeout(resolve,200));const chime=sound.nodes.find(n=>n.effect==='success');assert.ok(chime&&Date.now()-asked>=120);
+   assert.ok(sound.voiceWait>700&&sound.voiceWait<=1000,'and for the first 1.0 s of the chime');
+   sound.chime('success',0,()=>false);await new Promise(resolve=>setTimeout(resolve,20));assert.equal(sound.chimes.size,0,'a chime for a screen left behind is dropped');
+  }finally{globalThis.fetch=previousFetch;}
+ }finally{sound.destroy();}
+});

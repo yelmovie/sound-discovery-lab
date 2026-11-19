@@ -152,7 +152,9 @@ export function voiceFor(text){return byText.get(String(text||'').trim())||null;
 /** Reads the visible request-completion heading before its next-step cue. */
 export function voiceCue(id,requestComplete=false){return requestComplete&&['lesson-done','stage-done'].includes(id)?['quest-done',id]:[id];}
 
-export function createVoice({enabled,quiet=()=>{},onSpeaking=()=>{}}){
+// wait(): milliseconds until the line may start (an experiment sound still playing). A voice never cuts it;
+// the line starts once it has ended.
+export function createVoice({enabled,quiet=()=>{},onSpeaking=()=>{},wait=()=>0}){
  let audio=null,chain=[],ticket=0,timer=null,current=null;
  function release(){onSpeaking(null);if(audio){audio.onended=null;audio.onerror=null;audio.pause();audio.removeAttribute('src');audio.load();audio=null;}}
  function stop(){ticket++;clearTimeout(timer);timer=null;chain=[];current=null;release();quiet(false);}
@@ -172,7 +174,8 @@ export function createVoice({enabled,quiet=()=>{},onSpeaking=()=>{}}){
   stop();const list=(Array.isArray(ids)?ids:[ids]).filter(id=>voiceLines[id]);
   if(!list.length||!enabled()||typeof document!=='undefined'&&document.hidden)return;
   const mine=ticket;
-  timer=setTimeout(()=>{if(mine!==ticket||!enabled())return;quiet(true);chain=list.slice(1);next(list[0]);},delay);
+  const start=()=>{if(mine!==ticket||!enabled())return;const left=wait();if(left>0){timer=setTimeout(start,left+60);return;}quiet(true);chain=list.slice(1);next(list[0]);};
+  timer=setTimeout(start,delay);
  }
  if(typeof document!=='undefined')document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();});
  if(typeof window!=='undefined')window.addEventListener('pagehide',stop);

@@ -15,10 +15,10 @@ export class SoundEngine {
     this.bgm=true;this.sfx=true;this.bgmVolume=.35;this.scene='home';
     this.music=new Map();this.track='main';this.mapFinale=false;this.finaleDone=false;this.holdUntil=0;this.holdTimer=null;
     this.quiet=false;this.unlocked=false;this.needsGesture=false;this.destroyed=false;this.bgmBus=null;
-    this.buffers=new Map();this.effectClock=0;this.effectClocks=new Map();this.effectRequest=0;this.effectNode=null;
+    this.buffers=new Map();this.layers=new Set();this.chimes=new Set();this.chimeUntil=0;this.stepTurn=0;this.stepNode=null;this.effectClock=0;this.effectClocks=new Map();this.effectRequest=0;this.effectNode=null;
     this.visibilityHandler=()=>{
       if(typeof document!=='undefined'&&document.hidden){
-        this.needsGesture=true;this.stop();this.stopBgm();
+        this.needsGesture=true;this.stop();this.stopLayers();this.stopBgm();
         if(this.context?.state==='running')this.context.suspend().catch(()=>{});
       }
     };
@@ -28,7 +28,7 @@ export class SoundEngine {
     const wasMuted=this.muted,wasSfx=this.sfx;
     for(const key of ['muted','bgm','sfx'])if(typeof settings[key]==='boolean')this[key]=settings[key];
     if(Number.isFinite(settings.bgmVolume))this.bgmVolume=bounded(settings.bgmVolume,0,1,.35);
-    if(this.muted!==wasMuted||wasSfx&&!this.sfx)this.stop();
+    if(this.muted!==wasMuted||wasSfx&&!this.sfx){this.stop();this.stopLayers();}
     this.syncBgm();
   }
   setQuiet(value){this.quiet=Boolean(value);if(this.quiet)this.stop({keepCombat:true});this.syncBgm();}
@@ -149,6 +149,56 @@ export class SoundEngine {
       if(cue.max&&Number.isFinite(buffer?.duration)&&buffer.duration/rate>cue.max){gain.gain.setValueAtTime(cue.gain??.16,start+cue.max-.12);gain.gain.linearRampToValueAtTime(0,start+cue.max);source.stop(start+cue.max+.02);}
     }catch{if(generation===clock())this.tone({frequency:name==='success'?660:480,kind:'ui',level:.4,duration:.12});}
   }
+  sample(src){
+    if(!this.buffers.has(src))this.buffers.set(src,fetch(`/${src}`).then(r=>{if(!r.ok)throw Error('Sound unavailable');return r.arrayBuffer();}).then(b=>this.context.decodeAudioData(b)));
+    return this.buffers.get(src);
+  }
+  // Layered cues (the map's unlock sound and footsteps) play beside the one effect voice: they never fade it and
+  // are never faded by it, a voice or a new screen. Only the sound switches, a hidden tab or destroy stop them.
+  async layer(name,{delay=0,rate=1,level=1,replace=null}={}){
+    const cue=interfaceSounds[name];
+    if(!cue||!this.sfx||!await this.ready(true))return null;
+    try{
+      const buffer=await this.sample(cue.src);
+      if(!this.sfx||this.muted||this.needsGesture||this.destroyed||this.context?.state!=='running')return null;
+      const c=this.context,source=c.createBufferSource(),gain=c.createGain(),start=c.currentTime+bounded(delay,0,5,0),peak=(cue.gain??.16)*level;
+      source.buffer=buffer;source.playbackRate.value=rate;gain.gain.setValueAtTime(peak,start);
+      source.connect(gain);gain.connect(c.destination);
+      if(replace)this.fadeLayer(replace);
+      const entry={source,gain,effect:name};this.layers.add(entry);
+      source.onended=()=>{source.disconnect();gain.disconnect();this.layers.delete(entry);};source.start(start);
+      const length=Number.isFinite(buffer?.duration)?buffer.duration/rate:0;
+      if(cue.max&&length>cue.max){gain.gain.setValueAtTime(peak,start+cue.max-.08);gain.gain.linearRampToValueAtTime(0,start+cue.max);source.stop(start+cue.max+.02);}
+      return entry;
+    }catch{return null;}
+  }
+  fadeLayer(entry){
+    if(!this.layers.has(entry))return;
+    try{const t=this.context.currentTime;entry.gain.gain.cancelScheduledValues?.(t);entry.gain.gain.setValueAtTime(entry.gain.gain.value,t);entry.gain.gain.linearRampToValueAtTime(0,t+.02);entry.source.stop(t+.025);}catch{this.disconnect(entry);this.layers.delete(entry);}
+  }
+  stopLayers(){for(const entry of this.layers)this.disconnect(entry);this.layers.clear();this.stepNode=null;}
+  // One footstep: the two recordings alternate with a slight random speed change (±5 %) so the walk is not
+  // mechanical. A step only replaces the previous step, at half level under a voice line.
+  async step(){
+    const name=this.stepTurn++%2?'step-2':'step-1',previous=this.stepNode;
+    const entry=await this.layer(name,{rate:1+(Math.random()*2-1)*.05,level:this.quiet?.5:1,replace:previous});
+    if(entry)this.stepNode=entry;
+  }
+  // A newly opened facility: the unlock click, then the ding-dong 0.12 s later.
+  unlockCue(){void this.layer('unlock-open');void this.layer('unlock-ding',{delay:.12});}
+  // Milliseconds a voice line should still wait: an experiment sound is playing, or an answer chime is about to
+  // ring or is still ringing (its first 1.0 s), so the line never cuts it.
+  get voiceWait(){return this.chimes.size?100:Math.max(0,this.holdUntil-Date.now(),this.chimeUntil-Date.now());}
+  // Answer chime after wait ms, or after the experiment sound that is still playing then has ended, so it never
+  // masks the end of the sound being compared. ok() is checked when it rings (still on the same screen).
+  chime(name,wait=0,ok=()=>true){
+    const ticket={};this.chimes.add(ticket);
+    const tick=()=>{
+      const left=this.holdUntil-Date.now();if(left>0){setTimeout(tick,left+60);return;}
+      this.chimes.delete(ticket);if(!ok())return;this.chimeUntil=Date.now()+1000;void this.effect(name);
+    };
+    setTimeout(tick,wait);
+  }
   // A voice line or an experiment sound is playing: effects stay out of it (dropped, or skipped when polite).
   get masked(){return this.quiet||Date.now()<this.holdUntil;}
   fadeEffect(){
@@ -169,7 +219,8 @@ export class SoundEngine {
     if(track!==this.track){this.music.get(this.track)?.element.pause();this.track=track;if(track==='finale'){this.finaleDone=false;const finale=this.music.get('finale');if(finale)finale.element.currentTime=0;}}
     if(!this.canBgm()||this.context?.state!=='running'||track==='finale'&&this.finaleDone){this.stopBgm();return;}
     const c=this.context;
-    if(!this.bgmBus){this.bgmBus=c.createGain();this.bgmBus.connect(c.destination);}
+    // A new bus starts silent so the theme fades in instead of starting at full gain for the first 0.3 s.
+    if(!this.bgmBus){this.bgmBus=c.createGain();this.bgmBus.gain.value=0;this.bgmBus.gain.setValueAtTime(0,c.currentTime);this.bgmBus.connect(c.destination);}
     // Voices and concept films keep the music at a quarter instead of stopping it.
     const level=Date.now()<this.holdUntil?0:this.bgmVolume*.6*(this.quiet||this.scene==='concept'?.25:1);
     this.bgmBus.gain.setTargetAtTime(level,c.currentTime,.08);
@@ -192,7 +243,7 @@ export class SoundEngine {
     for(const {element} of this.music.values())element.pause();
   }
   destroy(){
-    this.destroyed=true;this.stop();this.stopBgm();clearTimeout(this.holdTimer);
+    this.destroyed=true;this.stop();this.stopLayers();this.stopBgm();clearTimeout(this.holdTimer);
     if(typeof document!=='undefined')document.removeEventListener('visibilitychange',this.visibilityHandler);
     try{this.bgmBus?.disconnect();}catch{}
     this.context?.close?.().catch(()=>{});

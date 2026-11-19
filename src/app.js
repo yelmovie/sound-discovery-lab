@@ -31,7 +31,8 @@ document.addEventListener('map-finale',e=>sound.setMapFinale(e.detail));
 // Achievement cards use the effect voice (mute, effects switch, one cue at a time) and wait for voices and experiment sounds.
 // The last villain's hit always earns a card whose full-set jingle is the celebration, so the map plays its plain exit cue there.
 connectRewardCards({sound:name=>void sound.effect(`card-${name}`),masked:()=>sound.masked,onMap:()=>route==='map',hits:()=>state.mapHits});
-const voice=createVoice({enabled:()=>!state.settings.muted&&state.settings.sfx,quiet:value=>sound.setQuiet(value),onSpeaking:id=>{
+// A line that would start while an experiment sound or an answer chime plays waits for it, so a coach hint never cuts them.
+const voice=createVoice({enabled:()=>!state.settings.muted&&state.settings.sfx,quiet:value=>sound.setQuiet(value),wait:()=>sound.voiceWait,onSpeaking:id=>{
  const dialog=modalRoot.querySelector('dialog.modal-npc');
  if(dialog)dialog.dataset.speaking=String(Boolean(id&&dialog.dataset.voiceLines?.split(',').includes(id)));
 }});
@@ -114,8 +115,8 @@ function save(){
 function work(i){return state.work[i]??=( {} );}
 function setWork(i,patch){Object.assign(work(i),patch);save();}
 function finishInteraction(i){
- // The evidence chime waits for the experiment sound so it never masks the sound being compared.
- if(collectReadyEvidence(state,i)){feedback=null;const here=route,wait=lessons[i].challenge==='solutions'?2700:700;setTimeout(()=>{if(route===here)void sound.effect('success');},wait);}
+ // The evidence chime waits for the experiment sound (and, if it is still playing then, for its end) so it never masks it.
+ if(collectReadyEvidence(state,i)){feedback=null;const here=route,wait=lessons[i].challenge==='solutions'?2700:700;sound.chime('success',wait,()=>route===here);}
  save();updateView();
 }
 function runTrial(i,action,data){
@@ -128,7 +129,7 @@ function runTrial(i,action,data){
   inputLockedUntil=Date.now()+500;
   // The sparkle waits for the experiment sound (the before/after pair is longer) so it never masks what is compared.
   const here=route,wait=id==='solutions'?2700:id==='melody'||id==='sort'?1100:850;
-  if(!collectReadyEvidence(structuredClone(state),i))setTimeout(()=>{if(route===here)void sound.effect('success');},wait);
+  if(!collectReadyEvidence(structuredClone(state),i))sound.chime('success',wait,()=>route===here);
  }
 }
 function strikeAndCapture(w,force){
@@ -323,8 +324,19 @@ function render(){
   });return;
  }
  const entering=voiceSeen.route!==route;sound.setScene(route.startsWith('lesson/')?'lesson':route);app.innerHTML=header()+(route==='home'?home():route==='map'?mapPage():route==='final'?finalPage():route==='result'?resultPage():lessonPage(Number(route.split('/')[1])))+adminDock()+`<footer class="statusbar"><span id="audio-status" role="status">${esc(soundText||'소리 준비됨')}</span><span id="save-status" role="status">${esc(studentState?'교사용 시연 · 학생 기록에 저장하지 않음':warning||'이 브라우저에 자동 저장 중')}</span></footer>${warning?`<div class="save-warning" role="alert">${esc(warning)}</div>`:''}`;if(route.startsWith('lesson/')){syncLessonCue();const n=Number(route.split('/')[1]);if(entering&&lessons[n].base===8&&!state.evidence[n])voice.say('reader-complaint',700);fitExperiment();fitObserver??=new ResizeObserver(fitExperiment);fitObserver.disconnect();fitObserver.observe(app.querySelector('.experiment-board'));}if(route==='home')disposeNpc=mountNpcGuide(app.querySelector('.title-actions'),{name:'울림새 삐오',portrait:'/image/generated/dialogue/pio.webp',src:'./media/audio/voices/el-welcome.mp3',text:'소리 탐험을 시작해 볼까? 소리가 날 때 물체가 어떻게 떨리는지 관찰하고, 소리의 크기와 높낮이를 직접 비교해 보자.',enabled:()=>!state.settings.muted&&state.settings.sfx,quiet:value=>{if(value)voice.stop();sound.setQuiet(value)}});if(route==='map')openMap();
- if(entering&&!route.startsWith('lesson/')){voiceSeen={route,text:''};if(route==='home')voice.say('title-bubble',400);if(route==='final')voice.say(voiceChains.final,500);if(route==='result'&&state.restored&&evidenceCount(state)===LESSON_COUNT)voice.say(voiceChains.ending,1600);}
+ if(entering&&!route.startsWith('lesson/')){voiceSeen={route,text:''};if(route==='home')sayTitle();if(route==='final')voice.say(voiceChains.final,500);if(route==='result'&&state.restored&&evidenceCount(state)===LESSON_COUNT)voice.say(voiceChains.ending,1600);}
  syncRunStage();
+}
+// Map places (facilities 0-4 and the sound core 5) already open when this page was loaded or last shown on the map.
+// One that opened since then gets the unlock sound once on the next map visit; a reload starts from what is saved,
+// so nothing replays. Teacher preview (everything open) neither plays it nor changes the record.
+const openPlaces=()=>[0,1,2,3,4].filter(n=>canLesson(state,n*4)).concat(canRoute(state,'final')?[5]:[]);
+let placesShown=new Set(openPlaces());
+function announceOpened(){
+ if(state.settings.admin)return false;
+ const now=openPlaces(),fresh=now.some(n=>!placesShown.has(n));placesShown=new Set(now);
+ if(fresh)setTimeout(()=>{if(route==='map')sound.unlockCue();},150);
+ return fresh;
 }
 function enterMapStage(n){
  if(n===5?!canRoute(state,'final'):!canLesson(state,n*4))return lockedNote(n);
@@ -348,18 +360,33 @@ function openMap(){
   status.hidden=true;
   try{
    const clearStage=dialogueStage;dialogueStage=null;
-   map=world.mountMap(canvas,state,enterMapStage,{clearStage,onMapHit:patch=>{const before=state.mapHits;state.mapHits={...before,...patch};save();awardRewardCards(before,state.mapHits);},encounterHold:rewardCardHold,encounterTone:(kind,hits)=>void sound.effect(kind==='hit'?`hit${hits}`:kind==='contact'?'bump':kind==='victory'?'exit':kind),onView:syncMapView,onTravel:syncMapTravel,onLoad:()=>{if(current()){mapFailed=false;status.hidden=true;}},onError:()=>fail(),onStep:()=>sound.tone({frequency:170,level:.5,duration:.06,kind:'ui'}),residentLine:n=>stages[n].restored,onResidentNear:n=>voice.say(`restored-${n+1}`,300),villainVoice:text=>{const id=voiceFor(text);if(id)voice.say(id);},residentLabel:n=>stages[n].name+' 주민과 대화하기',onTalk:residentDialogue});
+   map=world.mountMap(canvas,state,enterMapStage,{clearStage,onMapHit:patch=>{const before=state.mapHits;state.mapHits={...before,...patch};save();awardRewardCards(before,state.mapHits);},encounterHold:rewardCardHold,encounterTone:(kind,hits)=>void sound.effect(kind==='hit'?`hit${hits}`:kind==='contact'?'bump':kind==='victory'?'exit':kind),onView:syncMapView,onTravel:syncMapTravel,onLoad:()=>{if(current()){mapFailed=false;status.hidden=true;}},onError:()=>fail(),onStep:()=>void sound.step(),residentLine:n=>stages[n].restored,onResidentNear:n=>voice.say(`restored-${n+1}`,300),villainVoice:text=>{const id=voiceFor(text);if(id)voice.say(id);},residentLabel:n=>stages[n].name+' 주민과 대화하기',onTalk:residentDialogue});
    const events=new AbortController(),mounted=map,destroy=map.destroy;
    controls.bindDirectionPad(page,'.map-dpad [data-direction]',b=>b.dataset.direction,{signal:events.signal,blocked:()=>document.hidden||!!document.querySelector('dialog[open]'),press:d=>mounted.direction(d,true),release:d=>mounted.direction(d,false),tap:d=>mounted.nudge(d)});
    map.destroy=()=>{events.abort();destroy();};
    map.setView(mapView);
    if(modalRoot.querySelector('dialog')){pendingMapTravel=null;map.pause();}
    if(pendingMapTravel!==null){const target=pendingMapTravel;pendingMapTravel=null;map.walk(target);}
-   const next=stages.findIndex((_,i)=>!stageDone(state,i)),mission=next<0?'mission-core':`mission-${next+1}`;
-   if(!heardMissions.has(mission)){heardMissions.add(mission);voice.say(mission,700);}
+   const next=stages.findIndex((_,i)=>!stageDone(state,i)),mission=next<0?'mission-core':`mission-${next+1}`,opened=announceOpened();
+   // The unlock sound comes first (from 0.15 s, about 0.9 s long); the mission line then starts 0.4 s later than usual, after it.
+   if(!heardMissions.has(mission)){heardMissions.add(mission);voice.say(mission,opened?1100:700);}
    signals.mountSignalRestoration(page,state,save,frequency=>sound.play({frequency,kind:'fork',duration:.5}));
   }catch{fail();}
  },()=>fail(true));
+}
+// Opening the app is not a gesture, so the title line waits for the first tap or key (once). A tap on the guide
+// button plays its own welcome line instead.
+let titleWaiting=false;
+function sayTitle(){
+ if(navigator.userActivation?.hasBeenActive)return voice.say('title-bubble',400);
+ if(titleWaiting)return;titleWaiting=true;
+ const first=e=>{
+  if(e.type==='keydown'&&(e.repeat||navigator.userActivation?.isActive===false))return;
+  removeEventListener('pointerdown',first,true);removeEventListener('keydown',first,true);titleWaiting=false;
+  if(route!=='home'||e.target?.closest?.('.npc-stage-button,[data-action]')||modalRoot.querySelector('dialog'))return;
+  voice.say('title-bubble',400);
+ };
+ addEventListener('pointerdown',first,true);addEventListener('keydown',first,true);
 }
 function navigate(next){voice.stop();stopExperiment();cancelAdvance();inputLockedUntil=Date.now()+300;if(!canRoute(state,next))next='map';if(next!==route)trail.push(route);const lesson=lessonFromRoute(state,next);if(lesson!==null)state.resumeLesson=lesson;else if(next==='map'&&state.evidence[state.resumeLesson])state.resumeLesson=null;route=next;feedback=null;lastObject='';clearTimeout(liveTimer);playingUntil=0;sound.stop();closeModal(false);save();render();void sound.effect('tap');window.scrollTo(0,0);document.querySelector('main h1')?.setAttribute('tabindex','-1');document.querySelector('main h1')?.focus({preventScroll:true});}
 sound.onStatus=text=>{soundText=text;const el=document.querySelector('#audio-status');if(el)el.textContent=text;};

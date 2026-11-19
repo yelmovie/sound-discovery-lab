@@ -18,3 +18,12 @@ test('hiding the page or stopping clears queued voice and releases quiet state',
 test('explicit stop cancels delayed narration',async()=>{const h=harness();try{h.voice.say('story-1',15);h.voice.stop();await new Promise(resolve=>setTimeout(resolve,25));assert.equal(h.instances.length,0);assert.equal(h.quiet.at(-1),false);}finally{h.restore();}});
 
 test('request completion reads its heading before either next-step cue',()=>{assert.deepEqual(voiceCue('lesson-done',true),['quest-done','lesson-done']);assert.deepEqual(voiceCue('stage-done',true),['quest-done','stage-done']);assert.deepEqual(voiceCue('lesson-done',false),['lesson-done']);assert.deepEqual(voiceCue('retry',true),['retry']);});
+test('a line waits for an experiment sound to end instead of cutting it',async()=>{
+ const instances=[],old={Audio:globalThis.Audio,document:globalThis.document,window:globalThis.window};let left=40;
+ globalThis.Audio=class{constructor(src){this.src=src;this.paused=true;instances.push(this);}play(){this.paused=false;return Promise.resolve();}pause(){this.paused=true;}removeAttribute(){}load(){}};
+ globalThis.document={hidden:false,addEventListener(){}};globalThis.window={addEventListener(){}};
+ const quiet=[],voice=createVoice({enabled:()=>true,quiet:v=>quiet.push(v),wait:()=>left});
+ try{voice.say('hint-2-1');await wait();assert.equal(instances.length,0);assert.deepEqual(quiet,[false]);
+  left=0;await new Promise(resolve=>setTimeout(resolve,140));assert.equal(voice.playing,'hint-2-1');assert.equal(quiet.at(-1),true);
+ }finally{voice.stop();Object.assign(globalThis,old);}
+});

@@ -26,7 +26,7 @@ before(async()=>{
 after(()=>server?.kill());
 
 test('five concept films and credited instrument effects ship in the offline asset manifest',async()=>{
- assert.equal(concepts.length,5);assert.equal(Object.keys(interfaceSounds).length,23);
+ assert.equal(concepts.length,5);assert.equal(Object.keys(interfaceSounds).length,27);
  const sfx=JSON.parse(await readFile(new URL('../media/audio/sfx/sources.json',import.meta.url),'utf8'));
  for(const f of sfx.files){assert.match(f.license,/^(CC0|PD)/);assert.ok(f.sources.every(s=>/^https:\/\/freesound\.org\//.test(s.source_page)&&/^CC0/.test(s.license)));}
  for(const cue of Object.values(interfaceSounds))if(cue.src.startsWith('media/audio/sfx/'))assert.ok(sfx.files.some(f=>`media/audio/sfx/${f.file}`===cue.src),cue.src);

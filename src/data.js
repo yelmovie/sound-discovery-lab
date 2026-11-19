@@ -27,7 +27,11 @@ export const interfaceSounds={
  bump:{src:sfx('su-muffled-01'),gain:.2},victory:{src:sfx('victory-jingle-02'),gain:.2},
  // Achievement cards (map-reward-cards.js): fly in and out, reveal (the two rarest use the longer jingle), land in a slot, full set.
  'card-whoosh':{src:sfx('wind-whoosh-03'),gain:.3},'card-reveal':{src:sfx('reward-01'),gain:.24},'card-epic':{src:sfx('reward-03'),gain:.22},
- 'card-slot':{src:sfx('pickup-01'),gain:.3},'card-complete':{src:sfx('victory-jingle-01'),gain:.2}
+ 'card-slot':{src:sfx('pickup-01'),gain:.3},'card-complete':{src:sfx('victory-jingle-01'),gain:.2},
+ // Map (2026-11-19): footsteps alternate while the explorer walks; a facility or the core that has just opened gets
+ // the unlock click and, 0.12 s later, the restore ding-dong. Both play beside the effect voice (audio.js layer/step).
+ 'step-1':{src:sfx('step-01'),gain:.18,max:.3},'step-2':{src:sfx('step-02'),gain:.18,max:.3},
+ 'unlock-open':{src:'media/audio/maximize_008.ogg',gain:.2},'unlock-ding':{src:sfx('su-restore-dingdong-01'),gain:.2}
 };
 // Suno background music supplied by the user on 2026-11-17 (originals in references/suno).
 export const backgroundMusic={main:'media/audio/bgm/main-theme.mp3',finale:'media/audio/bgm/final-theme.mp3'};

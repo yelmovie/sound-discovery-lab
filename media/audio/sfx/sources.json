@@ -381,6 +381,63 @@
      "recheck": "https://freesound.org/people/qubodup/sounds/60027 에서 CC0 확인(2026-11-17)"
     }
    ]
+  },
+  {
+   "file": "step-01.mp3",
+   "use": "map footstep (alternates with step-02 while the explorer walks)",
+   "library_file": "sfx/step-01.mp3",
+   "license": "CC0",
+   "derivative": false,
+   "processing": "앞뒤 무음 제거; 최대 2.0 s; 짧은 페이드; 게인 -2.8 dB(목표 -20 LUFS, 참피크 -2 dBTP 이하); 모노 44.1 kHz MP3 112 kbps; 피치·속도 변경 없음",
+   "duration_s": 0.418,
+   "sha256": "c77001b9d67b37151499ce1993dd74427f8c26f47e4803096e6b76c386b88f32",
+   "sources": [
+    {
+     "title": "Footstep on Stone",
+     "creator": "sgossner",
+     "license": "CC0",
+     "source_page": "https://freesound.org/people/sgossner/sounds/197778",
+     "recheck": "https://freesound.org/people/sgossner/sounds/197778 에서 CC0 확인(2026-11-17)"
+    }
+   ]
+  },
+  {
+   "file": "step-02.mp3",
+   "use": "map footstep (alternates with step-01 while the explorer walks)",
+   "library_file": "sfx/step-02.mp3",
+   "license": "CC0",
+   "derivative": false,
+   "processing": "앞뒤 무음 제거; 최대 2.0 s; 짧은 페이드; 게인 -1.6 dB(목표 -20 LUFS, 참피크 -2 dBTP 이하); 모노 44.1 kHz MP3 112 kbps; 피치·속도 변경 없음",
+   "duration_s": 0.444,
+   "sha256": "a84873e22e90c19c2623df7971b75538b55a081492dbdfdc16f4685d2231ae79",
+   "sources": [
+    {
+     "title": "concrete footstep 4",
+     "creator": "Yoyodaman234",
+     "license": "CC0",
+     "source_page": "https://freesound.org/people/Yoyodaman234/sounds/166506",
+     "recheck": "https://freesound.org/people/Yoyodaman234/sounds/166506 에서 CC0 확인(2026-11-17)"
+    }
+   ]
+  },
+  {
+   "file": "su-restore-dingdong-01.mp3",
+   "use": "map: a new facility or the sound core opens (after maximize_008.ogg)",
+   "library_file": "sound-unit/su-restore-dingdong-01.mp3",
+   "license": "CC0",
+   "derivative": false,
+   "processing": "앞뒤 무음 제거; 최대 2.0 s; 짧은 페이드; 게인 -2.8 dB(목표 -18 LUFS, 참피크 -2 dBTP 이하); 모노 44.1 kHz MP3 112 kbps; 피치·속도 변경 없음",
+   "duration_s": 0.758,
+   "sha256": "8ad20f3a56beac763da8fa92b64f8fc6f82fadf2a49a5c4bd4090730f3fb604a",
+   "sources": [
+    {
+     "title": "Soft-Notifications - Bell - Ding-Dong.mp3",
+     "creator": "LegitCheese",
+     "license": "CC0",
+     "source_page": "https://freesound.org/people/LegitCheese/sounds/571513",
+     "recheck": "https://freesound.org/people/LegitCheese/sounds/571513 에서 CC0 확인(2026-11-17)"
+    }
+   ]
   }
  ]
 }

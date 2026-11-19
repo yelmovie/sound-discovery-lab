@@ -39,7 +39,7 @@ export const settingsContent = {
     '캐릭터 음성: ElevenLabs(eleven_v4, 유료 요금제 상업 이용)로 생성 · 캐릭터마다 한 목소리 · 파일별 제작·검증 정보는 docs/VOICE-FILL-20261118.json, docs/NPC-DIALOGUE-20261112.json.',
     '소리의 성질 성취기준 · 경기도교육청 2022 개정 교육과정 편성 안내(goe.go.kr).',
     '진동·크기·높낮이·전달·배려 실험과 16초 개념 영상 5편 · 자체 구성, CC0 녹음과 비교용 소리 모델.',
-    '화면·지도 효과음 15개: juancamiloorjuela, sgossner, dvdfu, mark205, Khrinx, TheEndOfACycle, HenKonen, cookies+policy, Fupicat / Freesound · 모두 CC0. 전체 출처는 media/audio/sfx/sources.json',
+    '화면·지도 효과음 15개: juancamiloorjuela, sgossner, dvdfu, mark205, Khrinx, TheEndOfACycle, HenKonen, cookies+policy, Fupicat / Freesound · 지도 발걸음·시설 열림: sgossner, Yoyodaman234, LegitCheese / Freesound, Kenney · 모두 CC0. 전체 출처는 media/audio/sfx/sources.json',
     '배경 음악 2곡(메인 테마·파이널): Suno로 생성한 곡을 제작자가 제공(2026-11-17).',
     '북·나무 타격·칼림바: Versilian Studios / Sam Gossner, VCSL · CC0 · github.com/sgossner/VCSL',
     '자: alienistcog / Freesound 124719 · 고무줄: baidonovan / Freesound 187354 · 소리굽쇠: jmuehlhans / Wikimedia Commons · 모두 CC0. 전체 출처는 media/audio/experiments/sources.json에 있어요.',
