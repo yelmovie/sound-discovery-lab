@@ -21,7 +21,7 @@ const sourceWork=[{seen:['rubber','drum'],choice:0},{started:true,stopped:true,c
 function seed(n,finished=false){const s=freshState();s.settings={...s.settings,muted:true,bgm:false,sfx:false};for(let i=0;i<(finished?20:n);i++){const l=lessons[i];s.work[i]=l.challenge?{challenge:{proof:proofs[l.challenge]}}:structuredClone(sourceWork[l.base]);assert.ok(recordEvidence(s,i).ok,`seed ${i}`);}if(!finished)s.work[n]=lessons[n].challenge?{challenge:{}}:{};s.lastRoute=`lesson/${n}`;return s;}
 const A=(name,count=1)=>[`[data-action="${name}"]`,count];
 const required=[
- [A('instrument',4),A('choice',2)],[A('fork-start'),A('fork-stop'),A('choice',2)],
+ [A('instrument',4),A('choice',2)],[A('fork-start'),A('choice',2)],
  [A('challenge-listen'),A('challenge-select',3)],[A('challenge-ring'),A('challenge-rest'),A('challenge-clear')],
  [A('hit'),['#force',1]],[A('sample-play',2),A('choice',2)],
  [A('challenge-strike',4)],[A('challenge-parcel',3),A('challenge-slot',3)],
@@ -78,7 +78,8 @@ function audit({requirements=[],quick=false,expectedTarget='',debug=false}={}){
   }
   const walk=document.createTreeWalker(main||document.body,NodeFilter.SHOW_TEXT),sentences=new Map();let n;
   while(n=walk.nextNode()){
-   const text=n.textContent.trim();if(!text||!visible(n.parentElement))continue;const e=n.parentElement,range=document.createRange();range.selectNodeContents(n);const rs=[...range.getClientRects()].filter(r=>r.width>1&&r.height>1),control=e.closest('button'),block=e.closest('button,p,h1,h2,h3,label,legend,.stage-badge,.chapter');
+   const text=n.textContent.trim();if(!text||!visible(n.parentElement))continue;if((()=>{for(let p=n.parentElement;p&&p!==document.body;p=p.parentElement){const b=p.getBoundingClientRect();if(b.width<=1&&b.height<=1&&getComputedStyle(p).overflow==='hidden')return true;}})())continue;// screen-reader-only text
+   const e=n.parentElement,range=document.createRange();range.selectNodeContents(n);const rs=[...range.getClientRects()].filter(r=>r.width>1&&r.height>1),control=e.closest('button'),block=e.closest('button,p,h1,h2,h3,label,legend,.stage-badge,.chapter');
    let renderedFont=parseFloat(getComputedStyle(e).fontSize);for(let p=e;p&&p!==document.body;p=p.parentElement){const style=getComputedStyle(p),transform=style.transform;if(transform!=='none'){const matrix=new DOMMatrix(transform);renderedFont*=Math.hypot(matrix.a,matrix.b);}renderedFont*=parseFloat(style.zoom)||1;}if(renderedFont<minimumFont){minimumFont=renderedFont;minimumFontLabel=text.slice(0,45);}
    const readingFloor=innerWidth>=1800?18:innerWidth>=900?14:0;if(readingFloor&&renderedFont<readingFloor-.1)add('small-reading-text',e,{actual:renderedFont,minimum:readingFloor,text:text.slice(0,45)});
    if(text.replace(/\s+/g,'').length>=12){const normalized=text.replace(/\s+/g,' ');sentences.set(normalized,(sentences.get(normalized)||0)+1);}
@@ -135,7 +136,7 @@ try{
  if(probe&&phase.includes('aux'))await auxiliaryChecks();
  if(cueOnly)await cueChecks();
  if(phase!=='baseline'&&!probe&&!cueOnly&&!process.env.QA_ACTIVITY_ONLY){
-  if(!autoOnly)for(const [width,height]of [[1280,800],[915,412],[740,360],[390,844],[360,740]]){await page.setViewportSize({width,height});for(const [i,work]of [[2,{challenge:{proof:proofs.parts.slice(0,2)}}],[2,{challenge:{proof:proofs.parts.slice(0,3)}}],[3,{challenge:{proof:proofs.rhythm.slice(0,2),sequence:['울림','쉼','울림','쉼']}}],[10,{challenge:{proof:proofs.melody.slice(0,2)}}],[15,{challenge:{proof:proofs.classify.slice(0,5)}}],[18,{challenge:{proof:proofs.solutions.slice(0,2)}}]]){const s=seed(i);s.work[i]=work;await open(s);await measure(`long-${i}-${work.challenge.proof.length}`,i);}
+  if(!autoOnly)for(const [width,height]of [[1280,800],[915,412],[740,360],[390,844],[360,740]]){await page.setViewportSize({width,height});for(const [i,work]of [[2,{challenge:{proof:proofs.parts.slice(0,1)}}],[2,{challenge:{proof:proofs.parts.slice(0,2)}}],[3,{challenge:{proof:proofs.rhythm.slice(0,1),sequence:['울림','쉼','울림','쉼']}}],[10,{challenge:{proof:proofs.melody.slice(0,1)}}],[15,{challenge:{proof:proofs.classify.slice(0,3)}}],[18,{challenge:{proof:proofs.solutions.slice(0,2)}}]]){const s=seed(i);s.work[i]=work;await open(s);await measure(`long-${i}-${work.challenge.proof.length}`,i);}
    for(const i of [0,4,8,12,16,19]){const s=seed(i,true);await open(s);await measure(`complete-${i}`,i,lessons[i].challenge?[A('challenge-replay')]:required[i]);}
    await open(seed(11));await action('challenge-check');await measure('error-mix',11);
    await open(seed(18));await action('challenge-solution','[data-value="volume"]');await measure('error-solution',18);

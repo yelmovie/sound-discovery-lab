@@ -81,3 +81,7 @@ main .experiment-content .stop-lab{grid-template-columns:minmax(0,1fr)}
  main.result-page .result-team{margin:6px 0}
  main.result-page .result-team .portrait{width:52px;height:52px}
 }
+/* 활동 9 완료: 발견 띠가 왼쪽 첫 줄을 차지해도 자 그림 칸은 두 줄을 다 써서 판이 줄어들지 않게 */
+@media (min-width:1000px) and (min-height:700px){
+ .activity-base-4:has(>.saved-discovery)>.ruler-demonstration{grid-column:2;grid-row:1/3}
+}

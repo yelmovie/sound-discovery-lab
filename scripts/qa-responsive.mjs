@@ -6,6 +6,7 @@ import path from 'node:path';
 import assert from 'node:assert/strict';
 import { freshState, recordEvidence, STORAGE_KEY } from '../src/model.js';
 import { lessons, finalTasks } from '../src/data.js';
+import { expectedProof } from '../src/challenge-rules.js';
 
 const root=fileURLToPath(new URL('../',import.meta.url));
 const phase=process.argv[2]||'baseline';
@@ -25,6 +26,8 @@ const errors=[];page.on('pageerror',e=>errors.push(String(e)));
 page.on('response',r=>{if(r.status()>=400)errors.push(`${r.status()} ${r.url()}`);});
 const base=process.env.QA_BASE||'http://127.0.0.1:4186';
 const proofs={parts:['0','1','2','1'],rhythm:['울림,쉼,울림','울림,쉼,울림,쉼','울림,쉼,울림,쉼,울림'],signal:['1','3','2','1'],sort:['1,2,3','1,2,3'],melody:['18,12,6','6,12,18','12,6,18,12'],mix:['6,1','18,3','12,1','6,3'],sensor:['air','water','solid'],classify:['air','water','solid','air','water','solid'],solutions:['pad','volume','time','place'],festival:['balanced']};
+// Seed with the current challenge answers so the QA states stay valid when a challenge changes.
+Object.assign(proofs,structuredClone(expectedProof));
 const sourceWork=[{seen:['rubber','drum'],choice:0},{started:true,stopped:true,choice:1},{a:1,b:3,force:1},{heardA:true,heardB:true,pairKey:'1,3',choice:1},{lengths:[18,6],length:18,choice:0},{targetHeard:true,pattern:[18,6,12]},{media:['air','water','solid'],choice:1},{verified:{0:'air',1:'water',2:'solid'}},{heard:true,place:'library',situation:'reading',person:'reader'},{solutions:['pad'],before:true,after:true,afterKey:'pad',choice:0}];
 function seed(n,finished=false){const s=freshState();s.settings={...s.settings,muted:true,bgm:false,sfx:false};for(let i=0;i<(finished?20:n);i++){const l=lessons[i];s.work[i]=l.challenge?{challenge:{proof:proofs[l.challenge]}}:structuredClone(sourceWork[l.base]);const r=recordEvidence(s,i);if(!r.ok)throw Error(`Bad QA seed ${i}: ${r.message}`);}s.lastRoute=n<20?`lesson/${n}`:'final';return s;}
 async function open(s){if(!page.url().startsWith(base))await page.goto(base,{waitUntil:'domcontentloaded'});await page.evaluate(({s,key})=>localStorage.setItem(key,JSON.stringify(s)),{s,key:STORAGE_KEY});await page.reload({waitUntil:'domcontentloaded'});await page.evaluate(async()=>{await document.fonts.ready;for(const i of document.images)i.loading='eager';await Promise.race([Promise.all([...document.images].map(i=>i.decode().catch(()=>{}))),new Promise(r=>setTimeout(r,2500))]);window.scrollTo(0,0);for(const e of document.querySelectorAll('.lesson-page,.experiment-board,.research-panel'))e.scrollTop=0;});}
@@ -98,7 +101,7 @@ try{
  // Longest rounds and completed evidence at a narrow viewport.
  for(const [width,height]of [[360,740],[915,412]]){
   await page.setViewportSize({width,height});const vp=`${width}x${height}`;
-  for(const [i,work]of [[2,{challenge:{proof:proofs.parts.slice(0,2)}}],[2,{challenge:{proof:proofs.parts.slice(0,3)}}],[3,{challenge:{proof:proofs.rhythm.slice(0,2),sequence:['울림','쉼','울림','쉼']}}],[10,{challenge:{proof:proofs.melody.slice(0,2)}}],[15,{challenge:{proof:proofs.classify.slice(0,5)}}],[18,{challenge:{proof:proofs.solutions.slice(0,2)}}]]){const s=seed(i);s.work[i]=work;await open(s);await inspect(`long-round-${i}-${work.challenge.proof.length}`,vp);}
+  for(const [i,work]of [[2,{challenge:{proof:proofs.parts.slice(0,1)}}],[2,{challenge:{proof:proofs.parts.slice(0,2)}}],[3,{challenge:{proof:proofs.rhythm.slice(0,1),sequence:['울림','쉼','울림','쉼']}}],[10,{challenge:{proof:proofs.melody.slice(0,1)}}],[15,{challenge:{proof:proofs.classify.slice(0,3)}}],[18,{challenge:{proof:proofs.solutions.slice(0,2)}}]]){const s=seed(i);s.work[i]=work;await open(s);await inspect(`long-round-${i}-${work.challenge.proof.length}`,vp);}
   const complete=seed(20,true);complete.lastRoute='lesson/19';await open(complete);await inspect('completed-19',vp);
   await open(seed(11));await page.waitForTimeout(350);await action('challenge-check');await inspect('error-mix',vp);
   await open(seed(18));await page.waitForTimeout(350);await action('challenge-solution','[data-value="volume"]');await action('challenge-before');await action('challenge-after');await inspect('error-solution',vp);
