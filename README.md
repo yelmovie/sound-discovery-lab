@@ -10,6 +10,7 @@
 - 숨긴 중복: 안내 팝업 3종(노트와 개념 영상·증거 노트·인물 대화)의 아래 「닫기」(위 X 유지), 마지막 미션 「이전 원리」(원리 알약과 같음), 교사 미리보기 결과의 「지도 둘러보기」.
 - 검증: `npm test` 148/148, `npm run build`, 홈→지도→활동→새로고침→마지막 미션→인증서 클릭 경로, 운영 주소 재측정. 헤드리스 Chrome이 이 밤 멈춰 `scripts/qa-*.mjs`는 못 돌림.
 - 커밋 `9cc27aa`, 운영 Workers 버전 `9defa269`, 해시 MATCH. 자세한 표: [docs/LAYOUT-BALANCE-20261118.md](docs/LAYOUT-BALANCE-20261118.md), 판정 [RELEASE-REVIEW-20261118](docs/reviews/RELEASE-REVIEW-20261118.md)(조건부 배포 가능), 점수 [SCORE-20261118](docs/reviews/SCORE-20261118.md)(78/100).
+- 추가(11-19 오후): 활동 2 소리굽쇠 그림과 같은 일 하던 버튼 줄 삭제·지시문 수정(`app.js`·`lesson-activity.js`), 설정 창은 아래 오른쪽 「닫기」 하나(16개 공통 기준), 교실 화면 크기에서 18px 미만 글자 0(지도 체력 점 기호 제외), 결과 1024×768 세로 스크롤 없앰. 커밋 `d8da048`, 운영 Workers `f128ec64`, 루트·`app.js`·`layout-balance.css`·`lesson-activity.js`·`app.css`·`sw.js` 해시 MATCH.
 
 ## 성취 카드 (2026-11-18)
 
