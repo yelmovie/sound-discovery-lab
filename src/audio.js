@@ -14,7 +14,7 @@ const bounded=(value,min,max,fallback)=>Number.isFinite(value)?Math.min(max,Math
 export class SoundEngine {
   constructor(){
     this.context=null;this.nodes=[];this.generation=0;this.combatGeneration=0;this.muted=false;this.onStatus=()=>{};
-    this.bgm=true;this.sfx=true;this.bgmVolume=.35;this.scene='home';
+    this.bgm=true;this.sfx=true;this.bgmVolume=.35;this.sfxVolume=1;this.scene='home';
     this.music=new Map();this.track='main';this.mapFinale=false;this.finaleDone=false;this.holdUntil=0;this.holdTimer=null;
     this.quiet=false;this.unlocked=false;this.needsGesture=false;this.destroyed=false;this.bgmBus=null;
     this.buffers=new Map();this.layers=new Set();this.chimes=new Set();this.chimeUntil=0;this.stepTurn=0;this.stepNode=null;this.effectClock=0;this.effectClocks=new Map();this.effectRequest=0;this.effectNode=null;
@@ -30,6 +30,9 @@ export class SoundEngine {
     const wasMuted=this.muted,wasSfx=this.sfx;
     for(const key of ['muted','bgm','sfx'])if(typeof settings[key]==='boolean')this[key]=settings[key];
     if(Number.isFinite(settings.bgmVolume))this.bgmVolume=bounded(settings.bgmVolume,0,1,.35);
+    // Effects volume (settings 0-100 %, default 100 % = the levels before it existed) scales interface, fight, reward
+    // and footstep cues only. Experiment sounds keep their own levels: their loudness is what the learner compares.
+    if(Number.isFinite(settings.sfxVolume))this.sfxVolume=bounded(settings.sfxVolume,0,1,1);
     if(this.muted!==wasMuted||wasSfx&&!this.sfx){this.stop();this.stopLayers();}
     this.syncBgm();
   }
@@ -67,6 +70,8 @@ export class SoundEngine {
   }
   async ready(combat=false){
     if(this.destroyed||this.quiet&&!combat||this.muted||this.needsGesture||typeof document!=='undefined'&&document.hidden)return false;
+    // Before the first tap or key the browser refuses audio: nothing is tried, so no refused or stale cue plays later.
+    if(globalThis.navigator?.userActivation?.hasBeenActive===false)return false;
     try{
       if(!this.context){const Audio=globalThis.AudioContext||globalThis.webkitAudioContext;this.context=new Audio();}
       if(this.context.state==='suspended')await this.context.resume();
@@ -81,7 +86,7 @@ export class SoundEngine {
     const osc=c.createOscillator(),gain=c.createGain();osc.type=kind==='rubber'?'triangle':'sine';
     const pitch=bounded(frequency,40,10000,440);osc.frequency.setValueAtTime(pitch,start);
     if(kind==='drum')osc.frequency.exponentialRampToValueAtTime(pitch*.58,start+.22);
-    const peak=Math.max(.001,bounded(level,0,1,.4)*(effectKinds.has(kind)?.025:.23));
+    const peak=Math.max(.001,bounded(level,0,1,.4)*(effectKinds.has(kind)?.025*this.sfxVolume:.23));
     gain.gain.setValueAtTime(0,start);gain.gain.linearRampToValueAtTime(peak,start+.012);gain.gain.exponentialRampToValueAtTime(.0001,start+length);
     osc.connect(gain);gain.connect(c.destination);osc.start(start);osc.stop(start+length+.03);
     const entry={source:osc,gain};this.nodes.push(entry);
@@ -150,14 +155,14 @@ export class SoundEngine {
       if(generation!==clock()||request!==this.effectRequest||this.quiet&&!combat||!this.sfx||this.muted||this.needsGesture||this.destroyed)return;
       this.fadeEffect();
       const c=this.context,source=c.createBufferSource(),gain=c.createGain(),rate=cue.rate??1,start=c.currentTime;
-      source.buffer=buffer;source.playbackRate.value=rate;source.playbackRate.setValueAtTime(rate,start);gain.gain.setValueAtTime(cue.gain??.16,start);
+      source.buffer=buffer;source.playbackRate.value=rate;source.playbackRate.setValueAtTime(rate,start);const level=(cue.gain??.16)*this.sfxVolume;gain.gain.setValueAtTime(level,start);
       source.connect(gain);gain.connect(c.destination);
       const entry={source,gain,effect:name};this.nodes.push(entry);this.effectNode=entry;
       // Completion chimes ring to their end: a voice line that follows waits for them (voiceWait).
       if(ringOut.has(name))this.chimeUntil=Math.max(this.chimeUntil,Date.now()+Math.min(2000,(Number.isFinite(buffer?.duration)?buffer.duration/rate:1)*1000));
       source.onended=()=>{source.disconnect();gain.disconnect();this.nodes=this.nodes.filter(n=>n!==entry);if(this.effectNode===entry)this.effectNode=null;};source.start(start);
       // A stop can only be scheduled after start, so the fade for long cues comes last.
-      if(cue.max&&Number.isFinite(buffer?.duration)&&buffer.duration/rate>cue.max){gain.gain.setValueAtTime(cue.gain??.16,start+cue.max-.12);gain.gain.linearRampToValueAtTime(0,start+cue.max);source.stop(start+cue.max+.02);}
+      if(cue.max&&Number.isFinite(buffer?.duration)&&buffer.duration/rate>cue.max){gain.gain.setValueAtTime(level,start+cue.max-.12);gain.gain.linearRampToValueAtTime(0,start+cue.max);source.stop(start+cue.max+.02);}
     }catch{if(generation===clock())this.tone({frequency:name==='success'?660:480,kind:'ui',level:.4,duration:.12});}
   }
   sample(src){
@@ -172,7 +177,7 @@ export class SoundEngine {
     try{
       const buffer=await this.sample(cue.src);
       if(!this.sfx||this.muted||this.needsGesture||this.destroyed||this.context?.state!=='running')return null;
-      const c=this.context,source=c.createBufferSource(),gain=c.createGain(),start=c.currentTime+bounded(delay,0,5,0),peak=(cue.gain??.16)*level;
+      const c=this.context,source=c.createBufferSource(),gain=c.createGain(),start=c.currentTime+bounded(delay,0,5,0),peak=(cue.gain??.16)*level*this.sfxVolume;
       source.buffer=buffer;source.playbackRate.value=rate;gain.gain.setValueAtTime(peak,start);
       source.connect(gain);gain.connect(c.destination);
       if(replace)this.fadeLayer(replace);

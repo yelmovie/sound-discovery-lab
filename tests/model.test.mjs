@@ -147,3 +147,10 @@ test('recording the same activity again never counts a second piece of evidence 
   assert.equal(evidenceCount(s),LESSON_COUNT);
   assert.equal(Object.keys(s.evidence).length,LESSON_COUNT);
 });
+test('voice switch and effects volume: new students start on, older saves carry the effects switch over to voices',()=>{
+  assert.deepEqual([freshState().settings.voice,freshState().settings.sfxVolume],[true,100]);
+  for(const [settings,voice] of [[{sfx:false},false],[{sfx:true},true],[undefined,true],[{sfx:false,voice:true},true],[{sfx:true,voice:false},false]]){
+    const s=normalize({version:2,settings});assert.equal(s.settings.voice,voice);assert.equal(s.settings.sfxVolume,100);
+  }
+  assert.equal(normalize({version:2,settings:{sfxVolume:42}}).settings.sfxVolume,40);assert.equal(normalize({version:2,settings:{sfxVolume:500}}).settings.sfxVolume,100);
+});

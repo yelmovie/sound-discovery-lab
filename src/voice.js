@@ -193,6 +193,8 @@ export function createVoice({enabled,quiet=()=>{},onSpeaking=()=>{},wait=()=>0})
   const start=()=>{
    if(mine!==ticket||!enabled())return;
    if(held&&!held.paused&&!held.ended&&Date.now()-asked<PATIENCE){timer=setTimeout(start,100);return;}
+   // Before the first tap or key the browser refuses to play: the line is not tried (the app asks again after that input).
+   if(typeof navigator!=='undefined'&&navigator.userActivation?.hasBeenActive===false){stop();return;}
    drop();const left=wait();if(left>0){timer=setTimeout(start,left+60);return;}
    quiet(true);chain=list.slice(1);next(list[0]);
   };

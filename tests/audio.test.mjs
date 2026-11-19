@@ -293,3 +293,17 @@ test('the map finale lets the card set jingle ring and raises its music from sil
   sound.effectClock=0;await sound.effect('victory');const victory=sound.effectNode;sound.setMapFinale(true);assert.equal(victory.gain.gain.events.at(-1).value,0);
  }finally{sound.destroy();globalThis.fetch=previousFetch;}
 });
+test('the effects volume scales interface, fight, reward and step cues but never experiment sounds',async()=>{
+ const previousFetch=globalThis.fetch,sound=new SoundEngine();sound.configure({bgm:false});
+ globalThis.fetch=async()=>({ok:true,arrayBuffer:async()=>new ArrayBuffer(8)});
+ try{await sound.ready();sound.context.decodeAudioData=async()=>({duration:.4});
+  await sound.effect('hit2');assert.equal(sound.effectNode.gain.gain.events[0].value,.34,'100 % (default) keeps the earlier level');
+  sound.configure({sfxVolume:.5});sound.effectClock=0;sound.effectClocks.clear();
+  await sound.effect('hit2');assert.equal(sound.effectNode.gain.gain.events[0].value,.17);
+  await sound.step();assert.equal(sound.stepNode.gain.gain.events[0].value,.09);
+  sound.tone({kind:'ui',level:.4,duration:.12});assert.equal(sound.context.gains.at(-1).gain.events.find(e=>e.kind==='linear').value,.4*.025*.5);
+  sound.context.decodeAudioData=undefined;
+  await sound.play({kind:'drum',frequency:150,level:1});
+  assert.equal(sound.context.gains.find(g=>g.gain.events.some(e=>e.kind==='exponential'&&e.value===.0001)&&g.gain.events.find(e=>e.kind==='linear')?.value===.23)?.gain.events.find(e=>e.kind==='linear').value,.23,'a full-force drum keeps its level');
+ }finally{sound.destroy();globalThis.fetch=previousFetch;}
+});

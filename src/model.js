@@ -2,7 +2,7 @@ import {normalizeMapHits} from './map-encounters.js';
 import { lessons, legacyLessons, legacyIndex, LESSON_COUNT, stageLessons, finalTasks, transferCases, diagnosisFields } from './data.js';
 import { cleanChallenge, checkChallenge } from './challenge-rules.js';
 export const STORAGE_KEY = 'ullim-city-v1';
-export const freshState = () => ({version:2,work:{},restoration:{},evidence:{},mapHits:{},settings:{muted:false,admin:false,bgm:true,sfx:true,bgmVolume:25},lastRoute:'home',resumeLesson:null,finalAnswers:{},restored:false,completedAt:null,previousCompletion:null});
+export const freshState = () => ({version:2,work:{},restoration:{},evidence:{},mapHits:{},settings:{muted:false,admin:false,bgm:true,sfx:true,voice:true,bgmVolume:25,sfxVolume:100},lastRoute:'home',resumeLesson:null,finalAnswers:{},restored:false,completedAt:null,previousCompletion:null});
 const object = value => value && typeof value === 'object' && !Array.isArray(value);
 function cleanWork(raw) {
   if (!object(raw)) return {};
@@ -23,7 +23,10 @@ export function normalize(raw) {
     const match=/^lesson\/(\d+)$/.exec(raw.lastRoute||'');
     raw={...raw,work:remap(raw.work),evidence:remap(raw.evidence),lastRoute:match?`lesson/${legacyIndex(Number(match[1]))}`:raw.lastRoute,previousCompletion:raw.restored?raw.completedAt:null,restored:false};
   }
-  base.settings = {muted:raw.settings?.muted===true,admin:raw.settings?.admin===true,bgm:raw.settings?.bgm!==false,sfx:raw.settings?.sfx!==false,bgmVolume:Number.isFinite(raw.settings?.bgmVolume)?Math.round(Math.max(0,Math.min(100,raw.settings.bgmVolume))/5)*5:25};
+  const percent=(value,fallback)=>Number.isFinite(value)?Math.round(Math.max(0,Math.min(100,value))/5)*5:fallback;
+  // Voice and effects volume came later (2026-11-20). Voices used to follow the effects switch, so a save without
+  // the voice switch carries on with that switch's value; the effects volume starts at 100 % (the earlier levels).
+  base.settings = {muted:raw.settings?.muted===true,admin:raw.settings?.admin===true,bgm:raw.settings?.bgm!==false,sfx:raw.settings?.sfx!==false,voice:typeof raw.settings?.voice==='boolean'?raw.settings.voice:raw.settings?.sfx!==false,bgmVolume:percent(raw.settings?.bgmVolume,25),sfxVolume:percent(raw.settings?.sfxVolume,100)};
   base.previousCompletion=typeof raw.previousCompletion==='string'&&Number.isFinite(Date.parse(raw.previousCompletion))?raw.previousCompletion:null;
   for (let i=0;i<LESSON_COUNT;i++) {
     if (object(raw.work?.[i])) base.work[i]=cleanWork(raw.work[i]);
