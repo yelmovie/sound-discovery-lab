@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import { SoundEngine } from '../src/audio.js';
 
 class Param {
@@ -108,6 +109,25 @@ test('hidden tab stops both channels and requires a fresh gesture before playbac
     assert.equal(sound.needsGesture,true);await sound.unlock();assert.equal(sound.needsGesture,false);assert.ok(playing(sound,'main'));
   }finally{sound.destroy();delete globalThis.document;}
   assert.equal(listeners.size,0);
+});
+
+test('a key press unlocks like a tap: no music under an experiment sound, and a refused key is tried again',async()=>{
+  const sound=new SoundEngine();
+  try{
+    sound.configure({bgmVolume:.5});await sound.unlock();sound.setScene('lesson');
+    await sound.play({duration:.4});const nodes=sound.nodes.length;await sound.unlock();
+    assert.equal(level(sound),0,'a key during an experiment sound keeps the theme at 0');assert.equal(sound.nodes.length,nodes,'and does not cut the experiment sound');
+    sound.stop();assert.ok(Math.abs(level(sound)-.3)<1e-9);
+  }finally{sound.destroy();}
+  // A key the browser does not count as a user action leaves resume() pending; the next key starts the theme.
+  const waiting=new SoundEngine();
+  try{
+    waiting.context=new Context();waiting.context.state='suspended';const resume=waiting.context.resume;
+    waiting.context.resume=()=>new Promise(()=>{});void waiting.unlock();await Promise.resolve();assert.ok(!playing(waiting,'main'));
+    waiting.context.resume=resume;assert.equal(await waiting.unlock(),true);assert.ok(playing(waiting,'main'));
+  }finally{waiting.destroy();}
+  const app=await readFile(new URL('../src/app.js',import.meta.url),'utf8');
+  assert.match(app,/document\.addEventListener\('keydown',e=>\{if\(!e\.repeat&&navigator\.userActivation\?\.isActive!==false\)void sound\.unlock\(\);\},\{capture:true\}\)/,'every key press the browser counts as a user action reaches sound.unlock()');
 });
 
 test('recorded drum uses the same cached sample and pitch for every striking force',async()=>{

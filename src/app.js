@@ -536,6 +536,9 @@ const manipulationOptions={
  }
 };
 app.addEventListener('click',handleClick);modalRoot.addEventListener('click',handleClick);
+// Keyboard-only use starts the music too, and restarts it after a hidden tab. A key the browser does not count as
+// a user action (Escape, Shift alone) is skipped, so audio is never opened early; the next key or click tries again.
+document.addEventListener('keydown',e=>{if(!e.repeat&&navigator.userActivation?.isActive!==false)void sound.unlock();},{capture:true});
 document.addEventListener('visibilitychange',()=>{if(document.hidden){const hadPreview=Boolean(previewVisual);stopExperiment();cancelAdvance();modalRoot.querySelector('video')?.pause();for(const w of Object.values(state.work))if(w.challenge)w.challenge.sounding=false;sound.stop();playingUntil=0;clearTimeout(liveTimer);if(hadPreview||route.startsWith('lesson/'))render();}});
 document.addEventListener('keydown',e=>{
  if(!['ArrowLeft','ArrowRight'].includes(e.key)||e.altKey||e.ctrlKey||e.metaKey||modalRoot.querySelector('dialog')||runStage)return;
