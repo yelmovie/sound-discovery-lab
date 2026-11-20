@@ -10,7 +10,7 @@ export const titleLogo = 'image/branding/title-logo.webp';
 export const titleBackground = 'image/backgrounds/title-city.webp';
 export const props = Object.fromEntries(['core','ring','tuning-fork','fork-stand','drum','mallet','kalimba','tine','transmitter','receiver'].map(name => [name, `image/generated/${name}.png`]));
 export const mapReactionAssets={hero:'image/generated/map-hero-reaction.webp',ally:'image/generated/map-ally-reaction.webp'};
-export const villageAssets = ['image/generated/ullim-village.webp','image/generated/map-villain-poses-left.webp',...Object.values(mapReactionAssets),...['explorer-walk','bird-walk'].map(name => `image/generated/${name}.webp`)];
+export const villageAssets = ['image/generated/ullim-village.webp','image/generated/map-villain-poses-left.webp',...Object.values(mapReactionAssets),...['explorer-walk-lite','bird-walk-lite'].map(name => `image/generated/${name}.webp`)];
 import { conceptAssets } from './concepts.js';
 // 2026-11-17: round/evidence success, pin taps, drag pick-up and slot drops use CC0 Freesound clips (media/audio/sources-20261117.json).
 // Effects sound like instruments so the whole city plays like one (CC0, media/audio/sfx/sources.json).

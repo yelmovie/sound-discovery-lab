@@ -43,7 +43,7 @@ async function addModule(file){
 }
 await addModule('/src/app.js');
 // The 3D run stage is imported on demand, so the walk above never reaches it. Precache it for offline classrooms.
-const runStage=['/src/run-stage.js','/src/run-stage-rules.js','/src/run-input.js','/src/run-character.js','/src/run-stage-hud.js','/src/map-controls.js','/src/vendor/three/three.module.min.js','/image/generated/explorer-walk.webp','/image/generated/concepts/pio-fly.webp',...runStageAssets.map(file=>`/${file}`)];
+const runStage=['/src/run-stage.js','/src/run-stage-rules.js','/src/run-input.js','/src/run-character.js','/src/run-stage-hud.js','/src/map-controls.js','/src/vendor/three/three.module.min.js','/image/generated/explorer-walk-lite.webp','/image/generated/concepts/pio-fly.webp',...runStageAssets.map(file=>`/${file}`)];
 // Achievement card pictures appear the moment a map villain is driven off, so they are precached too.
 const shell=['/','/index.html','/manifest.webmanifest','/src/app.css',...new Set([...sources,...runStage]),...rewardCardAssets.map(file=>`/${file}`),...assets.filter(file=>/^(image\/(branding|generated\/pio-guide)|media\/audio\/.*\.(ogg|m4a)$|media\/audio\/sfx\/)/.test(file)||file.startsWith('media/fonts/')).map(file=>`/${file}`),...shareAssets.filter(file=>file.includes('icons')).map(file=>`/${file}`),`/${backgrounds[1]}`,`/${titleBackground}`];
 const swPath=path.join(root,'dist','sw.js'),sw=await readFile(swPath,'utf8');

@@ -10,11 +10,11 @@ body:has(.single-screen) #app{height:100dvh;padding:0;overflow:hidden}
 .lesson-page.single-screen::before{position:absolute;inset:0;background:linear-gradient(#173b4b18,#173b4b08 40%,#173b4b35);pointer-events:none}
 .lesson-page.single-screen .lesson-heading{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:16px;padding:0 132px;min-width:0;min-height:64px;text-align:left}
 .single-screen .lesson-heading .lesson-title{min-width:0;max-width:none;padding:8px 16px;border:0;border-left:4px solid var(--lab-accent);border-radius:16px;background:#fffdf4f5;box-shadow:0 4px 16px #1b444020;flex:1}
-.lesson-heading .stage-badge{display:flex;align-items:center;justify-content:flex-start;gap:6px;font-size:var(--read-small);line-height:1.25;color:var(--lab-accent)}
+.lesson-heading .stage-badge{display:flex;align-items:center;justify-content:flex-start;gap:6px;font-size:var(--read-small);line-height:1.25;color:color-mix(in srgb,var(--lab-accent) 85%,#000)}
 .lesson-heading .stage-badge .icon{width:20px;height:20px;flex:none}
 .lesson-heading h1{font-size:clamp(22px,1.8vw,34px);line-height:1.3;letter-spacing:-.8px;margin:3px 0 0}
 .lesson-heading .learning-focus{font-size:var(--read-small);line-height:1.4;margin:5px 0 0;color:#285357}
-.learning-focus>span:first-child{font-weight:800;color:var(--lab-accent);margin-right:5px}
+.learning-focus>span:first-child{font-weight:800;color:color-mix(in srgb,var(--lab-accent) 85%,#000);margin-right:5px}
 .learning-focus .concept-keyword,#coach-hint .concept-keyword{padding:0;margin:0;background:#f9e7a5;color:#244b50;box-decoration-break:clone;-webkit-box-decoration-break:clone;font-weight:800}
 .lesson-saved .learning-focus{color:#185d50}
 .learning-bridge{padding:12px 16px;background:#edf5e9;border-radius:12px;color:#255b55;font-size:18px;line-height:1.5}
@@ -27,7 +27,7 @@ body:has(.single-screen) #app{height:100dvh;padding:0;overflow:hidden}
 .lesson-heading .chapter{display:flex;align-items:center;justify-content:center;gap:5px;flex:1;min-width:60px;min-height:48px;padding:8px;font-size:var(--read-small);line-height:1.25}
 .chapter-step{display:grid;place-items:center;flex:none;width:24px;height:24px;border-radius:50%;background:#e2ecdf;color:#416c5e;font-size:18px}
 .chapter.current{background:var(--lab-accent,#1a6b75);color:#fff}
-.chapter.current .chapter-step{background:#ffffff25;color:#fff}
+.chapter.current .chapter-step{background:#ffffff14;color:#fff}
 .lesson-page.single-screen .lesson-scene{display:block;flex:none;width:100%;height:100%;min-width:0;min-height:0;max-width:none;margin:0;padding:0;overflow:hidden}
 .lesson-page.single-screen .experiment-board{--read:clamp(18px,1.55vw,28px);--read-small:clamp(18px,1.2vw,23px);container:experiment / size;position:relative;width:100%;height:100%;min-height:0;max-height:none;min-width:0;margin:0;padding:clamp(10px,1.2vw,24px);overflow:hidden;scrollbar-gutter:auto;border:2px solid #fff9e9;border-radius:24px;background:#fffdf7f7;box-shadow:0 5px 0 #1b4e4520,0 12px 30px #153a4226}
 .experiment-content{--content-fit:1;position:relative;width:100%;height:100%;min-width:0;min-height:0;display:grid;align-content:center;gap:clamp(6px,1.4cqh,16px);zoom:var(--content-fit)}

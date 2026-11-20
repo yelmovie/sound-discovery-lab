@@ -111,3 +111,12 @@ main .experiment-content .stop-lab{grid-template-columns:minmax(0,1fr)}
  .rc-locked{gap:4px;padding:6px}
  .rc-locked i{font-size:36px;line-height:1}
 }
+/* 2026-11-21 인증서 인쇄: 화면용 결과 화면 위 여백(76px)과 연한 배경이 인쇄에도 남아 A4 2장(둘째 장에 캐릭터 얼굴만)이 됐다.
+   인쇄할 때만 여백·배경을 걷고 인증서를 한 장에 둔다. 목소리 다시 듣기 버튼은 종이에 찍지 않는다. */
+@media print{
+ html,body{background:#fff!important;min-height:0!important;height:auto!important}
+ main.result-page{padding:0!important;min-height:0!important;display:block!important}
+ .certificate{margin:0 auto!important;break-inside:avoid}
+ .certificate .voice-replay{display:none!important}
+}
+@page{margin:8mm}

@@ -1,7 +1,7 @@
 // The runner of the 3D run stage: the map's own explorer sheet stood up as a billboard, plus a round shadow.
 import * as THREE from './vendor/three/three.module.min.js';
 
-// Rows of image/generated/explorer-walk.webp, four frames each.
+// Rows of image/generated/explorer-walk-lite.webp (2026-11-21 lossy copy of explorer-walk.webp, same size and alpha), four frames each.
 const ROW = { front: 0, left: 1, right: 2, back: 3 };
 const HEIGHT = 1.55, CELL = 256;
 

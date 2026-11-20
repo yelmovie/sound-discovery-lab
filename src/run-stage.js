@@ -433,7 +433,7 @@ export function openRunStage(host, o) {
     const far = add(new THREE.PlaneGeometry(285, height), keep(new THREE.MeshBasicMaterial({ map: texture, fog: false, depthWrite: false })), 0, horizon - height * .02, -118, camera);
     far.renderOrder = -1;
   });
-  createRunner('/image/generated/explorer-walk.webp', runStageAssets.includes(`${ART.slice(1)}explorer-jump.webp`) ? `${ART}explorer-jump.webp` : '').then(made => {
+  createRunner('/image/generated/explorer-walk-lite.webp', runStageAssets.includes(`${ART.slice(1)}explorer-jump.webp`) ? `${ART}explorer-jump.webp` : '').then(made => {
     if (destroyed) { made.dispose(); return; }
     runner = made; scene.add(runner.shadow, runner.sprite); hud.ready();
   });
