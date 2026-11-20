@@ -453,6 +453,8 @@ dialog[open]{display:flex;flex-direction:column}
 .title-bubble::after{content:"";position:absolute;left:50%;bottom:-7px;width:14px;height:14px;background:inherit;transform:translateX(-50%) rotate(45deg)}
 .title-note{display:flex;align-items:center;gap:8px;margin-top:10px;padding:5px 14px;border-radius:999px;background:#0e2c45a6;color:#f2fbff;font-size:18px}
 .title-note .icon{width:20px;height:20px}
+/* Credit line 2026-11-20: small, quiet, bottom-right of the title screen only. */
+.title-credit{position:absolute;right:calc(clamp(14px,1.7vw,22px) + env(safe-area-inset-right));bottom:calc(10px + env(safe-area-inset-bottom));margin:0;color:#fff;font-size:clamp(10px,.9vw,13px);font-weight:700;line-height:1.3;white-space:nowrap;text-shadow:0 0 2px #0b2a44,0 0 2px #0b2a44,0 0 2px #0b2a44,0 0 3px #0b2a44,0 0 4px #0b2a44,0 1px 5px #0b2a44;pointer-events:none}
 @keyframes title-pop{from{opacity:0;transform:scale(.86)}}
 @keyframes title-bob{50%{transform:translateY(-8px)}}
 @media(max-width:900px){.title-guide{right:12px;bottom:12px}.title-guide .portrait{width:96px}.title-bubble{display:none}}
@@ -508,6 +510,7 @@ body:has(.admin-dock) :is(.lesson-page,.final-page,.result-page){padding-bottom:
 }
 @media(max-height:560px){
  .title-screen{min-height:0}
+ .title-credit{right:12px;bottom:68px;line-height:1.1}
  .title-copy{padding:54px 16px 10px}
  .title-eyebrow,.title-sub,.title-note{display:none}
  .title-logo img{width:calc((100dvh - 210px) * 1.78);min-width:240px}
