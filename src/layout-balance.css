@@ -101,3 +101,13 @@ main .experiment-content .stop-lab{grid-template-columns:minmax(0,1fr)}
   .activity-base-4 .ruler-play-row>span{font-size:max(14px,calc(14px / var(--content-fit)))}
  }
 }
+/* 2026-11-20 성취 카드 보관함: 잠긴 카드 안내 「악당을 물리치면 열려요」가 14px였다(교실 화면 18px 하한 밖).
+   잠긴 카드(약 175×262~180×270px)는 자리가 넉넉해 18px로 올리고, 좁은 카드처럼 낱말마다 한 줄씩 고르게 쌓는다. */
+@media (min-width:1000px) and (min-height:700px){
+ .rc-locked small{font-size:18px;max-width:4.6em;line-height:1.3}
+}
+/* 같은 보관함, 폰 가로처럼 낮은 화면(잠긴 카드 약 99×148px): 「?」 52px 때문에 내용이 위아래로 6px씩 카드 테두리 밖으로 나갔다. */
+@media (max-height:600px){
+ .rc-locked{gap:4px;padding:6px}
+ .rc-locked i{font-size:36px;line-height:1}
+}
