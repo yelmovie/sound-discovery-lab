@@ -1,10 +1,11 @@
 // Cloudflare static assets answer a Range request with the whole file (200). Browsers then cannot seek
 // (Chrome reports seekable [0,0], so scene buttons jump to 0) and iPad Safari will not play an mp4 at all.
-// Video requests come through here and get 206 slices. Files are under 10 MB, so buffering is fine.
-const VIDEO = /\.(mp4|webm|m4v)$/i;
+// Video and audio requests come through here and get 206 slices. Files are under 10 MB, so buffering is fine.
+// 2026-11-20: background music and voices are <audio> elements too, and iOS Safari asks them for byte ranges.
+const MEDIA = /\.(mp4|webm|m4v|mp3|m4a|ogg|wav)$/i;
 
 export async function mediaRange(request, assets) {
-  if (!VIDEO.test(new URL(request.url).pathname) || !['GET', 'HEAD'].includes(request.method)) {
+  if (!MEDIA.test(new URL(request.url).pathname) || !['GET', 'HEAD'].includes(request.method)) {
     return assets.fetch(request);
   }
   const assetHeaders = new Headers(request.headers);
@@ -12,8 +13,8 @@ export async function mediaRange(request, assets) {
   assetHeaders.delete('If-Range');
   assetHeaders.set('Accept-Encoding', 'identity');
   const asset = await assets.fetch(new Request(request.url, { method: 'GET', headers: assetHeaders }));
-  // Missing files may come back as the SPA's index.html; never slice anything that is not a video.
-  if (asset.status !== 200 || !/^video\//.test(asset.headers.get('Content-Type') || '')) {
+  // Missing files may come back as the SPA's index.html; never slice anything that is not a video or a sound.
+  if (asset.status !== 200 || !/^(video|audio)\//.test(asset.headers.get('Content-Type') || '')) {
     return request.method === 'HEAD' ? new Response(null, asset) : asset;
   }
 
