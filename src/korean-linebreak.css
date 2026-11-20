@@ -23,3 +23,5 @@
 .challenge-summary { text-wrap: balance; }
 /* 저장된 발견 한 줄 요약(활동 9 등): 1024×768에서 「…높은 / 소리가 나.」로 끝줄이 짧았다. */
 .saved-discovery > span { text-wrap: balance; }
+/* 지도 악당 말풍선: 「…선만 뽑으면 / 끝인 줄!」처럼 세 줄째에 한 낱말만 남았다. 줄 길이를 고르게. */
+.map-encounter-say { text-wrap: balance; }
