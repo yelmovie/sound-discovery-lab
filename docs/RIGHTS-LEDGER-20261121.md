@@ -29,6 +29,7 @@
 |---|---|---|---|---|---|
 | `media/concepts/*.mp4·jpg·vtt` 5편(개념 영상) | 프로젝트 소품·도형으로 Pillow 프레임 구성, FFmpeg 인코딩. 높낮이·전달·배려 편은 생성 그림 반영, 소리는 CC0 녹음 | 2026-10-22 제작, 2026-10-28 재렌더 | 재료 그림(Codex, 사용자 확인)과 CC0 녹음의 조건을 따름 | `docs/CREDITS.md` 「v2.1 추가 자료」, 「최신 추가 자료 · 2026-10-28」 | 확인됨(재료 기준, 자체 렌더) |
 | `assets/map-encounters/map-finale.mp4`(지도 파이널) | 자체 렌더: 11번 지도 그림(`ullim-village`) 위에 글자 3줄을 `ffmpeg`로 합성(6초, 페이드) | 2026-11-14, `.tmp/font-later-20261114/render/finale/11.mp4`(배포 파일과 SHA256 같음)·`11.png`·`11-0~2.txt`, Codex 세션 `rollout-2026-11-14T01-22-36-01a1d5b7…`의 렌더 명령 | 재료 그림(Codex, 사용자 확인)과 CC0 녹음의 조건을 따름 | 렌더 결과 폴더·세션 기록 | 확인됨(재료 기준, 자체 렌더) |
+| `media/intro/intro-ullim.mp4`·`.jpg`·`.vtt`(인트로 영상, 2026-11-21 추가) | 시작 그림: GPT 이미지(Codex 내장 이미지 도구), 영상: Google Flow Veo 3.1 Quality, 편집·목소리 합성: 로컬 ffmpeg | 2026-11-21, `docs/INTRO-FILM-20261121.md`(프롬프트·Flow 프로젝트 주소·편집 방법), 원본 `.work/film-20261121/` | 유료 요금제(GPT·Google AI Pro, 사용자 확인 2026-11-21 「영상은 제미나이, 모두 유료 요금제」), Flow 워터마크 표시 유지, 목소리는 앱 녹음(ElevenLabs) 그대로 | `docs/INTRO-FILM-20261121.md` | 확인됨(기록 + 사용자 요청 작업) |
 
 ## 음악·효과음·실험음
 

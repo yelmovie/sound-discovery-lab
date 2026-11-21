@@ -110,3 +110,14 @@ main .experiment-content .stop-lab{grid-template-columns:minmax(0,1fr)}
  .certificate .voice-replay{display:none!important}
 }
 @page{margin:8mm}
+/* Opening film (2026-11-21): film left, Pio's story to read on the right; stacked on narrow or portrait screens. */
+dialog.modal-intro{width:min(1180px,calc(100vw - 48px));max-height:calc(100dvh - 24px)}
+.modal-intro .modal-body{display:grid;grid-template-columns:minmax(0,2.3fr) minmax(0,1fr);gap:20px;align-items:center}
+.intro-film video{display:block;width:100%;max-height:calc(100dvh - 200px);aspect-ratio:16/9;object-fit:contain;border-radius:12px;background:#0c1418}
+.intro-fallback{margin:8px 0 0;font-size:18px}
+.modal-intro .story-card{gap:10px;justify-items:start;text-align:left}
+.modal-intro .story-card h3{margin:0;font-size:clamp(22px,2.4vw,28px);text-wrap:balance}
+.modal-intro .story-card p{font-size:18px;line-height:1.55;word-break:keep-all}
+@media (max-width:820px),(orientation:portrait){.modal-intro .modal-body{grid-template-columns:1fr}.intro-film video{max-height:48dvh}}
+@media (max-height:560px){.modal-intro .modal-body{gap:14px;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr)}.modal-intro .story-card{gap:6px}.modal-intro .story-card p:last-child{display:none}.modal-intro .story-card h3{font-size:20px}.intro-film video{max-height:calc(100dvh - 232px)}}
+.modal-intro .npc-scene-name{display:inline-block;padding:4px 10px;border:1px solid #b89965;border-radius:7px;background:#1a4b60;color:#fff1cc;font-size:18px;font-weight:700}

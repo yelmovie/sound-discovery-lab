@@ -230,6 +230,8 @@ export class SoundEngine {
     clearTimeout(this.holdTimer);this.holdTimer=setTimeout(()=>{this.holdTimer=null;this.holdUntil=0;this.syncBgm();},this.holdUntil-Date.now());
     this.syncBgm();
   }
+  // The opening film carries its own music and Pio's lines, so the theme waits until the film stops.
+  releaseBgm(){clearTimeout(this.holdTimer);this.holdTimer=null;this.holdUntil=0;this.syncBgm();}
   syncBgm(constant=.08){
     // Once the finale has played through on the finale dialog, ending or certificate, the main theme carries on
     // at 0.45 of its level instead of leaving silence; leaving those screens restores it.
