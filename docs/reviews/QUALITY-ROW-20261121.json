@@ -2,10 +2,10 @@
  "no": "11",
  "name": "울림도시 대작전",
  "appCommit": "727b9df",
- "measuredAt": "2026-11-21T09:40+09:00",
+ "measuredAt": "2026-11-21T09:50+09:00",
  "score": {
-  "total": 90,
-  "noDevice": 95,
+  "total": 92,
+  "noDevice": 97,
   "items": {
    "learning": 10,
    "fun": 9,
@@ -15,7 +15,7 @@
    "a11y": 10,
    "perf": 8,
    "firstScreen": 9,
-   "data": 8,
+   "data": 10,
    "deploy": 10
   }
  },
@@ -68,5 +68,5 @@
   "backButtonStaysInApp": true,
   "certificatePrintsOnePage": true
  },
- "notes": "운영 Workers 65f96a02(3-2a: 뒤로 가기 앱 안, 저장소 시안 _unused 이동). 화면 값은 1280×800 활동 1·9·15 가운데 값(그림 수는 img·svg·canvas 40px 이상만, 배경 그림 제외). autoRunSeconds는 qa-full-play 한 크기 완주(20활동+마지막 미션+인증서, 83개 확인). firstScreenKB는 11-20 운영 첫 방문 실측(첫 화면은 이후 바뀐 파일 없음). retryGoal=끝낸 의뢰 다시 하기 버튼. rewardEffects=성공음·시설 복구 배지·성취 카드 공개·인증서, transitionEffects=지도 걷기 이동·개념 영상·시설 복구 불빛. 뒤로 가기는 활동→지도→시작 화면, 시작 화면에서 한 번 더 누르면 나감."
+ "notes": "운영 Workers 65f96a02(3-2a: 뒤로 가기 앱 안, 저장소 시안 _unused 이동). 화면 값은 1280×800 활동 1·9·15 가운데 값(그림 수는 img·svg·canvas 40px 이상만, 배경 그림 제외). autoRunSeconds는 qa-full-play 한 크기 완주(20활동+마지막 미션+인증서, 83개 확인). firstScreenKB는 11-20 운영 첫 방문 실측(첫 화면은 이후 바뀐 파일 없음). retryGoal=끝낸 의뢰 다시 하기 버튼. rewardEffects=성공음·시설 복구 배지·성취 카드 공개·인증서, transitionEffects=지도 걷기 이동·개념 영상·시설 복구 불빛. 뒤로 가기는 활동→지도→시작 화면, 시작 화면에서 한 번 더 누르면 나감. 권리 장부: 2026-11-21 사용자 확인으로 출처 미확인 0줄(F10·F12 PASS)."
 }
