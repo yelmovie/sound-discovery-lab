@@ -40,8 +40,8 @@ export const runStageAssets=['paving', 'drum-top', 'water', 'skyline', 'explorer
 // Achievement cards of the five map villains, in map order: card art (640×960) then its slot thumbnail (96×144).
 export const rewardCardAssets=[0,1,2,3,4].flatMap(n=>['card','thumb'].map(kind=>`image/generated/reward-cards/${kind}-${n+1}-${n}.webp`));
 // Opening film (2026-11-21): Google Flow Veo 3.1 clips cut together with the app's recorded Pio lines (docs/RIGHTS-LEDGER-20261121.md).
-export const introFilm = { src: 'media/intro/intro-ullim.mp4', poster: 'media/intro/intro-ullim.jpg', captions: 'media/intro/intro-ullim.vtt', seconds: 21 };
-export const finaleFilm = { src: 'media/finale/final-ullim.mp4', poster: 'media/finale/final-ullim.jpg', captions: 'media/finale/final-ullim.vtt', seconds: 24 };
+export const introFilm = { src: 'media/intro/intro-ullim.mp4', poster: 'media/intro/intro-ullim.jpg', seconds: 25 };
+export const finaleFilm = { src: 'media/finale/final-ullim.mp4', poster: 'media/finale/final-ullim.jpg', seconds: 29 };
 export const assets = [...new Set([...[introFilm,finaleFilm].flatMap(f=>Object.values(f).filter(v=>typeof v==='string')),'media/fonts/NanumSquareNeoTTF-bRg.woff2','media/fonts/NanumSquareNeoTTF-cBd.woff2','media/fonts/NanumSquareNeoTTF-dEb.woff2','media/fonts/NanumSquareNeo-OFL.txt',...voiceAssets,...recordedAudioAssets, ...conceptArtAssets,...backgrounds, characters, titleLogo, titleBackground, ...Object.values(props), ...villageAssets, ...runStageAssets, ...rewardCardAssets, 'image/generated/pio-guide.svg','image/generated/dialogue/pio.webp',...conceptAssets,...Object.values(interfaceSounds).map(c=>c.src),'media/audio/sfx/sources.json',...Object.values(backgroundMusic),'media/audio/sources-20261117.json','media/audio/License.txt','media/audio/sources.json','media/concepts/manifest.json'])];
 export { APP_VERSION } from './version.js';
 // Curriculum link per facility. Teacher review is still pending, so needsReview stays true until a reviewer signs off.

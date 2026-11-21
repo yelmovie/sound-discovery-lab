@@ -1,0 +1,74 @@
+{
+ "src": "/Volumes/T7 Shield/iscreammedia_sc34/11 sound/.work/film-20261121/build/intro-base.mp4",
+ "out": "/Volumes/T7 Shield/iscreammedia_sc34/11 sound/.work/film-20261121/build/intro-cap.mp4",
+ "theme": {
+  "box": "#0e2a33",
+  "accent": "#ffd35c",
+  "hot": "#ffd35c"
+ },
+ "speakers": {
+  "삐오": [
+   "#2f8fe0",
+   "#ffffff"
+  ]
+ },
+ "bottom": 64,
+ "sweep": true,
+ "cues": [
+  {
+   "s": 0.7,
+   "e": 3.0,
+   "speech": [
+    0.8,
+    2.65
+   ],
+   "who": "삐오",
+   "text": "나는 [울림새 삐오]야!",
+   "voice": "guide-1"
+  },
+  {
+   "s": 5.3,
+   "e": 7.6,
+   "speech": [
+    5.4,
+    7.07
+   ],
+   "who": "삐오",
+   "text": "[소리 코어]가 멈췄어!",
+   "voice": "story-1"
+  },
+  {
+   "s": 10.3,
+   "e": 14.45,
+   "speech": [
+    10.4,
+    14.15
+   ],
+   "who": "삐오",
+   "text": "물체를 울리고, 조건을 바꾸며 [소리의 비밀]을 찾아 줘.",
+   "voice": "story-2"
+  },
+  {
+   "s": 14.5,
+   "e": 20.1,
+   "speech": [
+    14.53,
+    19.67
+   ],
+   "who": "삐오",
+   "text": "네가 모은 [증거 20개]로 다섯 시설을 복구하면 주민들의 축제가 다시 열려!",
+   "voice": "story-2"
+  },
+  {
+   "s": 20.9,
+   "e": 23.5,
+   "speech": [
+    21.0,
+    22.61
+   ],
+   "who": "삐오",
+   "text": "같이 [도시를 깨우자]!",
+   "voice": "title-bubble"
+  }
+ ]
+}

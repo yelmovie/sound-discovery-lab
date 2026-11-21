@@ -32,6 +32,7 @@ export const voiceLines=Object.fromEntries([
  ['final-title','우리의 증거로 축제를 열자!'],
  ['final-core','다섯 발견이 모이면 축제가 시작돼!'],
  ['ending-1','울림도시가 다시 깨어났어!'],
+ ['finale-thanks','우리가 해냈어! 함께 탐험해 줘서 고마워, 소리 탐험가!'],
  ['ending-2','소리의 떨림, 크기, 높낮이, 전달을 탐구하고 함께 사는 친구들을 배려하는 방법을 발견했어.'],
  // 2026-11-18 ElevenLabs fill (docs/VOICE-FILL-20261118.json): concept-film cues, learning bridges, coach hints, map villain.
  ["concept-vibration-1","물체를 울리면 떨림이 시작돼."],
