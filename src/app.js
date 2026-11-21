@@ -3,7 +3,7 @@ import { portraitMarkup } from './npc-scene.js';
 let disposeNpc;
 import { art, rulerIllustration, badgeArt } from './illustrations.js';
 import { transferSound } from './samples.js';
-import { introFilm, backgrounds, titleLogo, stages, lessons, instruments, lengths, media, transferCases, diagnosisFields, solutions, finalTasks, props, achievements, legacyIndex, LESSON_COUNT, stageLessons } from './data.js';
+import { introFilm, finaleFilm, backgrounds, titleLogo, stages, lessons, instruments, lengths, media, transferCases, diagnosisFields, solutions, finalTasks, props, achievements, legacyIndex, LESSON_COUNT, stageLessons } from './data.js';
 import { STORAGE_KEY, freshState, readState, createSaveSession, evidenceCount, stageDone, canLesson, canRoute, lessonFromRoute, recordEvidence, checkLesson, checkFinal, nextDiagnosisField } from './model.js';
 import { SoundEngine } from './audio.js';
 import { connectRewardCards, rewardSlotsHtml, awardRewardCards, rewardCardHold } from './map-reward-cards.js';
@@ -420,16 +420,20 @@ sound.onStatus=text=>{soundText=text;const el=document.querySelector('#audio-sta
 function updateView(){const focus=document.activeElement;const action=focus?.dataset?.action,key=['tool','length','medium','slot','choice','case','solution','field','value','question'].map(k=>focus?.dataset?.[k]?`[data-${k}="${focus.dataset[k]}"]`:'').join('');render();if(action)document.querySelector(`[data-action="${action}"]${key}`)?.focus({preventScroll:true});}
 function showFeedback(text,kind='hint'){feedback={text,kind};if(kind==='error')void sound.effect('retry',{polite:true});updateView();}
 function openModal(content,label,footer=button('닫기','close','','btn primary'),kind='standard'){const hadPreview=Boolean(previewVisual);stopExperiment();if(hadPreview)render();cancelAdvance();if(!modalRoot.querySelector('dialog'))returnFocus=document.activeElement;modalRoot.innerHTML=`<dialog class="modal-${kind}" aria-label="${label}"><div class="modal-heading"><h2>${label}</h2>${kind==='settings'?'':button(icon('close'),'close','aria-label="닫기"','icon-btn')}</div><div class="modal-body">${content}</div><div class="modal-footer${kind==='settings'?' science-settings-footer':''}">${footer}</div></dialog>`;const dialog=modalRoot.querySelector('dialog');dialog.addEventListener('cancel',e=>{e.preventDefault();closeModal();});dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)closeModal();}});map?.pause(true);if(kind!=='concept')void sound.effect(kind==='discovery'?'success':'open');dialog.showModal();(dialog.querySelector('.modal-heading button')||dialog.querySelector('.modal-footer [data-action="close"]'))?.focus({preventScroll:true});}
-// Opening film (2026-11-21): plays on the first start and from "도시 이야기 보기". Pio's story lines are in the film,
-// so the separate voice chain does not play; the same lines stay under the film to read, or to use if the film cannot load.
-function openIntro(next){
- openModal(`<div class="intro-film"><video id="intro-video" playsinline controls preload="auto" poster="/${introFilm.poster}" ${state.settings.voice?'':'muted'} aria-label="울림도시 이야기 · ${introFilm.seconds}초 영상"><source src="/${introFilm.src}" type="video/mp4"><track kind="captions" src="/${introFilm.captions}" srclang="ko" label="한국어"></video><p class="intro-fallback" role="status" hidden>영상을 불러오지 못했어. 아래 이야기를 읽고 출발해 줘.</p></div><div class="story-card"><span class="npc-scene-name">울림새 삐오</span><h3>${esc(voiceLines['story-1'].text)}</h3><p>${esc(voiceLines['story-2'].text)}</p><p>${esc(voiceLines['story-3'].text)}</p></div>`,'울림도시 이야기',button(`탐험하러 가기 ${icon('arrow')}`,'goto',`data-route="${next}"`,'btn primary'),'intro');
- const video=modalRoot.querySelector('#intro-video');if(!video)return;
- video.addEventListener('playing',()=>sound.holdBgm(introFilm.seconds+2));
+// Story films (2026-11-21): the opening plays on the first start and from "도시 이야기 보기"; the finale plays when the
+// core is restored and from "엔딩 다시 보기". Pio's lines are in the films, so the separate voice chains do not play;
+// the same lines stay beside the film to read, or to use if the film cannot load.
+function openFilm(film,id,label,lines,footer){
+ openModal(`<div class="intro-film"><video id="${id}" playsinline controls preload="auto" poster="/${film.poster}" ${state.settings.voice?'':'muted'} aria-label="${label} · ${film.seconds}초 영상"><source src="/${film.src}" type="video/mp4"><track kind="captions" src="/${film.captions}" srclang="ko" label="한국어"></video><p class="intro-fallback" role="status" hidden>영상을 불러오지 못했어. 이야기 글을 읽어 줘.</p></div><div class="story-card"><span class="npc-scene-name">울림새 삐오</span><h3>${esc(voiceLines[lines[0]].text)}</h3>${lines.slice(1).map(l=>`<p>${esc(voiceLines[l].text)}</p>`).join('')}</div>`,label,footer,'intro');
+ voice.stop();
+ const video=modalRoot.querySelector(`#${id}`);if(!video)return;
+ video.addEventListener('playing',()=>sound.holdBgm(film.seconds+2));
  ['pause','ended'].forEach(t=>video.addEventListener(t,()=>sound.releaseBgm()));
  video.querySelector('source').addEventListener('error',()=>{modalRoot.querySelector('.intro-fallback').hidden=false;sound.releaseBgm();});
  if(!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)void video.play().catch(()=>{});
 }
+function openIntro(next){openFilm(introFilm,'intro-video','울림도시 이야기',['story-1','story-2','story-3'],button(`탐험하러 가기 ${icon('arrow')}`,'goto',`data-route="${next}"`,'btn primary'));}
+function openFinale(){openFilm(finaleFilm,'finale-video','울림도시가 다시 깨어났어',['ending-1','ending-2'],button(`인증서 보기 ${icon('arrow')}`,'close','','btn primary'));}
 function closeModal(focus=true){voice.stop();modalRoot.querySelector('video')?.pause();sound.setScene(route.startsWith('lesson/')?'lesson':route);modalRoot.querySelector('dialog')?.close();modalRoot.innerHTML='';map?.pause(false);if(focus&&returnFocus?.isConnected)returnFocus.focus();}
 function showSettings(){const paragraphs=items=>items.map(x=>`<p>${esc(x)}</p>`).join('');const toggle=(label,key)=>`<div class="setting-row"><b>${label}</b><button class="switch ${state.settings[key]?'on':''}" role="switch" aria-checked="${state.settings[key]}" aria-label="${label}" data-action="sound-setting" data-key="${key}"><span></span></button></div>`;openModal(`<div data-science-settings class="science-settings-body"><div class="science-settings-audio">${toggle('배경 음악','bgm')}${toggle('효과음','sfx')}<div class="setting-row"><label for="bgm-volume">배경 음악 크기 <output id="bgm-value">${state.settings.bgmVolume}</output></label><input id="bgm-volume" type="range" min="0" max="100" step="5" value="${state.settings.bgmVolume}" ${state.settings.bgm?'':'disabled'}></div><div class="setting-row"><label for="sfx-volume">효과음 크기 <output id="sfx-value">${state.settings.sfxVolume}</output></label><input id="sfx-volume" type="range" min="0" max="100" step="5" value="${state.settings.sfxVolume}" ${state.settings.sfx?'':'disabled'}></div>${toggle('목소리','voice')}</div><div class="settings-shortcuts science-settings-actions">${button('이 탐험을 하는 이유 다시 보기','story','','btn secondary settings-story')}${state.restored?button('엔딩 다시 보기','ending','','btn quiet')+button('인증서 받기','certificate','','btn quiet'):''}</div><details><summary>앱 정보 · 배움과 보상</summary><p><b>탐험 목적</b> ${copy.purpose}</p><p><b>미션 보상</b> ${copy.reward}</p><p><b>남는 배움</b> ${copy.learning}</p><p>울림도시 대작전 v${APP_VERSION} · ${copy.signature}</p></details><details><summary>학생용 가이드</summary>${paragraphs([...copy.student,'방해 스피커 악당이 가까이 있을 때 원형 버튼이나 스페이스바로 공격해요.'])}</details><details><summary>교사용 가이드</summary>${paragraphs(copy.teacher)}<details><summary>성취기준</summary><p>${copy.curriculumIntro}</p>${paragraphs(copy.standards)}</details><details><summary>교사용 도구</summary><p>버튼 하나로 모든 활동과 마무리를 열어요. 시연 중 조작·정답·완료 기록은 학생 기록에 저장하지 않아요.</p><p>열린 동안 화면 왼쪽 아래 ← → 버튼(키보드 방향키)으로 활동을 하나씩 넘기고, 오른쪽 아래 ‘다음 스테이지’로 다음 시설까지 바로 건너뛸 수 있어요.</p>${button(state.settings.admin?'모두 열림 · 다시 누르면 닫기':'모든 단계 한 번에 열기','admin',`aria-pressed="${state.settings.admin}"`,'btn secondary wide')}<p>수업 시연용이에요. 다시 누르거나 새로고침하면 학생의 원래 진행으로 돌아가요.</p></details></details><details><summary>이미지·소리·저작권 고지</summary>${paragraphs(copy.credits)}<details><summary>자료 출처 모아 보기</summary>${paragraphs(copy.sources)}</details>${paragraphs(copy.copyright)}</details></div>`,'설정',`${button('탐험 기록 초기화','reset-confirm','','btn danger')}${button('닫기','close','','btn primary')}`,'settings');}
 function notebook(stage=route.startsWith('lesson/')?lessons[Number(route.split('/')[1])].stage:notebookStage){
@@ -535,7 +539,7 @@ async function handleClick(e){void sound.unlock();const b=e.target.closest('butt
   if(a==='travel'){const n=Number(b.dataset.stage);if(b.getAttribute('aria-disabled')==='true')return lockedNote(n);if(mapFailed)return enterMapStage(n);if(map)map.walk(n);else{pendingMapTravel=n;syncMapTravel(n);}return;}
   if(a==='sound-setting'){const key=b.dataset.key;if(['bgm','sfx','voice'].includes(key)){state.settings[key]=!state.settings[key];configureSound();save();syncMuteButton();showSettings();}return;}
   if(a==='story')return openIntro('map');
-  if(a==='ending')return state.restored?navigate('result'):undefined;
+  if(a==='ending'){if(!state.restored)return;navigate('result');return openFinale();}
   if(a==='certificate')return state.restored?navigate('result'):undefined;
   if(a==='guide'){
    void sound.effect('hint');
@@ -551,7 +555,7 @@ async function handleClick(e){void sound.unlock();const b=e.target.closest('butt
    else app.querySelector('[data-action="restore"]')?.focus({preventScroll:true});
    return;
   }
-  if(a==='restore'){const result=checkFinal(state);if(!result.ok){cancelAdvance();finalStep=result.wrong[0];return showFeedback(`${result.wrong.map(n=>stages[n].name).join(', ')}의 증거를 다시 읽어 봐. 선택을 바꿔 다시 도전할 수 있어.`,'error');}if(!result.eligible)return showFeedback('미리보기의 선택은 모두 맞았어! 정식 복구와 인증서를 받으려면 학습 증거 20개를 모아 줘.','hint');state.restored=true;state.completedAt=new Date().toISOString();save();navigate('result');void sound.effect('badge');return;}
+  if(a==='restore'){const result=checkFinal(state);if(!result.ok){cancelAdvance();finalStep=result.wrong[0];return showFeedback(`${result.wrong.map(n=>stages[n].name).join(', ')}의 증거를 다시 읽어 봐. 선택을 바꿔 다시 도전할 수 있어.`,'error');}if(!result.eligible)return showFeedback('미리보기의 선택은 모두 맞았어! 정식 복구와 인증서를 받으려면 학습 증거 20개를 모아 줘.','hint');state.restored=true;state.completedAt=new Date().toISOString();save();navigate('result');openFinale();void sound.effect('badge');return;}
   if(i<0)return;
   if(a==='continue')return completion(i);
   if(Date.now()<inputLockedUntil&&!e.auto)return;
