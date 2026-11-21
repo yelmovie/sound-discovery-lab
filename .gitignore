@@ -11,3 +11,7 @@ node_modules/
 _unused/originals-*/
 
 films/*/.hyperframes/
+
+# Meshy originals and their input pictures stay local; README.md records them (2026-11-21).
+references/meshy-20261121/*
+!references/meshy-20261121/README.md

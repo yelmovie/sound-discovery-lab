@@ -4,7 +4,7 @@
 // Walking, jumping and the checkpoint return follow the structure of the three.js games_fps example
 // (sub-steps, gravity only in the air, jump only from the floor), with box and disc floors instead of an octree.
 import * as THREE from './vendor/three/three.module.min.js';
-import { lengths, runStageAssets } from './data.js';
+import { lengths, runStageAssets, runStageModels } from './data.js';
 import { checkChallenge, challengeRoundCount, rhythms } from './challenge-rules.js';
 import { courseFor, landingAction, landingOutcome, runProgress, runGoal, rhythmNeedsRestart, runGuide, RUN_MISSIONS, RUN_SPEED, JUMP_SPEED, GRAVITY, STEP_UP } from './run-stage-rules.js';
 import { bindRunInput } from './run-input.js';
@@ -14,7 +14,7 @@ import { createRunHud } from './run-stage-hud.js';
 const FONT = '"NanumSquareNeo","Malgun Gothic","Apple SD Gothic Neo",sans-serif';
 // Pitch colours are drawn by code, the same on the keys and in the goal row.
 const PITCH = { 18: '#3f7fd6', 12: '#2fa37c', 6: '#ec7f3a' };
-const ART = '/image/generated/run-stage/';
+const ART = '/image/generated/run-stage/', MODELS = '/media/models/run-stage/';
 const WATER = -.62;
 // How the painted gate arch sits on the goal pad: its width in metres and how far its feet are lifted.
 const ARCH = { width: 4, lift: -.04, lampX: 1.61, lampY: 3.1 };
@@ -89,13 +89,13 @@ export function openRunStage(host, o) {
     else if (p.kind === 'plank') add(new THREE.BoxGeometry(p.halfWidth * 2, .12, p.halfDepth * 2), plankMaterial, p.x, p.top - .06, z(p.s));
     else if (p.kind === 'stone') {
       // A drum-shaped stone. Its skin and the rings are the 떨림 display, drawn by code.
-      add(new THREE.CylinderGeometry(p.radius, p.radius * .93, .8, 32), stoneSide, p.x, p.top - .4, z(p.s));
+      const side = add(new THREE.CylinderGeometry(p.radius, p.radius * .93, .8, 32), stoneSide, p.x, p.top - .4, z(p.s));
       const top = add(new THREE.CircleGeometry(p.radius, 40), skin, p.x, p.top + .012, z(p.s)); top.rotation.x = -Math.PI / 2;
       const rings = [0, 1, 2].map(n => {
         const material = keep(new THREE.MeshBasicMaterial({ color: '#0b8f9c', transparent: true, opacity: 0, depthWrite: false }));
         const ring = add(new THREE.RingGeometry(.46, .54, 40), material, p.x, p.top + .03 + n * .002, z(p.s)); ring.rotation.x = -Math.PI / 2; return ring;
       });
-      const entry = { p, top, rings, ringFrom: 0, ringEnds: 0, mark: null, played: '' };
+      const entry = { p, side, top, rings, ringFrom: 0, ringEnds: 0, mark: null, played: '' };
       stones.set(sectionOf(p), entry); animated.push(entry);
     } else if (p.kind === 'key') {
       // A ruler held on the bench at its near end. The free part hangs clear of the floor, is 6, 12 or 18 cm
@@ -413,13 +413,48 @@ export function openRunStage(host, o) {
     if (texture) texture.repeat.y = 2.6 / (1.31 * texture.image.height / texture.image.width);
     dress(doorMaterial, texture);
   });
+  let archModel = null, archPicture = null;
+  const placeLamps = front => lamps.forEach((lamp, n) => lamp.position.set((n - (total - 1) / 2) * ARCH.lampX * 2 / Math.max(1, total - 1), ARCH.lampY, front));
   picture('gate-arch').then(texture => {
-    if (!texture) return;
+    if (!texture || archModel) return;
     // A painted arch stands in front of the leaves; the plain frame steps back behind it.
     const width = ARCH.width, height = width * texture.image.height / texture.image.width;
-    add(new THREE.PlaneGeometry(width, height), keep(new THREE.MeshBasicMaterial({ map: texture, transparent: true, alphaTest: .35 })), 0, height / 2 + ARCH.lift, .14, gate);
-    arch.visible = false;
-    lamps.forEach((lamp, n) => lamp.position.set((n - (total - 1) / 2) * ARCH.lampX * 2 / Math.max(1, total - 1), ARCH.lampY, .16));
+    archPicture = add(new THREE.PlaneGeometry(width, height), keep(new THREE.MeshBasicMaterial({ map: texture, transparent: true, alphaTest: .35 })), 0, height / 2 + ARCH.lift, .14, gate);
+    arch.visible = false; placeLamps(.16);
+  });
+  // Meshy models for the parts that never move (2026-11-21). They only change the look: landings still read
+  // course.platforms, the leaves still swing and the lamps and drum skins are still drawn by code.
+  // A model that does not load leaves the plain shapes and pictures above in place.
+  const model = name => !runStageModels.includes(`${MODELS.slice(1)}${name}.glb`) ? Promise.resolve(null)
+    : Promise.all([import('./vendor/three/GLTFLoader.js'), import('./vendor/three/meshopt_decoder.module.js')]).then(([{ GLTFLoader }, { MeshoptDecoder }]) => new Promise(resolve => {
+      new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).load(`${MODELS}${name}.glb`, gltf => {
+        const owned = [];
+        gltf.scene.traverse(node => { if (!node.isMesh) return; owned.push(node.geometry); for (const m of [node.material].flat()) { owned.push(m); for (const value of Object.values(m)) if (value?.isTexture) owned.push(value); } });
+        if (destroyed) { for (const thing of owned) thing.dispose(); resolve(null); return; }
+        owned.forEach(keep);
+        // Centre it on its footprint with its feet at 0. gltfpack keeps a dequantising scale on the inner nodes, so only the root moves.
+        const box = new THREE.Box3().setFromObject(gltf.scene), size = box.getSize(new THREE.Vector3());
+        gltf.scene.position.set(-(box.min.x + box.max.x) / 2, -box.min.y, -(box.min.z + box.max.z) / 2);
+        resolve({ scene: gltf.scene, size });
+      }, undefined, () => resolve(null));
+    })).catch(() => null);
+  model('gate-arch').then(made => {
+    if (!made) return;
+    // Same width as the painted arch, so the opening still fits the two leaves and the lamps sit on the band over it.
+    const scale = ARCH.width / made.size.x;
+    archModel = new THREE.Group(); archModel.add(made.scene); archModel.scale.setScalar(scale); archModel.position.set(0, ARCH.lift, 0); gate.add(archModel);
+    arch.visible = false; if (archPicture) archPicture.visible = false;
+    placeLamps(made.size.z * scale / 2 + .06);
+  });
+  if (id === 'rhythm') model('drum').then(made => {
+    if (!made) return;
+    // Each stone gets the drum body at its own size: as wide as the stone, top level with the stone top, foot in the water.
+    // The skin on top stays the code-drawn circle with the rings, the 떨림 display.
+    for (const entry of stones.values()) {
+      const { p } = entry, body = new THREE.Group(); body.add(made.scene.clone());
+      body.scale.set(p.radius * 2 / made.size.x, .8 / made.size.y, p.radius * 2 / made.size.z);
+      body.position.set(p.x, p.top - .8, z(p.s)); scene.add(body); entry.side.visible = false;
+    }
   });
   picture('water', true).then(texture => { dress(water, texture); flowing = texture; });
   if (id === 'rhythm') picture('drum-top').then(texture => { if (texture) { skin.transparent = true; skin.alphaTest = .5; } dress(skin, texture); });
@@ -444,7 +479,7 @@ export function openRunStage(host, o) {
   }, () => {});
   frameId = requestAnimationFrame(frame);
   // Read-only position for play-through checks (scripts and browser QA).
-  host.runProbe = () => ({ x: pos.x, s: -pos.z, y: pos.y, grounded, moving: Boolean(tween), finished, fails });
+  host.runProbe = () => ({ x: pos.x, s: -pos.z, y: pos.y, grounded, moving: Boolean(tween), finished, fails, models: { arch: Boolean(archModel), drums: [...stones.values()].filter(entry => !entry.side.visible).length } });
 
   return {
     destroy() {

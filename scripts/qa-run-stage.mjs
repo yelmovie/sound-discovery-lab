@@ -85,6 +85,9 @@ async function playRhythm(name, size, touch) {
   const { context, page } = await open(name, size), i = 3, go = mover(page, steer(page, touch));
   await seed(page, i); await when(page, 'ready');
   assert.equal(await page.locator('main.lesson-page').getAttribute('inert'), '', '2D request is inert under the stage');
+  // The Meshy drum bodies and gate arch replace the plain shapes once they load (2026-11-21).
+  await page.waitForFunction(() => { const m = document.querySelector('.run-stage')?.runProbe?.()?.models; return m?.arch && m.drums === 10; }, null, { timeout: 20000 });
+  note(`${name}: Meshy gate arch and 10 drum bodies loaded`);
   await page.screenshot({ path: path.join(out, `${name}-start.png`) });
   const practice = stones('rhythm', 'practice');
   await go.jumpTo(practice[0]); await page.waitForTimeout(120); assert.match(await line(page), /떨리면서 소리/);
@@ -132,6 +135,8 @@ async function playMelody(name, size, touch) {
   await seed(page, i); await when(page, 'ready');
   assert.equal(await page.locator('[data-run-jump]').count(), 0, 'no jump button where jumping means nothing');
   const practice = rows('melody', 'practice')[0];
+  await page.waitForFunction(() => document.querySelector('.run-stage')?.runProbe?.()?.models?.arch, null, { timeout: 20000 });
+  note(`${name}: Meshy gate arch loaded`);
   for (const length of [18, 12, 6]) { await go.sideTo(LANE[length]); await go.walkTo(practice + .35); await go.backTo(practice - .5); }
   await page.screenshot({ path: path.join(out, `${name}-practice.png`) });
   assert.deepEqual((await saved(page)).work[i]?.challenge?.sequence || [], [], 'practice is not recorded');
@@ -203,6 +208,15 @@ async function fallbacks() {
   assert.equal(await page.locator('.run-stage').count(), 0); assert.equal(await page.locator('[data-action="run-stage-open"]').count(), 0);
   await page.locator('[data-action="challenge-listen"]').click(); assert.equal((await saved(page)).work[10].challenge.heard, true);
   note('no WebGL: falls back to the 2D request and it still plays');
+  await context.close();
+  // Models that cannot be fetched leave the plain drum shapes and the painted arch; the stage still plays.
+  ({ context, page } = await open('no-models', { width: 1280, height: 800 }));
+  await page.route('**/*.glb', route => route.abort());
+  await seed(page, 3); await when(page, 'ready'); await page.waitForTimeout(1500);
+  assert.deepEqual((await probe(page)).models, { arch: false, drums: 0 });
+  await mover(page, steer(page, false)).jumpTo(stones('rhythm', 'practice')[0]); await page.waitForTimeout(120); assert.match(await line(page), /떨리면서 소리/);
+  await page.screenshot({ path: path.join(out, 'no-models.png') });
+  note('models blocked: plain drums and painted arch, the stage still plays');
   await context.close();
 }
 
