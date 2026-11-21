@@ -43,10 +43,10 @@ Inside the round sound laboratory of the reference image at dusk: the tall glass
 
 # 파이널 영상 (2026-11-21 오후)
 
-앱 파일: `media/finale/final-ullim.mp4`(1280×720, 24.2초, 6.7MB), `final-ullim.jpg`, `final-ullim.vtt`. 마지막 복구 성공 직후와 설정 「엔딩 다시 보기」에서 결과(인증서) 화면 위에 열린다. 엔딩 목소리는 영상 안에 있어 따로 재생하지 않는다.
+앱 파일: `media/finale/final-ullim.mp4`(1280×720, 28.6초, 7.5MB), `final-ullim.jpg`, `final-ullim.vtt`. 마지막 복구 성공 직후와 설정 「엔딩 다시 보기」에서 결과(인증서) 화면 위에 열린다. 엔딩 목소리는 영상 안에 있어 따로 재생하지 않는다.
 
 - 컷 D: 구글 Flow Veo 3.1 Fast, 보조 계정 2(화면 표시 PRO), 시작 final-1 → 끝 final-2, 2026-11-21 15:16 KST. 크레딧 52→32.
-- 컷 E: **임시 판.** 크레딧이 두 장면 분량뿐이라 final-2에서 광장으로 다가가는 줌 + final-3으로 디졸브(로컬 ffmpeg), 소리는 앱 `final-theme.mp3` 앞 7.85초. 크레딧이 생기면 `flow-final.md` 「컷 E」 프롬프트로 바꿔 넣는다.
+- 컷 E: Gemini 앱(Veo), 보조 계정 3, 화면 요금제 표시 PRO, 만든 시각 2026-11-22 06:15 KST, 사용자 확인 2026-11-21 유료. 시작 그림 final-2, 원본 `flow-out/cutE-gemini.mp4`(10초, 720p). 첫 시도는 Gemini가 거절해 프롬프트에서 children을 빼고 두 번째에 받음. 원본은 6초 뒤부터 밤·불꽃놀이로 바뀌어 다음 컷(낮)과 안 맞아서, 낮인 앞 6.0초만 8.0초로 늘린 `flow-out/cutE-gemini-day.mp4`를 넣었다: `ffmpeg -i flow-out/cutE-gemini.mp4 -an -vf "trim=0:6.0,setpts=(PTS-STARTPTS)*8.1/6.0,minterpolate=fps=24:mi_mode=blend" -c:v libx264 -crf 14 -pix_fmt yuv420p flow-out/cutE-gemini-day.mp4` → `FINAL_E=flow-out/cutE-gemini-day.mp4 zsh scripts/films/build-films.sh final`. 영상 소리는 쓰지 않음. 오른쪽 아래 Gemini 워터마크 유지. 이전 임시 판은 `flow-out/cutE-temp.mp4`.
 - 컷 F: 구글 Flow Veo 3.1 Fast, 보조 계정 2(PRO), 시작 final-3, 2026-11-21 15:21 KST. 크레딧 32→12.
 - 편집: `.work/film-20261121/assemble-final.sh 0.4 3.1 6.6 15.6` — final-title 0.4초, final-core 3.1초, ending-1 6.6초, ending-2 15.6초, -16 LUFS. 영상·소리를 한 그래프에서 렌더하면 첫 전환 뒤 화면이 검게 나와서 따로 렌더해 합친다.
 
@@ -93,4 +93,4 @@ A joyful festival in the central plaza of Ullim City, a sound village of five fa
 - 인트로 25.0초: 마을 아침 + 「나는 울림새 삐오야!」 → 방해 스피커가 플러그를 뽑음 → 연구소의 부름 → 제목 로고 + 「멈춘 소리를 되찾을 탐험가, 바로 너야!」 + 「같이 도시를 깨우자!」.
 - 파이널 28.6초: 다섯 발견의 빛 → 코어 재가동·도시가 깨어남 → 축제 → 「울림도시 복구 완료!」 배지와 음표 꽃가루 + 「우리가 해냈어! 함께 탐험해 줘서 고마워, 소리 탐험가!」 → 인증서 화면.
 - 앱: 전체 화면(검은 바탕, contain), 오른쪽 위 건너뛰기(52px), 아래 자막 자리를 덮는 요소 없음. 인트로는 기록 없는 첫 시작에서 한 번(`ullim-intro-seen`), 다시 보기는 「도시 이야기 보기」. 파이널은 복구 직후 한 번, 다시 보기는 「엔딩 다시 보기」. 목소리 또는 전체 소리를 끄면 영상 음소거(자막은 영상 안에 남음) + 배경 음악 그대로. 대사 글은 화면 읽기용으로 대화창에 남기고, 영상을 못 불러오면 화면에 보인다.
-- 컷 E는 아직 임시 판. 크레딧이나 Gemini 사용량이 생기면 `flow-final.md` 「컷 E」로 만들어 `flow-out/cutE.mp4`에 넣거나 `FINAL_E=<파일>`로 `build-films.sh final`을 다시 돌린다.
+- 컷 E는 2026-11-22에 Gemini 영상으로 바꿨다. `build-films.sh final`은 `FINAL_E`를 주지 않으면 임시 판으로 돌아가니, 다시 합성할 때 `FINAL_E=flow-out/cutE-gemini-day.mp4`를 꼭 준다.
