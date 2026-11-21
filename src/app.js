@@ -415,7 +415,7 @@ function sayTitle(){
  };
  addEventListener('pointerdown',first,true);addEventListener('keydown',first,true);
 }
-function navigate(next){voice.stop();stopExperiment();cancelAdvance();inputLockedUntil=Date.now()+300;if(!canRoute(state,next))next='map';if(next!==route)trail.push(route);const lesson=lessonFromRoute(state,next);if(lesson!==null)state.resumeLesson=lesson;else if(next==='map'&&state.evidence[state.resumeLesson])state.resumeLesson=null;route=next;feedback=null;lastObject='';clearTimeout(liveTimer);playingUntil=0;sound.stop();closeModal(false);save();render();void sound.effect('tap');window.scrollTo(0,0);document.querySelector('main h1')?.setAttribute('tabindex','-1');document.querySelector('main h1')?.focus({preventScroll:true});}
+function navigate(next){voice.stop();stopExperiment();cancelAdvance();inputLockedUntil=Date.now()+300;if(!canRoute(state,next))next='map';if(next!==route)trail.push(route);const lesson=lessonFromRoute(state,next);if(lesson!==null)state.resumeLesson=lesson;else if(next==='map'&&state.evidence[state.resumeLesson])state.resumeLesson=null;route=next;feedback=null;lastObject='';clearTimeout(liveTimer);playingUntil=0;sound.stop();closeModal(false);save();render();void sound.effect('tap');window.scrollTo(0,0);document.querySelector('main h1')?.setAttribute('tabindex','-1');document.querySelector('main h1')?.focus({preventScroll:true});syncHistory();}
 sound.onStatus=text=>{soundText=text;const el=document.querySelector('#audio-status');if(el)el.textContent=text;};
 function updateView(){const focus=document.activeElement;const action=focus?.dataset?.action,key=['tool','length','medium','slot','choice','case','solution','field','value','question'].map(k=>focus?.dataset?.[k]?`[data-${k}="${focus.dataset[k]}"]`:'').join('');render();if(action)document.querySelector(`[data-action="${action}"]${key}`)?.focus({preventScroll:true});}
 function showFeedback(text,kind='hint'){feedback={text,kind};if(kind==='error')void sound.effect('retry',{polite:true});updateView();}
@@ -602,6 +602,19 @@ document.addEventListener('keydown',e=>{
 });
 window.addEventListener('pagehide',()=>{const hadPreview=Boolean(previewVisual);stopExperiment();cancelAdvance();clearTimeout(liveTimer);playingUntil=0;for(const w of Object.values(state.work))if(w.challenge)w.challenge.sounding=false;sound.stop();map?.destroy();if(hadPreview||route.startsWith('lesson/'))render();});
 render();
+// Browser back stays inside the app (2026-11-21): one app history entry sits above the page's own entry.
+// Back closes an open window first, otherwise goes lesson → map → home; from home the next back leaves as usual.
+// The address never changes and nothing here touches the saved progress.
+var skipPop=false;
+const parentRoute=r=>r.startsWith('lesson/')?'map':r==='home'?null:'home';
+function syncHistory(){try{const inside=route!=='home';if(inside&&!history.state?.ullim)history.pushState({ullim:1,route},'');else if(inside)history.replaceState({ullim:1,route},'');else if(history.state?.ullim){skipPop=true;history.back();}}catch{}}
+addEventListener('popstate',e=>{
+ if(skipPop){skipPop=false;return;}
+ if(e.state?.ullim){if(e.state.route&&e.state.route!==route&&canRoute(state,e.state.route))navigate(e.state.route);return;}
+ if(modalRoot.querySelector('dialog')||document.querySelector('.rc-layer')){if(modalRoot.querySelector('dialog'))closeModal();try{history.pushState({ullim:1,route},'');}catch{}return;}
+ const parent=parentRoute(route);if(parent)navigate(parent);
+});
+syncHistory();
 // Offline cache for classroom Wi-Fi drops; skipped on local dev unless ?sw is added.
 if('serviceWorker' in navigator&&location.protocol!=='file:'&&(!['localhost','127.0.0.1','[::1]'].includes(location.hostname)||new URLSearchParams(location.search).has('sw'))){
  const register=()=>navigator.serviceWorker.register('/sw.js').catch(()=>{});
