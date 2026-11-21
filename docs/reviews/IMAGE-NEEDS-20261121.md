@@ -11,14 +11,14 @@
 | 활동 화면 배경(진동 연구소·볼륨 경기장·조율 공방·전달 네트워크·소음 관리센터, 시설마다 2장) | `image/backgrounds/chatgpt_generated_017~026_*.jpg` 10장 | 1672×941(16:9 근처), 화면에서는 cover로 흐리게 깔림 | `ullim-village.webp`, `run-stage/` 무대 | 사용자 제공 ChatGPT 그림, 상업 이용 근거 없음. 026은 마지막 미션·결과 배경, 017은 옛 홈 배경 규칙에도 쓰임 |
 | 결과·인증서의 팀 얼굴(여자아이·남자아이) | `image/characters/chatgpt_generated_028_ee0700142c.jpg`(캐릭터 시트) 1장 | 1672×941 시트, 화면 표시는 얼굴 칸 52~68px 원형 | `explorer-walk-lite.webp` 얼굴, `card-*.webp` | 사용자 제공 ChatGPT 그림. 얼굴 두 개만 쓰므로 정사각 얼굴 2장(512×512, 투명)으로 바꿔도 됨 |
 | 시작 화면 제목 로고 | `image/branding/title-logo.webp` 1장 | 1200×675(투명 배경), 글자 「울림도시 대작전」 포함 | 지금 로고의 색·두께, `card-*.webp` | 원본 `chatgpt_generated_029`가 사용자 제공 그림. 글자가 들어가므로 그림은 바탕만 만들고 글자는 합성 |
-| 시작 화면 배경(연구소 실내) | `image/backgrounds/title-city.webp` 1장 | 1440×810(16:9) | `ullim-village.webp`, `concepts/` 실험실 그림 | 만든 도구·날짜 기록 없음 |
-| 지도 악당(방해 스피커) 동작 시트 | `image/generated/map-villain-poses-left.webp` 1장 | 768×128(128px 칸 6개, 투명), 지도에서 57px 안팎 | `explorer-walk-lite.webp`, `_shared/MAP-VILLAINS-HANDOFF-20261114.md`의 시트 규칙(바닥 피벗·좌우 반전) | 도구 기록 없음 |
-| 지도 탐험가·삐오 반응 시트 | `image/generated/map-hero-reaction.webp`, `map-ally-reaction.webp` 2장 | 각 1024×1024(투명, 칸 배치 지금과 같게) | `explorer-walk-lite.webp`, `concepts/pio-fly.webp` | 도구 기록 없음 |
-| 대화창 삐오 초상 | `image/generated/dialogue/pio.webp` 1장 | 1024×512(투명, 상반신) | `concepts/pio-fly.webp` | 도구 기록 없음 |
+| ~~시작 화면 배경(연구소 실내)~~ | `image/backgrounds/title-city.webp` 1장 | 1440×810(16:9) | `ullim-village.webp`, `concepts/` 실험실 그림 | **3-2a: 새로 그리지 않음** — 배경 018을 줄인 파생본으로 확인. 018을 바꾸면 같은 방법(1440px)으로 다시 만든다 |
+| ~~지도 악당(방해 스피커) 동작 시트~~ | `image/generated/map-villain-poses-left.webp` 1장 | 768×128(128px 칸 6개, 투명), 지도에서 57px 안팎 | `explorer-walk-lite.webp`, `_shared/MAP-VILLAINS-HANDOFF-20261114.md`의 시트 규칙(바닥 피벗·좌우 반전) | **3-2a: 필요 없음** — Codex `image_gen` 기록 확인(권리 장부) |
+| ~~지도 탐험가·삐오 반응 시트~~ | `image/generated/map-hero-reaction.webp`, `map-ally-reaction.webp` 2장 | 각 1024×1024(투명, 칸 배치 지금과 같게) | `explorer-walk-lite.webp`, `concepts/pio-fly.webp` | **3-2a: 필요 없음** — Codex `image_gen` 기록 확인 |
+| ~~대화창 삐오 초상~~ | `image/generated/dialogue/pio.webp` 1장 | 1024×512(투명, 상반신) | `concepts/pio-fly.webp` | **3-2a: 필요 없음** — Codex `image_gen` 기록 확인 |
 | 공유 썸네일·앱 아이콘 | `image/og/ullim-og.jpg`(1200×630), `image/icons/icon-192·512.png` | 같은 크기 | — | 새로 그리지 않고, 위 배경·로고를 바꾼 뒤 `scripts/compose-share-art.swift`로 다시 합성 |
-| 지도 파이널 영상 | `assets/map-encounters/map-finale.mp4` 1편 | 640×360 | 지도·탐험가 그림 | 만든 방법 기록 없음. 새 그림으로 다시 만들거나 출처 자료 필요 |
+| ~~지도 파이널 영상~~ | `assets/map-encounters/map-finale.mp4` 1편 | 640×360 | 지도·탐험가 그림 | **3-2a: 필요 없음** — 11번 지도 그림에 글자를 합성한 자체 렌더(해시 같음) |
 
-장수 세기: 배경 10 + 캐릭터 시트 1(얼굴 2장으로 바꾸면 2) + 로고 1 + 시작 배경 1 + 악당 시트 1 + 반응 시트 2 + 삐오 초상 1 = **17장**, 그리고 다시 합성할 공유 그림 3개와 영상 1편.
+장수 세기(3-2a 대조 뒤, 2026-11-21): 배경 10 + 캐릭터 시트 1(얼굴 2장으로 바꾸면 2) + 로고 1 = **12장**(전 17장 + 영상 1편). 시작 화면 배경·공유 썸네일·아이콘은 새 배경·로고로 다시 만든다(새로 그리지 않음). 지도 악당·반응 시트·삐오 초상은 생성 기록을 찾았고, 지도 파이널 영상은 자체 렌더라 빠졌다.
 
 ## (나) 화풍·해상도가 튀거나 임시로 넣은 그림
 
