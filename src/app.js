@@ -199,7 +199,7 @@ function lessonCue(i,w,saved){
  }
  if(l.base===1){
   if(playingUntil>Date.now())return {text:'울리는 소리굽쇠를 눌러 잡아 봐. 잡기 전과 뒤를 비교해 봐.',target:'[data-action="fork-stop"]'};
-  if(!w.stopped)return {text:'소리굽쇠를 눌러 울리고 소리와 그림을 살펴봐.',target:'[data-action="fork-start"]'};
+  if(!w.stopped)return {text:hintLevels[i]?coach.text:'소리굽쇠를 눌러 울리고 소리와 그림을 살펴봐.',target:'[data-action="fork-start"]'};
   return {text:hintLevels[i]?coach.text:'누르기 전과 뒤를 비교해 골라 봐.',target:hintLevels[i]===2?'[data-action="fork-start"]':coach.target};
  }
  if(l.base===8&&w.heard){const field=nextDiagnosisField(w);if(field)return {text:hintLevels[i]?coach.text:`${field.label}${field.key==='place'?'를':'을'} ${w[field.key]?'다시 살펴보고 ':''}골라 봐.`,target:hintLevels[i]===2?'[data-action="noise-scene"]':`[data-action="diagnostic"][data-field="${field.key}"]`};}

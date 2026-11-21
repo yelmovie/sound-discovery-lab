@@ -30,7 +30,10 @@ const hints = [
 const hintOrder=[0,1,4,5,2,3,6,7,8,9,10,11,12,13,14,15,16,17,18,19];
 export function coachFor(state,index,level=0,saved){
  const w=state.work[index]||{},l=lessons[index],ready=checkLesson(state,index).ok;
- let text=hints[hintOrder[index]][Math.min(2,Math.max(0,level))],target='';
+ // 2026-11-21 학습 문구 제안 1(사용자 선택): 아래 여섯 활동은 첫 안내가 모든 단계를 덮어 힌트가 깊어지지 않았다.
+ // 별을 누르면 힌트 표의 두 번째 문장(이미 녹음된 목소리)으로 넘어가고, 세 번째 문장은 쓰지 않는다.
+ const oneStep=[1,2,7,9,17,18].includes(index);
+ let text=hints[hintOrder[index]][Math.min(oneStep?1:2,Math.max(0,level))],target='';
  if(ready)return {text:(saved??Boolean(state.evidence[index]))?'증거가 노트에 담겼어! 다음 활동으로 가자.':'발견을 다 모았어! 증거를 확인하고 다음으로 가자.',target:(saved??Boolean(state.evidence[index]))?'[data-action="continue"]':'[data-action="submit"]',ready};
  if(l.base===0){const next=instruments.find(t=>!(w.seen||[]).includes(t.id));target=(w.seen||[]).length<2&&next?`[data-tool="${next.id}"]`:level===2?'[data-action="instrument"]':'.answer-group .choice';}
  if(l.base===1)target=!w.started||!w.stopped?'[data-action="fork-start"]':'.answer-group .choice';
@@ -66,16 +69,16 @@ export function coachFor(state,index,level=0,saved){
   const adjustment=adjustmentCue(l.challenge,c);
   if(adjustment){
    target=adjustment.target;
-   if(level===0||l.challenge==='sort'&&(c.listened||[]).length<3)text=adjustment.text;
+   if(level===0)text=adjustment.text;
    if(l.challenge==='mix'&&level===2)target='[data-action="challenge-check"]';
   }
-  if(l.challenge==='parts'&&!c.heard)text='악기 그림을 눌러 소리를 내 봐. 그다음 떨리는 곳의 번호 표시를 눌러.';
+  if(l.challenge==='parts'&&!c.heard&&level===0)text='악기 그림을 눌러 소리를 내 봐. 그다음 떨리는 곳의 번호 표시를 눌러.';
   if(l.challenge==='melody'&&!c.heard)text='목표 듣기를 눌러. 음마다 높이가 어떻게 바뀌는지 들어 봐.';
-  if(l.challenge==='solutions')text='현장 그림을 보고 알맞은 도구를 눌러 봐. 적용 전과 후 소리가 이어서 나와.';
+  if(l.challenge==='solutions'&&level===0)text='현장 그림을 보고 알맞은 도구를 눌러 봐. 적용 전과 후 소리가 이어서 나와.';
  }
  if(l.base===0&&(w.seen||[]).length<2&&level>0)text='아직 안 울려 본 물체를 눌러. 먼저 본 물체와 움직임을 비교해 봐.';
  if(level===0&&l.base===0&&(w.seen||[]).length>=2)text='관찰한 물체의 공통점을 아래에서 골라 봐.';
- if(l.base===5&&!w.targetHeard)text='목표 신호 듣기를 눌러. 음마다 높이가 어떻게 바뀌는지 들어 봐.';
- if(l.base===9&&!(w.solutions||[]).length)text=w.before?'해결 방법 하나를 고르고 적용 후 듣기를 눌러 봐.':'적용 전 듣기를 눌러 지금 들리는 소리를 기억해 봐.';
+ if(l.base===5&&!w.targetHeard&&level===0)text='목표 신호 듣기를 눌러. 음마다 높이가 어떻게 바뀌는지 들어 봐.';
+ if(l.base===9&&!(w.solutions||[]).length&&level===0)text=w.before?'해결 방법 하나를 고르고 적용 후 듣기를 눌러 봐.':'적용 전 듣기를 눌러 지금 들리는 소리를 기억해 봐.';
  return {text,target,ready};
 }

@@ -108,13 +108,13 @@ export function nextDiagnosisField(work={}) {
 export function checkLesson(s,i) {
   const w=s.work[i]||{};
   if(!lessons[i])return fail('올바른 실험을 선택해 줘.');
-  if(lessons[i].challenge)return checkChallenge(lessons[i].challenge,w.challenge)?{ok:true,message:lessons[i].summary}:fail('아직 해결하지 않은 의뢰가 있어. 직접 조절하고 끝까지 확인해 줘.');
+  if(lessons[i].challenge)return checkChallenge(lessons[i].challenge,w.challenge)?{ok:true,message:lessons[i].summary}:fail('의뢰가 아직 남았어. 손잡이를 조절하고 한 번 더 들어 보자.');
   const current=lessons[i];i=current.base;
-  if (i===0 && new Set(list(w.seen).filter(x=>['rubber','ruler','drum','fork'].includes(x))).size<2) return fail('다른 물체도 울려 봐. 두 가지 이상의 떨림을 관찰해야 해.');
+  if (i===0 && new Set(list(w.seen).filter(x=>['rubber','ruler','drum','fork'].includes(x))).size<2) return fail('다른 물체도 울려 봐. 두 가지를 비교하면 공통점이 보여.');
   if (i===1 && !(w.started && w.stopped)) return fail('먼저 울리기를 누른 다음, 소리가 나는 동안 눌러 멈춰 봐.');
   if (i===2) {
     if (![1,2,3].includes(w.a) || ![1,2,3].includes(w.b)) return fail('실험 A와 B를 각각 기록해 줘.');
-    if (w.a===w.b) return fail('두 실험의 세기가 같아. 세기를 바꿔 한 실험을 다시 기록해 봐.');
+    if (w.a===w.b) return fail('두 실험의 세기가 같아. 한쪽만 세기를 바꿔서 다시 쳐 볼까?');
   }
   if (i===3) {
     const pair=s.evidence[legacyIndex(2)]?.observation;
@@ -131,7 +131,7 @@ export function checkLesson(s,i) {
   if (i===7 && !transferCases.every((c,k)=>w.verified?.[k]===c.answer)) return fail('아직 검증하지 않은 상황이 있어. 세 상황 모두 선택한 뒤 실험해 봐.');
   if (i===8) {
     if (!w.heard) return fail('현장 소리를 먼저 들어 봐.');
-    if (nextDiagnosisField(w)) return fail('현장 소리 듣기를 누르고, 그림과 제보에서 장소·시간·사람을 다시 찾아봐.');
+    if (nextDiagnosisField(w)) return fail('현장 소리를 다시 듣고, 그림과 제보에서 장소·시간·사람을 하나씩 찾아봐.');
   }
   if (i===9) {
     if (!s.evidence[legacyIndex(8)]) return fail('먼저 소음 관리센터에서 현장을 진단해 줘.');
