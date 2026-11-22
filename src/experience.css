@@ -623,3 +623,21 @@ h1 .voice-replay,h3 .voice-replay{width:48px;height:48px;min-width:48px}
 .map-page .map-tools{position:absolute;z-index:11;right:24px;bottom:112px;flex-direction:row;align-items:center}
 @media(min-width:1500px){.map-page .map-tools{bottom:142px;right:34px}}
 @media(max-width:900px),(max-height:620px){.map-page .map-tools{bottom:84px;right:12px}}
+
+/* Title 2026-11-22 (1번 우당탕 양식): big logo upper middle, 시작하기/새로 시작 + 이어 하기 bottom middle, sound·settings only. */
+.title-hud{justify-content:flex-end}
+.title-copy{width:min(96vw,1200px);padding:clamp(56px,9dvh,96px) 20px calc(clamp(24px,6dvh,64px) + env(safe-area-inset-bottom))}
+.title-logo{margin:0}
+.title-logo img{width:min(78vw,1150px,calc((100dvh - 230px) * 1.78))}
+.title-actions{flex-wrap:nowrap;gap:20px;margin-top:clamp(12px,3dvh,32px)}
+.title-actions>button{min-width:220px;min-height:66px;padding:0 30px;font-size:26px;border-radius:20px}
+.title-actions>button:disabled{opacity:.55;cursor:not-allowed;box-shadow:none}
+.settings-voice{display:flex;align-items:center;gap:10px}
+.settings-voice>button{flex:1}
+.settings-voice small,.settings-progress{color:#466c45;font-size:15px;font-weight:700}
+@media(max-height:560px){
+ .title-copy{padding:50px 16px 12px}
+ .title-logo img{width:calc((100dvh - 150px) * 1.78);min-width:240px}
+ .title-actions{margin-top:8px;gap:12px}
+ .title-actions>button{min-width:180px;min-height:52px;font-size:20px}
+}
