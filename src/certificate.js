@@ -6,14 +6,13 @@ export function certificateResult({genuine, evidence, restored, date, findings, 
       <article class="cert-paper ${genuine ? '' : 'preview'}" aria-label="소리 탐험가 인증서">
         <img class="cert-frame" src="/image/certificate-frame-20261122.webp" alt="" aria-hidden="true">
         <div class="cert-content">
-          <p class="cert-world">울림도시 대작전 · 소리 탐험대</p>
+          <p class="cert-world">울림도시 대작전 · ${genuine ? '소리 탐험대' : '관리자 미리보기 · 정식 인증 아님'}</p>
           <h1 class="cert-title">소리 탐험가 인증서</h1>
           <div class="cert-recipient" aria-label="인쇄한 뒤 손으로 쓰는 학교, 학년, 반, 번호, 이름 빈칸">
             <div class="cert-class"><span class="cert-blank school" data-cert-blank="school"></span> 학교 <span class="cert-blank" data-cert-blank="grade"></span> 학년 <span class="cert-blank" data-cert-blank="class"></span> 반 <span class="cert-blank" data-cert-blank="number"></span> 번</div>
             <div class="cert-name">이름 <span class="cert-blank name" data-cert-blank="name"></span></div>
           </div>
           <p class="cert-award">위 탐험가는 소리의 떨림·크기·높낮이·전달을 탐구하고,<br>함께 사는 친구들을 배려하는 방법을 발견하였으므로<br>이 인증서를 드립니다.</p>
-          <p class="cert-summary">${genuine ? `증거 ${evidence}개 · 시설 ${restored}곳 복구 · 5가지 소리의 원리` : `관리자 미리보기 · 증거 ${evidence}/20 · 정식 인증 아님`}</p>
           <div class="cert-bottom">
             <p class="cert-date"><small>복구한 날</small>${esc(date)}</p>
             <div class="cert-stamp"><b>소리 코어</b><span>${genuine ? '복구 인증' : '연습용 예시'}</span></div>

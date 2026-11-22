@@ -106,12 +106,14 @@ export async function drawCertificate(paper) {
         ctx.textBaseline = 'middle';
         ctx.textAlign = 'left';
         const spacing = parseFloat(cs.letterSpacing) || 0;
+    const stroke = parseFloat(cs.webkitTextStrokeWidth) || 0;
+    ctx.strokeStyle = cs.webkitTextStrokeColor || cs.color; ctx.lineWidth = stroke * scale;
         for (const line of lines(n)) {
             const y = Y(line.rect.top + line.rect.height / 2);
             if (spacing) {
                 let x = X(line.rect.left);
                 for (const ch of line.text) {
-                    ctx.fillText(ch, x, y);
+                    if (stroke) ctx.strokeText(ch, x, y); ctx.fillText(ch, x, y);
                     x += ctx.measureText(ch).width + spacing * scale;
                 }
             }
