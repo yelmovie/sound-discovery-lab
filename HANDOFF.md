@@ -1,3 +1,7 @@
+# 첫 화면 우당탕 양식 (2026-11-22)
+지침 `_shared/START-SCREEN-UDANGTANG-20261122.md`. 첫 화면은 로고 + 「시작하기/새로 시작」(`start`, 기록 있으면 확인창 「기록 지우고 시작」 → 기존 초기화 뒤 인트로) + 「이어 하기」(`resume`, 기록 없으면 비활성) + 소리·설정 아이콘 + 제작 표기만. 「도시 이야기 보기」는 설정 「이 탐험을 하는 이유 다시 보기」와 같아 지웠고, 설정에 「안내 목소리 듣기」(AI 생성 음성 표시)와 「지금 기록 · 증거 N / 20 · 복구 배지 M / 5」를 넣었다. 새로고침하면 기존처럼 마지막 화면(`lastRoute`)으로 열린다.
+검증: check·테스트 163·build, `.tmp/startscreen-20261122/verify.mjs` 로컬·운영 각 43항목(1280×720·1024×768·844×390). 커밋 `cf35dc5` → Worker 버전 `288bb12f-d1a5-4a9e-96d8-2eaa6f0b9320`, `src/app.js`·index MATCH.
+---
 # 파이널 영상은 소리 코어 복구 때 한 번만 (2026-11-22)
 지침 `_shared/FINALE-ONCE-20261122.md` 덩어리 E. `src/map.js`의 `requiredFoes`를 5→0으로 바꿔 마지막 악당 뒤 지도 피날레(`map-finale.mp4`)를 껐다(`map-encounters.js`에서 피날레 시각에만 쓰임, `victory` 신호는 원래 `app.js`가 `exit`로 냄). 악당 격퇴는 성취 카드만, 파이널(`media/finale/final-ullim.mp4`)은 소리 코어 복구(`restore` → `openFinale`) 때 한 번. 「엔딩 다시 보기」는 `state.restored` 그대로.
 검증: check·테스트 163·build, 헤드리스 `.tmp/finale-once-20261122/verify.mjs` 로컬 29항목·운영 30항목(시나리오 1 영상 0, 2·2b 영상 1, 3 합계 1, 새로고침·지도 재진입 자동 재생 0, 콘솔 오류 0). 커밋 `c176161` → Worker `sound-discovery-lab` 버전 `52c67a32-6936-435b-b75d-b6d9678cb6eb`, `src/map.js`·index MATCH.
