@@ -120,3 +120,6 @@ dialog.modal-film{animation:none;transform:none;width:100dvw;height:100dvh;max-w
 .modal-film .modal-footer{position:absolute;top:max(14px,env(safe-area-inset-top,0px));right:max(14px,env(safe-area-inset-right,0px));padding:0;margin:0;border:0;background:none;box-shadow:none;z-index:2}
 .modal-film .film-skip{min-height:52px;opacity:.92}
 .film-transcript:not(.sr-only){position:absolute;inset:auto 16px 16px;padding:16px 20px;border-radius:14px;background:#fff2d7;color:#183849;font-size:18px;line-height:1.5}
+/* Certificate credit (2026-11-22, SALE-UNIFY A1): one small line at the bottom, also on paper. */
+.certificate .certificate-credit{margin:6px 0 0;font-size:14px;line-height:1.4;color:#4a5d63;letter-spacing:0}
+@media print{.certificate .certificate-credit{color:#333}}
