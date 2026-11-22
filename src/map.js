@@ -112,7 +112,8 @@ export function mountMap(canvas,state,onArrive,options={}){
       loadImage(mapReactionAssets[role],signal).then(image=>{if(active)reactionAtlases[role]=image;}).catch(()=>{});
     }
   }
-  const encounters=mountMapEncounters({requiredFoes:5,host:viewport,controls:viewport.closest('.map-page')?.querySelector('.map-next-stack')??viewport,clearStage:()=>options.clearStage,stages:state.settings?.admin?[]:mapVillainStages.filter((_,i)=>done[i]),
+  // 2026-11-22: 악당을 다 물리치면 성취 카드만. 파이널 영상은 소리 코어 복구(스테이지 완료) 때 한 번만 나오므로 지도 피날레는 끈다(requiredFoes 0).
+  const encounters=mountMapEncounters({requiredFoes:0,host:viewport,controls:viewport.closest('.map-page')?.querySelector('.map-next-stack')??viewport,clearStage:()=>options.clearStage,stages:state.settings?.admin?[]:mapVillainStages.filter((_,i)=>done[i]),
    progress:state.mapHits,onSave:options.onMapHit,art:{left:new URL('image/generated/map-villain-poses-left.webp',document.baseURI).href,frames:6},
    palette:'#c9a3ff',reach:122,contact:28,tone:options.encounterTone,voice:options.villainVoice,
    blocked:()=>!ready||!active||paused||view!=='follow'||destination!==null||dragged||Boolean(options.encounterHold?.()),
