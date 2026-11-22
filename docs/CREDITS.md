@@ -151,3 +151,7 @@ Openverse에서 CC0만 걸러 찾고, 각 Freesound 원본 페이지에서 CC0(�
 
 - three.js r170 (MIT, Copyright 2010-2024 Three.js Authors): `src/vendor/three/three.module.min.js`. 라이선스 전문은 같은 폴더의 `THREE-LICENSE.txt`. 구조는 threejs.org `games_fps` 예제를 참고해 새로 썼고 예제의 모델·그림은 쓰지 않았다.
 - 그림: GPT 이미지(Codex 내장 이미지 도구)로 만든 무대 그림. 프롬프트와 파일은 `docs/RUN-STAGE-3D-PLAN-20261117.md`의 「구현 결과」에 있다. 탐험가 걷기 그림과 삐오 그림은 기존 생성 그림을 다시 썼다.
+
+## 인증서 테두리 · 2026-11-22
+
+- `image/certificate-frame-20261122.webp`: Codex 기본 imagegen(GPT 이미지), 1회 생성. 소리굽쇠·음파 리본·작은북·실 전화기·삐오 깃털 수채 테두리, 글자는 앱에서 따로 표시합니다. 원본 `image/source/certificate-20261122.png`, 프롬프트 `image/source/PROMPT-11.txt`. 1800×1273, 145,378 bytes.
