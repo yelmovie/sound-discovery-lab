@@ -1,3 +1,7 @@
+# 파이널 영상은 소리 코어 복구 때 한 번만 (2026-11-22)
+지침 `_shared/FINALE-ONCE-20261122.md` 덩어리 E. `src/map.js`의 `requiredFoes`를 5→0으로 바꿔 마지막 악당 뒤 지도 피날레(`map-finale.mp4`)를 껐다(`map-encounters.js`에서 피날레 시각에만 쓰임, `victory` 신호는 원래 `app.js`가 `exit`로 냄). 악당 격퇴는 성취 카드만, 파이널(`media/finale/final-ullim.mp4`)은 소리 코어 복구(`restore` → `openFinale`) 때 한 번. 「엔딩 다시 보기」는 `state.restored` 그대로.
+검증: check·테스트 163·build, 헤드리스 `.tmp/finale-once-20261122/verify.mjs` 로컬 29항목·운영 30항목(시나리오 1 영상 0, 2·2b 영상 1, 3 합계 1, 새로고침·지도 재진입 자동 재생 0, 콘솔 오류 0). 커밋 `c176161` → Worker `sound-discovery-lab` 버전 `52c67a32-6936-435b-b75d-b6d9678cb6eb`, `src/map.js`·index MATCH.
+---
 # 3D 달리기 Meshy 모형 (2026-11-21 저녁)
 울림 징검다리·높낮이 잠금문의 움직이지 않는 부분만 Meshy GLB로 바꿨다: 도착점 문틀(`media/models/run-stage/gate-arch.glb`, 8,080면)과 북 징검돌 몸통 10개(`drum.glb`, 2,914면). 문짝·램프·북 윗면 가죽과 떨림 고리·발판 판정은 코드 그대로. 로더는 three r170 addon 사본(`src/vendor/three/GLTFLoader.js` 등), 목록은 `src/data.js` `runStageModels`(빌드 복사·오프라인 저장 포함). GLB를 못 불러오면 원기둥·그림 아치로 그대로 진행.
 원본·작업 ID·크레딧은 `references/meshy-20261121/README.md`(원본은 git 제외), 계획·결과는 `docs/MESHY-3D-RUN-STAGE-20261121.md`. 검증은 `scripts/qa-run-stage.mjs` 21항목(모형 불러옴·GLB 차단 대체 포함).
