@@ -9,8 +9,8 @@
 | 프로젝트 | 울림도시 대작전(11번, 초등 과학 「소리의 성질」), 앱 버전 2.3.0 |
 | 운영 주소 | https://sound-discovery-lab.yelsam.workers.dev |
 | 저장소 | https://github.com/yelmovie/sound-discovery-lab (`main`) |
-| 현재 커밋 | `c7f9dcb` (2026-11-22, 파이널 영상 컷 E 교체). 마지막 앱 코드 변경은 `f16484b`(2026-11-21, 3D 달리기 Meshy 모형) |
-| 운영 반영 확인 | 이 문서 작성 때는 운영 주소를 다시 열어 보지 않았습니다. 마지막으로 기록된 값은 `docs/reviews/SCORE-20261121.md`의 앱 `64445d3`·Workers `fd6a9d70`(`prodcmp.sh 11` 일치) |
+| 현재 앱 커밋 | `9bf30cc` (2026-11-22, 인증서 A4 고도화·진행 숫자 미표시·굵은 제목) |
+| 운영 반영 확인 | Workers `da07ff04-5cc9-4dd0-96c5-a3728f3ff8e2`, 공식 주소 index+코드/스타일40개 MATCH, 인증서3뷰·PDF·PNG 확인(아래 최종 운영 확인) |
 
 ## 2. 폴더 구조
 
