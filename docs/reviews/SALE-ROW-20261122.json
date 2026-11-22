@@ -1,33 +1,111 @@
 {
-  "no": 11, "name": "울림도시 대작전", "folder": "11 sound",
-  "grade": "3~4학년군", "semester": null, "subject": "과학", "unit": "(7) 소리의 성질",
+  "no": 11,
+  "name": "울림도시 대작전",
+  "folder": "11 sound",
+  "grade": "3학년",
+  "semester": "2학기",
+  "subject": "과학",
+  "unit": "소리의 성질",
   "standards": [
     "[4과07-01] 여러 가지 물체를 이용하여 소리를 내보고, 소리가 나는 물체는 떨림이 있음을 설명할 수 있다.",
     "[4과07-02] 큰 소리와 작은 소리, 높은 소리와 낮은 소리를 구분하고, 세기와 높낮이가 다른 소리를 낼 수 있다.",
     "[4과07-03] 여러 가지 물질을 통하여 소리가 전달되는 것을 관찰하고, 소음을 줄이는 방법을 찾아 일상생활에서 실천할 수 있다."
   ],
-  "minutes": null, "stages": 20,
+  "minutes": null,
+  "stages": 20,
   "thumbnail": "11 sound/thumbnails/thumbnail-16x8.png",
-  "appCommit": "c7f9dcb", "host": "workers",
+  "appCommit": "c7f9dcb",
+  "host": "workers",
   "note": "semester와 minutes는 저장소에 없음(40분 수업 미검증, 자동 완주 233초는 학생 시간 아님). stages=활동 20개(시설 5곳). appCommit은 HEAD, 마지막 앱 코드 변경은 f16484b.",
   "consistency": {
-    "creditLine": {"text": "기획·제작: 옐샘 & ⓒ 아이스크림미디어", "where": ["settings", "start"], "note": "인증서 화면에는 없음. 설정 창에는 앱 정보 줄과 저작권 줄 두 곳"},
+    "creditLine": {
+      "text": "기획·제작: 옐샘 & ⓒ 아이스크림미디어",
+      "where": [
+        "settings",
+        "start"
+      ],
+      "note": "인증서 화면에는 없음. 설정 창에는 앱 정보 줄과 저작권 줄 두 곳"
+    },
     "settings": {
-      "items": ["배경 음악(스위치)", "효과음(스위치)", "배경 음악 크기(슬라이더 0~100, 5단위)", "효과음 크기(슬라이더 0~100, 5단위)", "목소리(스위치)", "이 탐험을 하는 이유 다시 보기", "엔딩 다시 보기(복구 뒤)", "인증서 받기(복구 뒤)", "앱 정보·배움과 보상", "학생용 가이드", "교사용 가이드(성취기준, 교사용 도구)", "이미지·소리·저작권 고지(자료 출처)", "탐험 기록 초기화", "닫기"],
-      "close": ["esc", "backdrop"],
+      "items": [
+        "배경 음악(스위치)",
+        "효과음(스위치)",
+        "배경 음악 크기(슬라이더 0~100, 5단위)",
+        "효과음 크기(슬라이더 0~100, 5단위)",
+        "목소리(스위치)",
+        "이 탐험을 하는 이유 다시 보기",
+        "엔딩 다시 보기(복구 뒤)",
+        "인증서 받기(복구 뒤)",
+        "앱 정보·배움과 보상",
+        "학생용 가이드",
+        "교사용 가이드(성취기준, 교사용 도구)",
+        "이미지·소리·저작권 고지(자료 출처)",
+        "탐험 기록 초기화",
+        "닫기"
+      ],
+      "close": [
+        "esc",
+        "backdrop"
+      ],
       "closeLabel": "닫기",
       "note": "설정 창 제목줄에는 X 버튼이 없고(kind settings), 아래 오른쪽 「닫기」 하나. 아래 줄은 왼쪽 「탐험 기록 초기화」(위험), 오른쪽 「닫기」"
     },
     "certificate": {
-      "fields": ["증거 개수", "복구 곳 수", "소리의 원리 5가지(고정 문구)", "복구한 날(날짜)"],
-      "buttons": ["인증서 인쇄 · PDF 저장", "내 증거 다시 보기", "지도 둘러보기(미리보기 상태에서는 증거 모으러 가기 포함)"],
+      "fields": [
+        "증거 개수",
+        "복구 곳 수",
+        "소리의 원리 5가지(고정 문구)",
+        "복구한 날(날짜)"
+      ],
+      "buttons": [
+        "인증서 인쇄 · PDF 저장",
+        "내 증거 다시 보기",
+        "지도 둘러보기(미리보기 상태에서는 증거 모으러 가기 포함)"
+      ],
       "note": "이름 입력칸 없음. 복구 전 미리보기에서는 「증거 모으러 가기」가 첫 버튼. 아래에 「내가 발견한 다섯 원리」 영상 다시 보기 5개"
     },
-    "rewardCards": {"count": 5, "textPx": 16, "lockedText": "아직 못 얻은 카드 N / 악당을 물리치면 열려요", "note": "카드 제목 최소 20px, 보조줄 최소 16px(보관함 화면 높이 700 이상), 미니 카드 12~14px. 공통 모듈 reward-cards.css 그대로"},
-    "modalButtons": {"primarySide": "right", "order": ["취소", "기록 지우기"], "note": "일반 팝업 기본 푸터는 「닫기」 하나(오른쪽 위 X 버튼도 있음). 초기화 확인창은 취소(왼쪽 보조)·기록 지우기(오른쪽 위험)"},
-    "startScreen": {"buttons": ["탐험 시작하기(진행이 있으면 탐험 이어 하기)", "도시 이야기 보기"]}
+    "rewardCards": {
+      "count": 5,
+      "textPx": 16,
+      "lockedText": "아직 못 얻은 카드 N / 악당을 물리치면 열려요",
+      "note": "카드 제목 최소 20px, 보조줄 최소 16px(보관함 화면 높이 700 이상), 미니 카드 12~14px. 공통 모듈 reward-cards.css 그대로"
+    },
+    "modalButtons": {
+      "primarySide": "right",
+      "order": [
+        "취소",
+        "기록 지우기"
+      ],
+      "note": "일반 팝업 기본 푸터는 「닫기」 하나(오른쪽 위 X 버튼도 있음). 초기화 확인창은 취소(왼쪽 보조)·기록 지우기(오른쪽 위험)"
+    },
+    "startScreen": {
+      "buttons": [
+        "탐험 시작하기(진행이 있으면 탐험 이어 하기)",
+        "도시 이야기 보기"
+      ]
+    }
   },
-  "ledger": {"rows": 26, "open": 0, "openItems": [], "userPending": ["OpenAI(ChatGPT/Codex) 요금제 화면 사본", "ElevenLabs Creator 요금제 화면 사본", "Suno Premier 요금제 화면 사본", "Google AI Pro 요금제 화면 사본(Flow·Gemini 앱 영상)"]},
-  "teacherGuide": {"needsConfirm": ["학기", "예상 수업 시간(40분 수업 미검증)"]},
-  "files": {"teacherGuide": "11 sound/docs/TEACHER-GUIDE.md", "handoff": "11 sound/docs/DELIVERY-HANDOFF.md"}
+  "ledger": {
+    "rows": 26,
+    "open": 0,
+    "openItems": [],
+    "userPending": [
+      "OpenAI(ChatGPT/Codex) 요금제 화면 사본",
+      "ElevenLabs Creator 요금제 화면 사본",
+      "Suno Premier 요금제 화면 사본",
+      "Google AI Pro 요금제 화면 사본(Flow·Gemini 앱 영상)"
+    ]
+  },
+  "teacherGuide": {
+    "needsConfirm": [
+      "예상 수업 시간(40분 수업 미검증)"
+    ]
+  },
+  "files": {
+    "teacherGuide": "11 sound/docs/TEACHER-GUIDE.md",
+    "handoff": "11 sound/docs/DELIVERY-HANDOFF.md"
+  },
+  "gradeRepo": "3~4학년군",
+  "unitRepo": "(7) 소리의 성질",
+  "gradeUnitSource": "운영 시트 「이예리 선생님」 탭, 2026-11-22 확인"
 }
