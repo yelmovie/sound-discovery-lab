@@ -14,9 +14,9 @@
   "minutes": null,
   "stages": 20,
   "thumbnail": "11 sound/thumbnails/thumbnail-16x8.png",
-  "appCommit": "c7f9dcb",
+  "appCommit": "9bf30cc",
   "host": "workers",
-  "note": "semester와 minutes는 저장소에 없음(40분 수업 미검증, 자동 완주 233초는 학생 시간 아님). stages=활동 20개(시설 5곳). appCommit은 HEAD, 마지막 앱 코드 변경은 f16484b.",
+  "note": "학년·학기는 운영 시트 기준 3학년 2학기. minutes는 실제 수업 미검증. stages=활동 20개(시설 5곳). appCommit은 마지막 앱 코드 변경이며 문서 커밋과 구분한다.",
   "consistency": {
     "creditLine": {
       "text": "기획·제작: 옐샘 & ⓒ 아이스크림미디어",
@@ -113,5 +113,13 @@
   },
   "gradeRepo": "3~4학년군",
   "unitRepo": "(7) 소리의 성질",
-  "gradeUnitSource": "운영 시트 「이예리 선생님」 탭, 2026-11-22 확인"
+  "gradeUnitSource": "운영 시트 「이예리 선생님」 탭, 2026-11-22 확인",
+  "production": {
+    "checkedAt": "2026-11-22 20:23 KST",
+    "appCommit": "9bf30cc",
+    "workerVersion": "da07ff04-5cc9-4dd0-96c5-a3728f3ff8e2",
+    "url": "https://sound-discovery-lab.yelsam.workers.dev/",
+    "sha256MatchFiles": 63,
+    "result": "공식 운영 주소의 index·JS/CSS·서비스워커·인증서 핵심 파일이 최신 검증 빌드와 모두 일치. 앱 재배포 없이 기존 활성 버전 유지."
+  }
 }
