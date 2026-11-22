@@ -31,7 +31,7 @@ export const settingsContent = {
     '캐릭터·배경·장식은 프로젝트 제공 이미지와 자체 AI 생성 이미지예요.',
     '실험에는 실제 북·자·고무줄·소리굽쇠의 CC0 녹음을 사용해요. 나무 배치음과 복구 멜로디도 CC0 샘플로 구성했어요.',
     '화면 효과음과 지도 전투음은 Freesound의 CC0 악기 녹음(실로폰·글로켄슈필·칼림바·트라이앵글·작은북·종)이고, 악기 샘플은 Versilian Studios VCSL, 자·고무줄은 Freesound, 소리굽쇠는 Wikimedia Commons의 CC0 공개 자료예요.',
-    '삐오·주민·책 읽는 친구·방해 스피커의 대사와 개념 영상 해설 135줄은 실제 사람을 모사하지 않은 AI 생성 음성이에요. 소리를 꺼도 대사를 글로 볼 수 있어요.',
+    '삐오·주민·책 읽는 친구·방해 스피커의 대사와 개념 영상 해설 140줄은 실제 사람을 모사하지 않은 AI 생성 음성이에요. 소리를 꺼도 대사를 글로 볼 수 있어요.',
     '출처와 라이선스 확인 범위는 프로젝트의 docs/CREDITS.md에서 확인할 수 있어요.'
   ],
   sources:[
@@ -44,7 +44,7 @@ export const settingsContent = {
     '북·나무 타격·칼림바: Versilian Studios / Sam Gossner, VCSL · CC0 · github.com/sgossner/VCSL',
     '자: alienistcog / Freesound 124719 · 고무줄: baidonovan / Freesound 187354 · 소리굽쇠: jmuehlhans / Wikimedia Commons · 모두 CC0. 전체 출처는 media/audio/experiments/sources.json에 있어요.',
     '숲 마을·보행 캐릭터·실험 소품 · 프로젝트 자체 AI 생성.',
-    '기존 배경·캐릭터 · 사용자 제공 자료, 원본 라이선스 확인 필요.'
+    '기존 배경·캐릭터 · 제작자가 GPT 이미지(Codex)로 만들어 제공한 그림.'
   ],
   copyright:[
     '기획·제작: 옐샘 & ⓒ 아이스크림미디어',

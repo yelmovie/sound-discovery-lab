@@ -46,7 +46,7 @@
 
 | 파일(묶음) | 만든 곳 | 만든 날·기록 위치 | 이용 조건 | 근거 파일 | 상태 |
 |---|---|---|---|---|---|
-| `media/audio/voices/el-*.mp3` 139개(삐오·책 읽는 친구·방해 스피커 대사, 개념 해설) | ElevenLabs `eleven_v4`(유료 Creator 요금제) | 2026-11-18 | 유료 요금제 상업 이용 | `docs/VOICE-FILL-20261118.json`(줄별 voiceId·generationId·SHA256), `_shared/voice-provenance-20261118.md`, `docs/CREDITS.md` 「캐릭터 음성 통일」 | 확인됨(요금제 화면 사본은 없음) |
+| `media/audio/voices/el-*.mp3` 140개(삐오·책 읽는 친구·방해 스피커 대사, 개념 해설. 2026-11-21 파이널 마지막 줄 `el-finale-thanks` 1개 추가, 기록은 파이널 영상 줄) | ElevenLabs `eleven_v4`(유료 Creator 요금제) | 2026-11-18 | 유료 요금제 상업 이용 | `docs/VOICE-FILL-20261118.json`(줄별 voiceId·generationId·SHA256), `_shared/voice-provenance-20261118.md`, `docs/CREDITS.md` 「캐릭터 음성 통일」 | 확인됨(요금제 화면 사본은 없음) |
 
 ## 글꼴·코드
 
