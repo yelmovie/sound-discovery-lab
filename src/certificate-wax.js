@@ -34,7 +34,7 @@ export function mountCertificateWax(paper, options = {}) {
   if (!seal) return () => {};
   const oldLabel = seal.querySelector('strong');
   const label = options.label || oldLabel?.innerText?.trim() || '탐구 완료\n인증';
-  seal.replaceChildren(); seal.setAttribute('data-cert-wax', ''); seal.setAttribute('role', 'img'); seal.setAttribute('aria-label', label.replace(/\n/g, ' ') + ' 촛농 봉인');
+  seal.replaceChildren(); seal.setAttribute('data-cert-wax', ''); seal.setAttribute('role', 'img'); seal.setAttribute('aria-label', label.replace(/\n/g, ' ') + ' 도장');
   const art = doc.createElement('img'); art.className = 'cert-wax-art'; art.src = options.art || 'assets/ui/certificate-wax-seal-20261123.webp'; art.alt = ''; art.setAttribute('aria-hidden', 'true'); art.draggable = false; seal.append(art);
   const text = doc.createElement('strong'); text.className = 'cert-wax-label'; text.setAttribute('aria-hidden', 'true');
   label.split('\n').forEach((line, i) => { if (i) text.append(doc.createElement('br')); text.append(doc.createTextNode(line)); }); seal.append(text);
