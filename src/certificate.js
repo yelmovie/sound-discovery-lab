@@ -12,11 +12,11 @@ export function certificateResult({genuine, evidence, restored, date, findings, 
             <div class="cert-class"><span class="cert-blank school" data-cert-blank="school"></span> 학교 <span class="cert-blank" data-cert-blank="grade"></span> 학년 <span class="cert-blank" data-cert-blank="class"></span> 반 <span class="cert-blank" data-cert-blank="number"></span> 번</div>
             <div class="cert-name">이름 <span class="cert-blank name" data-cert-blank="name"></span></div>
           </div>
-          <p class="cert-award">위 탐험가는 소리의 떨림·크기·높낮이·전달을 탐구하고,<br>함께 사는 친구들을 배려하는 방법을 발견하였으므로<br>이 인증서를 드립니다.</p>
+          <p class="cert-award">위 탐험가는 소리의 떨림·크기·높낮이·전달을 탐구하고,<br>함께 사는 친구들을 배려하는 방법을 발견하였으므로<br>이 인증서를 수여함.</p>
           <div class="cert-bottom">
-            <p class="cert-date"><small>복구한 날</small>${esc(date)}</p>
+            <p class="cert-date"><small>복구일</small>${esc(date)}</p>
             <div class="cert-stamp"><b>소리 코어</b><span>${genuine ? '복구 인증' : '연습용 예시'}</span></div>
-            <p class="cert-issuer"><small>주는 이</small>울림도시 탐험대</p>
+            <p class="cert-issuer"><small>발급자</small>울림도시 탐험대</p>
           </div>
           <p class="cert-credit">기획·제작: 옐샘 &amp; ⓒ 아이스크림미디어</p>
         </div>
