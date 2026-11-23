@@ -1,5 +1,12 @@
 # 울림도시 대작전 — TRD
 
+## 2026-11-23 구현 대조
+
+아래 본문은 초기 구현 기록이다. 현재 macOS에서는 시스템 임시 경로를 사용하며 Windows 드라이브 설정을 적용하지 않는다. 로컬 three.js r170·GLB를 쓰는 선택적 두 3D 의뢰와 CC0 녹음·Suno MP3·ElevenLabs 목소리가 추가되어 있다.
+
+저장 키 `ullim-city-v1`·버전 2·학습 증거는 유지한다. 현재 소리 설정은 `muted`, `bgm`, `sfx`, `experiments`, `voice`, `bgmVolume`, `sfxVolume`이다. 새 `experiments`가 없는 기록은 이전 `sfx` 선호를 이관하고 이후 독립적으로 유지한다. 실험·효과음의 비동기 취소 번호와 노드 채널을 구분해 한 토글이 다른 채널을 끊지 않는다. 최종 재검토 표시는 세션 상태이며 답안은 기존 `finalAnswers`에 그대로 저장한다. 다시 로드한 뒤도 선택은 보존되고 명시적 확인을 통해서만 `restored`가 바뀐다. [검증·실패 대체·권한 오류 기록](reviews/FINAL-PROMPT-20261123.md)을 본다. 이번 로컬 빌드는 자산 296개·사전 캐시 104개이고 운영에는 반영하지 않았다.
+
+
 갱신일: 2026-10-22. Node 20+ 내장 HTTP 서버·빌드, 브라우저 ES modules·DOM·CSS·Canvas 2D·Web Audio를 사용한다. 외부 패키지·CDN·폰트 설치가 없다. D: exFAT에서 일반 파일 읽기·쓰기·복사만 수행하고 개발 프로세스의 TEMP/TMP는 D:\DevTemp를 쓴다.
 
 ## 파일 책임

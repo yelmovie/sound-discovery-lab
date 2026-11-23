@@ -343,7 +343,7 @@ export function openRunStage(host, o) {
     for (const drift of drifting) drift.sprite.position.y = drift.y + Math.sin(now * .0006 + drift.phase) * .35;
     cameraAt.set(pos.x * .45 + OFFSET.x, OFFSET.y, pos.z + OFFSET.z);
     camera.position.lerp(cameraAt, Math.min(1, dt * 7));
-    renderer.render(scene, camera);
+    try { renderer.render(scene, camera); } catch { o.onFail(); }
   }
 
   function resize() {
@@ -471,7 +471,7 @@ export function openRunStage(host, o) {
   createRunner('/image/generated/explorer-walk-lite.webp', runStageAssets.includes(`${ART.slice(1)}explorer-jump.webp`) ? `${ART}explorer-jump.webp` : '').then(made => {
     if (destroyed) { made.dispose(); return; }
     runner = made; scene.add(runner.shadow, runner.sprite); hud.ready();
-  });
+  }).catch(() => { if (!destroyed) o.onFail(); });
   loadImage('/image/generated/concepts/pio-fly.webp').then(image => {
     if (destroyed) return;
     const texture = keep(new THREE.Texture(image)); texture.colorSpace = THREE.SRGBColorSpace; texture.needsUpdate = true;

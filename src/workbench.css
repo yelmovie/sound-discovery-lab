@@ -437,3 +437,18 @@ body:has(.single-screen) .admin-arrow{width:48px;min-height:48px;height:48px;fon
  .experiment-content>.saved-discovery{display:none}
  .experiment-content.activity-base-challenge:has(>.saved-discovery){grid-template-rows:minmax(0,1fr)}
 }
+
+/* Main vibrating parts over the existing project art; no new raster assets. */
+.rubber-assembly>.rubber-body{width:100%;height:100%;object-fit:contain}
+.prop-assembly>.vibration-detail{position:absolute;inset:0;width:100%;height:100%;fill:none;stroke:#117d80;stroke-width:10;stroke-linecap:round;opacity:0;pointer-events:none}
+.prop-assembly>.drum-skin{inset:auto auto 0 0;width:91%;height:88%}
+.prop-assembly>.fork-tines{inset:auto auto 12% 15%;width:70%;height:88%;stroke-width:14}
+.pulse .prop-assembly>.prop-img{animation:none}
+.pulse .vibration-detail{opacity:1}
+.instrument.observed .vibration-detail{opacity:.65}
+.experiment-audio-notice[hidden]{display:none}
+.activity-footer:has(.experiment-audio-notice:not([hidden])){flex-wrap:wrap}
+.experiment-audio-notice{flex:1 0 100%;grid-column:1/-1;display:flex;align-items:center;gap:8px;color:#684517;background:#fff1cd;border:1px solid #b18d45;border-radius:12px;padding:8px}
+.experiment-audio-notice p{flex:1;min-width:0;margin:0;font-size:18px;line-height:1.35}
+@media(prefers-reduced-motion:reduce){.pulse .vibrating-part{animation:none!important}}
+@media(max-width:600px){.experiment-audio-notice{flex-wrap:wrap}.experiment-audio-notice p{flex-basis:100%}}

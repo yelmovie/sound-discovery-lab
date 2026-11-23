@@ -61,7 +61,7 @@ test('the Suno main theme loops after the first gesture; BGM and effects keep in
     sound.configure({bgm:true,sfx:false,bgmVolume:.25});assert.equal(sound.music.size,0);await sound.unlock();
     assert.ok(playing(sound,'main'));assert.equal(music(sound,'main').src,'/media/audio/bgm/main-theme.mp3');assert.equal(music(sound,'main').loop,true);
     assert.equal(sound.music.get('main').routed,true);assert.ok(Math.abs(level(sound)-.15)<1e-9);
-    const before=sound.context.oscillators.length;await sound.play();assert.equal(sound.context.oscillators.length,before);
+    const before=sound.context.oscillators.length;await sound.play();assert.equal(sound.context.oscillators.length,before+1,'experiment playback is independent of effects');sound.stop();
     sound.setScene('lesson');assert.ok(playing(sound,'main'));sound.setScene('map');assert.ok(playing(sound,'main'));
     sound.configure({bgm:false});assert.ok(!playing(sound,'main'));
     sound.configure({bgm:true,bgmVolume:0});assert.ok(!playing(sound,'main'));
@@ -306,4 +306,37 @@ test('the effects volume scales interface, fight, reward and step cues but never
   await sound.play({kind:'drum',frequency:150,level:1});
   assert.equal(sound.context.gains.find(g=>g.gain.events.some(e=>e.kind==='exponential'&&e.value===.0001)&&g.gain.events.find(e=>e.kind==='linear')?.value===.23)?.gain.events.find(e=>e.kind==='linear').value,.23,'a full-force drum keeps its level');
  }finally{sound.destroy();globalThis.fetch=previousFetch;}
+});
+
+
+test('effects and experiment switches stop only their channel, including pending recordings',async()=>{
+ const previousFetch=globalThis.fetch,sound=new SoundEngine();
+ globalThis.fetch=async()=>({ok:true,arrayBuffer:async()=>new ArrayBuffer(8)});
+ try{
+  await sound.unlock();sound.context.decodeAudioData=async()=>({duration:1.1});
+  await sound.play({kind:'ruler',frequency:390});const experiment=sound.nodes[0];
+  sound.configure({sfx:false});assert.equal(experiment.source.connected,true);assert.ok(sound.nodes.includes(experiment));
+  await sound.play({kind:'ruler',frequency:650});assert.equal(sound.nodes.length,1);assert.equal(sound.nodes[0].source.playbackRate.events[0].value,650/260);
+  sound.configure({sfx:true});await sound.effect('drop');const effect=sound.effectNode;
+  sound.configure({experiments:false});assert.ok(sound.nodes.includes(effect));assert.equal(effect.source.connected,true);assert.equal(sound.nodes.length,1);
+  await sound.play();assert.equal(sound.nodes.length,1);await sound.sequence([{frequency:260}]);assert.equal(sound.nodes.length,1);assert.ok(playing(sound,'main'));
+  sound.configure({experiments:true});let release;
+  sound.buffers.clear();globalThis.fetch=()=>new Promise(resolve=>{release=resolve;});
+  const pending=sound.play({kind:'drum'});for(let i=0;i<8&&!release;i++)await Promise.resolve();assert.ok(release);
+  sound.configure({experiments:false});sound.configure({experiments:true});release({ok:true,arrayBuffer:async()=>new ArrayBuffer(8)});await pending;
+  assert.equal(sound.nodes.length,0,'turning experiments off invalidates earlier asynchronous playback');
+ }finally{sound.destroy();globalThis.fetch=previousFetch;}
+});
+test('a failed experiment can be replayed with the same notes after audio recovers',async()=>{
+ const sound=new SoundEngine();const statuses=[];sound.onStatus=text=>statuses.push(text);
+ try{
+  await sound.ready();const create=sound.context.createOscillator;
+  sound.context.createOscillator=()=>{throw Error('device unavailable');};
+  const notes=[{kind:'ruler',frequency:260,level:.4},{kind:'ruler',frequency:650,level:.4}];
+  await sound.sequence(notes);assert.match(statuses.at(-1),/재생하지 못했어/);assert.equal(sound.nodes.length,0);
+  notes[0].frequency=999; // the retry holds its own comparison, not the caller's mutable array
+  sound.context.createOscillator=create;await sound.replay();
+  assert.deepEqual(sound.context.oscillators.map(n=>n.frequency.events[0].value),[260,650]);
+  assert.equal(sound.nodes.length,2);sound.setMuted(true);await sound.replay();assert.equal(sound.nodes.length,0);
+ }finally{sound.destroy();}
 });

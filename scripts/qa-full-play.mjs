@@ -155,8 +155,19 @@ async function advance(i){
 }
 async function finalQuestions(){
  assert.equal(await domRoute(),'final');await record('final-entered',{shot:true});
- for(let i=0;i<5;i++){if(!(await page.locator(`[data-question="${i}"]`).count()))await action('final-step',`[data-step="${i}"]`);await action('final-choice',`[data-question="${i}"][data-choice="${finalTasks[i].answer}"]`);await record(`final-question-${i}`);if(i<4)await page.waitForTimeout(650);}
- assert.equal(await page.locator('[data-action="restore"]').isEnabled(),true);await action('restore');await page.locator('.cert-paper:not(.preview)').waitFor();const s=await saved();assert.equal(s.restored,true);assert.equal(Object.keys(s.evidence).length,20);assert.equal(Object.keys(s.finalAnswers).length,5);assert.ok(Date.parse(s.completedAt));assert.equal(await page.locator('[data-action="print"]').count(),1);await record('genuine-certificate',{shot:true});checks.push('fresh student completed 20 lessons, all rounds, five reward videos, final and genuine certificate');await writeFile(path.join(out,'earned-state-before-regressions.json'),JSON.stringify(s,null,2));
+ for(let i=0;i<5;i++){if(!(await page.locator(`[data-question="${i}"]`).count()))await action('final-step',`[data-step="${i}"]`);await action('final-choice',`[data-question="${i}"][data-choice="${i===2?1:finalTasks[i].answer}"]`);await record(`final-question-${i}`);if(i<4)await page.waitForTimeout(650);}
+ assert.equal(await page.locator('[data-action="restore"]').isEnabled(),true);
+ const previous=(await saved()).finalAnswers;await action('restore');
+ assert.match(await page.locator('.final-progress').textContent(),/선택 5 \/ 5.*맞음 4 \/ 5/);
+ assert.deepEqual((await saved()).finalAnswers,previous);assert.equal((await saved()).restored,false);
+ assert.equal(await page.locator('.final-steps .needs-review').count(),1);assert.match(await page.locator('.final-evidence-hint').textContent(),/같은 힘.*길이/);
+ await record('final-wrong-choice-retained',{shot:true});
+ await page.reload({waitUntil:'domcontentloaded'});assert.deepEqual((await saved()).finalAnswers,previous);await action('restore');
+ await action('final-choice','[data-question="2"][data-choice="0"]');
+ assert.match(await page.locator('.final-progress').textContent(),/맞음 5 \/ 5/);assert.equal((await saved()).restored,false);
+ await action('restore');await page.locator('.cert-paper:not(.preview)').waitFor();
+ if(await page.locator('dialog #finale-video').count())await click('dialog .film-skip','show-certificate');
+ checks.push('one wrong final: selection 5/5 versus correct 4/5, evidence hint, choices survive reload, correction needs explicit recheck');const s=await saved();assert.equal(s.restored,true);assert.equal(Object.keys(s.evidence).length,20);assert.equal(Object.keys(s.finalAnswers).length,5);assert.ok(Date.parse(s.completedAt));assert.equal(await page.locator('[data-action="print"]').count(),1);await record('genuine-certificate',{shot:true});checks.push('fresh student completed 20 lessons, all rounds, five reward videos, final and genuine certificate');await writeFile(path.join(out,'earned-state-before-regressions.json'),JSON.stringify(s,null,2));
  await page.reload({waitUntil:'domcontentloaded'});await page.waitForTimeout(450);assert.equal(await domRoute(),'result');await page.locator('.cert-paper:not(.preview)').waitFor();const restored=await saved();assert.equal(restored.restored,true);assert.equal(Object.keys(restored.evidence).length,20);assert.equal(restored.completedAt,s.completedAt);assert.deepEqual(restored.finalAnswers,s.finalAnswers);await record('genuine-certificate-after-reload',{shot:true});checks.push('genuine certificate, completion date, final answers and twenty earned records survive real reload');
 }
 async function revisit(i){
@@ -216,7 +227,7 @@ try{
  else if(process.argv.includes('--trace-existing'))await tracePointer();
  else if(boundaryOnly)await boundaryChecks();
  else{
- if(await domRoute()==='home'){await record('fresh-home',{shot:true});await action('start');await page.locator('.map-next').waitFor();await page.locator('.map-load-state').first().waitFor({state:'hidden',timeout:30000});await page.waitForTimeout(800);await record('fresh-map',{shot:true});await click('.map-next','recommended-first-facility');await page.locator('.lesson-page[data-lesson="0"]').waitFor({timeout:20000});}
+ if(await domRoute()==='home'){await record('fresh-home',{shot:true});if(process.env.QA_SILENT==='1'){await action('mute');checks.push('master mute enabled through the home sound button before student play');}await action('start');if(await page.locator('dialog #intro-video').count())await click('dialog .film-skip','skip-intro');await page.locator('.map-next').waitFor();await page.locator('.map-load-state').first().waitFor({state:'hidden',timeout:30000});await page.waitForTimeout(800);await record('fresh-map',{shot:true});await click('.map-next','recommended-first-facility');await page.locator('.lesson-page[data-lesson="0"]').waitFor({timeout:20000});}
  for(let i=Number((await domRoute()).split('/')[1])||0;i<20;i++){if(await domRoute()==='final'||await domRoute()==='result')break;await repairable(`lesson-${i}`,()=>playLesson(i));await repairable(`next-${i}`,()=>advance(i));console.log(`PASS lesson ${i}: ${lessons[i].title}`);await flush();}
  if(await domRoute()==='final')await repairable('final',finalQuestions);
  assert.equal(await domRoute(),'result');

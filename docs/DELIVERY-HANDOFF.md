@@ -1,5 +1,10 @@
 # 납품 안내 · 울림도시 대작전 (11 sound)
 
+## 2026-11-23 로컬 수정본
+
+`codex/series11-final-review-20261123`에서 최종 수정 프롬프트를 실행했다. 진동 부분 표시·3D 실패 대체·실험음 토글·재생 실패 재시도·최종 근거 힌트를 보완했고, 출처 문서는 기존 권리 장부와 맞췄다. [검증·남은 일·명령 오류](reviews/FINAL-PROMPT-20261123.md)를 함께 본다. **로컬 커밋까지만이며 아래의 운영 커밋·Workers 대조 기록은 이전 배포 이력이다. 이번 수정본을 원격 push하거나 배포하지 않았다.**
+
+
 기존 인계 문서(원본 그대로 둠): [`HANDOFF.md`](../HANDOFF.md)(작업 기록), [`README.md`](../README.md)(변경 요약), `docs/TRD.md`·`docs/PRD.md`. 교사용 안내: [`docs/TEACHER-GUIDE.md`](TEACHER-GUIDE.md).
 
 ## 1. 한눈에

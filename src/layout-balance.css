@@ -123,3 +123,9 @@ dialog.modal-film{animation:none;transform:none;width:100dvw;height:100dvh;max-w
 /* Certificate credit (2026-11-22, SALE-UNIFY A1): one small line at the bottom, also on paper. */
 .certificate .certificate-credit{margin:6px 0 0;font-size:14px;line-height:1.4;color:#4a5d63;letter-spacing:0}
 @media print{.certificate .certificate-credit{color:#333}}
+
+/* Count selections separately from the result of the last explicit check. */
+.final-progress{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;font-weight:800}
+.final-progress>span{color:#7a4820}
+.final-steps .needs-review{border-color:#9c5f21;box-shadow:inset 0 0 0 2px #9c5f21}
+.final-evidence-hint{padding:10px 12px;border-left:4px solid #9c5f21;border-radius:8px;background:#fff0ce;color:#684517;font-size:clamp(18px,1.5vw,23px);line-height:1.4}

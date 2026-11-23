@@ -209,6 +209,53 @@ async function fallbacks() {
   await page.locator('[data-action="challenge-listen"]').click(); assert.equal((await saved(page)).work[10].challenge.heard, true);
   note('no WebGL: falls back to the 2D request and it still plays');
   await context.close();
+  // A real software-WebGL context loss must release the inert 2D request and retain the learner's prefix.
+  ({ context, page } = await open('context-loss', { width: 1024, height: 768 }));
+  await seed(page, 3); await when(page, 'ready');
+  const recoveryMove = mover(page, steer(page, true));
+  await recoveryMove.walkTo(padAt('rhythm', 'round-0')); await recoveryMove.jumpTo(stones('rhythm', 0)[0]);
+  const prefix = (await saved(page)).work[3].challenge.sequence;
+  assert.deepEqual(prefix, ['울림']);
+  await page.evaluate(() => { const gl = document.querySelector('.run-stage canvas').getContext('webgl2'); const ext = gl.getExtension('WEBGL_lose_context'); if (!ext) throw Error('No context-loss test extension'); ext.loseContext(); });
+  await page.waitForSelector('.run-stage', { state: 'detached' });
+  assert.equal(await page.locator('main[inert]').count(), 0); assert.deepEqual((await saved(page)).work[3].challenge.sequence, prefix);
+  assert.match(await page.locator('#coach-hint').textContent(), /기존 방식.*신호는 그대로/);
+  await page.locator('[data-action="challenge-rest"]').click();
+  assert.deepEqual((await saved(page)).work[3].challenge.sequence, ['울림', '쉼']);
+  await page.locator('[data-action="challenge-ring"]').click();
+  assert.equal((await saved(page)).work[3].challenge.proof.length, 1);
+  await page.waitForTimeout(560); // the same between-round input guard as the regular 2D student flow
+  for (const action of ['ring', 'rest', 'ring', 'rest', 'ring']) await page.locator(`[data-action="challenge-${action}"]`).click();
+  assert.equal((await saved(page)).work[3].challenge.proof.length, 2); assert.ok((await saved(page)).evidence[3]);
+  await page.screenshot({ path: path.join(out, 'context-loss-2d-complete.png') });
+  note('context loss: prefix retained, 2D controls active, request completed with no duplicate proof');
+  await context.close();
+  // Fatal initializer and render failures must also be caught, without an unhandled promise or an inert page.
+  for (const fault of ['initializer', 'render']) {
+    ({ context, page } = await open(`failed-${fault}`, { width: 1024, height: 768 }));
+    await page.route('**/src/run-stage.js', async route => {
+      const response = await route.fetch(), source = await response.text();
+      const body = fault === 'initializer' ? "export function openRunStage(){throw Error('QA initialization failure');}"
+        : source.replace('renderer.render(scene, camera)', "(()=>{throw Error('QA render failure');})()");
+      await route.fulfill({ response, body, contentType: 'text/javascript' });
+    });
+    await seed(page, 3); await page.waitForSelector('[data-action="challenge-ring"]');
+    await page.waitForFunction(() => !document.querySelector('.run-stage') && /기존 방식/.test(document.querySelector('#coach-hint')?.textContent || ''));
+    assert.equal(await page.locator('main[inert]').count(), 0);
+    await page.locator('[data-action="challenge-ring"]').click(); assert.deepEqual((await saved(page)).work[3].challenge.sequence, ['울림']);
+    note(`${fault} failure: 2D request active with explanation and unchanged proof`);
+    await context.close();
+  }
+  // A missing runner picture already has a plain-figure fallback; it need not abandon a working stage.
+  ({ context, page } = await open('runner-image', { width: 1024, height: 768 }));
+  await page.route('**/image/generated/explorer-walk-lite.webp', route => route.abort());
+  await seed(page, 3); await when(page, 'ready'); await page.waitForSelector('.run-loading', { state: 'detached' });
+  await mover(page, steer(page, true)).jumpTo(stones('rhythm', 'practice')[0]); await page.waitForTimeout(120);
+  assert.match(await line(page), /떨리면서 소리/); assert.deepEqual((await saved(page)).work[3]?.challenge?.proof || [], []);
+  await page.locator('.run-classic').click(); await page.waitForSelector('.run-stage', { state: 'detached' });
+  assert.equal(await page.locator('main[inert]').count(), 0);
+  note('runner picture blocked: existing plain figure still plays; manual 2D path remains available');
+  await context.close();
   // Models that cannot be fetched leave the plain drum shapes and the painted arch; the stage still plays.
   ({ context, page } = await open('no-models', { width: 1280, height: 800 }));
   await page.route('**/*.glb', route => route.abort());
@@ -222,10 +269,12 @@ async function fallbacks() {
 
 let failure = null;
 try {
+  if (!process.argv.includes('--fallback-only')) {
   await playRhythm('rhythm-keyboard-1280', { width: 1280, height: 800 }, false);
   await playMelody('melody-touch-1024', { width: 1024, height: 768 }, true);
   await playRhythm('rhythm-touch-1024', { width: 1024, height: 768 }, true);
   await playMelody('melody-keyboard-1280', { width: 1280, height: 800 }, false);
+  }
   await fallbacks();
 } catch (error) { failure = error; }
 // A cancelled request while a page closes is not a fault of the game.

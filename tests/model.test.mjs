@@ -154,3 +154,19 @@ test('voice switch and effects volume: new students start on, older saves carry 
   }
   assert.equal(normalize({version:2,settings:{sfxVolume:42}}).settings.sfxVolume,40);assert.equal(normalize({version:2,settings:{sfxVolume:500}}).settings.sfxVolume,100);
 });
+
+
+test('experiment preferences migrate from the old effects setting and then persist independently',()=>{
+ assert.equal(freshState().settings.experiments,true);
+ for(const [settings,expected] of [[undefined,true],[{sfx:false},false],[{sfx:true},true],[{sfx:false,experiments:true},true],[{sfx:true,experiments:false},false]]){
+  const state=normalize({version:2,settings});assert.equal(state.settings.experiments,expected);
+  assert.equal(normalize(JSON.parse(JSON.stringify(state))).settings.experiments,expected);
+ }
+});
+test('a failed final check preserves the last choices and cannot restore until corrected and confirmed',()=>{
+ const state=freshState();completeAll(state);state.finalAnswers=correctFinal();state.finalAnswers[2]=1;
+ const choices=structuredClone(state.finalAnswers),before=JSON.stringify(state);
+ assert.deepEqual(checkFinal(state),{ok:false,wrong:[2],eligible:true});assert.equal(JSON.stringify(state),before);
+ const restored=normalize(JSON.parse(before));assert.deepEqual(restored.finalAnswers,choices);assert.equal(restored.restored,false);
+ restored.finalAnswers[2]=0;assert.equal(checkFinal(restored).ok,true);assert.equal(restored.restored,false);
+});

@@ -135,3 +135,16 @@ test('rounds saved under an older request list keep only the still-matching pref
   const kept=trial('signal',{challenge:{proof:['1','3','2','1']}});
   kept.act('listen');assert.equal(count(kept),3);assert.equal(checkChallenge('signal',kept.w.challenge),true);
 });
+
+
+test('tuning changes exactly one condition while the other stays fixed',()=>{
+ const work={},sounds=[],sound={play:note=>sounds.push(note),sequence(){},stop(){}};
+ runChallenge('mix',work,'force',{value:2},sound);runChallenge('mix',work,'length',{value:12},sound);
+ runChallenge('mix',work,'check',{},sound);const first=sounds.at(-1);
+ runChallenge('mix',work,'length',{value:18},sound);assert.equal(work.challenge.force,2);
+ runChallenge('mix',work,'check',{},sound);const second=sounds.at(-1);
+ assert.equal(first.level,second.level);assert.notEqual(first.frequency,second.frequency);
+ runChallenge('mix',work,'force',{value:3},sound);assert.equal(work.challenge.length,18);
+ runChallenge('mix',work,'check',{},sound);const third=sounds.at(-1);
+ assert.equal(second.frequency,third.frequency);assert.notEqual(second.level,third.level);
+});

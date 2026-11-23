@@ -68,10 +68,10 @@ export const legacyLessons = [
   {title:'소리도, 친구도 배려해 줘',task:'살펴본 상황에 맞게 해결책을 적용하고 독서 시간의 소리를 비교해 봐.',goal:'해결책 적용 → 전후 소리 듣기 → 효과 설명',question:'바꾼 뒤 독서 시간에는?',choices:['소리의 영향을 줄여 책 읽기가 편해져.','언제나 모든 소리가 완전히 없어져.'],answer:0,summary:'장소와 상황에 맞는 해결책으로 소리의 불편함을 줄일 수 있어.'}
 ];
 export const instruments = [
-  {id:'rubber',name:'고무줄',action:'튕기기',frequency:330},
-  {id:'ruler',name:'자',action:'튕기기',frequency:220},
-  {id:'drum',name:'작은 북',action:'두드리기',frequency:140},
-  {id:'fork',name:'소리굽쇠',action:'울리기',frequency:520}
+  {id:'rubber',name:'고무줄',action:'튕기기',frequency:330,part:'고무줄',observation:'팽팽한 고무줄이 주로 떨려.'},
+  {id:'ruler',name:'자',action:'튕기기',frequency:220,part:'책상 밖 부분',observation:'자의 책상 밖으로 나온 부분이 주로 떨려.'},
+  {id:'drum',name:'작은 북',action:'두드리기',frequency:140,part:'북의 막',observation:'북 윗면의 팽팽한 막이 주로 떨려.'},
+  {id:'fork',name:'소리굽쇠',action:'울리기',frequency:520,part:'두 갈래 끝',observation:'소리굽쇠의 두 갈래 끝이 주로 떨려.'}
 ];
 export const lengths = [{value:18,label:'긴 자',pitch:'낮음',frequency:260},{value:12,label:'중간 자',pitch:'중간',frequency:390},{value:6,label:'짧은 자',pitch:'높음',frequency:650}];
 export const media = [
@@ -95,11 +95,11 @@ export const solutions = [
   {id:'time',label:'연습 시간 바꾸기',detail:'독서 시간이 끝난 뒤에 연습해.'}
 ];
 export const finalTasks = [
-  {q:'공연의 북에서 소리가 나려면?',options:['북의 막이 떨려야 해.','북을 밝게 비추면 돼.'],answer:0},
-  {q:'같은 북으로 더 큰 시작 신호를 내려면?',options:['더 살살 두드려.','더 세게 두드려.'],answer:1},
-  {q:'같은 자로 더 높은 신호를 내려면?',options:['떨리는 부분을 짧게 해.','떨리는 부분을 길게 해.'],answer:0},
-  {q:'무대 바닥을 두드린 소리가 바닥에 댄 감지기에 도착해. 무엇을 통해 왔을까?',options:['고체인 무대 바닥','빛'],answer:0},
-  {q:'공연 연습이 옆 교실의 독서를 방해해. 어떻게 할까?',options:['친구들이 참게 해.','세기를 줄이고 연습 시간을 조정해.'],answer:1}
+  {q:'공연의 북에서 소리가 나려면?',options:['북의 막이 떨려야 해.','북을 밝게 비추면 돼.'],answer:0,hint:'북을 친 뒤 관찰한 부분과, 손으로 잡아 멈췄을 때를 떠올려 봐.'},
+  {q:'같은 북으로 더 큰 시작 신호를 내려면?',options:['더 살살 두드려.','더 세게 두드려.'],answer:1,hint:'같은 북으로 기록한 A와 B에서 치는 세기와 떨림의 폭을 비교해 봐.'},
+  {q:'같은 자로 더 높은 신호를 내려면?',options:['떨리는 부분을 짧게 해.','떨리는 부분을 길게 해.'],answer:0,hint:'같은 힘으로 자를 튕겼을 때, 책상 밖 길이와 높낮이를 비교해 봐.'},
+  {q:'무대 바닥을 두드린 소리가 바닥에 댄 감지기에 도착해. 무엇을 통해 왔을까?',options:['고체인 무대 바닥','빛'],answer:0,hint:'무대 바닥과 감지기가 직접 맞닿은 곳에서 주된 전달 경로를 찾아봐.'},
+  {q:'공연 연습이 옆 교실의 독서를 방해해. 어떻게 할까?',options:['친구들이 참게 해.','세기를 줄이고 연습 시간을 조정해.'],answer:1,hint:'누가, 언제, 어디에서 불편한지와 연습도 함께 할 수 있는 방법을 살펴봐.'}
 ];
 
 // Stable source IDs keep the original ten observations readable after the upgrade.

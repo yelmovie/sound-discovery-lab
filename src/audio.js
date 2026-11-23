@@ -13,8 +13,8 @@ const bounded=(value,min,max,fallback)=>Number.isFinite(value)?Math.min(max,Math
 
 export class SoundEngine {
   constructor(){
-    this.context=null;this.nodes=[];this.generation=0;this.combatGeneration=0;this.muted=false;this.onStatus=()=>{};
-    this.bgm=true;this.sfx=true;this.bgmVolume=.35;this.sfxVolume=1;this.scene='home';
+    this.context=null;this.nodes=[];this.generation=0;this.effectGeneration=0;this.combatGeneration=0;this.muted=false;this.onStatus=()=>{};
+    this.bgm=true;this.sfx=true;this.experiments=true;this.lastExperiment=null;this.bgmVolume=.35;this.sfxVolume=1;this.scene='home';
     this.music=new Map();this.track='main';this.mapFinale=false;this.finaleDone=false;this.holdUntil=0;this.holdTimer=null;
     this.quiet=false;this.unlocked=false;this.needsGesture=false;this.destroyed=false;this.bgmBus=null;
     this.buffers=new Map();this.layers=new Set();this.chimes=new Set();this.chimeUntil=0;this.stepTurn=0;this.stepNode=null;this.effectClock=0;this.effectClocks=new Map();this.effectRequest=0;this.effectNode=null;
@@ -27,13 +27,17 @@ export class SoundEngine {
     if(typeof document!=='undefined')document.addEventListener('visibilitychange',this.visibilityHandler);
   }
   configure(settings={}){
-    const wasMuted=this.muted,wasSfx=this.sfx;
-    for(const key of ['muted','bgm','sfx'])if(typeof settings[key]==='boolean')this[key]=settings[key];
+    const wasMuted=this.muted,wasSfx=this.sfx,wasExperiments=this.experiments;
+    for(const key of ['muted','bgm','sfx','experiments'])if(typeof settings[key]==='boolean')this[key]=settings[key];
     if(Number.isFinite(settings.bgmVolume))this.bgmVolume=bounded(settings.bgmVolume,0,1,.35);
     // Effects volume (settings 0-100 %, default 100 % = the levels before it existed) scales interface, fight, reward
     // and footstep cues only. Experiment sounds keep their own levels: their loudness is what the learner compares.
     if(Number.isFinite(settings.sfxVolume))this.sfxVolume=bounded(settings.sfxVolume,0,1,1);
-    if(this.muted!==wasMuted||wasSfx&&!this.sfx){this.stop();this.stopLayers();}
+    if(this.muted!==wasMuted){this.stop();this.stopLayers();}
+    else {
+      if(wasSfx&&!this.sfx){this.stop({keepExperiments:true});this.stopLayers();}
+      if(wasExperiments&&!this.experiments)this.stop({keepEffects:true});
+    }
     this.syncBgm();
   }
   setQuiet(value){this.quiet=Boolean(value);if(this.quiet)this.stop({keepCombat:true});this.syncBgm();}
@@ -55,13 +59,13 @@ export class SoundEngine {
     const ready=await this.ready();if(ready)this.syncBgm();return ready;
   }
   // keepCombat: a voice starting stops experiment and interface sounds but lets map fight cues ring on.
-  stop({keepCombat=false}={}){
-    this.generation++;if(!keepCombat)this.combatGeneration++;
-    if(this.holdUntil){this.holdUntil=0;clearTimeout(this.holdTimer);this.holdTimer=null;this.syncBgm();}
-    const kept=keepCombat?this.nodes.filter(entry=>combatCues.has(entry.effect)):[];
+  stop({keepCombat=false,keepExperiments=false,keepEffects=false}={}){
+    if(!keepExperiments)this.generation++;if(!keepEffects)this.effectGeneration++;if(!keepCombat&&!keepEffects)this.combatGeneration++;
+    if(!keepExperiments&&this.holdUntil){this.holdUntil=0;clearTimeout(this.holdTimer);this.holdTimer=null;this.syncBgm();}
+    const kept=this.nodes.filter(entry=>entry.effect?(keepEffects||keepCombat&&combatCues.has(entry.effect)):keepExperiments);
     for(const entry of this.nodes)if(!kept.includes(entry))this.disconnect(entry);
     this.nodes=kept;if(!kept.includes(this.effectNode))this.effectNode=null;
-    this.onStatus(this.muted||!this.sfx?'소리 꺼짐 · 떨림을 눈으로 관찰해 봐':'소리 준비됨');
+    this.onStatus(this.muted||!this.experiments?'실험 소리 꺼짐 · 떨림을 눈으로 관찰해 봐':'소리 준비됨');
   }
   disconnect({source,gain}){
     source.onended=null;
@@ -81,7 +85,8 @@ export class SoundEngine {
     }catch{this.onStatus('소리를 시작하지 못했어 · 기기의 소리 설정을 확인해 줘');return false;}
   }
   tone({frequency=440,level=.4,duration=1.1,kind='ruler',delay=0}={}){
-    if(!this.context||this.context.state!=='running'||this.quiet||this.muted||!this.sfx||this.needsGesture||this.destroyed)return;
+    const isEffect=effectKinds.has(kind);
+    if(!this.context||this.context.state!=='running'||this.quiet||this.muted||(isEffect?!this.sfx:!this.experiments)||this.needsGesture||this.destroyed)return;
     const c=this.context,start=c.currentTime+bounded(delay,0,30,0),length=bounded(duration,.04,15,1.1);
     const osc=c.createOscillator(),gain=c.createGain();osc.type=kind==='rubber'?'triangle':'sine';
     const pitch=bounded(frequency,40,10000,440);osc.frequency.setValueAtTime(pitch,start);
@@ -89,10 +94,10 @@ export class SoundEngine {
     const peak=Math.max(.001,bounded(level,0,1,.4)*(effectKinds.has(kind)?.025*this.sfxVolume:.23));
     gain.gain.setValueAtTime(0,start);gain.gain.linearRampToValueAtTime(peak,start+.012);gain.gain.exponentialRampToValueAtTime(.0001,start+length);
     osc.connect(gain);gain.connect(c.destination);osc.start(start);osc.stop(start+length+.03);
-    const entry={source:osc,gain};this.nodes.push(entry);
+    const entry={source:osc,gain,...(isEffect?{effect:kind}:{})};this.nodes.push(entry);
     osc.onended=()=>{
       osc.disconnect();gain.disconnect();this.nodes=this.nodes.filter(n=>n!==entry);
-      if(!this.nodes.length)this.onStatus(this.muted||!this.sfx?'소리 꺼짐':'재생 끝');
+      if(!this.nodes.length)this.onStatus(this.muted||!this.experiments?'실험 소리 꺼짐':'재생 끝');
     };
     if(kind==='drum'){
       const count=Math.floor(c.sampleRate*.12),buffer=c.createBuffer(1,count,c.sampleRate),samples=buffer.getChannelData(0);
@@ -103,20 +108,35 @@ export class SoundEngine {
     }
   }
   async play(options={}){
+    this.lastExperiment={sequence:false,notes:[{...options}]};
+    if(!this.experiments||this.muted){this.onStatus('실험 소리 꺼짐 · 그림과 글로 관찰해 봐');return;}
     this.stop();const generation=this.generation;
-    if(!this.sfx||!await this.ready()||generation!==this.generation)return;
-    const sample=await this.loadInstrument(options.kind||'ruler');
-    if(generation!==this.generation||this.quiet||this.muted||!this.sfx||this.needsGesture||this.destroyed)return;
-    this.holdBgm((options.duration??1.1)+.3);
-    this.onStatus('소리 재생 중');if(!this.recordedTone(options,sample))this.tone(options);
+    if(!await this.ready()||generation!==this.generation)return;
+    try{
+      const sample=await this.loadInstrument(options.kind||'ruler');
+      if(generation!==this.generation||this.quiet||this.muted||!this.experiments||this.needsGesture||this.destroyed)return;
+      this.holdBgm((options.duration??1.1)+.3);
+      if(!this.recordedTone(options,sample))this.tone(options);
+      this.onStatus(sample?'소리 재생 중':'녹음 대신 비교용 소리로 재생 중');
+    }catch{if(generation===this.generation){this.stop();this.onStatus('소리를 재생하지 못했어');}}
   }
   async sequence(notes){
+    const sequence=notes.slice(0,32).map(note=>({...note}));
+    this.lastExperiment={sequence:true,notes:sequence};
+    if(!this.experiments||this.muted){this.onStatus('실험 소리 꺼짐 · 그림과 글로 관찰해 봐');return;}
     this.stop();const generation=this.generation;
-    if(!this.sfx||!await this.ready()||generation!==this.generation)return;
-    const sequence=notes.slice(0,32),samples=await Promise.all(sequence.map(note=>this.loadInstrument(note.kind||'ruler')));
-    if(generation!==this.generation||this.quiet||this.muted||!this.sfx||this.needsGesture||this.destroyed)return;
-    this.holdBgm(Math.max(0,sequence.length-1)*.62+.8);
-    this.onStatus('신호 재생 중');sequence.forEach((note,i)=>{const options={...note,delay:i*.62,duration:.5};if(!this.recordedTone(options,samples[i]))this.tone(options);});
+    if(!await this.ready()||generation!==this.generation)return;
+    try{
+      const samples=await Promise.all(sequence.map(note=>this.loadInstrument(note.kind||'ruler')));
+      if(generation!==this.generation||this.quiet||this.muted||!this.experiments||this.needsGesture||this.destroyed)return;
+      this.holdBgm(Math.max(0,sequence.length-1)*.62+.8);
+      sequence.forEach((note,i)=>{const options={...note,delay:i*.62,duration:.5};if(!this.recordedTone(options,samples[i]))this.tone(options);});
+      this.onStatus(samples.every(Boolean)?'신호 재생 중':'녹음 대신 비교용 소리로 재생 중');
+    }catch{if(generation===this.generation){this.stop();this.onStatus('소리를 재생하지 못했어');}}
+  }
+  replay(){
+    const last=this.lastExperiment;if(!last)return false;
+    return last.sequence?this.sequence(last.notes):this.play(last.notes[0]);
   }
   async loadInstrument(kind){
     const spec=instrumentSamples[kind];
@@ -129,7 +149,7 @@ export class SoundEngine {
   }
   recordedTone({frequency=440,level=.4,duration=1.1,delay=0}={},sample){
     if(!sample?.buffer||!Number.isFinite(sample.buffer.duration))return false;
-    if(this.context?.state!=='running'||this.quiet||this.muted||!this.sfx||this.needsGesture||this.destroyed)return false;
+    if(this.context?.state!=='running'||this.quiet||this.muted||!this.experiments||this.needsGesture||this.destroyed)return false;
     const c=this.context,rate=sample.spec.pitch?bounded(frequency/sample.spec.reference,.25,4,1):1;
     const length=Math.min(bounded(duration,.04,15,1.1),sample.buffer.duration/rate),start=c.currentTime+bounded(delay,0,30,0);
     const source=c.createBufferSource(),gain=c.createGain(),peak=bounded(level,0,1,.4)*.6*(sample.spec.gain??1);
@@ -146,7 +166,7 @@ export class SoundEngine {
   async effect(name='tap',{polite=false}={}){
     const cue=interfaceSounds[name],now=Date.now();
     if(!this.sfx||!cue||polite&&now<this.holdUntil||name!=='badge'&&(now-(this.effectClocks.get(name)??-Infinity)<90||now-this.effectClock<40))return;
-    this.effectClock=now;this.effectClocks.set(name,now);const combat=combatCues.has(name),clock=()=>combat?this.combatGeneration:this.generation;
+    this.effectClock=now;this.effectClocks.set(name,now);const combat=combatCues.has(name),clock=()=>combat?this.combatGeneration:this.effectGeneration;
     const generation=clock(),request=++this.effectRequest;
     if(!await this.ready(combat)||generation!==clock())return;
     try{
