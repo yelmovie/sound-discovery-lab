@@ -1,3 +1,4 @@
+import {finishCertificateWax} from './certificate-wax.js';
 // 인증서 PNG 저장: 화면의 인증서 종이(.cert-paper)를 그대로 캔버스에 옮겨 그린다(새 의존성 없음).
 // 테두리 그림 → 상자(배경·테두리·둥근 모서리) → 글자를 줄 단위로, 화면에서 잰 위치에 비례해 놓는다.
 const LONG_SIDE = 2400;
@@ -46,7 +47,8 @@ function lines(node) {
     return out.filter(l => l.text.trim());
 }
 export async function drawCertificate(paper) {
-    await document.fonts?.ready;
+    finishCertificateWax(paper);
+  await document.fonts?.ready;
     for (const animation of paper.getAnimations({ subtree: true }))
         animation.finish();
     const box = paper.getBoundingClientRect();
@@ -66,6 +68,7 @@ export async function drawCertificate(paper) {
     }
     // 상자: 배경색·테두리가 있는 요소(성취 배지, 도장, 이름 밑줄 등)
     for (const el of paper.querySelectorAll('.cert-content *')) {
+        if (el.closest('[data-cert-export-ignore]')) continue;
         const cs = getComputedStyle(el);
         if (cs.display === 'none' || cs.visibility === 'hidden')
             continue;
@@ -94,10 +97,16 @@ export async function drawCertificate(paper) {
             }
         }
     }
+    // 봉인은 도장 기구를 제외하고 최종 alpha 이미지로 내보낸다.
+    for (const el of paper.querySelectorAll('.cert-wax-art')) {
+      const image = el; await image.decode(); const r = image.getBoundingClientRect();
+      ctx.drawImage(image, X(r.left), Y(r.top), r.width * scale, r.height * scale);
+    }
     // 글자: 화면에서 잰 줄 위치에 같은 글꼴·크기·색으로
     const walker = document.createTreeWalker(paper.querySelector('.cert-content'), NodeFilter.SHOW_TEXT);
     for (let n = walker.nextNode(); n; n = walker.nextNode()) {
         const el = n.parentElement;
+        if (el.closest('[data-cert-export-ignore]')) continue;
         const cs = getComputedStyle(el);
         if (cs.display === 'none' || cs.visibility === 'hidden')
             continue;

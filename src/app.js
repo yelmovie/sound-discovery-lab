@@ -1,3 +1,4 @@
+import {mountCertificateWax} from './certificate-wax.js';
 import { certificateResult } from './certificate.js';
 import { saveCertificatePng } from './certificate-png.js';
 import { portraitMarkup, openNpcScene } from './npc-scene.js';
@@ -346,6 +347,7 @@ function render(){
   });return;
  }
  const entering=voiceSeen.route!==route;sound.setScene(route.startsWith('lesson/')?'lesson':route);app.innerHTML=header()+(route==='home'?home():route==='map'?mapPage():route==='final'?finalPage():route==='result'?resultPage():lessonPage(Number(route.split('/')[1])))+adminDock()+(route==='home'?'':`<footer class="statusbar"><span id="audio-status" role="status">${esc(soundText||'소리 준비됨')}</span><span id="save-status" role="status">${esc(studentState?'교사용 시연 · 학생 기록에 저장하지 않음':warning||'이 브라우저에 자동 저장 중')}</span></footer>`)+`${warning?`<div class="save-warning" role="alert">${esc(warning)}</div>`:''}`;if(route.startsWith('lesson/')){syncLessonCue();const n=Number(route.split('/')[1]);if(entering&&lessons[n].base===8&&!state.evidence[n])whenActive(wait=>voice.say('reader-complaint',wait||700));fitExperiment();fitObserver??=new ResizeObserver(fitExperiment);fitObserver.disconnect();fitObserver.observe(app.querySelector('.experiment-board'));}if(route==='map')openMap();
+ if(route==='result')mountCertificateWax(app.querySelector('.cert-paper'),{label:'울림도시\n탐험 인증',onImpact:()=>void sound.effect('hit2')});
  if(entering&&!route.startsWith('lesson/')){voiceSeen={route,text:''};if(route==='home')sayTitle();if(route==='final')whenActive(wait=>voice.say(voiceChains.final,wait||500));if(route==='result'&&state.restored&&evidenceCount(state)===LESSON_COUNT)whenActive(wait=>voice.say(voiceChains.ending,wait||1600));}
  syncRunStage();
 }
