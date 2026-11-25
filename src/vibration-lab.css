@@ -1,0 +1,160 @@
+.lesson-page[data-stage="0"] :is(.activity-base-0,.activity-base-1){
+ display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr);align-content:stretch
+}
+@media(min-height:451px),(orientation:portrait){
+ .lesson-page[data-stage="0"] :is(.activity-base-0,.activity-base-1):has(>.saved-discovery){grid-template-rows:auto minmax(0,1fr)}
+}
+.vibration-workspace,
+.lesson-page[data-stage="0"] .challenge-shell:is([data-challenge="parts"],[data-challenge="rhythm"])>.challenge-workspace{
+ display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);grid-template-rows:minmax(0,1fr);
+ gap:clamp(10px,1.4cqw,24px);height:100%;min-height:0;align-items:stretch
+}
+.vibration-art{
+ display:grid;grid-template-rows:minmax(0,1fr) auto;place-items:center;min-width:0;min-height:0;
+ margin:0;padding:clamp(6px,1.4cqw,20px);border:1px solid #aecdc2;border-radius:var(--card-radius,18px);
+ background:radial-gradient(ellipse at 50% 43%,#fffdf2 0%,var(--lab-tint) 72%,#dbece6 100%);
+ overflow:hidden;container-type:size
+}
+.vibration-art>figcaption{color:#30535b;font-size:var(--read);font-weight:800;text-align:center;line-height:1.25}
+.vibration-art>:is(.prop-assembly,.concept-art,.illustrated-ruler,.challenge-object-art){
+ width:100%;height:100%;max-width:100%;max-height:none;min-height:0;margin:0
+}
+.vibration-art>.illustrated-ruler{max-width:540px}
+.vibration-art.pulse::after{content:none}
+.vibration-controls{
+ display:flex;flex-direction:column;justify-content:safe center;min-width:0;min-height:0;
+ gap:clamp(7px,1.6cqh,16px)
+}
+.vibration-controls>.btn{width:100%}
+.vibration-controls .instruments{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.vibration-controls .instrument[aria-pressed="true"]{
+ background:#d9f1e9;border-color:var(--lab-accent);box-shadow:inset 0 0 0 1px var(--lab-accent)
+}
+.vibration-controls .answer-options{grid-template-columns:minmax(0,1fr)}
+.vibration-controls .observation-window{display:grid;grid-template-columns:minmax(0,1fr);gap:5px;margin:0}
+.vibration-controls :is(.observation-window,.comparison) .waveform{height:clamp(32px,10cqh,76px)}
+.vibration-controls .comparison{margin:0}
+.vibration-controls .comparison>div{display:grid;gap:4px;align-content:start}
+.fork-workspace{--fork-ring-time:4s}
+.part-stage{position:relative;width:min(100cqw,150cqh);aspect-ratio:3/2}
+.part-stage>.part-art{width:100%;height:100%;object-fit:contain}
+.part-illustration.is-ringing{border-color:var(--lab-accent);box-shadow:inset 0 0 0 2px #3aa6a638}
+.part-marker{
+ position:absolute;translate:-50% -50%;display:grid;place-items:center;width:32px;height:32px;
+ border:2px solid #fff;border-radius:50%;background:#265763;color:#fff;
+ box-shadow:0 2px 6px #143b4160;font-weight:800
+}
+.vibration-controls .labelled-choices{align-content:start}
+.challenge-shell .sequence-console.vibration-controls{display:flex;justify-content:safe center;gap:clamp(7px,1.6cqh,16px)}
+.vibration-controls .signal-score{min-height:0}
+.rubber-assembly .rubber-body{min-height:0}
+
+.fork-assembly>.prop-img{left:5%;bottom:0;width:90%;height:24%}
+.fork-metal,.drum-scene{position:absolute;display:block;pointer-events:none}
+.fork-metal{left:15%;bottom:12%;width:70%;height:88%}
+.drum-scene{inset:0;width:100%;height:100%}
+:is(.fork-metal,.drum-scene) .vibration-detail{
+ fill:none;stroke:#178184;stroke-width:7;stroke-linecap:round;opacity:0
+}
+.pulse .vibration-detail{opacity:1}
+.vibration-art.observed .vibration-detail{opacity:.58}
+.fork-motion,.drum-membrane{display:none}
+.waveform-live{overflow:hidden}
+
+/* Separate the prongs at their bend. A shared pivot keeps the stem still as the tips spread and close. */
+@media(prefers-reduced-motion:no-preference){
+ .pulse .fork-static{display:none}
+ .pulse .fork-motion{display:inline;animation:fork-settle var(--fork-ring-time,1.7s) ease-out both}
+ .fork-base{clip-path:inset(58% 0 0) view-box}
+ .fork-prong{transform-box:view-box;transform-origin:50% 58.3%;animation:fork-flex 190ms ease-in-out infinite alternate}
+ .fork-prong-left{clip-path:inset(0 50% 41.5% 0) view-box;--fork-direction:1}
+ .fork-prong-right{clip-path:inset(0 0 41.5% 50%) view-box;--fork-direction:-1}
+ .fork-motion-traces{fill:none;stroke:#287779;stroke-width:5;stroke-linecap:round;animation:fork-traces 620ms ease-out both}
+ .pulse .drum-mallet{transform-box:view-box;transform-origin:578px 200px;animation:drum-strike 650ms ease-out both}
+ .pulse .drum-membrane{display:inline;clip-path:ellipse(28.9% 16.15% at 44% 30.6%) view-box}
+ .pulse .drum-membrane-texture{animation:drum-rebound 760ms 87ms ease-out both}
+ .pulse .drum-impact-shade{animation:drum-shade 540ms 87ms ease-out both}
+ .pulse .drum-ripples{
+  transform-box:fill-box;transform-origin:center;fill:none;stroke:#a27043;stroke-width:4;
+  animation:drum-radiate 570ms 92ms ease-out both
+ }
+ .pulse .drum-scene .drum-skin{opacity:0}
+ .waveform-live .wave-envelope{
+  transform-box:view-box;transform-origin:center;animation:wave-settle var(--wave-duration) ease-out both
+ }
+ .waveform-live .wave-scroll{transform-box:view-box;animation:wave-travel 520ms linear infinite}
+}
+@property --fork-deflection{syntax:"<angle>";inherits:true;initial-value:0deg}
+@keyframes fork-settle{0%{--fork-deflection:5.3deg}29%{--fork-deflection:3.7deg}72%{--fork-deflection:1.35deg}100%{--fork-deflection:0deg}}
+@keyframes fork-flex{
+ from{transform:skewX(calc(-1 * var(--fork-direction) * var(--fork-deflection)))}
+ to{transform:skewX(calc(var(--fork-direction) * var(--fork-deflection)))}
+}
+@keyframes fork-traces{from{opacity:.62}to{opacity:0}}
+@keyframes drum-strike{
+ 0%,100%{transform:none}
+ 14%{transform:translateY(96px) rotate(-108deg)}
+ 36%{transform:translateY(38px) rotate(-67deg)}
+ 62%{transform:translateY(12px) rotate(-32deg)}
+}
+.drum-assembly{--skin-travel:7px;--impact-opacity:.34}
+[data-force="1"] .drum-assembly{--skin-travel:4px;--impact-opacity:.22}
+[data-force="3"] .drum-assembly{--skin-travel:11px;--impact-opacity:.44}
+@keyframes drum-rebound{
+ 0%,100%{transform:none}
+ 5%{transform:translateY(var(--skin-travel))}
+ 16%{transform:translateY(calc(var(--skin-travel) * -.65))}
+ 27%{transform:translateY(calc(var(--skin-travel) * .44))}
+ 38%{transform:translateY(calc(var(--skin-travel) * -.28))}
+ 49%{transform:translateY(calc(var(--skin-travel) * .16))}
+ 64%{transform:translateY(calc(var(--skin-travel) * -.08))}
+}
+@keyframes drum-shade{0%,100%{opacity:0}7%{opacity:var(--impact-opacity)}24%{opacity:.04}40%{opacity:.18}}
+@keyframes drum-radiate{0%{transform:scale(.14);opacity:0}17%{opacity:.64}80%,100%{transform:scale(1.1);opacity:0}}
+@keyframes wave-travel{to{transform:translateX(var(--wave-travel))}}
+@keyframes wave-settle{0%{transform:scaleY(1)}40%{transform:scaleY(.66)}100%{transform:scaleY(.025)}}
+
+@container experiment (max-height:360px){
+ .vibration-controls{gap:5px}
+ .vibration-controls .instruments{gap:5px}
+ .vibration-controls .instrument{padding:2px 5px;gap:1px}
+ .vibration-controls :is(.observation-window,.comparison) .waveform{height:30px}
+ .vibration-controls .comparison>div{padding:5px 6px;gap:2px}
+}
+@container experiment (max-width:520px) and (min-height:390px){
+ .vibration-workspace,
+ .lesson-page[data-stage="0"] .challenge-shell:is([data-challenge="parts"],[data-challenge="rhythm"])>.challenge-workspace{
+  grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(95px,1fr) auto;gap:7px
+ }
+ .vibration-art{padding:5px}
+ .vibration-controls{gap:5px}
+ .vibration-controls .instruments{gap:5px}
+ .vibration-controls .instrument{padding:2px 4px;gap:1px}
+ .vibration-controls :is(.observation-window,.comparison) .waveform{height:32px}
+ .vibration-controls .comparison>div{padding:5px;gap:2px}
+ .vibration-controls .answer-group{padding:6px;gap:5px}
+ .vibration-controls .answer-options{gap:4px}
+ .observe-workspace .answer-options{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .vibration-controls .answer-group .choice{padding:4px 8px}
+ .vibration-controls .signal-trace{height:28px}
+}
+
+@container experiment (max-height:250px){
+ .vibration-art>figcaption{font-size:var(--read-small)}
+ .observe-workspace .vibration-controls .instruments{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .observe-workspace .instrument{min-height:36px}
+ .observe-workspace .instrument small{display:none}
+ .vibration-controls>.observation-window{grid-template-columns:minmax(0,1fr) minmax(0,.75fr);padding:4px 6px}
+ .vibration-controls .answer-group{padding:5px 6px;gap:3px}
+ .vibration-controls .answer-options{grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+ .vibration-controls :is(.btn,.choice){min-height:40px;padding:4px 6px;font-size:var(--read-small)}
+ .vibration-controls .comparison small{font-size:var(--read-small)}
+ .vibration-controls .labelled-choices{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(40px,auto);gap:4px}
+ .challenge-shell .vibration-controls .labelled-choices .choice{padding:3px 5px;gap:4px}
+ .challenge-shell .sequence-console.vibration-controls{
+  display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1fr);
+  grid-template-rows:auto auto auto;align-content:center;align-items:center;gap:4px
+ }
+ .vibration-controls :is(.rhythm-actions,.performance-line){grid-column:1/-1}
+ .challenge-shell .vibration-controls .signal-trace{height:18px}
+}

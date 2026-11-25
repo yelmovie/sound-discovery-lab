@@ -76,23 +76,6 @@ button.fork-display:focus-visible{outline:3px solid #0bb8c4;outline-offset:3px}
 }
 
 /* ── Stage-specific interactions (2026-11-17) ── */
-/* Vibration: tap the instrument picture, then the numbered marker on the part that shakes. */
-.challenge-shell[data-challenge="parts"] .challenge-workspace{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr)}
-.part-scene{display:grid;grid-template-rows:minmax(0,1fr) auto;gap:8px;height:100%;min-height:0}
-.part-frame{container-type:size;min-height:0;display:grid;place-items:center}
-.part-stage{position:relative;width:min(100cqw,150cqh);aspect-ratio:3/2;border-radius:22px;background:radial-gradient(ellipse at center,#fffdf2 40%,#e6f1e4);box-shadow:0 8px 22px rgba(20,59,65,.14),inset 0 0 0 1px #fff}
-.part-stage>.part-ring{position:absolute;inset:0;width:100%;height:100%;min-height:0;padding:0;margin:0;border:0;background:none;box-shadow:none;border-radius:22px;cursor:pointer}
-.part-stage .part-art{display:block;width:100%;height:100%;max-height:none;object-fit:contain}
-.part-pin{position:absolute;z-index:2;translate:-50% -50%;display:flex;align-items:center;gap:6px;min-height:48px;padding:5px 14px 5px 5px;border-radius:999px;border:2px solid #fff;background:rgba(23,59,75,.86);color:#fff;font-weight:800;font-size:clamp(16px,1.3vw,20px);line-height:1.2;white-space:nowrap;box-shadow:0 6px 16px rgba(10,30,40,.3);cursor:pointer}
-.part-pin .pin-dot{display:grid;place-items:center;flex:none;width:36px;height:36px;border-radius:50%;background:#ffbf58;color:#173b4b}
-.part-pin:hover,.part-pin:focus-visible{background:#0b6f7a}
-.part-pin.selected{background:#a8433b}
-.part-stage:not(.is-ringing) .part-pin{opacity:.92}
-.part-caption{justify-self:center;margin:0;padding:6px 16px;border-radius:999px;background:rgba(255,253,247,.94);font-size:clamp(16px,1.3vw,21px);line-height:1.4;color:#28474f}
-.part-caption b{color:#0b6f7a;margin-right:4px}
-@media(prefers-reduced-motion:no-preference){.part-stage.is-ringing .part-art{animation:part-shake .09s linear 10}}
-@keyframes part-shake{0%,100%{translate:0 0}25%{translate:-3px 1px}75%{translate:3px -1px}}
-
 /* Loudness: swipe down on the drum; a longer swipe hits harder. */
 .challenge-shell .swipe-lab{grid-template-columns:minmax(0,1.35fr) minmax(0,.85fr);grid-template-rows:minmax(0,1fr) auto}
 .challenge-shell .swipe-lab .swipe-pad{grid-row:1/3;position:relative;touch-action:none;cursor:ns-resize}
@@ -180,12 +163,8 @@ dialog .modal-footer{border-top:1px solid rgba(23,59,75,.08)}
 .lesson-page.single-screen .experiment-board{border-color:color-mix(in srgb,var(--tint,#3aa6a6) 35%,white);box-shadow:0 10px 30px rgba(20,59,65,.12),inset 0 4px 0 color-mix(in srgb,var(--tint,#3aa6a6) 55%,white)}
 .lesson-page .challenge-shell .action-mission{border-left:6px solid var(--tint,#3aa6a6)}
 .lesson-page .action-mission .mission-copy b{color:color-mix(in srgb,var(--tint,#3aa6a6) 70%,#173b4b)}
-.lesson-page .part-pin .pin-dot{background:color-mix(in srgb,var(--tint,#ffbf58) 55%,#ffd27a)}
 .lesson-page .melody-slots>.melody-slot.filled,.lesson-page .swipe-lab .swipe-step.selected{border-color:var(--tint);background:color-mix(in srgb,var(--tint) 16%,white)}
 .lesson-page .scene-question{border-top:4px solid color-mix(in srgb,var(--tint,#3aa6a6) 60%,white)}
 .certificate-medal{width:clamp(56px,6vw,76px);height:clamp(56px,6vw,76px);background:none;box-shadow:none;border:0}
 .certificate-medal img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 6px 10px rgba(20,59,65,.25))}
 .finding-replay .badge-thumb{width:52px;height:52px;object-fit:contain;flex:none}
-/* The picture stays under the markers in every state (ringing, focused, observed). */
-.part-stage>.part-ring,.part-stage>.part-ring.observed,.part-stage>.part-ring:focus-visible{z-index:0}
-.part-stage>.part-pin{z-index:5}

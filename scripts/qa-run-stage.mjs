@@ -51,6 +51,7 @@ async function seed(page, upTo) {
       return w;
     };
     const s = m.freshState();
+    s.settings.allowAutoplay = true;
     for (let i = 0; i < upTo; i++) { s.work[i] = structuredClone(d.lessons[i].challenge ? play(d.lessons[i].challenge) : old[d.lessons[i].base]); if (!m.recordEvidence(s, i).ok) throw Error(`seed ${i}`); }
     s.lastRoute = `lesson/${upTo}`; s.resumeLesson = upTo; localStorage.setItem(KEY, JSON.stringify(s));
   }, { upTo, KEY });

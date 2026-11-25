@@ -170,3 +170,14 @@ test('a failed final check preserves the last choices and cannot restore until c
  const restored=normalize(JSON.parse(before));assert.deepEqual(restored.finalAnswers,choices);assert.equal(restored.restored,false);
  restored.finalAnswers[2]=0;assert.equal(checkFinal(restored).ok,true);assert.equal(restored.restored,false);
 });
+
+test('automatic experiment playback requires an explicit saved opt-in', () => {
+  assert.equal(freshState().settings.allowAutoplay, false);
+  for (const version of [1,2]) {
+    for (const allowAutoplay of [undefined,false,'true',1,true]) {
+      const state=normalize({version,settings:{admin:true,allowAutoplay}});
+      assert.equal(state.settings.allowAutoplay, allowAutoplay===true);
+      assert.equal(normalize(JSON.parse(JSON.stringify(state))).settings.allowAutoplay, allowAutoplay===true);
+    }
+  }
+});

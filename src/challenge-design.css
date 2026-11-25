@@ -18,7 +18,6 @@
 .challenge-shell .object-caption{display:block;position:static;max-width:100%;margin:0!important;font-size:var(--read-small);font-weight:700;line-height:1.3;text-align:center}
 .challenge-shell .object-touch{border:2px solid #bad5c4;background:radial-gradient(ellipse,#fffef5,#eaf3e6);box-shadow:0 3px 0 #c9dbca}
 .challenge-shell .object-touch.observed{border-color:#518e78;background:#eef9ee}
-.challenge-shell[data-challenge="parts"] .challenge-workspace{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)}
 .challenge-shell .hotspot-scene{height:100%;display:block;padding:0;border:0;background:none;min-width:0;min-height:0}
 .challenge-shell .hotspot-scene>.challenge-object{height:100%;width:100%}
 .challenge-shell .labelled-choices{display:grid;grid-template-columns:minmax(0,1fr);grid-auto-rows:minmax(44px,1fr);gap:8px;align-content:stretch}
@@ -33,9 +32,6 @@
 .challenge-shell .signal-tile.is-rest{border-style:dashed;color:#6f6950;background:#f6f3e7}
 .challenge-shell .signal-score>.filled{background:#dff2df;border-color:#47977b;box-shadow:0 3px 0 #a7cab2}
 .challenge-shell .pitch-score .signal-trace{background:repeating-linear-gradient(to bottom,transparent 0 8px,#dbe5d933 8px 9px);border-radius:3px}
-.challenge-shell[data-challenge="rhythm"] .challenge-workspace{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.4fr)}
-.challenge-shell[data-challenge="rhythm"] .rhythm-lab{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;grid-row:auto;grid-column:auto;align-items:stretch;height:100%;min-height:0;gap:6px;padding:8px;border:1px solid #d4e2d1;border-radius:18px;background:#f4f8ed}
-.challenge-shell[data-challenge="rhythm"] .rhythm-lab .challenge-object{width:100%;height:100%;grid-row:auto;grid-column:auto;padding:0;grid-template-rows:minmax(0,1fr)}
 .challenge-shell .rhythm-scope{min-height:0;min-width:0;text-align:center}
 .challenge-shell[data-challenge="rhythm"] .rhythm-scope .waveform{display:block;width:100%;height:clamp(30px,10cqh,75px);margin:0}
 .challenge-shell .rhythm-scope>span{display:block;font-size:var(--read-small);line-height:1.3;color:#4d7465}
@@ -170,7 +166,6 @@
  .challenge-shell .signal-score{gap:5px}
  .challenge-shell .signal-score>.signal-tile{padding:4px;gap:2px;border-radius:10px}
  .challenge-shell .signal-trace{height:24px}
- .challenge-shell[data-challenge="rhythm"] .rhythm-lab{padding:5px;gap:3px}
  .challenge-shell[data-challenge="rhythm"] .rhythm-scope .waveform{height:30px}
  .challenge-shell .sequence-console{gap:5px}
  .challenge-shell .rhythm-actions .btn{padding:6px 4px;gap:4px}
@@ -227,9 +222,7 @@
  .challenge-shell .challenge-feedback{padding:3px 7px}
 }
 @container experiment (max-width:560px){
- .challenge-shell[data-challenge="parts"] .challenge-workspace{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto}
  .challenge-shell .labelled-choices{grid-auto-rows:48px;gap:7px}
- .challenge-shell[data-challenge="rhythm"] .challenge-workspace{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto}
  .challenge-shell .sequence-console{grid-template-rows:minmax(60px,1fr) auto auto}
  .challenge-shell[data-challenge="melody"] .challenge-workspace{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
  .challenge-shell .melody-console{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:auto auto auto;gap:6px}

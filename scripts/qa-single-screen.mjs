@@ -18,7 +18,7 @@ const proofs={parts:['0','1','2','1'],rhythm:['울림,쉼,울림','울림,쉼,�
 // Seed with the current challenge answers so the QA states stay valid when a challenge changes.
 Object.assign(proofs,structuredClone(expectedProof));
 const sourceWork=[{seen:['rubber','drum'],choice:0},{started:true,stopped:true,choice:1},{a:1,b:3,force:1},{heardA:true,heardB:true,pairKey:'1,3',choice:1},{lengths:[18,6],length:18,choice:0},{targetHeard:true,pattern:[18,6,12]},{media:['air','water','solid'],choice:1},{verified:{0:'air',1:'water',2:'solid'}},{heard:true,place:'library',situation:'reading',person:'reader'},{solutions:['pad'],before:true,after:true,afterKey:'pad',choice:0}];
-function seed(n,finished=false){const s=freshState();s.settings={...s.settings,muted:true,bgm:false,sfx:false};for(let i=0;i<(finished?20:n);i++){const l=lessons[i];s.work[i]=l.challenge?{challenge:{proof:proofs[l.challenge]}}:structuredClone(sourceWork[l.base]);assert.ok(recordEvidence(s,i).ok,`seed ${i}`);}if(!finished)s.work[n]=lessons[n].challenge?{challenge:{}}:{};s.lastRoute=`lesson/${n}`;return s;}
+function seed(n,finished=false){const s=freshState();s.settings={...s.settings,allowAutoplay:true,muted:true,bgm:false,sfx:false};for(let i=0;i<(finished?20:n);i++){const l=lessons[i];s.work[i]=l.challenge?{challenge:{proof:proofs[l.challenge]}}:structuredClone(sourceWork[l.base]);assert.ok(recordEvidence(s,i).ok,`seed ${i}`);}if(!finished)s.work[n]=lessons[n].challenge?{challenge:{}}:{};s.lastRoute=`lesson/${n}`;return s;}
 const A=(name,count=1)=>[`[data-action="${name}"]`,count];
 const required=[
  [A('instrument',4),A('choice',2)],[A('fork-start'),A('choice',2)],

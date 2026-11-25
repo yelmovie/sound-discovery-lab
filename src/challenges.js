@@ -31,13 +31,29 @@ export function challengeView(id,w,h) {
   if(done)return `<div class="challenge-shell challenge-complete round-success" data-challenge="${id}" data-round="${round}">${scene}<div class="success-emblem">${icon('check')}</div><h2>주민의 의뢰를 모두 해결했어!</h2>${h.summary?`<p class="challenge-summary">${h.summary}</p>`:''}<div class="challenge-complete-actions">${h.next?b(`${h.next} ${icon('arrow')}`,'continue','','btn primary lesson-next-inline'):''}${control('다시 도전','replay','','btn quiet')}</div></div>`;
   let body='';
   if(id==='parts'){
-    // The picture itself is the instrument: tap it to ring, then tap the marker on the part that shakes.
-    const p=parts[k];body=`<div class="part-scene"><div class="part-frame"><div class="part-stage ${c.heard?'is-ringing':''}">${control(`${art(p.art,'','part-art')}`,'listen',`aria-label="${p.name} 울려 보기"`,`part-ring challenge-object object-touch ${c.heard?'observed':''}`)}${p.answers.map((x,n)=>control(`<span class="pin-dot">${n+1}</span><span class="pin-label">${x}</span>`,'select',`data-value="${n}" aria-pressed="${c.selected===n}" aria-label="${n+1}번 ${x}" style="left:${p.pins[n][0]}%;top:${p.pins[n][1]}%"`,`part-pin ${c.selected===n?'selected':''}`)).join('')}</div></div><p class="part-caption"><b>${p.name}</b></p></div>`;
+    const p=parts[k],live=h.playingUntil>Date.now();
+    body=`<figure class="vibration-art part-illustration ${live?'is-ringing':''}">
+     <div class="part-stage">${art(p.art,p.name,'part-art')}${p.pins.map(([x,y],n)=>`<span class="part-marker" aria-hidden="true" style="left:${x}%;top:${y}%">${n+1}</span>`).join('')}</div>
+     <figcaption>${p.name}</figcaption>
+    </figure><div class="vibration-controls">
+     ${control(`${icon('play')} ${c.heard?'다시 울리기':'울려 보기'}`,'listen',`aria-label="${p.name} ${c.heard?'다시 울리기':'울려 보기'}"`,'btn primary')}
+     <div class="labelled-choices" role="group" aria-label="떨리는 부분 고르기">
+      ${p.answers.map((x,n)=>choose(`<span class="answer-marker">${n+1}</span>${x}`,n,c.selected)).join('')}
+     </div>
+    </div>`;
   }else if(id==='rhythm'){
-    body=`<div class="rhythm-lab"><div class="challenge-object ${c.sounding?'pulse':''}">${object('fork')}</div><div class="rhythm-scope">${wave(c.sounding?.7:0,5,!c.sounding)}<span>${c.sounding?'울림 · 떨리는 중':'쉼 · 멈춘 상태'}</span></div></div><div class="sequence-console"><div class="pattern-slots signal-score" aria-label="목표 신호">${rhythms[k].map((x,n)=>beat(x,n,c.sequence?.[n]===x)).join('')}</div><div class="challenge-tools rhythm-actions">${control(`${icon('play')} 울리기`,'ring')}${control(`${icon('hand')} 쉼`,'rest')}${control('처음부터','clear','','btn quiet')}</div>${performance('내 신호',(c.sequence||[]).join(' → '))}</div>`;
+    const live=c.sounding&&h.playingUntil>Date.now(),duration=h.previewVisual?1300:4000;
+    body=`<figure class="vibration-art rhythm-art ${live?'pulse':''}" style="--fork-ring-time:${duration}ms">
+     ${object('fork')}<figcaption>소리굽쇠</figcaption>
+    </figure><div class="sequence-console vibration-controls">
+     <div class="rhythm-scope">${wave(live?.7:0,5,!live,live?duration:0)}<span>${live?'울림 · 떨리는 중':'쉼 · 멈춘 상태'}</span></div>
+     <div class="pattern-slots signal-score" aria-label="목표 신호">${rhythms[k].map((x,n)=>beat(x,n,c.sequence?.[n]===x)).join('')}</div>
+     <div class="challenge-tools rhythm-actions">${control(`${icon('play')} 울리기`,'ring')}${control(`${icon('hand')} 쉼`,'rest')}${control('처음부터','clear','','btn quiet')}</div>
+     ${performance('내 신호',(c.sequence||[]).join(' → '))}
+    </div>`;
   }else if(id==='signal'){
     // Swiping down the drum sets how hard it is hit; the meter shows the same three strengths for a tap or keyboard.
-    const t=signals[k];body=`<div class="request-card"><h2>${t.name}에게 ${forceName(t.target)} 보내 줘</h2></div><div class="signal-lab swipe-lab" data-swipe="${c.force||0}"><button class="challenge-object strike-pad swipe-pad" data-action="challenge-strike" data-drag-kind="strike" data-strike-action="challenge-strike" aria-label="북을 아래로 쓸어 치기. 길게 쓸수록 세게 쳐져.">${object('drum')}<span class="swipe-hint" aria-hidden="true"><i></i>아래로 쓸어 치기</span></button><div class="swipe-meter" role="group" aria-label="치는 세기 고르기">${[3,2,1].map(n=>control(`<span class="swipe-bar" style="--n:${n}" aria-hidden="true"></span><b>${['','살살','보통','세게'][n]}</b><small>${['','짧게','중간','길게'][n]} 쓸기</small>`,'strike',`data-value="${n}" aria-pressed="${c.force===n}"`,`swipe-step ${c.force===n?'selected':''}`)).join('')}</div><div class="live-scope challenge-live-wave">${liveWave((c.force||1)/3,5)}</div></div>`;
+    const t=signals[k],live=h.playingUntil>Date.now(),force=(live&&h.visualForce)||c.force||1;body=`<div class="request-card"><h2>${t.name}에게 ${forceName(t.target)} 보내 줘</h2></div><div class="signal-lab swipe-lab" data-swipe="${c.force||0}"><button class="challenge-object strike-pad swipe-pad ${live?'pulse':''}" data-force="${force}" data-action="challenge-strike" data-drag-kind="strike" data-strike-action="challenge-strike" aria-label="북을 아래로 쓸어 치기. 길게 쓸수록 세게 쳐져.">${object('drum')}<span class="swipe-hint" aria-hidden="true"><i></i>아래로 쓸어 치기</span></button><div class="swipe-meter" role="group" aria-label="치는 세기 고르기">${[3,2,1].map(n=>control(`<span class="swipe-bar" style="--n:${n}" aria-hidden="true"></span><b>${['','살살','보통','세게'][n]}</b><small>${['','짧게','중간','길게'][n]} 쓸기</small>`,'strike',`data-value="${n}" aria-pressed="${c.force===n}"`,`swipe-step ${c.force===n?'selected':''}`)).join('')}</div><div class="live-scope challenge-live-wave">${live?wave(force/3,5,false,900):liveWave((c.force||1)/3,5)}</div></div>`;
   }else if(id==='sort'){
     body=`<div class="sort-cards">${sortOrders[k].map((v,n)=>`<div class="sound-parcel ${c.selected===n?'selected':''}">${control(`${art('sound-parcel','','concept-thumb')}<b class="parcel-title">${icon('play')} 상자 ${'ABC'[n]}${(c.listened||[]).includes(n)?' ✓':''}</b>`,'parcel',`data-value="${n}" data-drag-kind="parcel" aria-pressed="${c.selected===n}" aria-label="상자 ${'ABC'[n]} 듣고 옮기기"`,'drag-handle')}</div>`).join('')}</div><div class="sort-slots">${[0,1,2].map(n=>control(`<span class="slot-level" aria-hidden="true">${[0,1,2].map(j=>`<i class="${j<=n?'on':''}"></i>`).join('')}</span><b>${c.slots?.[n]!=null?`상자 ${'ABC'[c.slots[n]]}`:'＋'}</b><span>${['작은 소리','중간 소리','큰 소리'][n]}</span>`,'slot',`data-value="${n}" data-drop-kind="parcel" aria-label="${['작은 소리','중간 소리','큰 소리'][n]} 칸${c.slots?.[n]!=null?`, 상자 ${'ABC'[c.slots[n]]}`:', 비어 있음'}"`,`sort-slot ${c.slots?.[n]!=null?'filled':''}`)).join('')}</div>`;
   }else if(id==='melody'){
@@ -77,9 +93,9 @@ export function runChallenge(id,w,action,data={},sound) {
     const p=parts[k];
     if(action==='listen'){c.heard=true;sound.play({frequency:p.sound==='fork'?520:230,kind:p.sound,level:.5});return;}
     if(action!=='select'||!Number.isInteger(n)||!p.answers[n])return;
-    if(!c.heard)return wrong('먼저 물체를 눌러 울리고, 떨리는 곳을 관찰해 봐.');
+    if(!c.heard)return wrong('먼저 ‘울려 보기’를 눌러 떨리는 곳을 관찰해 봐.');
     c.selected=n;
-    return n===p.answer?finish(`맞아! ${p.answers[p.answer]}${subject(p.answers[p.answer])} 떨려.`):wrong('다시 울리기를 눌러. 고른 부분과 다른 부분이 어떻게 움직이는지 비교해 봐.');
+    return n===p.answer?finish(`맞아! ${p.answers[p.answer]}${subject(p.answers[p.answer])} 떨려.`):wrong('‘다시 울리기’를 눌러. 고른 부분과 다른 부분이 어떻게 움직이는지 비교해 봐.');
   }
   if(id==='rhythm'){
     if(!['ring','rest'].includes(action))return;

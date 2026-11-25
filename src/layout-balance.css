@@ -45,11 +45,6 @@ dialog:is(.modal-standard,.modal-npc,.modal-notebook,.modal-discovery) .modal-fo
  main.result-page .finding-replay{margin:0;flex:1 1 0;max-height:132px}
 }
 
-/* 2026-11-19 중복 4: 활동 2 「떨림을 멈추면」은 소리굽쇠 그림(누르면 울리기/잡기)만 남기고 같은 일 하던 버튼 줄을 없앴다(lesson-activity.js).
-   그림이 버튼 자리까지 넓게 쓴다. */
-main .experiment-content .stop-lab{grid-template-columns:minmax(0,1fr)}
-.stop-lab>.fork-display{width:100%;flex:1 1 auto}
-
 /* 2026-11-19 글자 하한: 교실 화면(태블릿·노트북·전자칠판)에서 18px 아래로 내려가던 글자를 18px 이상으로 올린다.
    폰 가로처럼 낮은 화면의 압축 규칙은 그대로 둔다. */
 @media (min-width:1000px) and (min-height:700px){
@@ -64,7 +59,6 @@ main .experiment-content .stop-lab{grid-template-columns:minmax(0,1fr)}
 /* 2026-11-19 글자 하한(활동 안): 화면 폭에 비례해 16~17px까지 줄던 라벨의 최소값을 18px로 올린다. 큰 화면 크기는 그대로다. */
 @media (min-width:1000px) and (min-height:700px){
  .rc-slot{font-size:18px}
- .part-pin{font-size:clamp(18px,1.3vw,20px)}
  .lesson-page .scene-copy p{font-size:clamp(18px,1.35vw,23px)}
  .scene-question.case-story .scene-copy .case-number,.sound-path-mini{font-size:clamp(18px,1.2vw,20px)}
  .sensor-zones.medium-drop .sensor-zone,.swipe-step b,.melody-slot b{font-size:clamp(18px,1.4vw,22px)}

@@ -48,7 +48,6 @@ body:has(.single-screen) #app{height:100dvh;padding:0;overflow:hidden}
 .experiment-content .instruments{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:stretch;gap:12px;min-height:0}
 .experiment-content .instrument{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;min-height:0;height:100%;padding:8px;background:linear-gradient(#fafcf5,#edf5e9);border-color:#c5d9cc;box-shadow:0 3px 0 #bbd0bf}
 .experiment-content .instrument.observed{border-color:#398c78;background:#e6f6e7}
-.experiment-content .instrument > :is(.prop-assembly,.concept-art,.illustrated-ruler){flex:none;width:100%;max-width:280px;height:clamp(64px,30cqh,280px);max-height:none;margin:0 auto}
 .experiment-content .instrument :is(b,small){display:block;max-width:100%;line-height:1.3;text-align:center;margin:0}
 .experiment-content .instrument b{font-size:var(--read)}
 .experiment-content .instrument small{font-size:var(--read-small)}
@@ -168,7 +167,6 @@ body:has(.single-screen) .admin-arrows{gap:4px;padding:4px;background:#fff8e6;bo
 body:has(.single-screen) .admin-arrow{width:48px;min-height:48px;height:48px;font-size:20px}
 @container experiment (max-height:430px){
  .experiment-content{gap:8px}
- .experiment-content .instrument > :is(.prop-assembly,.concept-art,.illustrated-ruler){height:clamp(44px,24cqh,100px)}
  .experiment-content .instrument small{font-size:var(--read-small)}
  .experiment-content :is(.force-lab,.stop-lab){padding:8px;gap:12px}
  .experiment-content :is(.fork-display,.drum-display)>.prop-assembly{height:clamp(56px,25cqh,120px)}
@@ -190,18 +188,8 @@ body:has(.single-screen) .admin-arrow{width:48px;min-height:48px;height:48px;fon
  .experiment-content .btn,.experiment-content .choice{min-height:48px;padding:5px 8px}
  .experiment-content input[type=range]{min-height:44px}
  .experiment-content .answer-group legend,.experiment-content .diagnostic legend{margin-bottom:4px}
- .activity-base-0{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto}
- .activity-base-0>.experiment-label{grid-column:1;grid-row:1}
- .activity-base-0>.instruments{grid-column:1;grid-row:2/4;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
- .activity-base-0>.observation-window{grid-column:2;grid-row:1/3}
- .activity-base-0>.answer-group{grid-column:2;grid-row:3;grid-template-columns:minmax(0,1fr)}
  .activity-base-0 .answer-options,.activity-base-1 .answer-options,.activity-base-3 .answer-options,.activity-base-6 .answer-options{grid-template-columns:minmax(0,1fr)}
  .experiment-content .instrument{padding:5px;gap:2px}
- .experiment-content .instrument > :is(.prop-assembly,.concept-art,.illustrated-ruler){height:44px}
- .activity-base-1{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto}
- .activity-base-1>.stop-lab{grid-column:1;grid-row:1/3;grid-template-columns:minmax(0,.6fr) minmax(0,1fr)}
- .activity-base-1>.comparison{grid-column:2;grid-row:1}
- .activity-base-1>.answer-group{grid-column:2;grid-row:2;grid-template-columns:minmax(0,1fr)}
  .activity-base-2{grid-template-columns:minmax(0,1fr) minmax(0,.8fr)}
  .activity-base-2>.force-lab{grid-template-columns:minmax(0,.65fr) minmax(0,1fr)}
  .activity-base-2>.sample-pair{align-self:center}
@@ -325,7 +313,6 @@ body:has(.single-screen) .admin-arrow{width:48px;min-height:48px;height:48px;fon
  body:has(.single-screen) .game-hud{top:8px;left:10px;right:10px}
  body:has(.single-screen) .game-hud .icon-btn{width:44px;min-width:44px;height:44px;border-radius:12px}
  .experiment-content .instruments{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
- .experiment-content .instrument > :is(.prop-assembly,.concept-art,.illustrated-ruler){height:clamp(44px,14cqh,100px)}
  .experiment-content .instrument{gap:3px;padding:6px}
  .experiment-content .instrument b{font-size:18px}
  .experiment-content .instrument small{font-size:16px}
@@ -438,14 +425,11 @@ body:has(.single-screen) .admin-arrow{width:48px;min-height:48px;height:48px;fon
  .experiment-content.activity-base-challenge:has(>.saved-discovery){grid-template-rows:minmax(0,1fr)}
 }
 
-/* Main vibrating parts over the existing project art; no new raster assets. */
+/* Rubber bands over the illustrated wooden frame. */
 .rubber-assembly>.rubber-body{width:100%;height:100%;object-fit:contain}
-.prop-assembly>.vibration-detail{position:absolute;inset:0;width:100%;height:100%;fill:none;stroke:#117d80;stroke-width:10;stroke-linecap:round;opacity:0;pointer-events:none}
-.prop-assembly>.drum-skin{inset:auto auto 0 0;width:91%;height:88%}
-.prop-assembly>.fork-tines{inset:auto auto 12% 15%;width:70%;height:88%;stroke-width:14}
+.rubber-assembly>.vibration-detail{position:absolute;inset:0;width:100%;height:100%;fill:none;stroke:#117d80;stroke-width:10;stroke-linecap:round;opacity:0;pointer-events:none}
 .pulse .prop-assembly>.prop-img{animation:none}
 .pulse .vibration-detail{opacity:1}
-.instrument.observed .vibration-detail{opacity:.65}
 .experiment-audio-notice[hidden]{display:none}
 .activity-footer:has(.experiment-audio-notice:not([hidden])){flex-wrap:wrap}
 .experiment-audio-notice{flex:1 0 100%;grid-column:1/-1;display:flex;align-items:center;gap:8px;color:#684517;background:#fff1cd;border:1px solid #b18d45;border-radius:12px;padding:8px}

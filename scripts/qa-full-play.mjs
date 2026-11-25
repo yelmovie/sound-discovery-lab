@@ -180,6 +180,14 @@ async function viewportRegressions(viewports=process.env.QA_VIEWPORTS?process.en
   if(width<=915){await revisit(11);if(await page.locator('[data-action="challenge-replay"]').count())await action('challenge-replay');await page.locator('#experiment-speed').selectOption('2');await action('auto-play');await page.waitForFunction(()=>document.querySelector('#mix-length')?.value==='6',{},{timeout:6000});await physicalClick('[data-action="challenge-check"]');assert.equal(await page.locator('.challenge-shell').getAttribute('data-round'),'0');assert.match(await page.locator('#coach-hint').textContent(),/멈췄어/);await record(`${width}x${height}-handoff-message`,{shot:true});await revisit(16);await action('diagnostic','[data-field="person"][data-value="drummer"]');assert.ok(await page.locator('.next-target[data-field="person"],.next-choice-group [data-field="person"]').count());await record(`${width}x${height}-wrong-diagnosis-message`,{shot:true});await action('diagnostic','[data-field="person"][data-value="reader"]');await evidence(16);checks.push(`${width}x${height}: new handoff and wrong-person guidance remain visible and recoverable`);}
  }
 }
+async function allowAutoplayForQa(){
+ if((await saved())?.settings?.allowAutoplay)return;
+ await action('settings');
+ await page.getByText('교사용 가이드',{exact:true}).click();
+ await page.getByText('교사용 도구',{exact:true}).click();
+ await action('allow-autoplay');
+ await click('dialog[open] [data-action="close"]:visible >> nth=0');
+}
 async function setupDemo(){
  await action('settings');await page.getByText('교사용 가이드',{exact:true}).click();await page.getByText('교사용 도구',{exact:true}).click();await action('admin');await click('dialog[open] [data-action="close"]:visible >> nth=0');await action('start');await page.locator('.map-load-state').first().waitFor({state:'hidden',timeout:30000});await page.waitForTimeout(800);await click('.map-next');await page.locator('.lesson-page[data-lesson="0"]').waitFor({timeout:20000});
 }
@@ -221,6 +229,7 @@ try{
  if(process.argv.includes('--map-early'))await page.route('**/image/generated/ullim-village.webp',async r=>{events.push({type:'network-delay',url:r.request().url(),milliseconds:4500});await new Promise(resolve=>setTimeout(resolve,4500));await r.continue();});
  await page.goto(base,{waitUntil:'domcontentloaded'});await page.bringToFront();await page.waitForTimeout(350);
  if(!process.argv.includes('--resume'))assert.equal(await saved(),null,'fresh student profile has no saved progress');
+ if(!process.argv.includes('--map-early'))await allowAutoplayForQa();
  if(process.argv.includes('--map-early')){await action('start');await page.locator('.map-load-state').first().waitFor({state:'visible'});await click('.map-next','single-early-recommended-click');assert.equal(await page.locator('.map-load-state').first().isVisible(),true);await record('map-early-click-loading',{shot:true});await page.locator('.lesson-page[data-lesson="0"]').waitFor({timeout:25000});await record('map-early-click-arrived',{shot:true});checks.push('one real recommended-map click during delayed loading is queued and enters first lesson after art becomes ready');}
  else if(process.argv.includes('--small-existing')){assert.equal((await saved()).restored,true);await page.setViewportSize({width:360,height:740});await revisit(4);await range('#force',1);await record('360x740-drum-complete-long-force-label',{shot:true});await viewportRegressions([[830,515]]);}
  else if(process.argv.includes('--font-existing'))await fontProbeExisting();

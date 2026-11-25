@@ -56,7 +56,7 @@ try{
   assert.match(await page.locator('.observation-window').textContent(),new RegExp(instrument.observation));
   const card=page.locator(`[data-tool="${instrument.id}"]`);
   assert.match(await card.textContent(),new RegExp(instrument.part));
-  if(instrument.id!=='ruler')assert.ok(await card.locator('.vibration-detail').evaluate(e=>+getComputedStyle(e).opacity)>0);
+  if(instrument.id!=='ruler')assert.ok(await page.locator('.vibration-art .vibration-detail').evaluate(e=>+getComputedStyle(e).opacity)>0);
   assert.equal(Object.keys((await saved(page)).evidence).length,0);
  }
  await layout(page,'vibration-1024');

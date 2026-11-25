@@ -24,7 +24,7 @@ const persistence=createSaveSession(storage,loaded);
 let studentState=null;
 // Older builds persisted teacher unlock. Always return to student mode on load.
 state.settings.admin=false;if(!canRoute(state,route))route='map';
-let map=null,feedback=null,liveTimer=null,playingUntil=0,returnFocus=null,trail=[],soundText='',soundProblem='',lastObject='';
+let map=null,feedback=null,liveTimer=null,playingUntil=0,visualForce=0,returnFocus=null,trail=[],soundText='',soundProblem='',lastObject='';
 let finalStep=0,finalReview=null,notebookStage=0,mapView='follow',mapNoteTimer=null;
 let advanceTimer=null,inputLockedUntil=0;
 const hintLevels={};
@@ -123,8 +123,10 @@ function icon(name){return `<svg class="icon" viewBox="0 0 24 24" aria-hidden="t
 function button(label,action,attrs='',cls='btn'){return `<button class="${cls}" data-action="${action}" ${attrs}>${label}</button>`;}
 function save(){
  state.lastRoute=route;
- if(studentState)return;
- const result=persistence.save(state);
+ if(!studentState)saveRecord(state);
+}
+function saveRecord(record){
+ const result=persistence.save(record);
  if(!result.ok){warning=result.warning;const el=document.querySelector('#save-status');if(el)el.textContent=warning;}
 }
 
@@ -137,19 +139,34 @@ function finishInteraction(i){
 }
 function runTrial(i,action,data){
  const w=work(i),before=w.challenge?.proof?.length||0,id=lessons[i].challenge;
+ const wasSounding=w.challenge?.sounding;
+ const strikeForce=Number(data.value)||w.challenge?.force||1;
  if(data.round!==undefined&&Number(data.round)!==before)return;
  if(id==='parts'&&action==='select')void sound.effect('pin');
  runChallenge(id,w,action,data,sound);
+ if(id==='parts'&&action==='listen'&&w.challenge?.heard)playVisualFor(950);
+ if(id==='signal'&&action==='strike')playVisualFor(900,strikeForce);
+ if(id==='rhythm'){
+  if(action==='ring'&&!wasSounding&&w.challenge?.sounding)playVisualFor(4000);
+  if(!w.challenge?.sounding){clearTimeout(liveTimer);playingUntil=0;}
+ }
  if(id==='solutions'&&action==='solution')void sound.effect('drop');
  if((w.challenge?.proof?.length||0)>before){
+  if(id==='parts'){clearTimeout(liveTimer);playingUntil=0;}
   inputLockedUntil=Date.now()+500;
   // The sparkle waits for the experiment sound (the before/after pair is longer) so it never masks what is compared.
   const here=route,wait=id==='solutions'?2700:id==='melody'||id==='sort'?1100:850;
   if(!collectReadyEvidence(structuredClone(state),i))sound.chime('success',wait,()=>route===here);
  }
 }
+function playVisualFor(duration,force=0){
+ const here=route;visualForce=force;
+ clearTimeout(liveTimer);playingUntil=Date.now()+duration;
+ liveTimer=setTimeout(()=>{playingUntil=0;if(route===here)updateView();},duration);
+}
 function strikeAndCapture(w,force){
  feedback={kind:'hint',text:captureStrike(w,force)};
+ playVisualFor(1000,force);
  sound.play({kind:'drum',frequency:150,level:force/3,duration:1});
 }
 function cancelAdvance(){clearTimeout(advanceTimer);advanceTimer=null;}
@@ -184,12 +201,43 @@ function adminDock(inMenu=false){
  const t=state.settings.admin&&adminTargets();if(!t)return '';
  return `<nav class="admin-dock ${inMenu?'admin-menu':''}" aria-label="교사용 빠른 이동"><div class="admin-arrows"><span class="admin-chip">교사용 · ← → 키로 이동</span>${button('←','goto',`data-route="${t.prev}" aria-label="이전 단계" aria-keyshortcuts="ArrowLeft"`,'admin-arrow')}${button('→','goto',`data-route="${t.next||''}" aria-label="다음 단계" aria-keyshortcuts="ArrowRight" ${t.next?'':'disabled'}`,'admin-arrow')}</div>${t.stage?button(`다음 스테이지 ${icon('skip')}`,'goto',`data-route="${t.stage}"`,'btn primary admin-skip'):''}</nav>`;
 }
-function wave(level=1,frequency=4,flat=false){const points=Array.from({length:121},(_,i)=>`${i*2},${40+(flat?0:Math.sin(i/120*Math.PI*2*frequency)*level*25)}`).join(' ');return `<svg viewBox="0 0 240 80" preserveAspectRatio="none" class="waveform" aria-hidden="true"><path class="wave-reference" d="M0 20H240M0 40H240M0 60H240M60 0V80M120 0V80M180 0V80" fill="none"/><polygon class="wave-area" points="0,40 ${points} 240,40"/><polyline class="wave-trace" points="${points}"/></svg>`;}
+function wave(level=1,frequency=4,flat=false,duration=0){
+ const period=frequency>0?240/frequency:0;
+ const live=!flat&&period>0&&duration>0;
+ const end=live?240+Math.ceil(period/2)*2:240;
+ const points=Array.from({length:end/2+1},(_,i)=>`${i*2},${40+(flat?0:Math.sin(i/120*Math.PI*2*frequency)*level*25)}`).join(' ');
+ return `<svg viewBox="0 0 240 80" preserveAspectRatio="none" class="waveform${live?' waveform-live':''}" ${live?`style="--wave-travel:${-100/frequency}%;--wave-duration:${duration}ms"`:''} aria-hidden="true">
+  <path class="wave-reference" d="M0 20H240M0 40H240M0 60H240M60 0V80M120 0V80M180 0V80" fill="none"/>
+  <g class="wave-envelope"><g class="wave-scroll"><polygon class="wave-area" points="0,40 ${points} ${end},40"/><polyline class="wave-trace" points="${points}"/></g></g>
+ </svg>`;
+}
 function prop(name,alt=''){return `<img class="prop-img" src="/${props[name]}" alt="${esc(alt)}" draggable="false">`;}
 function toolGraphic(id){
  if(id==='rubber')return `<span class="prop-assembly rubber-assembly">${art('rubber-instrument','팽팽한 고무줄을 울리는 나무 상자 악기','rubber-body')}<svg class="vibration-detail vibrating-part" viewBox="0 0 790 527" aria-hidden="true"><path d="M105 237 653 88M140 278 695 129M174 321 736 173"/></svg></span>`;
  if(id==='ruler')return rulerIllustration(18);
- if(id==='drum'||id==='fork')return `<span class="prop-assembly ${id==='fork'?'fork':'drum'}-assembly">${id==='fork'?prop('fork-stand','소리굽쇠 받침대')+prop('tuning-fork','소리굽쇠')+'<svg class="vibration-detail fork-tines vibrating-part" viewBox="0 0 464 728" aria-hidden="true"><path d="M181 50V410M301 50V410"/></svg>':prop('drum','작은 북')+prop('mallet','북채')+'<svg class="vibration-detail drum-skin vibrating-part" viewBox="0 0 691 578" aria-hidden="true"><ellipse cx="365" cy="161" rx="220" ry="106"/></svg>'}</span>`;
+ if(id==='drum')return `<span class="prop-assembly drum-assembly"><svg class="drum-scene" viewBox="0 0 820 650" role="img" aria-label="작은 북과 북채">
+  <defs><radialGradient id="drum-impact-gradient"><stop offset="0" stop-color="#92613a"/><stop offset="1" stop-color="#92613a" stop-opacity="0"/></radialGradient></defs>
+  <image href="/${props.drum}" y="44" width="720" height="600"/>
+  <g class="drum-membrane">
+   <image class="drum-membrane-texture" href="/${props.drum}" y="44" width="720" height="600"/>
+   <ellipse class="drum-impact-shade" cx="382" cy="197" rx="162" ry="82" fill="url(#drum-impact-gradient)"/>
+   <g class="drum-ripples"><ellipse cx="382" cy="197" rx="192" ry="90"/><ellipse cx="382" cy="197" rx="132" ry="61"/></g>
+  </g>
+  <ellipse class="vibration-detail drum-skin" cx="361" cy="199" rx="237" ry="105"/>
+  <g class="drum-mallet"><image href="/${props.mallet}" x="563" y="52" width="246" height="164" transform="rotate(-14 578 200)"/></g>
+ </svg></span>`;
+ if(id==='fork'){
+  const metal=`<image href="/${props['tuning-fork']}" width="480" height="720"/>`;
+  return `<span class="prop-assembly fork-assembly">${prop('fork-stand','')}<svg class="fork-metal" viewBox="0 0 480 720" role="img" aria-label="받침대에 세운 소리굽쇠">
+   <g class="fork-static">${metal}<path class="vibration-detail" d="M180 48v124m123-124v124"/></g>
+   <g class="fork-motion">
+    <g class="fork-base">${metal}</g>
+    <g class="fork-prong fork-prong-left">${metal}</g>
+    <g class="fork-prong fork-prong-right">${metal}</g>
+    <path class="fork-motion-traces" d="M131 41q-8 27 0 58m-18-42q-4 15 0 29m239-45q8 27 0 58m18-42q4 15 0 29"/>
+   </g>
+  </svg></span>`;
+ }
  return '';
 }
 function stagePicture(stage){return art(badgeArt[stage],`${achievements[stage].name} 배지`,'concept-thumb badge-thumb');}
@@ -204,27 +252,30 @@ function lessonCue(i,w,saved){
   return {text:!hintLevels[i]&&c.message?c.message:coach.text,target};
  }
  if(l.base===1){
-  if(playingUntil>Date.now())return {text:'울리는 소리굽쇠를 눌러 잡아 봐. 잡기 전과 뒤를 비교해 봐.',target:'[data-action="fork-stop"]'};
-  if(!w.stopped)return {text:hintLevels[i]?coach.text:'소리굽쇠를 눌러 울리고 소리와 그림을 살펴봐.',target:'[data-action="fork-start"]'};
+  if(playingUntil>Date.now())return {text:'‘잡아서 멈추기’를 눌러 소리와 떨림이 어떻게 바뀌는지 봐.',target:'[data-action="fork-stop"]'};
+  if(!w.stopped)return {text:hintLevels[i]?coach.text:'‘소리굽쇠 울리기’를 눌러 소리와 그림을 살펴봐.',target:'[data-action="fork-start"]'};
   return {text:hintLevels[i]?coach.text:'누르기 전과 뒤를 비교해 골라 봐.',target:hintLevels[i]===2?'[data-action="fork-start"]':coach.target};
  }
  if(l.base===8&&w.heard){const field=nextDiagnosisField(w);if(field)return {text:hintLevels[i]?coach.text:`${field.label}${field.key==='place'?'를':'을'} ${w[field.key]?'다시 살펴보고 ':''}골라 봐.`,target:hintLevels[i]===2?'[data-action="noise-scene"]':`[data-action="diagnostic"][data-field="${field.key}"]`};}
  if(hintLevels[i])return coach;
- if(l.base===0)return {text:arr(w.seen).length<2?'물체를 눌러 떨림을 관찰해 봐.':'관찰한 물체의 공통점을 골라 봐.',target:coach.target};
+ if(l.base===0)return {text:arr(w.seen).length<2?'악기 버튼을 눌러 떨림을 관찰해 봐.':'관찰한 물체의 공통점을 골라 봐.',target:coach.target};
  if(l.base===2)return coach;
  if(l.base===3&&!coach.target.includes('data-route'))return {text:!w.heardA||!w.heardB?'A와 B를 번갈아 들어 봐.':'더 큰 소리가 난 실험을 골라 봐.',target:coach.target};
  if(l.base===4)return {text:arr(w.lengths).length<2?'길이 손잡이를 움직여 두 소리를 비교해 봐.':'길이가 짧아졌을 때의 소리를 골라 봐.',target:coach.target};
  return coach;
 }
 function playerLabel(ps){const compact=innerWidth<=600;return ps.playing?(compact?'멈춤':'일시정지'):ps.state==='paused'?(compact?'계속':'계속 재생'):'자동재생';}
+function playerControls(ps){
+ return `<div class="autoplay-controls" data-player-state="${ps.state}">${button(`${icon(ps.playing?'pause':'play')} <span class="autoplay-state">${playerLabel(ps)}</span>`,'auto-play',`aria-pressed="${ps.playing}"`,'btn secondary auto-play')}${button(icon('stop'),'auto-stop',`aria-label="자동실험 정지" title="정지" ${ps.state==='idle'?'hidden':''}`,'icon-btn auto-stop')}<label class="sr-only" for="experiment-speed">자동실험 속도</label><select id="experiment-speed" aria-label="자동실험 속도">${EXPERIMENT_SPEEDS.map(n=>`<option value="${n}" ${ps.speed===n?'selected':''}>${n}배</option>`).join('')}</select></div>`;
+}
 function lessonPage(i){
  const l=lessons[i],s=stages[l.stage],w=work(i),saved=evidenceMatches(state,i),cue=lessonCue(i,w,saved),ps=(experimentPlayer?.status()||idlePlayer);
  const display=previewVisual?{...w,...previewVisual,challenge:{...w.challenge,...previewVisual.challenge}}:w;
- return `<main data-stage="${l.stage}" data-lesson="${i}" class="lesson-page single-screen ${saved?'lesson-saved':''}" style="--scene:url('/${backgrounds[l.base??l.stage*2+1]}')"><header class="lesson-heading"><div class="lesson-title"><span class="stage-badge">${icon(s.icon)} ${s.name}</span><h1>${l.title}</h1>${saved?`<p class="learning-focus saved-focus"><span>발견</span> ${emphasize(l.discovery,conceptTerms[l.stage])}</p>`:`<p class="learning-focus"><span>생각해 봐</span> ${emphasize(l.inquiry,conceptTerms[l.stage])}</p>`}</div><nav class="chapter-switch" aria-label="장소 안의 활동">${stageLessons(l.stage).map(n=>button(`<span class="chapter-step" aria-hidden="true">${state.evidence[n]?'✓':n%4+1}</span><span>${lessons[n].phase}</span>`,'goto',`data-route="lesson/${n}" ${!canLesson(state,n)?'disabled':''} ${i===n?'aria-current="step"':''}`,`chapter ${i===n?'current':''}`)).join('')}</nav></header><section class="lesson-scene"><div class="experiment-board" role="region" aria-label="${esc(s.name)} · ${esc(l.phase)} 실험대"><div class="experiment-content activity-base-${l.base??'challenge'}">${saved?`<p class="saved-discovery"><span class="saved-discovery-mark">${icon('check')} 발견</span><span>${emphasize(l.discovery,conceptTerms[l.stage])}</span></p>`:''}${activity(i,display,{state,playingUntil,lastObject,button,icon,prop,toolGraphic,wave,voiceButton,challengeView})}</div></div></section><footer class="activity-footer"><div class="experiment-audio-notice" role="status" ${soundProblem?'':'hidden'}><p>${esc(soundProblem)}</p>${button('다시 듣기','audio-retry',sound.lastExperiment?'':'disabled','btn secondary')}${button('그림·글로 계속','audio-dismiss','','btn quiet')}</div><div class="next-instruction"><span class="next-marker" aria-hidden="true">${saved?'✓':'→'}</span><p id="coach-hint" role="status">${esc(ps.state!=='idle'&&ps.message?ps.message:feedback?.text||cue.text)}</p>${voiceButton('lesson-done')}</div><div class="activity-controls"><div class="autoplay-controls" data-player-state="${ps.state}">${button(`${icon(ps.playing?'pause':'play')} <span class="autoplay-state">${playerLabel(ps)}</span>`,'auto-play',`aria-pressed="${ps.playing}"`,'btn secondary auto-play')}${button(icon('stop'),'auto-stop',`aria-label="자동실험 정지" title="정지" ${ps.state==='idle'?'hidden':''}`,'icon-btn auto-stop')}<label class="sr-only" for="experiment-speed">자동실험 속도</label><select id="experiment-speed" aria-label="자동실험 속도">${EXPERIMENT_SPEEDS.map(n=>`<option value="${n}" ${ps.speed===n?'selected':''}>${n}배</option>`).join('')}</select></div><div class="activity-tools">${button(icon('star'),'guide','aria-label="힌트 더 보기" title="힌트" aria-describedby="coach-hint"','icon-btn')}${button(icon('book'),'activity-tools','aria-label="노트와 개념 영상" title="노트·영상"','icon-btn')}${runStageIds.includes(l.challenge)&&classicRun&&!runStageFailed&&!challengeDone?.(l.challenge,w.challenge)?button('3D 달리기','run-stage-open','aria-label="3D 달리기로 하기"','btn secondary run-stage-open'):''}</div>${saved&&!(l.challenge&&challengeDone?.(l.challenge,state.work[i]?.challenge))?button(`${i%4===3?'시설 복구':'다음 활동'} ${icon('arrow')}`,'continue','','btn primary lesson-next ready-action'):''}</div></footer></main>`;
+ return `<main data-stage="${l.stage}" data-lesson="${i}" class="lesson-page single-screen ${saved?'lesson-saved':''}" style="--scene:url('/${backgrounds[l.base??l.stage*2+1]}')"><header class="lesson-heading"><div class="lesson-title"><span class="stage-badge">${icon(s.icon)} ${s.name}</span><h1>${l.title}</h1>${saved?`<p class="learning-focus saved-focus"><span>발견</span> ${emphasize(l.discovery,conceptTerms[l.stage])}</p>`:`<p class="learning-focus"><span>생각해 봐</span> ${emphasize(l.inquiry,conceptTerms[l.stage])}</p>`}</div><nav class="chapter-switch" aria-label="장소 안의 활동">${stageLessons(l.stage).map(n=>button(`<span class="chapter-step" aria-hidden="true">${state.evidence[n]?'✓':n%4+1}</span><span>${lessons[n].phase}</span>`,'goto',`data-route="lesson/${n}" ${!canLesson(state,n)?'disabled':''} ${i===n?'aria-current="step"':''}`,`chapter ${i===n?'current':''}`)).join('')}</nav></header><section class="lesson-scene"><div class="experiment-board" role="region" aria-label="${esc(s.name)} · ${esc(l.phase)} 실험대"><div class="experiment-content activity-base-${l.base??'challenge'}">${saved?`<p class="saved-discovery"><span class="saved-discovery-mark">${icon('check')} 발견</span><span>${emphasize(l.discovery,conceptTerms[l.stage])}</span></p>`:''}${activity(i,display,{state,playingUntil,lastObject,button,icon,prop,toolGraphic,wave,voiceButton,challengeView,previewVisual,visualForce})}</div></div></section><footer class="activity-footer"><div class="experiment-audio-notice" role="status" ${soundProblem?'':'hidden'}><p>${esc(soundProblem)}</p>${button('다시 듣기','audio-retry',sound.lastExperiment?'':'disabled','btn secondary')}${button('그림·글로 계속','audio-dismiss','','btn quiet')}</div><div class="next-instruction"><span class="next-marker" aria-hidden="true">${saved?'✓':'→'}</span><p id="coach-hint" role="status">${esc(ps.state!=='idle'&&ps.message?ps.message:feedback?.text||cue.text)}</p>${voiceButton('lesson-done')}</div><div class="activity-controls">${state.settings.allowAutoplay?playerControls(ps):''}<div class="activity-tools">${button(icon('star'),'guide','aria-label="힌트 더 보기" title="힌트" aria-describedby="coach-hint"','icon-btn')}${button(icon('book'),'activity-tools','aria-label="노트와 개념 영상" title="노트·영상"','icon-btn')}${runStageIds.includes(l.challenge)&&classicRun&&!runStageFailed&&!challengeDone?.(l.challenge,w.challenge)?button('3D 달리기','run-stage-open','aria-label="3D 달리기로 하기"','btn secondary run-stage-open'):''}</div>${saved&&!(l.challenge&&challengeDone?.(l.challenge,state.work[i]?.challenge))?button(`${i%4===3?'시설 복구':'다음 활동'} ${icon('arrow')}`,'continue','','btn primary lesson-next ready-action'):''}</div></footer></main>`;
 }
 function stopExperiment(){
  const active=(experimentPlayer?.status()||idlePlayer).state!=='idle'||previewVisual;
- autoSession++;previewVisual=null;currentExperimentStep=null;experimentPlayer?.stop();if(active)sound.stop();
+ autoSession++;previewVisual=null;currentExperimentStep=null;experimentPlayer?.stop();if(active){clearTimeout(liveTimer);playingUntil=0;sound.stop();}
 }
 // A preview is a demonstration, not the learner's saved settings. The first
 // manual gesture restores those settings; a second, explicit gesture acts on them.
@@ -277,7 +328,13 @@ async function performExperimentStep(step,meta){
  if(!meta.isCurrent())return;
  currentExperimentStep=step;previewVisual=null;
  if(step.type==='preview'){
-  previewVisual=step.visual||{};sound.stop();if(step.sound)sound.play(step.sound);render();return;
+  previewVisual=step.visual||{};sound.stop();
+  if(step.sound)sound.play(step.sound);
+  if(['rhythm','signal'].includes(previewVisual.kind)){
+   clearTimeout(liveTimer);playingUntil=0;
+   if(step.sound)playVisualFor(step.sound.duration*1000,previewVisual.challenge?.force);
+  }
+  render();return;
  }
  if(step.type==='range'){
   const input=app.querySelector(`#${step.id}`);if(!input)throw Error('Experiment control unavailable');
@@ -430,7 +487,7 @@ function sayTitle(){
 function navigate(next){soundProblem='';sound.lastExperiment=null;voice.stop();stopExperiment();cancelAdvance();inputLockedUntil=Date.now()+300;if(!canRoute(state,next))next='map';if(next!==route)trail.push(route);const lesson=lessonFromRoute(state,next);if(lesson!==null)state.resumeLesson=lesson;else if(next==='map'&&state.evidence[state.resumeLesson])state.resumeLesson=null;route=next;feedback=null;lastObject='';clearTimeout(liveTimer);playingUntil=0;sound.stop();closeModal(false);save();render();void sound.effect('tap');window.scrollTo(0,0);document.querySelector('main h1')?.setAttribute('tabindex','-1');document.querySelector('main h1')?.focus({preventScroll:true});syncHistory();}
 function syncAudioNotice(){const notice=app.querySelector('.experiment-audio-notice');if(!notice)return;notice.hidden=!soundProblem;notice.querySelector('p').textContent=soundProblem;notice.querySelector('[data-action="audio-retry"]').disabled=!sound.lastExperiment;fitExperiment();}
 sound.onStatus=text=>{soundText=text;const el=document.querySelector('#audio-status');if(el)el.textContent=text;if(/못했어|녹음 대신/.test(text))soundProblem=text+' · 다시 듣거나 그림과 글로 계속해도 돼.';else if(/^(소리|신호) 재생 중/.test(text))soundProblem='';syncAudioNotice();};
-function updateView(){const focus=document.activeElement;const action=focus?.dataset?.action,key=['tool','length','medium','slot','choice','case','solution','field','value','question'].map(k=>focus?.dataset?.[k]?`[data-${k}="${focus.dataset[k]}"]`:'').join('');render();if(action)document.querySelector(`[data-action="${action}"]${key}`)?.focus({preventScroll:true});}
+function updateView(){const focus=document.activeElement,id=focus?.id;const action=focus?.dataset?.action,key=['tool','length','medium','slot','choice','case','solution','field','value','question'].map(k=>focus?.dataset?.[k]?`[data-${k}="${focus.dataset[k]}"]`:'').join('');render();if(id||action)app.querySelector(id?`#${CSS.escape(id)}`:`[data-action="${action}"]${key}`)?.focus({preventScroll:true});}
 function showFeedback(text,kind='hint'){feedback={text,kind};if(kind==='error')void sound.effect('retry',{polite:true});updateView();}
 function openModal(content,label,footer=button('닫기','close','','btn primary'),kind='standard'){const hadPreview=Boolean(previewVisual);stopExperiment();if(hadPreview)render();cancelAdvance();if(!modalRoot.querySelector('dialog'))returnFocus=document.activeElement;modalRoot.innerHTML=`<dialog class="modal-${kind}" aria-label="${label}"><div class="modal-heading"><h2>${label}</h2>${kind==='settings'?'':button(icon('close'),'close','aria-label="닫기"','icon-btn')}</div><div class="modal-body">${content}</div><div class="modal-footer${kind==='settings'?' science-settings-footer':''}">${footer}</div></dialog>`;const dialog=modalRoot.querySelector('dialog');dialog.addEventListener('cancel',e=>{e.preventDefault();closeModal();});dialog.addEventListener('click',e=>{if(e.target===dialog&&kind!=='settings'){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)closeModal();}});map?.pause(true);if(kind!=='concept'&&kind!=='film')void sound.effect(kind==='discovery'?'success':'open');dialog.showModal();(dialog.querySelector('.modal-heading button')||dialog.querySelector('.modal-footer [data-action="close"]'))?.focus({preventScroll:true});}
 // Story films (2026-11-21): full-screen like 1~8. The opening plays once on the first start (and from "도시 이야기 보기");
@@ -454,7 +511,7 @@ function openFilm(film,id,label,lines,footer,onEnd){
 function openIntro(next){try{localStorage.setItem(INTRO_SEEN,'1');}catch{}openFilm(introFilm,'intro-video','울림도시 이야기',['guide-1','story-1','story-2','title-bubble'],button(`건너뛰기 ${icon('arrow')}`,'goto',`data-route="${next}"`,'btn primary film-skip'),()=>navigate(next));}
 function openFinale(){openFilm(finaleFilm,'finale-video','울림도시가 다시 깨어났어',['final-title','final-core','ending-1','ending-2','finale-thanks'],button(`인증서 보기 ${icon('arrow')}`,'close','','btn primary film-skip'),()=>closeModal());}
 function closeModal(focus=true){voice.stop();modalRoot.querySelector('video')?.pause();sound.setScene(route.startsWith('lesson/')?'lesson':route);modalRoot.querySelector('dialog')?.close();modalRoot.innerHTML='';map?.pause(false);if(focus&&returnFocus?.isConnected)returnFocus.focus();}
-function showSettings(){const paragraphs=items=>items.map(x=>`<p>${esc(x)}</p>`).join('');const toggle=(label,key)=>`<div class="setting-row"><b>${label}</b><button class="switch ${state.settings[key]?'on':''}" role="switch" aria-checked="${state.settings[key]}" aria-label="${label}" data-action="sound-setting" data-key="${key}"><span></span></button></div>`;openModal(`<div data-science-settings class="science-settings-body"><div class="science-settings-audio">${toggle('배경 음악','bgm')}<div class="setting-row"><label for="bgm-volume">배경 음악 크기 <output id="bgm-value">${state.settings.bgmVolume}</output></label><input id="bgm-volume" type="range" min="0" max="100" step="5" value="${state.settings.bgmVolume}" ${state.settings.bgm?'':'disabled'}></div>${toggle('효과음','sfx')}<div class="setting-row"><label for="sfx-volume">효과음 크기 <output id="sfx-value">${state.settings.sfxVolume}</output></label><input id="sfx-volume" type="range" min="0" max="100" step="5" value="${state.settings.sfxVolume}" ${state.settings.sfx?'':'disabled'}></div>${toggle('실험 소리','experiments')}${toggle('목소리','voice')}</div><div class="settings-shortcuts science-settings-actions">${button('이 탐험을 하는 이유 다시 보기','story','','btn secondary settings-story')}<div class="settings-voice science-settings-full">${button('안내 목소리 듣기','guide-voice','aria-haspopup="dialog"','btn secondary')}<small>AI 생성 음성</small></div><p class="settings-progress">지금 기록 · 증거 ${evidenceCount(state)} / ${LESSON_COUNT} · 복구 배지 ${stages.filter((_,i)=>stageDone(state,i)).length} / 5</p>${state.restored?button('엔딩 다시 보기','ending','','btn quiet')+button('인증서 받기','certificate','','btn quiet'):''}</div><details><summary>앱 정보 · 배움과 보상</summary><p><b>탐험 목적</b> ${copy.purpose}</p><p><b>미션 보상</b> ${copy.reward}</p><p><b>남는 배움</b> ${copy.learning}</p><p>울림도시 대작전 v${APP_VERSION} · ${copy.signature}</p></details><details><summary>학생용 가이드</summary>${paragraphs([...copy.student,'방해 스피커 악당이 가까이 있을 때 원형 버튼이나 스페이스바로 공격해요.'])}</details><details><summary>교사용 가이드</summary>${paragraphs(copy.teacher)}<details><summary>성취기준</summary><p>${copy.curriculumIntro}</p>${paragraphs(copy.standards)}</details><details><summary>교사용 도구</summary><p>버튼 하나로 모든 활동과 마무리를 열어요. 시연 중 조작·정답·완료 기록은 학생 기록에 저장하지 않아요.</p><p>열린 동안 화면 왼쪽 아래 ← → 버튼(키보드 방향키)으로 활동을 하나씩 넘기고, 오른쪽 아래 ‘다음 스테이지’로 다음 시설까지 바로 건너뛸 수 있어요.</p>${button(state.settings.admin?'모두 열림 · 다시 누르면 닫기':'모든 단계 한 번에 열기','admin',`aria-pressed="${state.settings.admin}"`,'btn secondary wide')}<p>수업 시연용이에요. 다시 누르거나 새로고침하면 학생의 원래 진행으로 돌아가요.</p></details></details><details><summary>이미지·소리·저작권 고지</summary>${paragraphs(copy.credits)}<details><summary>자료 출처 모아 보기</summary>${paragraphs(copy.sources)}</details>${paragraphs(copy.copyright)}</details></div>`,'설정',`${button('탐험 기록 초기화','reset-confirm','','btn danger')}${button('닫기','close','','btn primary')}`,'settings');}
+function showSettings(){const paragraphs=items=>items.map(x=>`<p>${esc(x)}</p>`).join('');const toggle=(label,key,action='sound-setting')=>`<div class="setting-row"><b>${label}</b><button class="switch ${state.settings[key]?'on':''}" role="switch" aria-checked="${state.settings[key]}" aria-label="${label}" data-action="${action}" data-key="${key}"><span></span></button></div>`;openModal(`<div data-science-settings class="science-settings-body"><div class="science-settings-audio">${toggle('배경 음악','bgm')}<div class="setting-row"><label for="bgm-volume">배경 음악 크기 <output id="bgm-value">${state.settings.bgmVolume}</output></label><input id="bgm-volume" type="range" min="0" max="100" step="5" value="${state.settings.bgmVolume}" ${state.settings.bgm?'':'disabled'}></div>${toggle('효과음','sfx')}<div class="setting-row"><label for="sfx-volume">효과음 크기 <output id="sfx-value">${state.settings.sfxVolume}</output></label><input id="sfx-volume" type="range" min="0" max="100" step="5" value="${state.settings.sfxVolume}" ${state.settings.sfx?'':'disabled'}></div>${toggle('실험 소리','experiments')}${toggle('목소리','voice')}</div><div class="settings-shortcuts science-settings-actions">${button('이 탐험을 하는 이유 다시 보기','story','','btn secondary settings-story')}<div class="settings-voice science-settings-full">${button('안내 목소리 듣기','guide-voice','aria-haspopup="dialog"','btn secondary')}<small>AI 생성 음성</small></div><p class="settings-progress">지금 기록 · 증거 ${evidenceCount(state)} / ${LESSON_COUNT} · 복구 배지 ${stages.filter((_,i)=>stageDone(state,i)).length} / 5</p>${state.restored?button('엔딩 다시 보기','ending','','btn quiet')+button('인증서 받기','certificate','','btn quiet'):''}</div><details><summary>앱 정보 · 배움과 보상</summary><p><b>탐험 목적</b> ${copy.purpose}</p><p><b>미션 보상</b> ${copy.reward}</p><p><b>남는 배움</b> ${copy.learning}</p><p>울림도시 대작전 v${APP_VERSION} · ${copy.signature}</p></details><details><summary>학생용 가이드</summary>${paragraphs([...copy.student,'방해 스피커 악당이 가까이 있을 때 원형 버튼이나 스페이스바로 공격해요.'])}</details><details><summary>교사용 가이드</summary>${paragraphs(copy.teacher)}<details><summary>성취기준</summary><p>${copy.curriculumIntro}</p>${paragraphs(copy.standards)}</details><details><summary>교사용 도구</summary>${toggle('실험 자동재생 허용','allowAutoplay','allow-autoplay')}<p>허용하면 이 브라우저의 활동 화면에 자동재생 버튼이 보여요.</p><p>버튼 하나로 모든 활동과 마무리를 열어요. 시연 중 조작·정답·완료 기록은 학생 기록에 저장하지 않아요.</p><p>열린 동안 화면 왼쪽 아래 ← → 버튼(키보드 방향키)으로 활동을 하나씩 넘기고, 오른쪽 아래 ‘다음 스테이지’로 다음 시설까지 바로 건너뛸 수 있어요.</p>${button(state.settings.admin?'모두 열림 · 다시 누르면 닫기':'모든 단계 한 번에 열기','admin',`aria-pressed="${state.settings.admin}"`,'btn secondary wide')}<p>수업 시연용이에요. 다시 누르거나 새로고침하면 학생의 원래 진행으로 돌아가요.</p></details></details><details><summary>이미지·소리·저작권 고지</summary>${paragraphs(copy.credits)}<details><summary>자료 출처 모아 보기</summary>${paragraphs(copy.sources)}</details>${paragraphs(copy.copyright)}</details></div>`,'설정',`${button('탐험 기록 초기화','reset-confirm','','btn danger')}${button('닫기','close','','btn primary')}`,'settings');}
 function notebook(stage=route.startsWith('lesson/')?lessons[Number(route.split('/')[1])].stage:notebookStage){
  notebookStage=stage;
  openModal(`<nav class="notebook-tabs" aria-label="시설별 증거">${stages.map((s,n)=>button(s.short,'notebook-stage',`data-stage="${n}" aria-pressed="${stage===n}"`,`chapter ${stage===n?'current':''}`)).join('')}</nav><div class="notebook-summary"><b>${stages[stage].name}</b><span>전체 증거 ${evidenceCount(state)} / ${LESSON_COUNT}</span>${button(`${icon('play')} 16초 개념 영상`,'concept',`data-stage="${stage}"`,'btn quiet')}</div><div class="evidence-list">${stageLessons(stage).map(i=>{const l=lessons[i];return `<article class="${state.evidence[i]?'collected':''}"><span class="evidence-number">${state.evidence[i]?'✓':i%4+1}</span><div><h3>${l.phase} · ${l.title}</h3><p>${state.evidence[i]?emphasize(state.evidence[i].summary,conceptTerms[l.stage]):'아직 모은 증거가 없어.'}</p></div>${button(state.evidence[i]?'다시 실험':'실험하기','goto',`data-route="lesson/${i}" ${canLesson(state,i)?'':'disabled'}`,'btn quiet')}</article>`;}).join('')}</div>`,'내 증거 노트',button('닫기','close','','btn primary'),'notebook');
@@ -517,12 +574,13 @@ async function handleClick(e){void sound.unlock();const b=e.target.closest('butt
   voice.stop();
   if(e.detail>1&&['continue','goto','restore'].includes(a))return;
   if(a==='auto-play'){
+   if(!state.settings.allowAutoplay||i<0||!experimentPlayer)return;
    const ps=(experimentPlayer?.status()||idlePlayer);
    if(ps.playing){experimentPlayer.pause();sound.stop();clearTimeout(liveTimer);playingUntil=0;updateView();return;}
    if(ps.state==='paused'){const step=currentExperimentStep,context=`${route}|${autoSession}`;experimentPlayer.start();if(step)void performExperimentStep(step,{isCurrent:()=>(experimentPlayer?.status()||idlePlayer).playing&&context===`${route}|${autoSession}`});return;}
-   if(i<0)return;if(lessons[i].challenge==='rhythm'&&w.challenge)w.challenge.sounding=false;previewVisual=null;experimentPlayer.start(experimentPlan(i,w,state.evidence));return;
+   if(lessons[i].challenge==='rhythm'&&w.challenge)w.challenge.sounding=false;previewVisual=null;experimentPlayer.start(experimentPlan(i,w,state.evidence));return;
   }
-  if(a==='auto-stop'){stopExperiment();clearTimeout(liveTimer);playingUntil=0;updateView();return;}
+  if(a==='auto-stop'&&state.settings.allowAutoplay){stopExperiment();clearTimeout(liveTimer);playingUntil=0;updateView();return;}
   if(!e.auto){if(b.closest('.experiment-board')&&handOffExperiment(b))return;const hadPreview=Boolean(previewVisual);stopExperiment();if(hadPreview){render();app.querySelector(`[data-action="${a}"]`)?.focus({preventScroll:true});}}
   if(a==='run-stage-open'){classicRun=false;render();return;}
   if(a==='activity-tools')return openModal(`<div class="activity-menu">${button(`${icon('book')} 내 증거 노트`,'notebook','','btn secondary')}${button(`${icon('play')} 개념 영상`,'concept',`data-stage="${lessons[i].stage}"`,'btn secondary')}${button(`${icon('map')} 지도 보기`,'goto','data-route="map"','btn quiet')}${adminDock(true)}</div>`,'노트와 개념 영상');
@@ -550,7 +608,7 @@ async function handleClick(e){void sound.unlock();const b=e.target.closest('butt
   if(a==='reset-confirm'){openModal(`<p>${studentState?'시연 기록만 새로 시작할까? 학생 기록은 그대로야.':'현재 기록을 브라우저에 백업한 뒤 처음부터 시작할까?'}</p><p>${copy.reset}</p>`,'탐험 기록을 초기화할까요?',`${button('취소','close','','btn secondary')}${button('기록 지우기','reset','','btn danger')}`);modalRoot.querySelector('.modal-footer [data-action="close"]')?.focus();return;}
   if(a==='reset'||a==='new-start'){
    if(!studentState&&!persistence.backup()){closeModal();warning='원본 기록을 안전하게 보관하지 못해 초기화하지 않았어.';render();return;}
-   const audioSettings={...state.settings};state=freshState();for(const key of ['muted','bgm','sfx','experiments','voice','bgmVolume','sfxVolume'])state.settings[key]=audioSettings[key];state.settings.admin=Boolean(studentState);
+   const settings={...state.settings};state=freshState();for(const key of ['allowAutoplay','muted','bgm','sfx','experiments','voice','bgmVolume','sfxVolume'])state.settings[key]=settings[key];state.settings.admin=Boolean(studentState);
    warning=loaded.blocked?loaded.warning:'';trail=[];finalReview=null;configureSound();navigate('home');trail=[];render();if(a==='new-start')openIntro('map');return;
   }
   if(a==='reload-screen')return location.reload();
@@ -558,6 +616,13 @@ async function handleClick(e){void sound.unlock();const b=e.target.closest('butt
   if(a==='map-direct'&&route==='map'&&mapFailed)return enterMapStage(Number(b.dataset.stage));
   if(a==='map-view'){map?.browse(mapView===b.dataset.view?'follow':b.dataset.view);return;}
   if(a==='travel'){const n=Number(b.dataset.stage);if(b.getAttribute('aria-disabled')==='true')return lockedNote(n);if(mapFailed)return enterMapStage(n);if(map)map.walk(n);else{pendingMapTravel=n;syncMapTravel(n);}return;}
+  if(a==='allow-autoplay'){
+   const record=studentState??state;
+   const allowed=!record.settings.allowAutoplay;
+   record.settings.allowAutoplay=state.settings.allowAutoplay=allowed;
+   saveRecord(record);render();returnFocus=app.querySelector('[data-action="settings"]');
+   b.classList.toggle('on',allowed);b.setAttribute('aria-checked',String(allowed));return;
+  }
   if(a==='sound-setting'){const key=b.dataset.key;if(['bgm','sfx','experiments','voice'].includes(key)){state.settings[key]=!state.settings[key];configureSound();save();syncMuteButton();showSettings();}return;}
   if(a==='story')return openIntro('map');
   if(a==='guide-voice'){closeModal(false);disposeNpc?.();disposeNpc=openNpcScene({name:'울림새 삐오',portrait:'/image/generated/dialogue/pio.webp',src:'./media/audio/voices/el-welcome.mp3',text:'소리 탐험을 시작해 볼까? 소리가 날 때 물체가 어떻게 떨리는지 관찰하고, 소리의 크기와 높낮이를 직접 비교해 보자.',trigger:app.querySelector('[data-action="settings"]'),enabled:voiceOn,quiet:value=>{if(value)voice.stop();sound.setQuiet(value)}});return;}
@@ -598,11 +663,11 @@ async function handleClick(e){void sound.unlock();const b=e.target.closest('butt
   if(a==='pluck'){const length=w.length||18;w.lengths=[...new Set([...arr(w.lengths),length])];sound.play({frequency:lengths.find(l=>l.value===length).frequency,level:.5});}
   if(a.startsWith('challenge-')){runTrial(i,a.slice(10),b.dataset);finishInteraction(i);return;}
   if(a==='choice'){w.choice=Number(b.dataset.choice);const result=checkLesson(state,i);if(!result.ok)feedback={kind:'hint',text:result.message};}
-  if(a==='instrument'){const t=instruments.find(t=>t.id===b.dataset.tool);w.seen=[...new Set([...arr(w.seen),t.id])];lastObject=t.id;playingUntil=Date.now()+1700;sound.play({frequency:t.frequency,kind:t.id,duration:1.7});clearTimeout(liveTimer);liveTimer=setTimeout(()=>{playingUntil=0;if(route===`lesson/${legacyIndex(0)}`)updateView();},1700);}
-  if(a==='fork-start'){w.started=true;playingUntil=Date.now()+4000;sound.play({frequency:520,duration:4,kind:'fork'});clearTimeout(liveTimer);liveTimer=setTimeout(()=>{playingUntil=0;if(route===`lesson/${legacyIndex(1)}`)updateView();},4000);}
+  if(a==='instrument'){const t=instruments.find(t=>t.id===b.dataset.tool);w.seen=[...new Set([...arr(w.seen),t.id])];lastObject=t.id;playVisualFor(1700);sound.play({frequency:t.frequency,kind:t.id,duration:1.7});}
+  if(a==='fork-start'){w.started=true;playVisualFor(4000);sound.play({frequency:520,duration:4,kind:'fork'});}
   if(a==='fork-stop'){if(playingUntil<=Date.now())return;w.stopped=true;playingUntil=0;clearTimeout(liveTimer);sound.stop();feedback={kind:'success',text:'눌렀더니 떨림과 소리가 함께 멈췄어. 누르기 전과 비교해 봐.'};}
   if(a==='hit')strikeAndCapture(w,w.force||1);
-  if(a==='capture'){const force=w.force||1;w[b.dataset.slot]=force;sound.play({kind:'drum',frequency:150,level:force/3,duration:1});}
+  if(a==='capture'){const force=w.force||1;w[b.dataset.slot]=force;playVisualFor(1000,force);sound.play({kind:'drum',frequency:150,level:force/3,duration:1});}
   if(a==='sample-play'){const pair=state.evidence[legacyIndex(2)]?.observation;if(!pair)return;const pairKey=`${pair.a},${pair.b}`;if(w.pairKey!==pairKey){w.heardA=false;w.heardB=false;}w.pairKey=pairKey;w[b.dataset.slot==='a'?'heardA':'heardB']=true;sound.play({kind:'drum',frequency:150,level:pair[b.dataset.slot]/3,duration:1});}
   if(a==='length'){const length=Number(b.dataset.length);w.length=length;w.lengths=[...new Set([...arr(w.lengths),length])];sound.play({frequency:lengths.find(l=>l.value===length).frequency,level:.5});}
   if(a==='target'){w.targetHeard=true;sound.sequence([18,6,12].map(value=>({frequency:lengths.find(l=>l.value===value).frequency,level:.5})));}
@@ -675,7 +740,7 @@ document.addEventListener('click',releaseExperimentPointer,{capture:true});
 document.addEventListener('pointercancel',releaseExperimentPointer,{capture:true});
 window.addEventListener('blur',releaseExperimentPointer);
 app.addEventListener('keydown',e=>{if(e.target.matches('.experiment-board input[type="range"]')&&['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown'].includes(e.key)&&handOffExperiment(e.target)){e.preventDefault();e.stopImmediatePropagation();}},{capture:true});
-app.addEventListener('input',e=>{if(e.target.id==='experiment-speed'){experimentPlayer?.setSpeed(Number(e.target.value));return;}if(!autoplayDispatch){if(handOffExperiment(e.target)){e.stopImmediatePropagation();return;}stopExperiment();}},{capture:true});
+app.addEventListener('input',e=>{if(e.target.id==='experiment-speed'){if(state.settings.allowAutoplay)experimentPlayer?.setSpeed(Number(e.target.value));return;}if(!autoplayDispatch){if(handOffExperiment(e.target)){e.stopImmediatePropagation();return;}stopExperiment();}},{capture:true});
 window.addEventListener('resize',()=>{syncExperimentPlayer();fitExperiment();});
 window.visualViewport?.addEventListener('resize',fitExperiment);
 document.fonts.ready.then(fitExperiment);
