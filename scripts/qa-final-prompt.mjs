@@ -62,7 +62,7 @@ try{
  }
  await layout(page,'vibration-1024');
  await page.locator('.nav-right [data-action="settings"]').click();
- assert.deepEqual(await page.locator('dialog [role="switch"]').evaluateAll(es=>es.map(e=>[e.getAttribute('aria-label'),e.getAttribute('aria-checked')])),[['배경 음악','false'],['효과음','false'],['실험 소리','true'],['목소리','false']]);
+ assert.deepEqual(await page.locator('dialog .science-settings-audio [role="switch"]').evaluateAll(es=>es.map(e=>[e.getAttribute('aria-label'),e.getAttribute('aria-checked')])),[['배경 음악','false'],['효과음','false'],['실험 소리','true'],['목소리','false']]);
  await page.locator('[data-key="experiments"]').click();await page.locator('dialog .modal-footer [data-action="close"]').click();
  await page.reload();assert.equal((await saved(page)).settings.experiments,false);assert.equal((await saved(page)).settings.sfx,false);
  await page.locator('[data-action="instrument"][data-tool="drum"]').click();await page.locator('[data-action="choice"][data-choice="0"]').click();
