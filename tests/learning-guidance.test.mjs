@@ -29,12 +29,16 @@ test('signal and two-variable mixing guide adjustment before playing', () => {
   state.work[6] = { challenge: { proof: ['1'] } };
   assert.equal(coachFor(state, 6).target, '.swipe-pad');
   assert.doesNotMatch(coachFor(state, 6).text, /길게|짧게|세게|살살/, 'the swipe hint never names the matching strength');
-  state.work[11] = { challenge: { length: 18, force: 3 } };
+  state.work[11] = { challenge: {} };
   assert.equal(coachFor(state, 11).target, '#mix-length');
-  state.work[11].challenge.length = 6;
+  state.work[11].challenge.length = 18;
   assert.equal(coachFor(state, 11).target, '#mix-force');
+  state.work[11].challenge.force = 3;
+  const beforeCheck = coachFor(state, 11);
+  assert.equal(beforeCheck.target, '[data-action="challenge-check"]');
+  state.work[11].challenge.length = 6;
   state.work[11].challenge.force = 1;
-  assert.equal(coachFor(state, 11).target, '[data-action="challenge-check"]');
+  assert.deepEqual(coachFor(state, 11), beforeCheck);
   assert.deepEqual(state.evidence, {});
 });
 

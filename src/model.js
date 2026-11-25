@@ -1,5 +1,5 @@
 import {normalizeMapHits} from './map-encounters.js';
-import { lessons, legacyLessons, legacyIndex, LESSON_COUNT, stageLessons, finalTasks, transferCases, diagnosisFields } from './data.js';
+import { lessons, legacyLessons, legacyIndex, LESSON_COUNT, stageLessons, finalTasks, transferCases, diagnosisFields, legacyPitchTarget } from './data.js';
 import { cleanChallenge, checkChallenge } from './challenge-rules.js';
 export const STORAGE_KEY = 'ullim-city-v1';
 export const freshState = () => ({version:2,work:{},restoration:{},evidence:{},mapHits:{},settings:{muted:false,admin:false,allowAutoplay:false,bgm:true,sfx:true,experiments:true,voice:true,bgmVolume:25,sfxVolume:100},lastRoute:'home',resumeLesson:null,finalAnswers:{},restored:false,completedAt:null,previousCompletion:null});
@@ -126,7 +126,7 @@ export function checkLesson(s,i) {
   if (i===4 && new Set(list(w.lengths).filter(x=>[6,12,18].includes(x))).size<2) return fail('길이를 바꿔 두 가지 이상 튕겨 봐. 다른 조건은 그대로야.');
   if (i===5) {
     if (!w.targetHeard) return fail('먼저 목표 신호를 들어 봐.');
-    if (JSON.stringify(w.pattern)!==JSON.stringify([18,6,12])) return fail('목표 신호 듣기를 다시 눌러. 헷갈린 자리의 소리를 비교하고 연주해 봐.');
+    if (JSON.stringify(w.pattern)!==JSON.stringify(legacyPitchTarget)) return fail('목표 신호 듣기를 다시 눌러. 헷갈린 자리의 소리를 비교하고 연주해 봐.');
   }
   if (i===6 && !['air','water','solid'].every(x=>list(w.media).includes(x))) return fail('공기·물·고체 실험을 각각 한 번씩 확인해 줘.');
   if (i===7 && !transferCases.every((c,k)=>w.verified?.[k]===c.answer)) return fail('아직 검증하지 않은 상황이 있어. 세 상황 모두 선택한 뒤 실험해 봐.');

@@ -55,7 +55,8 @@ try{
   await page.locator(`[data-action="instrument"][data-tool="${instrument.id}"]`).click();
   assert.match(await page.locator('.observation-window').textContent(),new RegExp(instrument.observation));
   const card=page.locator(`[data-tool="${instrument.id}"]`);
-  assert.match(await card.textContent(),new RegExp(instrument.part));
+  assert.equal(await card.getAttribute('aria-pressed'),'true');
+  assert.equal(await card.textContent().then(text=>text.trim()),instrument.name);
   if(instrument.id!=='ruler')assert.ok(await page.locator('.vibration-art .vibration-detail').evaluate(e=>+getComputedStyle(e).opacity)>0);
   assert.equal(Object.keys((await saved(page)).evidence).length,0);
  }
@@ -106,7 +107,9 @@ try{
     assert.deepEqual((await saved(page)).finalAnswers,fixture.finalAnswers);assert.equal((await saved(page)).restored,false);
     await layout(page,`final-${size.width}-wrong-${q+1}`);
     await page.locator(`[data-action="final-choice"][data-question="${q}"][data-choice="${finalTasks[q].answer}"]`).click();
-    assert.equal((await saved(page)).restored,false);assert.match(await page.locator('.final-progress').textContent(),/맞음 5 \/ 5/);
+    assert.equal((await saved(page)).restored,false);
+    assert.match(await page.locator('.final-progress').textContent(),/맞음 4 \/ 5/);
+    assert.equal(await page.locator('.final-steps .needs-review').count(),1);
    }
    await page.locator('[data-action="restore"]').click();await page.locator('dialog .film-skip').click();
    assert.equal((await saved(page)).restored,true);await page.locator('.cert-paper:not(.preview)').waitFor();await page.evaluate(()=>document.fonts.ready);

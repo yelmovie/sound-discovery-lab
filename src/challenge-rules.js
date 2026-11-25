@@ -65,18 +65,17 @@ export function checkChallenge(id,c={}) {
 function roundOf(id,c){return Math.min(c.proof?.length||0,challengeRoundCount(id)-1);}
 // Guidance reads the same request as validation, without changing an answer.
 export function adjustmentCue(id, c = {}) {
-  const round = roundOf(id, c);
   if (id === 'signal') {
     return { text: '요청한 크기를 읽고 북을 아래로 쓸어 쳐 봐. 쓸어내린 길이에 따라 소리가 어떻게 달라지는지 들어 봐.', target: '.swipe-pad' };
   }
   if (id === 'mix') {
-    if ((c.length || 18) !== mixes[round].length) {
-      return { text: '먼저 길이 손잡이로 주문한 높낮이를 맞춰 봐.', target: '#mix-length' };
+    if (c.length === undefined) {
+      return { text: '길이 손잡이를 움직여 높낮이를 비교해 봐.', target: '#mix-length' };
     }
-    if ((c.force || 1) !== mixes[round].force) {
-      return { text: '이제 세기 손잡이로 주문한 소리 크기를 맞춰 봐.', target: '#mix-force' };
+    if (c.force === undefined) {
+      return { text: '세기 손잡이를 움직여 소리 크기를 비교해 봐.', target: '#mix-force' };
     }
-    return { text: '두 손잡이를 맞췄다면 연주하기를 눌러 들어 봐.', target: '[data-action="challenge-check"]' };
+    return { text: '연주하기를 눌러 주문한 소리와 비교해 봐.', target: '[data-action="challenge-check"]' };
   }
   if (id === 'sort') {
     const unheard = [0, 1, 2].find(index => !(c.listened || []).includes(index));

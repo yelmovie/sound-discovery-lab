@@ -225,7 +225,7 @@ export function mountMap(canvas,state,onArrive,options={}){
   }
   // Each restored facility lifts the dusk a step; the explorer always carries a pool of light.
   function paintDusk(t){
-    const reveal=newLights.length&&!reduced.matches?clamp((t-loadedAt)/2000,0,1):1,level=done.filter(Boolean).length-newLights.filter(i=>i<5).length*(1-reveal),darkness=.44*(1-level/5);
+    const reveal=newLights.length&&!reduced.matches?clamp((t-loadedAt)/2000,0,1):1,level=done.filter(Boolean).length-newLights.filter(i=>i<5).length*(1-reveal),darkness=.25*(1-level/5);
     if(darkness<.005)return;
     const key=`${darkness.toFixed(3)}|${reveal.toFixed(2)}`;
     if(key!==fogKey){

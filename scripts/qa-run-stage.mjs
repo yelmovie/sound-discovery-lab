@@ -26,7 +26,7 @@ async function open(name, { width, height, reducedMotion = 'no-preference', noWe
   const context = await chromium.launchPersistentContext(path.join(out, `profile-${name}`), {
     executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: process.env.QA_HEADFUL !== '1',
     viewport: { width, height }, deviceScaleFactor: 1, reducedMotion,
-    args: ['--disable-crash-reporter', '--disable-breakpad', '--noerrdialogs', '--use-mock-keychain', '--mute-audio', '--enable-unsafe-swiftshader', `--disk-cache-dir=${path.join(out, `cache-${name}`)}`]
+    args: ['--disable-crash-reporter', '--disable-breakpad', '--noerrdialogs', '--use-mock-keychain', '--mute-audio', '--enable-unsafe-swiftshader', `--disk-cache-dir=${path.join(out, `cache-${name}`)}`, `--crash-dumps-dir=${path.join(out, 'crashes')}`]
   });
   const page = context.pages()[0] || await context.newPage(); page.setDefaultTimeout(15000);
   page.on('pageerror', e => runtime.push({ run: name, type: 'pageerror', text: String(e) }));
@@ -39,20 +39,20 @@ async function open(name, { width, height, reducedMotion = 'no-preference', noWe
 async function seed(page, upTo) {
   await page.goto(base, { waitUntil: 'domcontentloaded' });
   await page.evaluate(async ({ upTo, KEY }) => {
-    const m = await import('/src/model.js'), d = await import('/src/data.js'), ch = await import('/src/challenges.js');
-    const sound = { play() { }, sequence() { }, stop() { } };
-    const old = [{ seen: ['rubber', 'fork'], choice: 0 }, { started: true, stopped: true, choice: 1 }, { a: 1, b: 3 }, { heardA: true, heardB: true, pairKey: '1,3', choice: 1 }, { lengths: [18, 6], choice: 0 }, { targetHeard: true, pattern: [18, 6, 12] }];
-    const play = id => {
-      const w = {}, act = (a, value) => ch.runChallenge(id, w, a, { value }, sound);
-      if (id === 'parts') for (const x of [1, 1, 0]) { act('listen'); act('select', x); }
-      if (id === 'rhythm') for (const n of [3, 5]) for (let k = 0; k < n; k++) act(k % 2 ? 'rest' : 'ring');
-      if (id === 'signal') for (const f of [1, 3, 2]) { act('force', f); act('strike'); }
-      if (id === 'sort') for (const o of [[2, 1, 3], [3, 2, 1]]) for (let n = 0; n < 3; n++) { act('parcel', o.indexOf(n + 1)); act('slot', n); }
-      return w;
-    };
+    const m = await import('/src/model.js'), { lessons } = await import('/src/data.js'), { expectedProof } = await import('/src/challenge-rules.js');
+    const observations = [
+      { seen: ['rubber', 'fork'], choice: 0 }, { started: true, stopped: true, choice: 1 },
+      { a: 1, b: 3, force: 1 }, { heardA: true, heardB: true, pairKey: '1,3', choice: 1 },
+      { lengths: [18, 6], length: 18, choice: 0 }, { targetHeard: true, pattern: [18, 6, 12] }
+    ];
     const s = m.freshState();
     s.settings.allowAutoplay = true;
-    for (let i = 0; i < upTo; i++) { s.work[i] = structuredClone(d.lessons[i].challenge ? play(d.lessons[i].challenge) : old[d.lessons[i].base]); if (!m.recordEvidence(s, i).ok) throw Error(`seed ${i}`); }
+    for (let i = 0; i < upTo; i++) {
+      const lesson = lessons[i];
+      const priorWork = lesson.challenge ? { challenge: { proof: expectedProof[lesson.challenge] } } : observations[lesson.base];
+      s.work[i] = structuredClone(priorWork);
+      if (!m.recordEvidence(s, i).ok) throw Error(`seed ${i}`);
+    }
     s.lastRoute = `lesson/${upTo}`; s.resumeLesson = upTo; localStorage.setItem(KEY, JSON.stringify(s));
   }, { upTo, KEY });
   await page.reload({ waitUntil: 'domcontentloaded' });
@@ -86,6 +86,8 @@ async function playRhythm(name, size, touch) {
   const { context, page } = await open(name, size), i = 3, go = mover(page, steer(page, touch));
   await seed(page, i); await when(page, 'ready');
   assert.equal(await page.locator('main.lesson-page').getAttribute('inert'), '', '2D request is inert under the stage');
+  await page.locator('.run-up.is-next').waitFor();
+  assert.deepEqual(await page.locator('.run-stage .run-key.is-next').evaluateAll(keys => keys.map(key => key.dataset.runDirection)), ['up'], 'practice opens on one movement cue');
   // The Meshy drum bodies and gate arch replace the plain shapes once they load (2026-11-21).
   await page.waitForFunction(() => { const m = document.querySelector('.run-stage')?.runProbe?.()?.models; return m?.arch && m.drums === 10; }, null, { timeout: 20000 });
   note(`${name}: Meshy gate arch and 10 drum bodies loaded`);
@@ -121,7 +123,7 @@ async function playRhythm(name, size, touch) {
   const state = await saved(page);
   assert.deepEqual(state.work[i].challenge.proof, rhythms.map(r => r.join(',')));
   assert.deepEqual(state.evidence[i].observation.challenge.proof, state.work[i].challenge.proof, 'evidence recorded in the existing field');
-  assert.equal(await page.locator('.challenge-complete [data-action="continue"]').count(), 1);
+  assert.equal(await page.locator('.activity-footer [data-action="continue"]').count(), 1);
   assert.equal(await page.locator('main[inert]').count(), 0);
   await page.screenshot({ path: path.join(out, `${name}-complete-card.png`) });
   await page.reload({ waitUntil: 'domcontentloaded' }); await page.waitForSelector('.challenge-complete');
@@ -145,8 +147,12 @@ async function playMelody(name, size, touch) {
   await go.walkTo(rows('melody', 0)[0] + .35); await when(page, 'settled');
   assert.match((await saved(page)).work[i].challenge.message, /목표 멜로디를 먼저/);
   assert.ok(await page.locator('.run-unit.is-next').count(), 'target button is pointed out');
+  assert.equal(await page.locator('.run-goal [data-pitch]').count(), 0, 'the target does not identify a ruler length');
+  assert.equal(await page.locator('.run-goal svg path').evaluateAll(paths => new Set(paths.map(p => p.getAttribute('d'))).size), 1, 'unheard notes have no contour');
   const choose = async (round, notes) => { for (const [n, length] of notes.entries()) { await go.sideTo(LANE[length]); await go.walkTo(rows('melody', round)[n] + .35); await page.waitForTimeout(150); } await when(page, 'settled'); };
   await page.locator('.run-unit').click(); assert.equal((await saved(page)).work[i].challenge.heard, true);
+  await page.waitForFunction(() => new Set([...document.querySelectorAll('.run-goal svg path')].map(p => p.getAttribute('d'))).size > 1);
+  assert.equal(await page.locator('.run-goal svg path').evaluateAll(paths => new Set(paths.map(p => getComputedStyle(p).stroke)).size), 1, 'the target contour uses one ink colour');
   await choose(0, [...melodies[0]].reverse());
   assert.match(await line(page), /다른 발판이 있어/); assert.equal((await saved(page)).work[i].challenge.proof?.length || 0, 0);
   note(`${name}: a wrong melody returns to the section start without proof`);
@@ -180,11 +186,11 @@ async function fallbacks() {
   await page.locator('[data-action="run-stage-open"]').click(); await when(page, 'ready');
   note('reduced motion: 2D request first, 3D on request');
   // Back to the 2D request, where the automatic experiment still runs.
-  await page.locator('.run-classic').click(); await page.waitForSelector('.run-stage', { state: 'detached' });
+  await page.locator('.run-classic').focus(); await page.keyboard.press('Space'); await page.waitForSelector('.run-stage', { state: 'detached' });
   await page.locator('[data-action="auto-play"]').click();
   await page.waitForFunction(() => ['playing', 'waiting'].includes(document.querySelector('.autoplay-controls')?.dataset.playerState));
   assert.equal(await page.locator('.run-stage').count(), 0);
-  note('기존 방식으로 하기: 2D request returns and 자동재생 runs on it');
+  note('2D로 하기: 2D request returns and 자동재생 runs on it');
   await context.close();
   // Teacher demo: the stage opens with the same choice, arrow keys steer instead of changing activity, nothing is saved.
   ({ context, page } = await open('teacher', { width: 1280, height: 800 }));

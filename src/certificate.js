@@ -21,15 +21,15 @@ export function certificateResult({genuine, evidence, restored, date, findings, 
           <p class="cert-credit">기획·제작: 옐샘 &amp; ⓒ 아이스크림미디어</p>
         </div>
       </article>
-      <p class="cert-note">인쇄한 뒤 학교·반·번호·이름을 직접 적어요.</p>
+      ${genuine ? '<p class="cert-note">이름과 학교 정보는 인쇄한 뒤 적어요.</p>' : ''}
       <div class="result-actions">
-        ${genuine ? '<button class="btn primary" data-action="print">인증서 인쇄 / PDF 저장</button><button class="btn secondary" data-action="cert-png">PNG 저장</button>' : '<button class="btn primary" data-action="goto" data-route="map">증거 모으러 가기</button>'}
-        <button class="btn secondary" data-action="notebook">내 증거 다시 보기</button>
-        <button class="btn quiet" data-action="goto" data-route="map">지도 둘러보기</button>
+        ${genuine ? '<button class="btn primary" data-action="print">인쇄·PDF 저장</button><button class="btn secondary" data-action="cert-png">PNG 저장</button>' : '<button class="btn primary" data-action="goto" data-route="map">증거 모으러 가기</button>'}
+        <button class="btn quiet" data-action="notebook">증거 노트</button>
+        ${genuine ? '<button class="btn quiet" data-action="goto" data-route="map">지도</button>' : ''}
         ${endingVoice}
       </div>
       <p class="cert-error" role="status" aria-live="polite"></p>
     </div>
-    <section class="result-findings"><h2>내가 발견한 다섯 원리</h2>${findings}</section>
+    <section class="result-findings"><h2>소리 원리 다시 보기</h2>${findings}</section>
   </main>`;
 }

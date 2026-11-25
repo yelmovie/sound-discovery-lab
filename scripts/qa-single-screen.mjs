@@ -33,6 +33,11 @@ const required=[
  [A('challenge-solution',4)],
  [['#festival-music',1],['#festival-announcement',1],A('challenge-pads'),A('challenge-preview')]
 ];
+
+const gatedActions={0:'choice',1:'choice',2:'challenge-select',5:'choice',8:'choice',12:'choice',16:'diagnostic',17:'choice'};
+const essentialControls=(index,{completed=false,observed=completed}={})=>completed&&lessons[index].challenge
+ ?[A('challenge-replay'),A('continue')]
+ :required[index].filter(([selector])=>observed||selector!==A(gatedActions[index])[0]);
 const browser=await chromium.launchPersistentContext(path.join(out,'profile'),{executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',headless:true,viewport:{width:1280,height:800},deviceScaleFactor:1,reducedMotion:'reduce',args:['--disable-crash-reporter','--disable-breakpad','--noerrdialogs','--use-mock-keychain',`--disk-cache-dir=${path.join(out,'cache')}`,`--crash-dumps-dir=${path.join(out,'crashes')}`]});
 const page=browser.pages()[0]||await browser.newPage();page.setDefaultTimeout(20000);
 const errors=[],results=[],checks=[];page.on('pageerror',e=>errors.push(String(e)));page.on('response',r=>{if(r.status()>=400)errors.push(`${r.status()} ${r.url()}`);});
@@ -94,7 +99,7 @@ function audit({requirements=[],quick=false,expectedTarget='',debug=false}={}){
  const detailBoxes=debug?[...main.querySelectorAll('.challenge-workspace,.hotspot-scene,.challenge-object,.challenge-object-art,.prop-assembly,.prop-img,.labelled-choices,.labelled-choices .choice,.festival-controls,.festival-controls fieldset,.festival-controls legend,.festival-controls .mixer-channel,.festival-controls .mixer-title,.festival-controls .range-ticks,.festival-controls button,.festival-controls input')].map(e=>{const c=getComputedStyle(e);return {tag:e.tagName,class:e.className,label:label(e),rect:box(e),clientH:e.clientHeight,scrollH:e.scrollHeight,clientW:e.clientWidth,scrollW:e.scrollWidth,gridRows:c.gridTemplateRows,gridColumns:c.gridTemplateColumns,gap:c.gap,padding:c.padding,height:c.height,minHeight:c.minHeight,zoom:c.zoom,transform:c.transform};}):undefined;
  return {title:main?.querySelector('h1')?.textContent,viewport:[innerWidth,innerHeight],metrics,controlCount:controls.length,outsideControls:outside,hiddenControls:hidden,minimumTarget:Number.isFinite(minimumTarget)?Math.round(minimumTarget*10)/10:null,minimumFont:Number.isFinite(minimumFont)?Math.round(minimumFont*10)/10:null,minimumFontLabel,fitScale:board?.dataset.fitScale,guidance:hint?.textContent,nextTargets:targets.map(e=>({label:label(e),class:e.className,rect:box(e)})),issues:unique,actions:[...new Set(controls.map(e=>e.dataset.action||e.id))],detailBoxes};
 }
-async function measure(name,i,requirements=required[i],expectedTarget=''){const data=await page.evaluate(audit,{quick:phase==='baseline',requirements,expectedTarget,debug:phase.includes('debug')});assert.equal(data.title,lessons[i].title,`actual route ${i}`);results.push({name,lesson:i,...data});if(phase!=='baseline'&&(process.env.QA_CAPTURE_ALL==='1'||phase.startsWith('probe')||i%4===0||data.issues.length))await page.screenshot({path:path.join(out,`${data.viewport.join('x')}-${name}.png`)});return data;}
+async function measure(name,i,requirements=essentialControls(i),expectedTarget=''){const data=await page.evaluate(audit,{quick:phase==='baseline',requirements,expectedTarget,debug:phase.includes('debug')});assert.equal(data.title,lessons[i].title,`actual route ${i}`);results.push({name,lesson:i,...data});if(phase!=='baseline'&&(process.env.QA_CAPTURE_ALL==='1'||phase.startsWith('probe')||i%4===0||data.issues.length))await page.screenshot({path:path.join(out,`${data.viewport.join('x')}-${name}.png`)});return data;}
 async function save(){const counts={};for(const r of results)for(const i of r.issues)counts[i.type]=(counts[i.type]||0)+1;await writeFile(path.join(out,'results.json'),JSON.stringify({phase,results,counts,checks,errors,sourceHashes:Object.fromEntries(Object.entries(snapshot).map(([k,v])=>[k,v.hash]))},null,2));return counts;}
 const action=async(name,attrs='')=>{await page.locator(`[data-action="${name}"]${attrs}`).click();await page.waitForTimeout(80);};
 // Legacy observations gain empty challenge defaults on the first two normalizations.
@@ -129,23 +134,58 @@ async function auxiliaryChecks(){
  const final=seed(0,true);final.lastRoute='final';await open(final);assert.equal(await page.locator('.final-focus').count(),1);await action('final-choice','[data-question="0"][data-choice="0"]');await page.waitForTimeout(700);assert.ok(await page.locator('[data-question="1"]').count());const value=await saved();assert.equal(value.finalAnswers[0],0);assert.equal(value.restored,false);checks.push('final question selection advances while restoration still requires completion');
 }
 async function cueChecks(){for(const [width,height]of [[1280,800],[915,412],[740,360],[390,844],[360,740]]){await page.setViewportSize({width,height});await open(seed(11));await action('challenge-check');await measure('error-mix',11,required[11],'#mix-length,#mix-force');await open(seed(18));await action('challenge-solution','[data-value="volume"]');await measure('error-solution',18,required[18],'[data-action="challenge-solution"]');}checks.push('wrong mix redirects to adjustment controls without choosing a value');checks.push('wrong solution redirects to tool choices without choosing a tool');for(const [width,height]of [[1920,1080],[1280,800],[390,844]]){await page.setViewportSize({width,height});await open(seed(0));await measure('lesson-0',0);}checks.push('ruler card layout remains visible at board, tablet and portrait sizes');}
-const probe=phase.startsWith('probe'),autoOnly=phase==='auto',cueOnly=phase==='cue',focused=phase.includes('focused'),worst=phase.includes('worst'),debug=phase.includes('debug'),ids=process.env.QA_LESSONS?process.env.QA_LESSONS.split(',').map(Number):debug?[2,11,14,19]:focused?[8,12,16]:probe&&!worst?[0,8,12,16,19]:Array.from({length:20},(_,i)=>i);
-const vps=process.env.QA_SIZES?process.env.QA_SIZES.split(',').map(size=>size.split('x').map(Number)):autoOnly||cueOnly?[]:focused?[[1024,600],[390,844]]:worst||debug?[[740,360],[360,740]]:phase==='baseline'||probe?[[1280,800],[915,412],[390,844]]:[[1920,1080],[1366,768],[1280,800],[1024,768],[1024,600],[915,412],[740,360],[390,844],[360,740]];
+async function observationGateChecks(){
+ await page.setViewportSize({width:1280,height:800});
+ const cases=[
+  [0,[['instrument','[data-tool="rubber"]'],['instrument','[data-tool="drum"]']]],
+  [1,[['fork-start'],['fork-stop']]],
+  [2,[['challenge-listen']]],
+  [5,[['sample-play','[data-slot="a"]'],['sample-play','[data-slot="b"]']]],
+  [8,[['pluck'],['ruler-home']]],
+  [12,[['medium','[data-medium="air"]'],['medium','[data-medium="water"]'],['medium','[data-medium="solid"]']]],
+  [16,[['noise-scene']]],
+  [17,[['noise-before'],['solution','[data-solution="pad"]'],['noise-after']]]
+ ];
+ for(const [index,actions] of cases){
+  await open(seed(index));
+  const choices=page.locator(A(gatedActions[index])[0]);
+  assert.equal(await choices.count(),0,`lesson ${index}: choices wait for evidence`);
+  for(const [name,attrs] of actions){
+   if(name==='ruler-home'){
+    await page.locator('#ruler-length').focus();
+    await page.keyboard.press('Home');
+    await page.waitForTimeout(80);
+   }else await action(name,attrs);
+  }
+  assert.ok(await choices.count()>=2,`lesson ${index}: nearest observation opens the choices`);
+  await page.mouse.move(0,0);
+  await page.waitForTimeout(100);
+  const styles=await choices.evaluateAll(elements=>elements.map(e=>[
+   getComputedStyle(e).backgroundColor,e.getAttribute('aria-pressed'),e.classList.contains('next-target')
+  ]));
+  assert.ok(styles.every(([background,pressed,cued])=>background===styles[0][0]&&pressed==='false'&&!cued),
+   `lesson ${index}: equal choice emphasis before answering (${JSON.stringify(styles)})`);
+  checks.push(`lesson ${index}: observe before choosing, individual options unmarked`);
+ }
+}
+const probe=phase.startsWith('probe'),autoOnly=phase==='auto',cueOnly=phase==='cue',gatesOnly=phase==='gates',focused=phase.includes('focused'),worst=phase.includes('worst'),debug=phase.includes('debug'),ids=process.env.QA_LESSONS?process.env.QA_LESSONS.split(',').map(Number):debug?[2,11,14,19]:focused?[8,12,16]:probe&&!worst?[0,8,12,16,19]:Array.from({length:20},(_,i)=>i);
+const vps=process.env.QA_SIZES?process.env.QA_SIZES.split(',').map(size=>size.split('x').map(Number)):autoOnly||cueOnly||gatesOnly?[]:focused?[[1024,600],[390,844]]:worst||debug?[[740,360],[360,740]]:phase==='baseline'||probe?[[1280,800],[915,412],[390,844]]:[[1920,1080],[1366,768],[1280,800],[1024,768],[1024,600],[915,412],[740,360],[390,844],[360,740]];
 try{
- for(const [width,height]of vps){await page.setViewportSize({width,height});for(const i of ids){const completed=process.env.QA_COMPLETED_ONLY==='1';await open(seed(i,completed));await measure(`${completed?'complete':'lesson'}-${i}`,i,completed&&lessons[i].challenge?[A('challenge-replay')]:required[i]);}console.log(JSON.stringify({phase,viewport:`${width}x${height}`,states:ids.length,outsideControls:results.slice(-ids.length).reduce((n,r)=>n+r.outsideControls,0),scrollingStates:results.slice(-ids.length).filter(r=>r.metrics.some(m=>m.contentHeight>m.height+3)).length}));await save();}
+ for(const [width,height]of vps){await page.setViewportSize({width,height});for(const i of ids){const completed=process.env.QA_COMPLETED_ONLY==='1';await open(seed(i,completed));await measure(`${completed?'complete':'lesson'}-${i}`,i,essentialControls(i,{completed}));}console.log(JSON.stringify({phase,viewport:`${width}x${height}`,states:ids.length,outsideControls:results.slice(-ids.length).reduce((n,r)=>n+r.outsideControls,0),scrollingStates:results.slice(-ids.length).filter(r=>r.metrics.some(m=>m.contentHeight>m.height+3)).length}));await save();}
  if(probe&&phase.includes('aux'))await auxiliaryChecks();
  if(cueOnly)await cueChecks();
- if(phase!=='baseline'&&!probe&&!cueOnly&&!process.env.QA_ACTIVITY_ONLY){
+ if(gatesOnly)await observationGateChecks();
+ if(phase!=='baseline'&&!probe&&!cueOnly&&!gatesOnly&&!process.env.QA_ACTIVITY_ONLY){
   if(!autoOnly)for(const [width,height]of [[1280,800],[915,412],[740,360],[390,844],[360,740]]){await page.setViewportSize({width,height});for(const [i,work]of [[2,{challenge:{proof:proofs.parts.slice(0,1)}}],[2,{challenge:{proof:proofs.parts.slice(0,2)}}],[3,{challenge:{proof:proofs.rhythm.slice(0,1),sequence:['울림','쉼','울림','쉼']}}],[10,{challenge:{proof:proofs.melody.slice(0,1)}}],[15,{challenge:{proof:proofs.classify.slice(0,3)}}],[18,{challenge:{proof:proofs.solutions.slice(0,2)}}]]){const s=seed(i);s.work[i]=work;await open(s);await measure(`long-${i}-${work.challenge.proof.length}`,i);}
-   for(const i of [0,4,8,12,16,19]){const s=seed(i,true);await open(s);await measure(`complete-${i}`,i,lessons[i].challenge?[A('challenge-replay')]:required[i]);}
+   for(const i of [0,4,8,12,16,19]){const s=seed(i,true);await open(s);await measure(`complete-${i}`,i,essentialControls(i,{completed:true}));}
    await open(seed(11));await action('challenge-check');await measure('error-mix',11);
    await open(seed(18));await action('challenge-solution','[data-value="volume"]');await measure('error-solution',18);
    const diagnosis=seed(16);diagnosis.work[16]={heard:true,place:'library'};await open(diagnosis);await measure('diagnosis-next-situation',16,required[16],'[data-action="diagnostic"][data-field="situation"]');
-   const care=seed(17);care.work[17]={before:true};await open(care);await measure('care-next-solutions',17,required[17],'.solution-grid');
+   const care=seed(17);care.work[17]={before:true};await open(care);await measure('care-next-solutions',17,essentialControls(17),'.solution-grid');
    await open(seed(0));await action('auto-play');await measure('playing-0',0);await action('auto-play');await measure('paused-0',0);await action('auto-stop');
   }
   if(!process.env.QA_SKIP_AUTO)await autoChecks();
-  if(!autoOnly)await auxiliaryChecks();
+  if(!autoOnly){await observationGateChecks();await auxiliaryChecks();}
   if(!autoOnly){await page.setViewportSize({width:1024,height:600});const teacherSeed=seed(0,true);teacherSeed.work={};await open(teacherSeed);await action('settings');await page.locator('[data-action="admin"]').evaluate(e=>{for(let p=e;p;p=p.parentElement)if(p.tagName==='DETAILS')p.open=true;});await action('admin');await page.locator('dialog[open] [data-action="close"]:visible >> nth=0').click();for(let i=0;i<20;i++){await measure(`teacher-${i}`,i);if(i<19){await page.keyboard.press('ArrowRight');await page.waitForTimeout(80);}}}
  }
  if(phase.startsWith('final')||cueOnly){const changed=[];for(const [file,value]of Object.entries(snapshot)){if(file==='/')continue;const actual=createHash('sha256').update(await readFile(path.join(root,file.slice(1)))).digest('hex');if(actual!==value.hash)changed.push(file);}assert.deepEqual(changed,[],'product source changed during verification');checks.push(`product source hashes remained unchanged throughout ${phase} verification`);}

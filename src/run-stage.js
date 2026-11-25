@@ -5,14 +5,14 @@
 // (sub-steps, gravity only in the air, jump only from the floor), with box and disc floors instead of an octree.
 import * as THREE from './vendor/three/three.module.min.js';
 import { lengths, runStageAssets, runStageModels } from './data.js';
-import { checkChallenge, challengeRoundCount, rhythms } from './challenge-rules.js';
+import { checkChallenge, challengeRoundCount } from './challenge-rules.js';
 import { courseFor, landingAction, landingOutcome, runProgress, runGoal, rhythmNeedsRestart, runGuide, RUN_MISSIONS, RUN_SPEED, JUMP_SPEED, GRAVITY, STEP_UP } from './run-stage-rules.js';
 import { bindRunInput } from './run-input.js';
 import { createRunner, loadImage } from './run-character.js';
 import { createRunHud } from './run-stage-hud.js';
 
 const FONT = '"NanumSquareNeo","Malgun Gothic","Apple SD Gothic Neo",sans-serif';
-// Pitch colours are drawn by code, the same on the keys and in the goal row.
+// Colour distinguishes the different ruler lengths.
 const PITCH = { 18: '#3f7fd6', 12: '#2fa37c', 6: '#ec7f3a' };
 const ART = '/image/generated/run-stage/', MODELS = '/media/models/run-stage/';
 const WATER = -.62;
@@ -32,19 +32,16 @@ function drawn(width, height, paint) {
   const texture = new THREE.CanvasTexture(canvas); texture.colorSpace = THREE.SRGBColorSpace; texture.anisotropy = 4;
   return texture;
 }
-function sign(text, { color = '#17394b', paper = '#fffdf3', trace = '' } = {}) {
-  const width = 72 + [...text].length * 46 + (trace ? 96 : 0);
+function sign(text, { color = '#17394b' } = {}) {
+  const width = 72 + [...text].length * 46;
   const texture = drawn(width, 104, g => {
-    g.fillStyle = paper; g.beginPath(); g.roundRect(4, 4, width - 8, 96, 26); g.fill();
+    g.fillStyle = '#fffdf3'; g.beginPath(); g.roundRect(4, 4, width - 8, 96, 26); g.fill();
     g.strokeStyle = color; g.lineWidth = 6; g.stroke();
-    let left = 36;
-    if (trace) { g.lineWidth = 7; g.lineCap = 'round'; g.lineJoin = 'round'; g.save(); g.translate(28, 22); g.scale(1.25, 2); g.stroke(new Path2D(trace)); g.restore(); left = 132; }
-    g.fillStyle = color; g.font = `800 46px ${FONT}`; g.textBaseline = 'middle'; g.fillText(text, left, 55);
+    g.fillStyle = color; g.font = `800 46px ${FONT}`; g.textBaseline = 'middle'; g.fillText(text, 36, 55);
   });
   const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: texture, transparent: true })); sprite.scale.set(width / 104 * .6, .6, 1);
   return sprite;
 }
-const WAVE = 'M4 15H12L18 5L26 25L34 5L42 25L50 5L58 15H68', FLAT = 'M4 15H68';
 
 export function openRunStage(host, o) {
   const id = o.id, course = courseFor(id), guide = runGuide[id], total = challengeRoundCount(id);
@@ -95,7 +92,7 @@ export function openRunStage(host, o) {
         const material = keep(new THREE.MeshBasicMaterial({ color: '#0b8f9c', transparent: true, opacity: 0, depthWrite: false }));
         const ring = add(new THREE.RingGeometry(.46, .54, 40), material, p.x, p.top + .03 + n * .002, z(p.s)); ring.rotation.x = -Math.PI / 2; return ring;
       });
-      const entry = { p, side, top, rings, ringFrom: 0, ringEnds: 0, mark: null, played: '' };
+      const entry = { p, side, top, rings, ringFrom: 0, ringEnds: 0 };
       stones.set(sectionOf(p), entry); animated.push(entry);
     } else if (p.kind === 'key') {
       // A ruler held on the bench at its near end. The free part hangs clear of the floor, is 6, 12 or 18 cm
@@ -145,13 +142,6 @@ export function openRunStage(host, o) {
   // One lamp per section sits on top of the frame, one over each post.
   const lamps = Array.from({ length: total }, (_, n) => add(new THREE.SphereGeometry(.2, 16, 12), keep(new THREE.MeshBasicMaterial({ color: '#8a8f99' })), (n - (total - 1) / 2) * 3 / Math.max(1, total - 1), 2.95, 0, gate));
 
-  // Target signs beside the rhythm stones show the same goal as the row at the top.
-  if (id === 'rhythm') for (const p of course.platforms) if (p.kind === 'stone' && p.section !== 'practice') {
-    const beat = rhythms[p.section][p.index];
-    const entry = stones.get(sectionOf(p));
-    entry.target = label(beat, p.radius + .75, .66, z(p.s), { trace: beat === '쉼' ? FLAT : WAVE, color: beat === '쉼' ? '#486675' : '#086a73' });
-    entry.post = post(entry.target, -1.2, 9.5);
-  }
   if (id === 'melody') for (const p of course.platforms) if (p.kind === 'key' && p.lane === 0 && p.section !== 'practice') post(label(`${p.index + 1}`, -(course.halfWidth + .55), .7, z(p.rowStart) - .3, { color: '#6f5bb5' }), .4, 13);
 
   // ---- character, companion ----
@@ -159,6 +149,7 @@ export function openRunStage(host, o) {
   let runner = null, pio = null, grounded = true, ground = course.pads[0], jumped = false, safe = course.pads[0];
   let landedUntil = 0, fails = 0, notice = '', noticeKind = 'hint', noticeEnds = 0, cheerEnds = 0, flinchEnds = 0, tween = null, finished = false, doneTimer = 0, destroyed = false;
   const practice = { jumped: false, walked: false, keys: new Set() };
+  const firstStone = course.platforms.find(p => p.kind === 'stone' && p.section === 'practice');
   const padFor = round => course.pads.find(p => p.name === `round-${round}`) || course.pads[0];
   const centre = p => ({ x: p.x, y: p.top, z: z(p.kind === 'key' ? p.rowStart + Math.min(.4, p.halfDepth) : p.s) });
   function stand(platform) { const c = centre(platform); pos.set(c.x, c.y, c.z); vel.set(0, 0, 0); grounded = true; jumped = false; ground = platform; }
@@ -222,14 +213,6 @@ export function openRunStage(host, o) {
 
   // ---- state → pictures ----
   let stamp = '';
-  function mark(entry, text, x, y, zed) {
-    if (entry.played === text) return;
-    if (entry.mark) { scene.remove(entry.mark); entry.mark.material.map.dispose(); entry.mark.material.dispose(); entry.mark = null; }
-    entry.played = text;
-    if (text) { entry.mark = sign(text, { color: '#fffdf3', paper: text.startsWith('쉼') ? '#486675' : '#086a73' }); entry.mark.position.set(x, y, zed); scene.add(entry.mark); }
-    // The played mark takes the target sign's place on the same post.
-    entry.post.signs = text ? [entry.mark] : [entry.target]; entry.target.visible = false;
-  }
   function syncState() {
     let c = o.challenge();
     if (id === 'rhythm' && !finished && rhythmNeedsRestart(c) && !checkChallenge(id, c)) {
@@ -238,28 +221,28 @@ export function openRunStage(host, o) {
       stand(padFor(runProgress(id, c).round)); safe = ground; tween = null; say(guide.restart);
     }
     const at = runProgress(id, c), solved = c.proof?.length || 0, done = checkChallenge(id, c);
-    const next = JSON.stringify([solved, c.sequence, c.message, c.kind, c.heard, c.sounding, notice, fails >= 3, practice.jumped, practice.walked, practice.keys.size, pos.z < z(padFor(0).s - 1.6)]);
+    const inPractice = !solved && !at.step && pos.z > z(padFor(0).s - 1.6) && !done;
+    const nearFirstStone = firstStone && pos.z <= z(firstStone.s - 1.75);
+    let action;
+    if (id === 'melody' && !c.heard && !done && !inPractice) action = 'listen';
+    else if (inPractice && !notice && firstStone && !practice.jumped) action = nearFirstStone ? 'jump' : 'forward';
+    else if (inPractice && !notice && !firstStone && !practice.keys.size && pos.z > -1) action = 'forward';
+    const next = JSON.stringify([solved, c.sequence, c.message, c.kind, c.heard, c.sounding, notice, fails >= 3, practice.jumped, practice.walked, practice.keys.size, inPractice, action]);
     if (next === stamp) return; stamp = next;
-    // Played stones and keys are read back from the saved sequence, so a reload shows the same marks.
-    for (const entry of stones.values()) {
-      const p = entry.p; if (p.section === 'practice') continue;
-      const beat = rhythms[p.section][p.index], played = p.section < solved || p.section === at.round && !done && p.index < at.step;
-      mark(entry, played ? `${beat} ✓` : '', p.radius + .75, .66, z(p.s));
-    }
+    // The key stays marked after landing. The target contour has no matching key colour.
     for (const entry of keys.values()) {
       const p = entry.p; if (p.section === 'practice') continue;
       const played = p.section === at.round && !done && p.index < at.step && c.sequence?.[p.index] === p.length;
       if (played !== entry.played) { entry.played = played; entry.paint(played); }
     }
     lamps.forEach((lamp, n) => lamp.material.color.set(n < solved ? '#ffd257' : '#8a8f99'));
-    const inPractice = !solved && !at.step && pos.z > z(padFor(0).s - 1.6) && !done;
-    const prompt = id === 'rhythm' ? guide.practice[!practice.jumped ? 0 : !practice.walked ? 1 : 2] : guide.practice[practice.keys.size < 3 ? 0 : 1];
+    const prompt = action === 'jump' ? '위 화살표를 누른 채 점프해 봐.' : id === 'rhythm' ? guide.practice[!practice.jumped ? 0 : !practice.walked ? 1 : 2] : guide.practice[practice.keys.size < 3 ? 0 : 1];
     const line = done ? (c.message || '주민의 의뢰를 모두 해결했어!') : notice || c.message || (inPractice ? prompt : id === 'melody' && !c.heard ? guide.practice[2] : guide.play);
     hud.update({
       goal: done ? runGoal(id, { proof: c.proof.slice(0, total - 1) }).map(g => ({ ...g, filled: true })) : runGoal(id, c), now: done ? -1 : at.step,
       roundText: done ? `${total} / ${total} 통과` : `${solved} / ${total} 통과`,
       line: fails >= 3 && !done && !notice ? guide.hint : line, kind: done ? 'success' : notice ? noticeKind : c.kind === 'success' ? 'success' : c.kind === 'hint' || fails >= 3 ? 'hint' : '',
-      listen: id === 'melody' && !c.heard && !done && !inPractice, heard: Boolean(c.heard), stuck: fails >= 3 && !done
+      action, heard: Boolean(c.heard), finished: done
     });
   }
 
@@ -484,7 +467,6 @@ export function openRunStage(host, o) {
   return {
     destroy() {
       destroyed = true; delete host.runProbe; cancelAnimationFrame(frameId); clearTimeout(doneTimer); observer.disconnect(); input.destroy();
-      for (const entry of animated) if (entry.mark) { entry.mark.material.map.dispose(); entry.mark.material.dispose(); }
       for (const thing of disposables) thing.dispose();
       runner?.dispose(); renderer.dispose(); renderer.forceContextLoss?.(); hud.destroy();
     }

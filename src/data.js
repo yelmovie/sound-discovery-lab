@@ -74,6 +74,7 @@ export const instruments = [
   {id:'fork',name:'소리굽쇠',action:'울리기',frequency:520,part:'두 갈래 끝',observation:'소리굽쇠의 두 갈래 끝이 주로 떨려.'}
 ];
 export const lengths = [{value:18,label:'긴 자',pitch:'낮음',frequency:260},{value:12,label:'중간 자',pitch:'중간',frequency:390},{value:6,label:'짧은 자',pitch:'높음',frequency:650}];
+export const legacyPitchTarget = Object.freeze([18, 6, 12]);
 export const media = [
   {id:'air',label:'공기',source:'북',receiver:'친구의 귀',detail:'북과 귀 사이의 공기를 통해 소리가 전해져.'},
   {id:'water',label:'물',source:'물속 종',receiver:'물속 소리 감지기',detail:'물속에서 울린 종의 소리가 물을 통해 전해져.'},

@@ -19,7 +19,12 @@ export function bindRunInput(root, { blocked = () => false, onUnit = () => {}, o
     if (blocked() || event.ctrlKey || event.altKey || event.metaKey || event.isComposing || typing(event.target)) return;
     const direction = mapKeyDirection(event);
     if (direction) { event.preventDefault(); keys.set(event.code || event.key, direction); onGesture(); return; }
-    if (event.code === 'Space' || event.key === ' ') { event.preventDefault(); if (!event.repeat) { jumpAt = win.performance.now(); onGesture(); } }
+    if (event.code === 'Space' || event.key === ' ') {
+      // The run controls keep native Space activation when one has focus.
+      if (root.contains(event.target) && event.target?.closest?.('button')) return;
+      event.preventDefault();
+      if (!event.repeat) { jumpAt = win.performance.now(); onGesture(); }
+    }
   }, options);
   doc.addEventListener('keyup', event => { if (mapKeyDirection(event)) keys.delete(event.code || event.key); }, options);
   root.addEventListener('pointerdown', event => {
